@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CStackAndConquer</class>
+ <widget class="QMainWindow" name="CStackAndConquer">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">StackAndConquer</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedKingdom"/>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>600</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuGame">
+    <property name="title">
+     <string>&amp;Game</string>
+    </property>
+    <addaction name="action_NewGame"/>
+    <addaction name="action_LoadGame"/>
+    <addaction name="action_SaveGame"/>
+    <addaction name="separator"/>
+    <addaction name="action_Quit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_ReportBug"/>
+    <addaction name="action_Info"/>
+   </widget>
+   <addaction name="menuGame"/>
+   <addaction name="menu_Help"/>
+  </widget>
+  <action name="action_NewGame">
+   <property name="text">
+    <string>&amp;New game</string>
+   </property>
+   <property name="toolTip">
+    <string>New game</string>
+   </property>
+  </action>
+  <action name="action_Quit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="action_Info">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="action_SaveGame">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Save game</string>
+   </property>
+   <property name="toolTip">
+    <string>Save game</string>
+   </property>
+  </action>
+  <action name="action_LoadGame">
+   <property name="text">
+    <string>&amp;Load game</string>
+   </property>
+   <property name="toolTip">
+    <string>Load game</string>
+   </property>
+  </action>
+  <action name="action_ReportBug">
+   <property name="text">
+    <string>Report &amp;bug</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
