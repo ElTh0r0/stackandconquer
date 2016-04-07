@@ -40,7 +40,8 @@ CStackAndConquer::CStackAndConquer(QWidget *pParent)
       m_pPlayer1(NULL),
       m_pPlayer2(NULL),
       m_nMaxTowerHeight(5),
-      m_nNumToWin(1) {
+      m_nNumToWin(1),
+      m_nMaxStones(20) {
     qDebug() << Q_FUNC_INFO;
 
     m_pUi->setupUi(this);
@@ -140,7 +141,7 @@ void CStackAndConquer::startNewGame() {
         if (NULL != m_pBoard) {
             delete m_pBoard;
         }
-        m_pBoard = new CBoard(m_pGraphView, 35);
+        m_pBoard = new CBoard(m_pGraphView, 35, m_nMaxStones);
         m_pGraphView->setScene(m_pBoard);
         connect(m_pBoard, SIGNAL(setStone(QPoint)),
                 this, SLOT(setStone(QPoint)));
@@ -153,11 +154,13 @@ void CStackAndConquer::startNewGame() {
         if (NULL != m_pPlayer2) {
             delete m_pPlayer2;
         }
-        m_pPlayer1 = new CPlayer(true, true, "PLAYER 1", 20);
-        m_pPlayer2 = new CPlayer(false, true, "PLAYER 2", 20);
+        m_pPlayer1 = new CPlayer(true, true, "PLAYER 1", m_nMaxStones);
+        m_pPlayer2 = new CPlayer(false, true, "PLAYER 2", m_nMaxStones);
 
 
-        m_pUi->action_SaveGame->setEnabled(true);
+        // m_pUi->action_SaveGame->setEnabled(true);
+        this->m_pGraphView->setEnabled(true);
+        this->updatePlayers();
 }
 
 // ---------------------------------------------------------------------------
@@ -262,7 +265,7 @@ void CStackAndConquer::returnStones(QPoint field) {
     m_pPlayer2->setStonesLeft(m_pPlayer2->getStonesLeft() + stones);
 
     // Clear field
-    m_pBoard->addStone(field, 0);
+    m_pBoard->removeStone(field, true);
 }
 
 // ---------------------------------------------------------------------------
@@ -280,8 +283,10 @@ void CStackAndConquer::updatePlayers() {
 
     if (m_nNumToWin == m_pPlayer1->getWonTowers()) {
         QMessageBox::information(this, "Info", "PLAYER 1 won the game!");
+        this->m_pGraphView->setEnabled(false);
     } else if (m_nNumToWin == m_pPlayer2->getWonTowers()) {
         QMessageBox::information(this, "Info", "PLAYER 2 won the game!");
+        this->m_pGraphView->setEnabled(false);
     }
 
     m_pPlayer1->setActive(!m_pPlayer1->getIsActive());

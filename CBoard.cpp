@@ -27,16 +27,15 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QMessageBox>
-#include <QGraphicsProxyWidget>
-#include <QSvgRenderer>
-#include <QGraphicsSvgItem>
 
 #include "./CBoard.h"
 
-CBoard::CBoard(QGraphicsView *pGraphView, quint16 nGridSize)
+CBoard::CBoard(QGraphicsView *pGraphView, quint16 nGridSize, quint8 nMaxStones)
     : m_pGraphView(pGraphView),
       m_nGridSize(nGridSize),
-      m_numOfFields(5) {
+      m_nMaxStones(nMaxStones),
+      m_numOfFields(5),
+      m_pSvgRenderer(NULL) {
     qDebug() << Q_FUNC_INFO;
     this->setBackgroundBrush(QBrush(QColor("#EEEEEC")));
     this->drawGrid();
@@ -46,47 +45,59 @@ CBoard::CBoard(QGraphicsView *pGraphView, quint16 nGridSize)
     m_pHighlightRect->setBrush(QBrush(QColor("#8ae234")));
     m_pHighlightRect->setPen(QPen(QColor("#888A85")));
     m_pHighlightRect->setVisible(false);
+    m_pHighlightRect->setZValue(0);
     this->addItem(m_pHighlightRect);
     // Selected field
     m_pSelectedField = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
     m_pSelectedField->setBrush(QBrush(QColor("#fce94f")));
     m_pSelectedField->setPen(QPen(QColor("#000000")));
     m_pSelectedField->setVisible(false);
+    m_pSelectedField->setZValue(0);
     this->addItem(m_pSelectedField);
+
+    // Generate stones
+    QSvgRenderer *m_pSvgRenderer = new QSvgRenderer(
+                QLatin1String(":/images/stones.svg"));
+    // Create a few more than maximum of stones because of wrong
+    // order during move tower add/remove
+    for (int i = 0; i < m_nMaxStones + 4; i++) {
+        m_listStonesP1.append(new QGraphicsSvgItem());
+        // Don't transform graphics to isometric view!
+        m_listStonesP1.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+        m_listStonesP1.last()->setSharedRenderer(m_pSvgRenderer);
+        m_listStonesP1.last()->setElementId(QLatin1String("Stone1"));
+        this->addItem(m_listStonesP1.last());
+        m_listStonesP1.last()->setPos(0, 0);
+        m_listStonesP1.last()->setZValue(5);
+        m_listStonesP1.last()->setVisible(false);
+
+        m_listStonesP2.append(new QGraphicsSvgItem());
+        // Don't transform graphics to isometric view!
+        m_listStonesP2.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+        m_listStonesP2.last()->setSharedRenderer(m_pSvgRenderer);
+        m_listStonesP2.last()->setElementId(QLatin1String("Stone2"));
+        this->addItem(m_listStonesP2.last());
+        m_listStonesP2.last()->setPos(0, 0);
+        m_listStonesP2.last()->setZValue(5);
+        m_listStonesP2.last()->setVisible(false);
+    }
 
     // Generate field matrix
     QList<quint8> tower;
     QList<QList<quint8> > line;
+    QList<QGraphicsSvgItem *> tower2;
+    QList<QList<QGraphicsSvgItem *> > line2;
     for (int i = 0; i < m_numOfFields; i++) {
         line.append(tower);
+        line2.append(tower2);
     }
     m_Fields.clear();
+    m_FieldStones.clear();
     for (int i = 0; i < m_numOfFields; i++) {
         m_Fields.append(line);
+        m_FieldStones.append(line2);
     }
     // qDebug() << "FIELDS:" << m_Fields;
-
-    // TODO: Add stone graphics
-    /*
-    // QSvgRenderer *renderer = new QSvgRenderer(QLatin1String(":/res/cylinders.svg"));
-    QGraphicsSvgItem *RedStone = new QGraphicsSvgItem();
-    // Don't transform graphics to isometric view!
-    RedStone->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    // !!!
-    RedStone->setSharedRenderer(renderer);
-    RedStone->setElementId(QLatin1String("RedCyl"));
-    this->addItem(RedStone);
-    RedStone->setPos(-5, 12);
-
-    QGraphicsSvgItem *OrangeStone = new QGraphicsSvgItem();
-    // Don't transform graphics to isometric view!
-    OrangeStone->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    // !!!
-    OrangeStone->setSharedRenderer(renderer);
-    OrangeStone->setElementId(QLatin1String("OraCyl"));
-    this->addItem(OrangeStone);
-    OrangeStone->setPos(96, 44);
-    */
 }
 
 // ---------------------------------------------------------------------------
@@ -197,14 +208,36 @@ QPoint CBoard::getGridField(QPointF point) const {
 // ---------------------------------------------------------------------------
 
 void CBoard::addStone(QPoint field, quint8 stone) {
-    if (0 == stone) {
-        m_Fields[field.x()][field.y()].clear();
-    } else if (1 == stone || 2 == stone) {
+    quint8 nExisting = m_Fields[field.x()][field.y()].size();
+
+    if (1 == stone) {
         m_Fields[field.x()][field.y()].append(stone);
+        // Graphics
+        m_FieldStones[field.x()][field.y()].append(m_listStonesP1.last());
+        m_FieldStones[field.x()][field.y()].last()->setVisible(true);
+        m_listStonesP1.removeLast();
+        // TODO: Handle item size
+        m_FieldStones[field.x()][field.y()].last()->setPos(field*m_nGridSize);
+        m_FieldStones[field.x()][field.y()].last()->setPos(m_FieldStones[field.x()][field.y()].last()->x() - 6*nExisting,
+                m_FieldStones[field.x()][field.y()].last()->y() + 12 - 5*nExisting);
+    } else if (2 == stone) {
+        m_Fields[field.x()][field.y()].append(stone);
+        // Graphics
+        m_FieldStones[field.x()][field.y()].append(m_listStonesP2.last());
+        m_FieldStones[field.x()][field.y()].last()->setVisible(true);
+        m_listStonesP2.removeLast();
+        // TODO: Handle item size
+        m_FieldStones[field.x()][field.y()].last()->setPos(field*m_nGridSize);
+        m_FieldStones[field.x()][field.y()].last()->setPos(m_FieldStones[field.x()][field.y()].last()->x() - 6*nExisting,
+                m_FieldStones[field.x()][field.y()].last()->y() + 12 - 5*nExisting);
     } else {
         qWarning() << "Trying to set stone type" << stone;
         QMessageBox::warning(NULL, "Warning", "Something went wrong!");
         return;
+    }
+
+    for (int z = 0; z < m_FieldStones[field.x()][field.y()].size(); z++) {
+        m_FieldStones[field.x()][field.y()][z]->setZValue(6 + z);
     }
 
     qDebug() << "FIELDS";
@@ -217,13 +250,39 @@ void CBoard::addStone(QPoint field, quint8 stone) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::removeStone(QPoint field) {
+void CBoard::removeStone(QPoint field, bool bAll) {
     if (0 == m_Fields[field.x()][field.y()].size()) {
         qWarning() << "Trying to remove stone from empty field" << field;
         QMessageBox::warning(NULL, "Warning", "Something went wrong!");
         return;
+    } else if (bAll) {
+        foreach (quint8 i, m_Fields[field.x()][field.y()]) {
+            if (1 == i) {
+                m_listStonesP1.append(m_FieldStones[field.x()][field.y()].last());
+                m_FieldStones[field.x()][field.y()].removeLast();
+            } else {
+                m_listStonesP2.append(m_FieldStones[field.x()][field.y()].last());
+                m_FieldStones[field.x()][field.y()].removeLast();
+            }
+        }
+        m_Fields[field.x()][field.y()].clear();
     } else {
+        if (1 == m_Fields[field.x()][field.y()].last()) {
+            m_listStonesP1.append(m_FieldStones[field.x()][field.y()].last());
+            m_FieldStones[field.x()][field.y()].last()->setVisible(false);
+            m_FieldStones[field.x()][field.y()].removeLast();
+        } else {
+            m_listStonesP2.append(m_FieldStones[field.x()][field.y()].last());
+            m_FieldStones[field.x()][field.y()].last()->setVisible(false);
+            m_FieldStones[field.x()][field.y()].removeLast();
+        }
         m_Fields[field.x()][field.y()].removeLast();
+    }
+
+    qDebug() << "FIELDS";
+    for (int i = 0; i < m_numOfFields; i++) {
+        qDebug() << m_Fields[0][i] << m_Fields[1][i] << m_Fields[2][i]
+                 << m_Fields[3][i] << m_Fields[4][i];
     }
 }
 

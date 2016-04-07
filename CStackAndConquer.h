@@ -75,6 +75,7 @@ class CStackAndConquer : public QMainWindow {
 
     const quint8 m_nMaxTowerHeight;
     const quint8 m_nNumToWin;
+    const quint8 m_nMaxStones;
 
     QLabel *m_plblPlayer1;
     QLabel *m_plblPlayer2;

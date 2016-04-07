@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/stackandconquer_64x64.png</file>
+        <file>images/stones.svg</file>
+    </qresource>
+</RCC>

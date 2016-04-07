@@ -49,7 +49,7 @@ class CPlayer {
 
   private:
     bool m_bIsActive;
-    bool m_bIsHuman;
+    const bool m_bIsHuman;
     QString m_sName;
     const quint8 m_nMaxStones;
     quint8 m_nStonesLeft;

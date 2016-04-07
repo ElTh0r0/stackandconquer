@@ -52,7 +52,7 @@ void setupLogger(const QString &sDebugFilePath,
 #endif
 
 int main(int argc, char *argv[]) {
-// Q_INIT_RESOURCE(stackandconquer_resources);
+    Q_INIT_RESOURCE(stackandconquer_resources);
 
     QApplication app(argc, argv);
     app.setApplicationName(APP_NAME);

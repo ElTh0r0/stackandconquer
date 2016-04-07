@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string notr="true">StackAndConquer</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="res/stackandconquer_resources.qrc">
+    <normaloff>:/images/stackandconquer_64x64.png</normaloff>:/images/stackandconquer_64x64.png</iconset>
+  </property>
   <property name="locale">
    <locale language="English" country="UnitedKingdom"/>
   </property>
@@ -96,6 +100,8 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="res/stackandconquer_resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

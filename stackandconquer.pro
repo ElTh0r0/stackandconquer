@@ -47,3 +47,9 @@ HEADERS      += CStackAndConquer.h \
 FORMS        += CStackAndConquer.ui
 
 TRANSLATIONS += lang/stackandconquer.ts
+
+RESOURCES += res/stackandconquer_resources.qrc
+
+win32 {
+    RC_FILE   = res/stackandconquer.rc
+}
