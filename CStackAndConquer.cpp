@@ -41,7 +41,8 @@ CStackAndConquer::CStackAndConquer(QWidget *pParent)
       m_pPlayer2(NULL),
       m_nMaxTowerHeight(5),
       m_nNumToWin(1),
-      m_nMaxStones(20) {
+      m_nMaxStones(20),
+      m_nGridSize(70) {
     qDebug() << Q_FUNC_INFO;
 
     m_pUi->setupUi(this);
@@ -56,7 +57,7 @@ CStackAndConquer::CStackAndConquer(QWidget *pParent)
 
     // Transform coordinate system to "isometric" view
     QTransform transfISO;
-    transfISO = transfISO.scale(1.0, 0.5).rotate(45).scale(2.0, 2.0);
+    transfISO = transfISO.scale(1.0, 0.5).rotate(45);
     m_pGraphView->setTransform(transfISO);
     this->setCentralWidget(m_pGraphView);
 
@@ -103,18 +104,19 @@ void CStackAndConquer::setupMenu() {
     m_pUi->action_NewGame->setIcon(QIcon::fromTheme("document-new"));
     connect(m_pUi->action_NewGame, SIGNAL(triggered()),
             this, SLOT(startNewGame()));
-/*
+
     // Load game
     m_pUi->action_LoadGame->setShortcut(QKeySequence::Open);
     m_pUi->action_LoadGame->setIcon(QIcon::fromTheme("document-open"));
-    connect(m_pUi->action_LoadGame, SIGNAL(triggered()),
-            this, SLOT(loadGame()));
+    // connect(m_pUi->action_LoadGame, SIGNAL(triggered()),
+    //         this, SLOT(loadGame()));
+    m_pUi->action_LoadGame->setEnabled(false);
+
     // Save game
     m_pUi->action_SaveGame->setShortcut(QKeySequence::Save);
     m_pUi->action_SaveGame->setIcon(QIcon::fromTheme("document-save"));
-    connect(m_pUi->action_SaveGame, SIGNAL(triggered()),
-            this, SLOT(saveGame()));
-*/
+    // connect(m_pUi->action_SaveGame, SIGNAL(triggered()),
+    //         this, SLOT(saveGame()));
 
     // Exit game
     m_pUi->action_Quit->setShortcut(QKeySequence::Quit);
@@ -141,7 +143,7 @@ void CStackAndConquer::startNewGame() {
         if (NULL != m_pBoard) {
             delete m_pBoard;
         }
-        m_pBoard = new CBoard(m_pGraphView, 35, m_nMaxStones);
+        m_pBoard = new CBoard(m_pGraphView, m_nGridSize, m_nMaxStones);
         m_pGraphView->setScene(m_pBoard);
         connect(m_pBoard, SIGNAL(setStone(QPoint)),
                 this, SLOT(setStone(QPoint)));
@@ -159,8 +161,8 @@ void CStackAndConquer::startNewGame() {
 
 
         // m_pUi->action_SaveGame->setEnabled(true);
-        this->m_pGraphView->setEnabled(true);
-        this->updatePlayers();
+        m_pGraphView->setInteractive(true);
+        this->updatePlayers(true);
 }
 
 // ---------------------------------------------------------------------------
@@ -271,7 +273,7 @@ void CStackAndConquer::returnStones(QPoint field) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::updatePlayers() {
+void CStackAndConquer::updatePlayers(bool bInitial) {
     m_plblPlayer1StonesLeft->setText(trUtf8("Stones left:") + " "  +
                                      QString::number(m_pPlayer1->getStonesLeft()));
     m_plblPlayer2StonesLeft->setText(trUtf8("Stones left:") + " "  +
@@ -282,22 +284,24 @@ void CStackAndConquer::updatePlayers() {
                                      QString::number(m_pPlayer2->getWonTowers()));
 
     if (m_nNumToWin == m_pPlayer1->getWonTowers()) {
+        m_pGraphView->setInteractive(false);
         QMessageBox::information(this, "Info", "PLAYER 1 won the game!");
-        this->m_pGraphView->setEnabled(false);
     } else if (m_nNumToWin == m_pPlayer2->getWonTowers()) {
+        m_pGraphView->setInteractive(false);
         QMessageBox::information(this, "Info", "PLAYER 2 won the game!");
-        this->m_pGraphView->setEnabled(false);
-    }
-
-    m_pPlayer1->setActive(!m_pPlayer1->getIsActive());
-    m_pPlayer2->setActive(!m_pPlayer2->getIsActive());
-
-    if (m_pPlayer1->getIsActive()) {
-        m_plblPlayer1->setStyleSheet("color: #FF0000");
-        m_plblPlayer2->setStyleSheet("color: #000000");
     } else {
-        m_plblPlayer1->setStyleSheet("color: #000000");
-        m_plblPlayer2->setStyleSheet("color: #FF0000");
+        if (!bInitial) {
+            m_pPlayer1->setActive(!m_pPlayer1->getIsActive());
+            m_pPlayer2->setActive(!m_pPlayer2->getIsActive());
+        }
+
+        if (m_pPlayer1->getIsActive()) {
+            m_plblPlayer1->setStyleSheet("color: #FF0000");
+            m_plblPlayer2->setStyleSheet("color: #000000");
+        } else {
+            m_plblPlayer1->setStyleSheet("color: #000000");
+            m_plblPlayer2->setStyleSheet("color: #FF0000");
+        }
     }
 
     // TODO: Check for possible moves!

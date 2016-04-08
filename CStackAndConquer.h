@@ -76,6 +76,7 @@ class CStackAndConquer : public QMainWindow {
     const quint8 m_nMaxTowerHeight;
     const quint8 m_nNumToWin;
     const quint8 m_nMaxStones;
+    const quint16 m_nGridSize;
 
     QLabel *m_plblPlayer1;
     QLabel *m_plblPlayer2;
@@ -90,7 +91,7 @@ class CStackAndConquer : public QMainWindow {
 
     void checkTowerWin(QPoint field);
     void returnStones(QPoint field);
-    void updatePlayers();
+    void updatePlayers(bool bInitial = false);
 };
 
 #endif  // STACKANDCONQUER_CSTACKANDCONQUER_H_

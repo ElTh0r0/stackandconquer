@@ -212,29 +212,23 @@ void CBoard::addStone(QPoint field, quint8 stone) {
 
     if (1 == stone) {
         m_Fields[field.x()][field.y()].append(stone);
-        // Graphics
         m_FieldStones[field.x()][field.y()].append(m_listStonesP1.last());
-        m_FieldStones[field.x()][field.y()].last()->setVisible(true);
         m_listStonesP1.removeLast();
-        // TODO: Handle item size
-        m_FieldStones[field.x()][field.y()].last()->setPos(field*m_nGridSize);
-        m_FieldStones[field.x()][field.y()].last()->setPos(m_FieldStones[field.x()][field.y()].last()->x() - 6*nExisting,
-                m_FieldStones[field.x()][field.y()].last()->y() + 12 - 5*nExisting);
     } else if (2 == stone) {
         m_Fields[field.x()][field.y()].append(stone);
-        // Graphics
         m_FieldStones[field.x()][field.y()].append(m_listStonesP2.last());
-        m_FieldStones[field.x()][field.y()].last()->setVisible(true);
         m_listStonesP2.removeLast();
-        // TODO: Handle item size
-        m_FieldStones[field.x()][field.y()].last()->setPos(field*m_nGridSize);
-        m_FieldStones[field.x()][field.y()].last()->setPos(m_FieldStones[field.x()][field.y()].last()->x() - 6*nExisting,
-                m_FieldStones[field.x()][field.y()].last()->y() + 12 - 5*nExisting);
     } else {
         qWarning() << "Trying to set stone type" << stone;
         QMessageBox::warning(NULL, "Warning", "Something went wrong!");
         return;
     }
+
+    m_FieldStones[field.x()][field.y()].last()->setPos(field*m_nGridSize);
+    m_FieldStones[field.x()][field.y()].last()->setPos(
+            m_FieldStones[field.x()][field.y()].last()->x() - 16 - 13*nExisting,
+            m_FieldStones[field.x()][field.y()].last()->y() + 20 - 13*nExisting);
+    m_FieldStones[field.x()][field.y()].last()->setVisible(true);
 
     for (int z = 0; z < m_FieldStones[field.x()][field.y()].size(); z++) {
         m_FieldStones[field.x()][field.y()][z]->setZValue(6 + z);
