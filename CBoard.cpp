@@ -420,3 +420,21 @@ void CBoard::highlightNeighbourhood(QList<QPoint> neighbours) {
         this->addItem(listPossibleMoves.last());
     }
 }
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+bool CBoard::findPossibleMoves(bool bStonesLeft) {
+    for (int y = 0; y < m_numOfFields; y++) {
+        for (int x = 0; x < m_numOfFields; x++) {
+            if (0 == m_Fields[x][y].size() && bStonesLeft) {
+                return true;
+            } else if (m_Fields[x][y].size() > 0) {
+                if (checkNeighbourhood(QPoint(x, y)).size() > 0) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}

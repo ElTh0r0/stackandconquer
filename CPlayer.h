@@ -47,6 +47,8 @@ class CPlayer {
     quint8 getStonesLeft() const;
     void increaseWonTowers();
     quint8 getWonTowers() const;
+    void setCanMove(bool bCanMove);
+    bool getCanMove() const;
 
   private:
     bool m_bIsActive;
@@ -55,6 +57,7 @@ class CPlayer {
     const quint8 m_nMaxStones;
     quint8 m_nStonesLeft;
     quint8 m_nWonTowers;
+    bool m_bCanMove;
 };
 
 #endif  // STACKANDCONQUER_CPLAYER_H_

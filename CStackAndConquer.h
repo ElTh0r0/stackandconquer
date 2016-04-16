@@ -66,6 +66,7 @@ class CStackAndConquer : public QMainWindow {
 
   private:
     void setupMenu();
+    void checkPossibleMoves();
 
     Ui::CStackAndConquer *m_pUi;
     QGraphicsView *m_pGraphView;

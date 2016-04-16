@@ -217,12 +217,8 @@ void CStackAndConquer::setStone(QPoint field) {
         m_pPlayer2->setStonesLeft(m_pPlayer2->getStonesLeft() - 1);
         m_pBoard->addStone(field, 2);
     } else {
-        qWarning() << "Player1 active?" << m_pPlayer1->getIsActive();
-        qWarning() << "Player1 stones:" << m_pPlayer1->getStonesLeft();
-        qWarning() << "Player2 active?" << m_pPlayer2->getIsActive();
-        qWarning() << "Player2 stones:" << m_pPlayer2->getStonesLeft();
-        QMessageBox::warning(NULL, trUtf8("Warning"),
-                             trUtf8("Something went wrong!"));
+        QMessageBox::information(NULL, trUtf8("Information"),
+                                 trUtf8("No stones left! Please move a tower."));
         return;
     }
 
@@ -327,11 +323,13 @@ void CStackAndConquer::updatePlayers(bool bInitial) {
     if (m_pSettings->getWinTowers() == m_pPlayer1->getWonTowers()) {
         m_pGraphView->setInteractive(false);
         QMessageBox::information(this, qApp->applicationName(),
-                                 trUtf8("%1 won the game!").arg(m_pPlayer1->getName()));
+                                 trUtf8("%1 won the game!")
+                                 .arg(m_pPlayer1->getName()));
     } else if (m_pSettings->getWinTowers() == m_pPlayer2->getWonTowers()) {
         m_pGraphView->setInteractive(false);
         QMessageBox::information(this, qApp->applicationName(),
-                                 trUtf8("%1 won the game!").arg(m_pPlayer2->getName()));
+                                 trUtf8("%1 won the game!")
+                                 .arg(m_pPlayer2->getName()));
     } else {
         if (!bInitial) {
             m_pPlayer1->setActive(!m_pPlayer1->getIsActive());
@@ -345,10 +343,46 @@ void CStackAndConquer::updatePlayers(bool bInitial) {
             m_plblPlayer1->setStyleSheet("color: #000000");
             m_plblPlayer2->setStyleSheet("color: #FF0000");
         }
+        this->checkPossibleMoves();
+    }
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CStackAndConquer::checkPossibleMoves() {
+    if (m_pPlayer1->getIsActive()) {
+        if (m_pBoard->findPossibleMoves(m_pPlayer1->getStonesLeft() > 0)) {
+            m_pPlayer1->setCanMove(true);
+            return;
+        } else {
+            m_pPlayer1->setCanMove(false);
+        }
+    } else {
+        if (m_pBoard->findPossibleMoves(m_pPlayer2->getStonesLeft() > 0)) {
+            m_pPlayer2->setCanMove(true);
+            return;
+        } else {
+            m_pPlayer2->setCanMove(false);
+        }
     }
 
-    // TODO: Check for possible moves!
-    // Otherwise game ends in a tie.
+    if (!m_pPlayer1->getCanMove() && !m_pPlayer2->getCanMove()) {
+        m_pGraphView->setInteractive(false);
+        QMessageBox::information(this, qApp->applicationName(),
+                                 trUtf8("No moves possible anymore.\n"
+                                        "Game ends in a tie!"));
+    } else if (!m_pPlayer1->getCanMove()) {
+        QMessageBox::information(this, qApp->applicationName(),
+                                 trUtf8("No move possible!\n%1 has to pass.")
+                                 .arg(m_pPlayer1->getName()));
+        this->updatePlayers();
+    } else if (!m_pPlayer2->getCanMove()) {
+        QMessageBox::information(this, qApp->applicationName(),
+                                 trUtf8("No move possible!\n%1 has to pass.")
+                                 .arg(m_pPlayer2->getName()));
+        this->updatePlayers();
+    }
 }
 
 // ---------------------------------------------------------------------------
