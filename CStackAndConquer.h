@@ -67,6 +67,7 @@ class CStackAndConquer : public QMainWindow {
   private:
     void setupMenu();
     void checkPossibleMoves();
+    bool checkPreviousMoveReverted(const QString sMove);
 
     Ui::CStackAndConquer *m_pUi;
     QGraphicsView *m_pGraphView;
@@ -80,6 +81,7 @@ class CStackAndConquer : public QMainWindow {
     const quint8 m_nMaxStones;
     const quint16 m_nGridSize;
     QString m_sSharePath;
+    QString m_sPreviousMove;
 
     QLabel *m_plblPlayer1;
     QLabel *m_plblPlayer2;

@@ -99,7 +99,6 @@ CBoard::CBoard(QGraphicsView *pGraphView, quint16 nGridSize,
         m_Fields.append(line);
         m_FieldStones.append(line2);
     }
-    // qDebug() << "FIELDS:" << m_Fields;
 }
 
 // ---------------------------------------------------------------------------
@@ -236,12 +235,6 @@ void CBoard::addStone(QPoint field, quint8 stone) {
     for (int z = 0; z < m_FieldStones[field.x()][field.y()].size(); z++) {
         m_FieldStones[field.x()][field.y()][z]->setZValue(6 + z);
     }
-
-    qDebug() << "FIELDS";
-    for (int i = 0; i < m_numOfFields; i++) {
-        qDebug() << m_Fields[0][i] << m_Fields[1][i] << m_Fields[2][i]
-                 << m_Fields[3][i] << m_Fields[4][i];
-    }
 }
 
 // ---------------------------------------------------------------------------
@@ -276,12 +269,6 @@ void CBoard::removeStone(QPoint field, bool bAll) {
         }
         m_Fields[field.x()][field.y()].removeLast();
     }
-
-    qDebug() << "FIELDS";
-    for (int i = 0; i < m_numOfFields; i++) {
-        qDebug() << m_Fields[0][i] << m_Fields[1][i] << m_Fields[2][i]
-                 << m_Fields[3][i] << m_Fields[4][i];
-    }
 }
 
 // ---------------------------------------------------------------------------
@@ -307,7 +294,7 @@ void CBoard::selectField(QPointF point) {
         currentField = QPoint(-1, -1);
         m_pSelectedField->setVisible(false);
         this->highlightNeighbourhood(neighbours);
-        qDebug() << "Deselected";
+        // qDebug() << "Deselected";
         return;
     } else {
         QPoint field = this->getGridField(point);
@@ -316,7 +303,7 @@ void CBoard::selectField(QPointF point) {
             currentField = QPoint(-1, -1);
             m_pSelectedField->setVisible(false);
             this->highlightNeighbourhood(neighbours);
-            qDebug() << "Deselected";
+            // qDebug() << "Deselected";
             return;
         }
         neighbours = this->checkNeighbourhood(currentField);
@@ -348,7 +335,7 @@ QList<QPoint> CBoard::checkNeighbourhood(QPoint field) {
     }
 
     quint8 nMoves = m_Fields[field.x()][field.y()].size();
-    qDebug() << "Selected:" << field << "- Moves:" << nMoves;
+    // qDebug() << "Selected:" << field << "- Moves:" << nMoves;
 
     // TODO: Optimize loops...
     for (int y = field.y() - nMoves; y <= field.y() + nMoves; y += nMoves) {
@@ -359,7 +346,7 @@ QList<QPoint> CBoard::checkNeighbourhood(QPoint field) {
             } else if (m_Fields[x][y].size() > 0) {
                 // Check for blocking towers in between
                 QPoint check(x, y);
-                qDebug() << "POSSIBLE:" << check;
+                // qDebug() << "POSSIBLE:" << check;
                 QPoint route(field - check);
                 bool bBreak = false;
 
@@ -380,9 +367,9 @@ QList<QPoint> CBoard::checkNeighbourhood(QPoint field) {
                         check.setX(x);
                     }
 
-                    qDebug() << "Check route:" << check;
+                    // qDebug() << "Check route:" << check;
                     if (m_Fields[check.x()][check.y()].size() > 0) {
-                        qDebug() << "Route blocked";
+                        // qDebug() << "Route blocked";
                         bBreak = true;
                         break;
                     }
@@ -394,7 +381,7 @@ QList<QPoint> CBoard::checkNeighbourhood(QPoint field) {
             }
         }
     }
-    qDebug() << "Neighbours which can be moved:" << neighbours;
+    // qDebug() << "Neighbours which can be moved:" << neighbours;
     return neighbours;
 }
 
@@ -437,4 +424,15 @@ bool CBoard::findPossibleMoves(bool bStonesLeft) {
         }
     }
     return false;
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CBoard::printDebugFields() const {
+    qDebug() << "FIELDS";
+    for (int i = 0; i < m_numOfFields; i++) {
+        qDebug() << m_Fields[0][i] << m_Fields[1][i] << m_Fields[2][i]
+                 << m_Fields[3][i] << m_Fields[4][i];
+    }
 }

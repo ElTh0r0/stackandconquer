@@ -52,6 +52,7 @@ class CBoard : public QGraphicsScene {
     void removeStone(QPoint field, bool bAll = false);
     QList<quint8> getField(QPoint field) const;
     bool findPossibleMoves(bool bStonesLeft);
+    void printDebugFields() const;
 
   signals:
     void setStone(QPoint);

@@ -200,6 +200,7 @@ void CStackAndConquer::startNewGame() {
 
         // m_pUi->action_SaveGame->setEnabled(true);
         m_pGraphView->setInteractive(true);
+        m_sPreviousMove.clear();
         this->updatePlayers(true);
 }
 
@@ -207,23 +208,27 @@ void CStackAndConquer::startNewGame() {
 // ---------------------------------------------------------------------------
 
 void CStackAndConquer::setStone(QPoint field) {
-    qDebug() << "Set stone:" << field;
+    QString sMove(static_cast<char>(field.x() + 65)
+                  + QString::number(field.y() + 1));
 
     if (0 == m_pBoard->getField(field).size()) {
-    if (m_pPlayer1->getIsActive() && m_pPlayer1->getStonesLeft() > 0) {
-        m_pPlayer1->setStonesLeft(m_pPlayer1->getStonesLeft() - 1);
-        m_pBoard->addStone(field, 1);
-    } else if (m_pPlayer2->getIsActive() && m_pPlayer2->getStonesLeft() > 0) {
-        m_pPlayer2->setStonesLeft(m_pPlayer2->getStonesLeft() - 1);
-        m_pBoard->addStone(field, 2);
-    } else {
-        QMessageBox::information(NULL, trUtf8("Information"),
-                                 trUtf8("No stones left! Please move a tower."));
-        return;
-    }
+        if (m_pPlayer1->getIsActive() && m_pPlayer1->getStonesLeft() > 0) {
+            m_pPlayer1->setStonesLeft(m_pPlayer1->getStonesLeft() - 1);
+            m_pBoard->addStone(field, 1);
+            qDebug() << "P1 >>" << sMove;
+        } else if (m_pPlayer2->getIsActive() && m_pPlayer2->getStonesLeft() > 0) {
+            m_pPlayer2->setStonesLeft(m_pPlayer2->getStonesLeft() - 1);
+            m_pBoard->addStone(field, 2);
+            qDebug() << "P2 >>" << sMove;
+        } else {
+            QMessageBox::information(NULL, trUtf8("Information"),
+                                     trUtf8("No stones left! Please move a tower."));
+            return;
+        }
+        m_sPreviousMove.clear();
 
-    this->checkTowerWin(field);
-    this->updatePlayers();
+        this->checkTowerWin(field);
+        this->updatePlayers();
     } else {
         QMessageBox::information(NULL, trUtf8("Information"),
                                  trUtf8("It is only allowed to place a "
@@ -235,9 +240,7 @@ void CStackAndConquer::setStone(QPoint field) {
 // ---------------------------------------------------------------------------
 
 void CStackAndConquer::moveTower(QPoint tower, QPoint moveTo) {
-    qDebug() << "Move tower" << tower << "onto" << moveTo;
     QList<quint8> listStones = m_pBoard->getField(tower);
-
     if (0 == listStones.size()) {
         qWarning() << "Move tower size == 0!";
         QMessageBox::warning(NULL, trUtf8("Warning"),
@@ -252,15 +255,27 @@ void CStackAndConquer::moveTower(QPoint tower, QPoint moveTo) {
                                              trUtf8("How many stones shall be moved:"),
                                              1, 1, listStones.size(), 1, &ok);
         if (!ok) {
-            qDebug() << "Abort move";
             return;
         }
     }
 
-    // TODO: Check if this move reverts the others player previous move
-    //       It is not allowed to do this.
+    // Debug print: E.g. "C4:3-D3" = move 3 stones from C4 to D3 (ASCII 65 = A)
+    QString sMove(static_cast<char>(tower.x() + 65) + QString::number(tower.y() + 1)
+                  + ":" + QString::number(nStonesToMove) + "-"
+                  + static_cast<char>(moveTo.x() + 65) + QString::number(moveTo.y() + 1));
+    if (this->checkPreviousMoveReverted(sMove)) {
+        QMessageBox::information(NULL, trUtf8("Information"),
+                                 trUtf8("It is not allowed to revert the "
+                                        "previous oppenents move directly!"));
+        return;
+    }
 
-    qDebug() << "Move" << nStonesToMove << "stones from tower";
+    if (m_pPlayer1->getIsActive()) {
+        qDebug() << "P1 >>" << sMove;
+    } else {
+        qDebug() << "P2 >>" << sMove;
+    }
+
     for (int i = 0; i < nStonesToMove; i++) {
         m_pBoard->removeStone(tower);  // Remove is in the wrong order, nevermind!
         m_pBoard->addStone(moveTo,
@@ -321,11 +336,13 @@ void CStackAndConquer::updatePlayers(bool bInitial) {
     m_plblPlayer2Won->setText(QString::number(m_pPlayer2->getWonTowers()));
 
     if (m_pSettings->getWinTowers() == m_pPlayer1->getWonTowers()) {
+        qDebug() << "PLAYER 1 WON!";
         m_pGraphView->setInteractive(false);
         QMessageBox::information(this, qApp->applicationName(),
                                  trUtf8("%1 won the game!")
                                  .arg(m_pPlayer1->getName()));
     } else if (m_pSettings->getWinTowers() == m_pPlayer2->getWonTowers()) {
+        qDebug() << "PLAYER 2 WON!";
         m_pGraphView->setInteractive(false);
         QMessageBox::information(this, qApp->applicationName(),
                                  trUtf8("%1 won the game!")
@@ -345,6 +362,7 @@ void CStackAndConquer::updatePlayers(bool bInitial) {
         }
         this->checkPossibleMoves();
     }
+    m_pBoard->printDebugFields();
 }
 
 // ---------------------------------------------------------------------------
@@ -369,20 +387,67 @@ void CStackAndConquer::checkPossibleMoves() {
 
     if (!m_pPlayer1->getCanMove() && !m_pPlayer2->getCanMove()) {
         m_pGraphView->setInteractive(false);
+        qDebug() << "NO MOVES POSSIBLE ANYMORE!";
         QMessageBox::information(this, qApp->applicationName(),
                                  trUtf8("No moves possible anymore.\n"
                                         "Game ends in a tie!"));
     } else if (!m_pPlayer1->getCanMove()) {
+        qDebug() << "PLAYER 1 HAS TO PASS!";
         QMessageBox::information(this, qApp->applicationName(),
                                  trUtf8("No move possible!\n%1 has to pass.")
                                  .arg(m_pPlayer1->getName()));
         this->updatePlayers();
     } else if (!m_pPlayer2->getCanMove()) {
+        qDebug() << "PLAYER 2 HAS TO PASS!";
         QMessageBox::information(this, qApp->applicationName(),
                                  trUtf8("No move possible!\n%1 has to pass.")
                                  .arg(m_pPlayer2->getName()));
         this->updatePlayers();
     }
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+bool CStackAndConquer::checkPreviousMoveReverted(const QString sMove) {
+    if (!m_sPreviousMove.isEmpty()) {
+        QStringList sListPrev;
+        QStringList sListCur;
+        sListPrev = m_sPreviousMove.split(":");
+        sListCur = sMove.split(":");
+
+        if (2 == sListPrev.size() && 2 == sListCur.size()) {
+            QString tmp(sListPrev[1]);
+            sListPrev.removeLast();
+            sListPrev << tmp.split("-");
+            tmp = sListCur[1];
+            sListCur.removeLast();
+            sListCur << tmp.split("-");
+
+            if (3 == sListPrev.size() && 3 == sListCur.size()) {
+                if (sListPrev[0] == sListCur[2]
+                        && sListPrev[1] == sListCur[1]
+                        && sListPrev[2] == sListCur[0]) {
+                    return true;
+                }
+            } else {
+                qDebug() << Q_FUNC_INFO;
+                qWarning() << "Splitting 2 failed:" << m_sPreviousMove << sMove;
+                QMessageBox::warning(NULL, trUtf8("Warning"),
+                                     trUtf8("Something went wrong!"));
+                return false;
+            }
+        } else {
+            qDebug() << Q_FUNC_INFO;
+            qWarning() << "Splitting 1 failed:" << m_sPreviousMove << sMove;
+            QMessageBox::warning(NULL, trUtf8("Warning"),
+                                 trUtf8("Something went wrong!"));
+            return false;
+        }
+    }
+
+    m_sPreviousMove = sMove;
+    return false;
 }
 
 // ---------------------------------------------------------------------------
