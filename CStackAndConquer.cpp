@@ -108,6 +108,7 @@ void CStackAndConquer::setupMenu() {
     connect(m_pUi->action_NewGame, SIGNAL(triggered()),
             this, SLOT(startNewGame()));
 
+    // TODO: Load / save game
     // Load game
     m_pUi->action_LoadGame->setShortcut(QKeySequence::Open);
     m_pUi->action_LoadGame->setIcon(QIcon::fromTheme("document-open"));

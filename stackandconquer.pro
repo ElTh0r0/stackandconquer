@@ -17,7 +17,7 @@
 TEMPLATE      = app
 TARGET        = stackandconquer
 
-VERSION       = 0.3.0
+VERSION       = 0.4.0
 QMAKE_TARGET_PRODUCT     = "StackAndConquer"
 QMAKE_TARGET_DESCRIPTION = "Challenging tower conquest board game"
 QMAKE_TARGET_COPYRIGHT   = "(C) 2015-2016 Thorsten Roth"

@@ -4,14 +4,14 @@
 <context>
     <name>CBoard</name>
     <message>
-        <location filename="../CBoard.cpp" line="225"/>
-        <location filename="../CBoard.cpp" line="253"/>
+        <location filename="../CBoard.cpp" line="224"/>
+        <location filename="../CBoard.cpp" line="246"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../CBoard.cpp" line="226"/>
-        <location filename="../CBoard.cpp" line="254"/>
+        <location filename="../CBoard.cpp" line="225"/>
+        <location filename="../CBoard.cpp" line="247"/>
         <source>Something went wrong!</source>
         <translation>Etwas ist schief gelaufen!</translation>
     </message>
@@ -164,69 +164,96 @@
     <message>
         <location filename="../CStackAndConquer.cpp" line="68"/>
         <location filename="../CStackAndConquer.cpp" line="84"/>
-        <location filename="../CStackAndConquer.cpp" line="320"/>
+        <location filename="../CStackAndConquer.cpp" line="331"/>
         <source>Stones left:</source>
         <translation>Verbleibende Steine:</translation>
     </message>
     <message>
         <location filename="../CStackAndConquer.cpp" line="69"/>
         <location filename="../CStackAndConquer.cpp" line="85"/>
-        <location filename="../CStackAndConquer.cpp" line="323"/>
+        <location filename="../CStackAndConquer.cpp" line="334"/>
         <source>Won:</source>
         <translation>Gewonnen:</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="224"/>
-        <location filename="../CStackAndConquer.cpp" line="247"/>
-        <location filename="../CStackAndConquer.cpp" line="294"/>
+        <location filename="../CStackAndConquer.cpp" line="246"/>
+        <location filename="../CStackAndConquer.cpp" line="305"/>
+        <location filename="../CStackAndConquer.cpp" line="436"/>
+        <location filename="../CStackAndConquer.cpp" line="443"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="225"/>
-        <location filename="../CStackAndConquer.cpp" line="248"/>
-        <location filename="../CStackAndConquer.cpp" line="295"/>
+        <location filename="../CStackAndConquer.cpp" line="247"/>
+        <location filename="../CStackAndConquer.cpp" line="306"/>
+        <location filename="../CStackAndConquer.cpp" line="437"/>
+        <location filename="../CStackAndConquer.cpp" line="444"/>
         <source>Something went wrong!</source>
         <translation>Etwas ist schief gelaufen!</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="232"/>
+        <location filename="../CStackAndConquer.cpp" line="224"/>
+        <location filename="../CStackAndConquer.cpp" line="233"/>
+        <location filename="../CStackAndConquer.cpp" line="267"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="233"/>
+        <location filename="../CStackAndConquer.cpp" line="225"/>
+        <source>No stones left! Please move a tower.</source>
+        <translation>Keine Steine verfügbar! Bitte einen Turm bewegen.</translation>
+    </message>
+    <message>
+        <location filename="../CStackAndConquer.cpp" line="234"/>
         <source>It is only allowed to place a stone on a free field.</source>
         <translation>Es ist nur erlaubt, Steine auf freie Felder zu setzen.</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="255"/>
+        <location filename="../CStackAndConquer.cpp" line="254"/>
         <source>Move tower</source>
         <translation>Turm bewegen</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="256"/>
+        <location filename="../CStackAndConquer.cpp" line="255"/>
         <source>How many stones shall be moved:</source>
         <translation>Wie viele Steine sollen bewegt werden:</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="330"/>
-        <location filename="../CStackAndConquer.cpp" line="334"/>
+        <location filename="../CStackAndConquer.cpp" line="268"/>
+        <source>It is not allowed to revert the previous oppenents move directly!</source>
+        <translation>Ist ist nicht erlaubt, den vorangegangenen Zug des Gegners direkt rückgängig zu machen!</translation>
+    </message>
+    <message>
+        <location filename="../CStackAndConquer.cpp" line="342"/>
+        <location filename="../CStackAndConquer.cpp" line="348"/>
         <source>%1 won the game!</source>
         <translation>%1 hat das Spiel gewonnen!</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="365"/>
+        <location filename="../CStackAndConquer.cpp" line="392"/>
+        <source>No moves possible anymore.
+Game ends in a tie!</source>
+        <translation>Keine Züge mehr möglich.\nDas Spiel endet unentschieden!</translation>
+    </message>
+    <message>
+        <location filename="../CStackAndConquer.cpp" line="397"/>
+        <location filename="../CStackAndConquer.cpp" line="403"/>
+        <source>No move possible!
+%1 has to pass.</source>
+        <translation>Keine Züge möglich!\n%1 muss passen.</translation>
+    </message>
+    <message>
+        <location filename="../CStackAndConquer.cpp" line="464"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="380"/>
+        <location filename="../CStackAndConquer.cpp" line="479"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="383"/>
+        <location filename="../CStackAndConquer.cpp" line="482"/>
         <source>Translations</source>
         <translation>Übersetzungen</translation>
     </message>
