@@ -42,6 +42,7 @@ class CPlayer {
     void setActive(bool bActive);
     bool getIsActive() const;
     bool getIsHuman() const;
+    QString getName() const;
     void setStonesLeft(quint8 nStones);
     quint8 getStonesLeft() const;
     void increaseWonTowers();

@@ -35,6 +35,8 @@
 #include <QGraphicsSvgItem>
 #include <QPolygonF>
 
+#include <./CSettings.h>
+
 /**
  * \class CBoard
  * \brief Game board generation.
@@ -43,7 +45,8 @@ class CBoard : public QGraphicsScene {
     Q_OBJECT
 
   public:
-    CBoard(QGraphicsView *pGraphView, quint16 nGridSize, quint8 nMaxStones);
+    CBoard(QGraphicsView *pGraphView, quint16 nGridSize, quint8 nMaxStones,
+           CSettings *pSettings);
 
     void addStone(QPoint field, quint8 stone);
     void removeStone(QPoint field, bool bAll = false);
@@ -61,6 +64,7 @@ class CBoard : public QGraphicsScene {
     QGraphicsView *m_pGraphView;
     const quint16 m_nGridSize;
     const quint8 m_nMaxStones;
+    CSettings *m_pSettings;
     const quint8 m_numOfFields;
     QRect m_BoardRect;
     QGraphicsRectItem *m_pHighlightRect;

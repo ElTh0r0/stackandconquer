@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
         exit(0);
     }
 
-/*
+
     // Default share data path (Windows and debugging)
     QString sSharePath = app.applicationDirPath();
     // Standard installation path (Linux)
@@ -81,24 +81,24 @@ int main(int argc, char *argv[]) {
     QTranslator AppTranslator;
 
     // Setup gui translation (Qt)
-        if (!qtTranslator.load("qt_" + sLang,
-                               QLibraryInfo::location(
-                                   QLibraryInfo::TranslationsPath))) {
-            // If it fails, search in application directory
-            if (!qtTranslator.load("qt_" + sLang, sSharePath + "/lang")) {
-                qWarning() << "Could not load Qt translations:" << "qt_" + sLang;
-            }
+    if (!qtTranslator.load("qt_" + sLang,
+                           QLibraryInfo::location(
+                               QLibraryInfo::TranslationsPath))) {
+        // If it fails, search in application directory
+        if (!qtTranslator.load("qt_" + sLang, sSharePath + "/lang")) {
+            qWarning() << "Could not load Qt translations:" << "qt_" + sLang;
         }
-        app.installTranslator(&qtTranslator);
+    }
+    app.installTranslator(&qtTranslator);
 
-        // Setup gui translation (app)
-        if (!AppTranslator.load(app.applicationName().toLower() + "_" + sLang,
-                                sSharePath + "/lang")) {
-            qWarning() << "Could not load application translation:"
-                       << qAppName() + "_" + sLang;
-        }
-        app.installTranslator(&AppTranslator);
-*/
+    // Setup gui translation (app)
+    if (!AppTranslator.load(app.applicationName().toLower() + "_" + sLang,
+                            sSharePath + "/lang")) {
+        qWarning() << "Could not load application translation:"
+                   << qAppName() + "_" + sLang;
+    }
+    app.installTranslator(&AppTranslator);
+
 #if QT_VERSION >= 0x050000
     QStringList sListPaths = QStandardPaths::standardLocations(
                 QStandardPaths::DataLocation);
@@ -121,8 +121,7 @@ int main(int argc, char *argv[]) {
     setupLogger(userDataDir.absolutePath() + "/" + sDebugFile,
                 app.applicationName(), app.applicationVersion());
 
-//    CStackAndConquer myStackAndConquer(userDataDir, sSharePath);
-    CStackAndConquer myStackAndConquer;
+    CStackAndConquer myStackAndConquer(sSharePath);
     myStackAndConquer.show();
     int nRet = app.exec();
 

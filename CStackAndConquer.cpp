@@ -33,20 +33,21 @@
 #include "./CStackAndConquer.h"
 #include "ui_CStackAndConquer.h"
 
-CStackAndConquer::CStackAndConquer(QWidget *pParent)
+CStackAndConquer::CStackAndConquer(const QDir &sharePath, QWidget *pParent)
     : QMainWindow(pParent),
       m_pUi(new Ui::CStackAndConquer),
       m_pBoard(NULL),
       m_pPlayer1(NULL),
       m_pPlayer2(NULL),
       m_nMaxTowerHeight(5),
-      m_nNumToWin(1),
       m_nMaxStones(20),
-      m_nGridSize(70) {
+      m_nGridSize(70),
+      m_sSharePath(sharePath.absolutePath()) {
     qDebug() << Q_FUNC_INFO;
 
     m_pUi->setupUi(this);
     this->setWindowTitle(qApp->applicationName());
+    m_pSettings = new CSettings(m_sSharePath, this);
     this->setupMenu();
 
     m_pGraphView = new QGraphicsView(this);
@@ -63,9 +64,9 @@ CStackAndConquer::CStackAndConquer(QWidget *pParent)
 
     m_pFrame1 = new QFrame(m_pGraphView);
     m_pLayout1 = new QFormLayout;
-    m_plblPlayer1 = new QLabel(trUtf8("Player 1") + "          ");
-    m_plblPlayer1StonesLeft = new QLabel(trUtf8("Stones left:") + "          ");
-    m_plblPlayer1Won = new QLabel(trUtf8("Won:") + "          ");
+    m_plblPlayer1 = new QLabel(m_pSettings->getNameP1());
+    m_plblPlayer1StonesLeft = new QLabel(trUtf8("Stones left:") + " " + QString::number(m_nMaxStones));
+    m_plblPlayer1Won = new QLabel(trUtf8("Won:") + " 0");
     m_pLayout1->setVerticalSpacing(0);
     m_pLayout1->addRow(m_plblPlayer1);
     m_pLayout1->addRow(m_plblPlayer1StonesLeft);
@@ -74,18 +75,20 @@ CStackAndConquer::CStackAndConquer(QWidget *pParent)
 
     m_pFrame2 = new QFrame(m_pGraphView);
     m_pLayout2 = new QFormLayout;
-    m_plblPlayer2 = new QLabel(trUtf8("Player 2") + "          ");
-    m_plblPlayer2StonesLeft = new QLabel(trUtf8("Stones left:") + "          ");
-    m_plblPlayer2Won = new QLabel(trUtf8("Won:") + "          ");
+    m_plblPlayer2 = new QLabel(m_pSettings->getNameP2());
+    m_plblPlayer2->setAlignment(Qt::AlignRight);
+    m_plblPlayer2StonesLeft = new QLabel(QString::number(m_nMaxStones));
+    m_plblPlayer2Won = new QLabel("0");
     m_pLayout2->setVerticalSpacing(0);
     m_pLayout2->addRow(m_plblPlayer2);
-    m_pLayout2->addRow(m_plblPlayer2StonesLeft);
-    m_pLayout2->addRow(m_plblPlayer2Won);
+    m_pLayout2->addRow(trUtf8("Stones left:"), m_plblPlayer2StonesLeft);
+    m_pLayout2->addRow(trUtf8("Won:"), m_plblPlayer2Won);
     m_pFrame2->setLayout(m_pLayout2);
-    m_pFrame2->move(this->width() - m_pFrame2->size().width() - 20, 0);
+    m_pFrame2->move(this->width() - m_pLayout2->sizeHint().width(), 0);
 
-    m_plblPlayer1->setStyleSheet("color: #FF0000");
-    m_plblPlayer2->setStyleSheet("color: #000000");
+    // Seed random number generator
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
 
     this->startNewGame();
 }
@@ -118,6 +121,11 @@ void CStackAndConquer::setupMenu() {
     // connect(m_pUi->action_SaveGame, SIGNAL(triggered()),
     //         this, SLOT(saveGame()));
 
+    // Settings
+    m_pUi->action_Preferences->setIcon(QIcon::fromTheme("preferences-system"));
+    connect(m_pUi->action_Preferences, SIGNAL(triggered()),
+            m_pSettings, SLOT(show()));
+
     // Exit game
     m_pUi->action_Quit->setShortcut(QKeySequence::Quit);
     m_pUi->action_Quit->setIcon(QIcon::fromTheme("application-exit"));
@@ -143,7 +151,8 @@ void CStackAndConquer::startNewGame() {
         if (NULL != m_pBoard) {
             delete m_pBoard;
         }
-        m_pBoard = new CBoard(m_pGraphView, m_nGridSize, m_nMaxStones);
+        m_pBoard = new CBoard(m_pGraphView, m_nGridSize, m_nMaxStones,
+                              m_pSettings);
         m_pGraphView->setScene(m_pBoard);
         connect(m_pBoard, SIGNAL(setStone(QPoint)),
                 this, SLOT(setStone(QPoint)));
@@ -156,9 +165,38 @@ void CStackAndConquer::startNewGame() {
         if (NULL != m_pPlayer2) {
             delete m_pPlayer2;
         }
-        m_pPlayer1 = new CPlayer(true, true, "PLAYER 1", m_nMaxStones);
-        m_pPlayer2 = new CPlayer(false, true, "PLAYER 2", m_nMaxStones);
 
+        QString sP2HumanCpu(m_pSettings->getP2HumanCpu());
+        bool bP2HumanCpu(true);
+        if ("Human" == sP2HumanCpu) {
+            bP2HumanCpu = true;
+        } else {
+            // TODO: Implement CPU opponent
+            qWarning() << "CPU Player not implemeted, yet!";
+            // bP2HumanCpu = false;
+        }
+
+        // Select start player
+        quint8 nStartPlayer(m_pSettings->getStartPlaner());
+        bool bStart1(true);
+        bool bStart2(false);
+        if (0 == nStartPlayer) {  // Random
+            nStartPlayer = qrand() % 2 + 1;
+        }
+        if (2 == nStartPlayer) {  // Player 2
+            bStart1 = false;
+            bStart2 = true;
+        } else {  // Player 1
+            bStart1 = true;
+            bStart2 = false;
+        }
+
+        m_pPlayer1 = new CPlayer(bStart1, true,
+                                 m_pSettings->getNameP1(), m_nMaxStones);
+        m_pPlayer2 = new CPlayer(bStart2, bP2HumanCpu,
+                                 m_pSettings->getNameP2(), m_nMaxStones);
+        m_plblPlayer1->setText(m_pSettings->getNameP1());
+        m_plblPlayer2->setText(m_pSettings->getNameP2());
 
         // m_pUi->action_SaveGame->setEnabled(true);
         m_pGraphView->setInteractive(true);
@@ -183,15 +221,17 @@ void CStackAndConquer::setStone(QPoint field) {
         qWarning() << "Player1 stones:" << m_pPlayer1->getStonesLeft();
         qWarning() << "Player2 active?" << m_pPlayer2->getIsActive();
         qWarning() << "Player2 stones:" << m_pPlayer2->getStonesLeft();
-        QMessageBox::warning(NULL, "Warning", "Something went wrong!");
+        QMessageBox::warning(NULL, trUtf8("Warning"),
+                             trUtf8("Something went wrong!"));
         return;
     }
 
     this->checkTowerWin(field);
     this->updatePlayers();
     } else {
-        QMessageBox::information(NULL, "Information",
-                                 "It is only allowed to place a stone on a free field.");
+        QMessageBox::information(NULL, trUtf8("Information"),
+                                 trUtf8("It is only allowed to place a "
+                                        "stone on a free field."));
     }
 }
 
@@ -204,15 +244,16 @@ void CStackAndConquer::moveTower(QPoint tower, QPoint moveTo) {
 
     if (0 == listStones.size()) {
         qWarning() << "Move tower size == 0!";
-        QMessageBox::warning(this, "Warning", "Something went wrong!");
+        QMessageBox::warning(NULL, trUtf8("Warning"),
+                             trUtf8("Something went wrong!"));
         return;
     }
 
     int nStonesToMove = 1;
     if (listStones.size() > 1) {
         bool ok;
-        nStonesToMove = QInputDialog::getInt(this, "Move Tower",
-                                             "How many stones to move:",
+        nStonesToMove = QInputDialog::getInt(this, trUtf8("Move tower"),
+                                             trUtf8("How many stones shall be moved:"),
                                              1, 1, listStones.size(), 1, &ok);
         if (!ok) {
             qDebug() << "Abort move";
@@ -226,7 +267,8 @@ void CStackAndConquer::moveTower(QPoint tower, QPoint moveTo) {
     qDebug() << "Move" << nStonesToMove << "stones from tower";
     for (int i = 0; i < nStonesToMove; i++) {
         m_pBoard->removeStone(tower);  // Remove is in the wrong order, nevermind!
-        m_pBoard->addStone(moveTo, listStones[listStones.size() - nStonesToMove + i]);
+        m_pBoard->addStone(moveTo,
+                           listStones[listStones.size() - nStonesToMove + i]);
     }
 
     this->checkTowerWin(moveTo);
@@ -249,7 +291,8 @@ void CStackAndConquer::checkTowerWin(QPoint field) {
             qWarning() << "Last stone neither 1 nor 2!";
             qWarning() << "Field:" << field
                        << " -  Tower" << m_pBoard->getField(field);
-            QMessageBox::warning(NULL, "Warning", "Something went wrong!");
+            QMessageBox::warning(NULL, trUtf8("Warning"),
+                                 trUtf8("Something went wrong!"));
             return;
         }
         this->returnStones(field);
@@ -276,19 +319,19 @@ void CStackAndConquer::returnStones(QPoint field) {
 void CStackAndConquer::updatePlayers(bool bInitial) {
     m_plblPlayer1StonesLeft->setText(trUtf8("Stones left:") + " "  +
                                      QString::number(m_pPlayer1->getStonesLeft()));
-    m_plblPlayer2StonesLeft->setText(trUtf8("Stones left:") + " "  +
-                                     QString::number(m_pPlayer2->getStonesLeft()));
+    m_plblPlayer2StonesLeft->setText(QString::number(m_pPlayer2->getStonesLeft()));
     m_plblPlayer1Won->setText(trUtf8("Won:") + " "  +
                                      QString::number(m_pPlayer1->getWonTowers()));
-    m_plblPlayer2Won->setText(trUtf8("Won:") + " "  +
-                                     QString::number(m_pPlayer2->getWonTowers()));
+    m_plblPlayer2Won->setText(QString::number(m_pPlayer2->getWonTowers()));
 
-    if (m_nNumToWin == m_pPlayer1->getWonTowers()) {
+    if (m_pSettings->getWinTowers() == m_pPlayer1->getWonTowers()) {
         m_pGraphView->setInteractive(false);
-        QMessageBox::information(this, "Info", "PLAYER 1 won the game!");
-    } else if (m_nNumToWin == m_pPlayer2->getWonTowers()) {
+        QMessageBox::information(this, qApp->applicationName(),
+                                 trUtf8("%1 won the game!").arg(m_pPlayer1->getName()));
+    } else if (m_pSettings->getWinTowers() == m_pPlayer2->getWonTowers()) {
         m_pGraphView->setInteractive(false);
-        QMessageBox::information(this, "Info", "PLAYER 2 won the game!");
+        QMessageBox::information(this, qApp->applicationName(),
+                                 trUtf8("%1 won the game!").arg(m_pPlayer2->getName()));
     } else {
         if (!bInitial) {
             m_pPlayer1->setActive(!m_pPlayer1->getIsActive());

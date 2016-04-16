@@ -30,27 +30,29 @@
 
 #include "./CBoard.h"
 
-CBoard::CBoard(QGraphicsView *pGraphView, quint16 nGridSize, quint8 nMaxStones)
+CBoard::CBoard(QGraphicsView *pGraphView, quint16 nGridSize,
+               quint8 nMaxStones, CSettings *pSettings)
     : m_pGraphView(pGraphView),
       m_nGridSize(nGridSize),
       m_nMaxStones(nMaxStones),
+      m_pSettings(pSettings),
       m_numOfFields(5),
       m_pSvgRenderer(NULL) {
     qDebug() << Q_FUNC_INFO;
-    this->setBackgroundBrush(QBrush(QColor("#EEEEEC")));
+    this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
     this->drawGrid();
 
     // Field highlighter
     m_pHighlightRect = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
-    m_pHighlightRect->setBrush(QBrush(QColor("#8ae234")));
-    m_pHighlightRect->setPen(QPen(QColor("#888A85")));
+    m_pHighlightRect->setBrush(QBrush(m_pSettings->getHighlightColor()));
+    m_pHighlightRect->setPen(QPen(m_pSettings->getHighlightBorderColor()));
     m_pHighlightRect->setVisible(false);
     m_pHighlightRect->setZValue(0);
     this->addItem(m_pHighlightRect);
     // Selected field
     m_pSelectedField = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
-    m_pSelectedField->setBrush(QBrush(QColor("#fce94f")));
-    m_pSelectedField->setPen(QPen(QColor("#000000")));
+    m_pSelectedField->setBrush(QBrush(m_pSettings->getSelectedColor()));
+    m_pSelectedField->setPen(QPen(m_pSettings->getSelectedBorderColor()));
     m_pSelectedField->setVisible(false);
     m_pSelectedField->setZValue(0);
     this->addItem(m_pSelectedField);
@@ -110,13 +112,13 @@ void CBoard::drawGrid() {
                                       m_numOfFields * m_nGridSize -1));
 
     // Draw board
-    QPen linePen(QColor("#2E3436"));
-    this->addRect(m_BoardRect, linePen, QBrush(QColor("#FFFFFF")));
+    QPen linePen(m_pSettings->getOutlineBoardColor());
+    this->addRect(m_BoardRect, linePen, QBrush(m_pSettings->getBgBoardColor()));
     m_pGraphView->setSceneRect(m_BoardRect);
 
     // Draw lines
     QLineF lineGrid;
-    linePen.setColor(QColor("#888A85"));
+    linePen.setColor(m_pSettings->getGridBoardColor());
     // Horizontal
     for (int i = 1; i < m_numOfFields; i++) {
         lineGrid.setPoints(QPointF(1, i*m_nGridSize),
@@ -220,7 +222,8 @@ void CBoard::addStone(QPoint field, quint8 stone) {
         m_listStonesP2.removeLast();
     } else {
         qWarning() << "Trying to set stone type" << stone;
-        QMessageBox::warning(NULL, "Warning", "Something went wrong!");
+        QMessageBox::warning(NULL, trUtf8("Warning"),
+                             trUtf8("Something went wrong!"));
         return;
     }
 
@@ -247,7 +250,8 @@ void CBoard::addStone(QPoint field, quint8 stone) {
 void CBoard::removeStone(QPoint field, bool bAll) {
     if (0 == m_Fields[field.x()][field.y()].size()) {
         qWarning() << "Trying to remove stone from empty field" << field;
-        QMessageBox::warning(NULL, "Warning", "Something went wrong!");
+        QMessageBox::warning(NULL, trUtf8("Warning"),
+                             trUtf8("Something went wrong!"));
         return;
     } else if (bAll) {
         foreach (quint8 i, m_Fields[field.x()][field.y()]) {
@@ -320,13 +324,16 @@ void CBoard::selectField(QPointF point) {
             neighbours.clear();
             this->highlightNeighbourhood(neighbours);
             m_pSelectedField->setVisible(false);
-            emit moveTower(field ,currentField);
+            emit moveTower(field, currentField);
             currentField = QPoint(-1, -1);
         } else {
             currentField = field;
             m_pSelectedField->setVisible(true);
             m_pSelectedField->setPos(pointSnap);
-            this->highlightNeighbourhood(this->checkNeighbourhood(currentField));
+            if (m_pSettings->getShowPossibleMoveTowers()) {
+                this->highlightNeighbourhood(
+                            this->checkNeighbourhood(currentField));
+            }
         }
     }
 }
@@ -407,8 +414,8 @@ void CBoard::highlightNeighbourhood(QList<QPoint> neighbours) {
                                                    posField.y()*m_nGridSize,
                                                    m_nGridSize,
                                                    m_nGridSize);
-        listPossibleMoves.last()->setBrush(QBrush(QColor("#ad7fa8")));
-        listPossibleMoves.last()->setPen(QPen(QColor("#000000")));
+        listPossibleMoves.last()->setBrush(QBrush(m_pSettings->GetNeighboursColor()));
+        listPossibleMoves.last()->setPen(QPen(m_pSettings->GetNeighboursBorderColor()));
         listPossibleMoves.last()->setVisible(true);
         this->addItem(listPossibleMoves.last());
     }

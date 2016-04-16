@@ -37,6 +37,7 @@
 
 #include "./CBoard.h"
 #include "./CPlayer.h"
+#include "./CSettings.h"
 
 namespace Ui {
     class CStackAndConquer;
@@ -50,7 +51,7 @@ class CStackAndConquer : public QMainWindow {
     Q_OBJECT
 
   public:
-    explicit CStackAndConquer(QWidget *pParent = 0);
+    explicit CStackAndConquer(const QDir &sharePath, QWidget *pParent = 0);
     ~CStackAndConquer();
 
   protected:
@@ -68,15 +69,16 @@ class CStackAndConquer : public QMainWindow {
 
     Ui::CStackAndConquer *m_pUi;
     QGraphicsView *m_pGraphView;
+    CSettings *m_pSettings;
 
     CBoard *m_pBoard;
     CPlayer *m_pPlayer1;
     CPlayer *m_pPlayer2;
 
     const quint8 m_nMaxTowerHeight;
-    const quint8 m_nNumToWin;
     const quint8 m_nMaxStones;
     const quint16 m_nGridSize;
+    QString m_sSharePath;
 
     QLabel *m_plblPlayer1;
     QLabel *m_plblPlayer2;

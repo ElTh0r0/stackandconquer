@@ -17,7 +17,7 @@
 TEMPLATE      = app
 TARGET        = stackandconquer
 
-VERSION       = 0.2.0
+VERSION       = 0.3.0
 QMAKE_TARGET_PRODUCT     = "StackAndConquer"
 QMAKE_TARGET_DESCRIPTION = "Challenging tower conquest board game"
 QMAKE_TARGET_COPYRIGHT   = "(C) 2015-2016 Thorsten Roth"
@@ -38,17 +38,20 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 SOURCES      += main.cpp\
                 CStackAndConquer.cpp \
                 CBoard.cpp \
-                CPlayer.cpp
+                CPlayer.cpp \
+                CSettings.cpp
 
 HEADERS      += CStackAndConquer.h \
                 CBoard.h \
-                CPlayer.h
+                CPlayer.h \
+                CSettings.h
 
-FORMS        += CStackAndConquer.ui
+FORMS        += CStackAndConquer.ui \
+                CSettings.ui
 
-TRANSLATIONS += lang/stackandconquer.ts
+TRANSLATIONS += lang/stackandconquer_de.ts
 
-RESOURCES += res/stackandconquer_resources.qrc
+RESOURCES    += res/stackandconquer_resources.qrc
 
 win32 {
     RC_FILE   = res/stackandconquer.rc
