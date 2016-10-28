@@ -1,0 +1,7 @@
+?package(stackandconquer):\
+    needs="x11"\
+    section="Games/Strategy"\
+    title="StackAndConquer"\
+    longtitle="StackAndConquer - tower conquest board game"\
+    icon="/usr/share/pixmaps/stackandconquer.xpm"\
+    command="/usr/bin/stackandconquer"

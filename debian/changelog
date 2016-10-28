@@ -1,0 +1,30 @@
+stackandconquer (0.4.0-0ubuntu1) xenial; urgency=low
+
+  [ Thorsten Roth ]
+  * Check for possible moves.
+  * Check if previou move is reverted.
+  * Pretty debug output.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Sun, 29 May 2016 01:29:00 +0200
+
+stackandconquer (0.3.0-0ubuntu1) wily; urgency=low
+
+  [ Thorsten Roth ]
+  * Settings dialog.
+  * Added German translation.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Sat, 16 Apr 2016 19:40:00 +0200
+ 
+stackandconquer (0.2.0-0ubuntu1) wily; urgency=low
+
+  [ Thorsten Roth ]
+  * Improved graphics.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Fri, 08 Apr 2016 13:30:00 +0200
+
+stackandconquer (0.1.0-0ubuntu1) wily; urgency=low
+
+  [ Thorsten Roth ]
+  * Initial commit. Main game logic implemented.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Thu, 07 Apr 2016 13:29:00 +0200

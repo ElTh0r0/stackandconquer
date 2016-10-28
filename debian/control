@@ -1,0 +1,22 @@
+Source: stackandconquer
+Section: games
+Priority: extra
+Maintainer: Thorsten Roth <elthoro@gmx.de>
+Build-Depends:
+   debhelper (>= 9),
+   libqt4-dev,
+   qt4-qmake,
+   libqtgui4,
+   pkg-config
+Standards-Version: 3.9.5
+Homepage: https://launchpad.net/stackandconquer
+Vcs-Bzr: https://code.launchpad.net/~elthoro/stackandconquer/packaging
+Vcs-Browser: http://bazaar.launchpad.net/~elthoro/stackandconquer/packaging
+
+Package: stackandconquer
+Architecture: any
+Depends:
+   ${shlibs:Depends},
+   ${misc:Depends}
+Description: Challenging tower conquest board game
+ StackAndConquer is a challenging tower conquest board game.
