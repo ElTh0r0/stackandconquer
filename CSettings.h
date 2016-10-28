@@ -33,7 +33,7 @@
 #include "./CSettings.h"
 
 namespace Ui {
-    class CSettingsDialog;
+class CSettingsDialog;
 }
 
 /**
@@ -41,60 +41,60 @@ namespace Ui {
  * \brief Settings dialog.
  */
 class CSettings : public QDialog {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    explicit CSettings(const QString &sSharePath, QWidget *pParent = 0);
-    virtual ~CSettings();
+ public:
+  explicit CSettings(const QString &sSharePath, QWidget *pParent = 0);
+  virtual ~CSettings();
 
-    QString getNameP1();
-    QString getNameP2();
-    QString getP2HumanCpu();
-    quint8 getStartPlaner();
-    quint8 getWinTowers();
-    bool getShowPossibleMoveTowers();
+  QString getNameP1();
+  QString getNameP2();
+  QString getP2HumanCpu();
+  quint8 getStartPlaner();
+  quint8 getWinTowers();
+  bool getShowPossibleMoveTowers();
 
-    QColor getBgColor() const;
-    QColor getHighlightColor() const;
-    QColor getHighlightBorderColor() const;
-    QColor getSelectedColor() const;
-    QColor getSelectedBorderColor() const;
-    QColor getBgBoardColor() const;
-    QColor getOutlineBoardColor() const;
-    QColor getGridBoardColor() const;
-    QColor GetNeighboursColor() const;
-    QColor GetNeighboursBorderColor() const;
+  QColor getBgColor() const;
+  QColor getHighlightColor() const;
+  QColor getHighlightBorderColor() const;
+  QColor getSelectedColor() const;
+  QColor getSelectedBorderColor() const;
+  QColor getBgBoardColor() const;
+  QColor getOutlineBoardColor() const;
+  QColor getGridBoardColor() const;
+  QColor GetNeighboursColor() const;
+  QColor GetNeighboursBorderColor() const;
 
-  public slots:
-    void accept();
+ public slots:
+  void accept();
 
-  private:
-    void readSettings();
-    QColor readColor(const QString sKey, const QString sFallback);
+ private:
+  void readSettings();
+  QColor readColor(const QString sKey, const QString sFallback);
 
-    QWidget *m_pParent;
-    Ui::CSettingsDialog *m_pUi;
-    QSettings *m_pSettings;
+  QWidget *m_pParent;
+  Ui::CSettingsDialog *m_pUi;
+  QSettings *m_pSettings;
 
-    QString m_sSharePath;
-    QString m_sGuiLanguage;
-    QString m_sNameP1;
-    QString m_sNameP2;
-    QString m_sP2HumanCpu;
-    int m_nStartPlayer;
-    int m_nWinTowers;
-    bool m_bShowPossibleMoveTowers;
+  QString m_sSharePath;
+  QString m_sGuiLanguage;
+  QString m_sNameP1;
+  QString m_sNameP2;
+  QString m_sP2HumanCpu;
+  int m_nStartPlayer;
+  int m_nWinTowers;
+  bool m_bShowPossibleMoveTowers;
 
-    QColor m_bgColor;
-    QColor m_highlightColor;
-    QColor m_highlightBorderColor;
-    QColor m_selectedColor;
-    QColor m_selectedBorderColor;
-    QColor m_bgBoardColor;
-    QColor m_outlineBoardColor;
-    QColor m_gridBoardColor;
-    QColor m_neighboursColor;
-    QColor m_neighboursBorderColor;
+  QColor m_bgColor;
+  QColor m_highlightColor;
+  QColor m_highlightBorderColor;
+  QColor m_selectedColor;
+  QColor m_selectedBorderColor;
+  QColor m_bgBoardColor;
+  QColor m_outlineBoardColor;
+  QColor m_gridBoardColor;
+  QColor m_neighboursColor;
+  QColor m_neighboursBorderColor;
 };
 
 #endif  // STACKANDCONQUER_CSETTINGS_H_

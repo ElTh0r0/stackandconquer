@@ -40,7 +40,7 @@
 #include "./CSettings.h"
 
 namespace Ui {
-    class CStackAndConquer;
+class CStackAndConquer;
 }
 
 /**
@@ -48,55 +48,55 @@ namespace Ui {
  * \brief Main application definition (gui, objects, etc.)
  */
 class CStackAndConquer : public QMainWindow {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    explicit CStackAndConquer(const QDir &sharePath, QWidget *pParent = 0);
-    ~CStackAndConquer();
+ public:
+  explicit CStackAndConquer(const QDir &sharePath, QWidget *pParent = 0);
+  ~CStackAndConquer();
 
-  protected:
-    void closeEvent(QCloseEvent *pEvent);
+ protected:
+  void closeEvent(QCloseEvent *pEvent);
 
-  private slots:
-    void startNewGame();
-    void setStone(QPoint field);
-    void moveTower(QPoint tower, QPoint moveTo);
-    void reportBug();
-    void showInfoBox();
+ private slots:
+  void startNewGame();
+  void setStone(QPoint field);
+  void moveTower(QPoint tower, QPoint moveTo);
+  void reportBug();
+  void showInfoBox();
 
-  private:
-    void setupMenu();
-    void checkPossibleMoves();
-    bool checkPreviousMoveReverted(const QString sMove);
+ private:
+  void setupMenu();
+  void checkPossibleMoves();
+  bool checkPreviousMoveReverted(const QString sMove);
 
-    Ui::CStackAndConquer *m_pUi;
-    QGraphicsView *m_pGraphView;
-    CSettings *m_pSettings;
+  Ui::CStackAndConquer *m_pUi;
+  QGraphicsView *m_pGraphView;
+  CSettings *m_pSettings;
 
-    CBoard *m_pBoard;
-    CPlayer *m_pPlayer1;
-    CPlayer *m_pPlayer2;
+  CBoard *m_pBoard;
+  CPlayer *m_pPlayer1;
+  CPlayer *m_pPlayer2;
 
-    const quint8 m_nMaxTowerHeight;
-    const quint8 m_nMaxStones;
-    const quint16 m_nGridSize;
-    QString m_sSharePath;
-    QString m_sPreviousMove;
+  const quint8 m_nMaxTowerHeight;
+  const quint8 m_nMaxStones;
+  const quint16 m_nGridSize;
+  QString m_sSharePath;
+  QString m_sPreviousMove;
 
-    QLabel *m_plblPlayer1;
-    QLabel *m_plblPlayer2;
-    QLabel *m_plblPlayer1StonesLeft;
-    QLabel *m_plblPlayer2StonesLeft;
-    QLabel *m_plblPlayer1Won;
-    QLabel *m_plblPlayer2Won;
-    QFrame *m_pFrame1;
-    QFrame *m_pFrame2;
-    QFormLayout *m_pLayout1;
-    QFormLayout *m_pLayout2;
+  QLabel *m_plblPlayer1;
+  QLabel *m_plblPlayer2;
+  QLabel *m_plblPlayer1StonesLeft;
+  QLabel *m_plblPlayer2StonesLeft;
+  QLabel *m_plblPlayer1Won;
+  QLabel *m_plblPlayer2Won;
+  QFrame *m_pFrame1;
+  QFrame *m_pFrame2;
+  QFormLayout *m_pLayout1;
+  QFormLayout *m_pLayout2;
 
-    void checkTowerWin(QPoint field);
-    void returnStones(QPoint field);
-    void updatePlayers(bool bInitial = false);
+  void checkTowerWin(QPoint field);
+  void returnStones(QPoint field);
+  void updatePlayers(bool bInitial = false);
 };
 
 #endif  // STACKANDCONQUER_CSTACKANDCONQUER_H_

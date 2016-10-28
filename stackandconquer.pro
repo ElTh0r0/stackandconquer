@@ -15,7 +15,12 @@
 #  along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
 
 TEMPLATE      = app
-TARGET        = stackandconquer
+
+unix: !macx {
+       TARGET = stackandconquer
+} else {
+       TARGET = StackAndConquer
+}
 
 VERSION       = 0.4.0
 QMAKE_TARGET_PRODUCT     = "StackAndConquer"
@@ -49,10 +54,45 @@ HEADERS      += CStackAndConquer.h \
 FORMS        += CStackAndConquer.ui \
                 CSettings.ui
 
+RESOURCES    += res/stackandconquer_resources.qrc
+win32:RC_FILE = res/stackandconquer.rc
+
 TRANSLATIONS += lang/stackandconquer_de.ts
 
-RESOURCES    += res/stackandconquer_resources.qrc
+unix: !macx {
+    isEmpty(PREFIX) {
+        PREFIX = /usr/local
+    }
+    isEmpty(BINDIR) {
+        BINDIR = bin
+    }
 
-win32 {
-    RC_FILE   = res/stackandconquer.rc
+    target.path     = $$PREFIX/$$BINDIR/
+
+    #data.path       = $$PREFIX/share/stackandconquer
+    #data.files     += data
+
+    lang.path       = $$PREFIX/share/stackandconquer/lang
+    lang.files     += lang/*.qm
+
+    desktop.path    = $$PREFIX/share/applications
+    desktop.files  += stackandconquer.desktop
+
+    pixmap.path     = $$PREFIX/share/pixmaps
+    pixmap.files   += res/images/stackandconquer_64x64.png \
+                      res/images/stackandconquer.xpm
+
+    #icons.path      = $$PREFIX/share/icons
+    #icons.files    += res/images/hicolor
+
+    man.path        = $$PREFIX/share
+    man.files      += man
+
+    INSTALLS       += target \
+                      #data \
+                      lang \
+                      desktop \
+                      pixmap \
+                      #icons \
+                      man
 }

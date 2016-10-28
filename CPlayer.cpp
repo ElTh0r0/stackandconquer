@@ -30,13 +30,14 @@
 #include "./CPlayer.h"
 
 CPlayer::CPlayer(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones)
-    : m_bIsActive(bActive),
-      m_bIsHuman(bIsHuman),
-      m_sName(sName),
-      m_nMaxStones(nMaxStones),
-      m_nStonesLeft(nMaxStones),
-      m_nWonTowers(0) {
-    qDebug() << "Generated player" << m_sName;
+  : m_bIsActive(bActive),
+    m_bIsHuman(bIsHuman),
+    m_sName(sName),
+    m_nMaxStones(nMaxStones),
+    m_nStonesLeft(nMaxStones),
+    m_nWonTowers(0),
+    m_bCanMove(false) {
+  qDebug() << "Generated player" << m_sName;
 }
 
 CPlayer::~CPlayer() {
@@ -46,58 +47,58 @@ CPlayer::~CPlayer() {
 // ---------------------------------------------------------------------------
 
 void CPlayer::setActive(bool bActive) {
-    m_bIsActive = bActive;
+  m_bIsActive = bActive;
 }
 
 bool CPlayer::getIsActive() const {
-    return m_bIsActive;
+  return m_bIsActive;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
 bool CPlayer::getIsHuman() const {
-    return m_bIsHuman;
+  return m_bIsHuman;
 }
 
 QString CPlayer::getName() const {
-    return m_sName;
+  return m_sName;
 }
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
 void CPlayer::setCanMove(bool bCanMove) {
-    m_bCanMove = bCanMove;
+  m_bCanMove = bCanMove;
 }
 
 bool CPlayer::getCanMove() const {
-    return m_bCanMove;
+  return m_bCanMove;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
 void CPlayer::setStonesLeft(quint8 nStones) {
-    if (nStones <= m_nMaxStones) {
-        m_nStonesLeft = nStones;
-    } else {
-        m_nStonesLeft = m_nMaxStones;
-        qWarning() << "Stones > MaxStones!" << nStones << ">" << m_nMaxStones;
-        QMessageBox::warning(NULL, "Warning", "Something went wrong!");
-    }
+  if (nStones <= m_nMaxStones) {
+    m_nStonesLeft = nStones;
+  } else {
+    m_nStonesLeft = m_nMaxStones;
+    qWarning() << "Stones > MaxStones!" << nStones << ">" << m_nMaxStones;
+    QMessageBox::warning(NULL, "Warning", "Something went wrong!");
+  }
 }
 
 quint8 CPlayer::getStonesLeft() const {
-    return m_nStonesLeft;
+  return m_nStonesLeft;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
 void CPlayer::increaseWonTowers() {
-    m_nWonTowers++;
+  m_nWonTowers++;
 }
 
 quint8 CPlayer::getWonTowers() const {
-    return m_nWonTowers;
+  return m_nWonTowers;
 }

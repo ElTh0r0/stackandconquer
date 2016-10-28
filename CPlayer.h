@@ -35,29 +35,29 @@
  * \brief Player class.
  */
 class CPlayer {
-  public:
-    CPlayer(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones);
-    ~CPlayer();
+ public:
+  CPlayer(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones);
+  ~CPlayer();
 
-    void setActive(bool bActive);
-    bool getIsActive() const;
-    bool getIsHuman() const;
-    QString getName() const;
-    void setStonesLeft(quint8 nStones);
-    quint8 getStonesLeft() const;
-    void increaseWonTowers();
-    quint8 getWonTowers() const;
-    void setCanMove(bool bCanMove);
-    bool getCanMove() const;
+  void setActive(bool bActive);
+  bool getIsActive() const;
+  bool getIsHuman() const;
+  QString getName() const;
+  void setStonesLeft(quint8 nStones);
+  quint8 getStonesLeft() const;
+  void increaseWonTowers();
+  quint8 getWonTowers() const;
+  void setCanMove(bool bCanMove);
+  bool getCanMove() const;
 
-  private:
-    bool m_bIsActive;
-    const bool m_bIsHuman;
-    QString m_sName;
-    const quint8 m_nMaxStones;
-    quint8 m_nStonesLeft;
-    quint8 m_nWonTowers;
-    bool m_bCanMove;
+ private:
+  bool m_bIsActive;
+  const bool m_bIsHuman;
+  QString m_sName;
+  const quint8 m_nMaxStones;
+  quint8 m_nStonesLeft;
+  quint8 m_nWonTowers;
+  bool m_bCanMove;
 };
 
 #endif  // STACKANDCONQUER_CPLAYER_H_

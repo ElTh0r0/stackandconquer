@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=StackAndConquer
+GenericName=Tower conquest board game
+Comment=Challenging tower conquest board game
+Exec=stackandconquer
+Terminal=false
+Type=Application
+StartupNotify=true
+Icon=stackandconquer
+Categories=Game;StrategyGame;
+Keywords=Strategy;Tower;Conquest;
