@@ -56,6 +56,7 @@ CStackAndConquer::CStackAndConquer(const QDir &sharePath, QWidget *pParent)
   // QGraphicsView forwards the event to the scene.
   m_pGraphView->setMouseTracking(true);
 
+  // TODO: Scalable window/board/stones
   // Transform coordinate system to "isometric" view
   QTransform transfISO;
   transfISO = transfISO.scale(1.0, 0.5).rotate(45);
@@ -92,8 +93,6 @@ CStackAndConquer::CStackAndConquer(const QDir &sharePath, QWidget *pParent)
   qsrand((uint)time.msec());
 
   this->startNewGame();
-  // TODO: Configurable mouse buttons
-  // TODO: Scalable window/board/stones
 }
 
 CStackAndConquer::~CStackAndConquer() {

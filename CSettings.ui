@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>372</height>
+    <height>477</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -132,16 +132,56 @@
     </widget>
    </item>
    <item row="10" column="0">
+    <widget class="QLabel" name="lblControls">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Mouse Controls</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QLabel" name="lblPlaceTower">
+     <property name="text">
+      <string>Place tower</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="1">
+    <widget class="QComboBox" name="cbPlaceTower"/>
+   </item>
+   <item row="12" column="0">
+    <widget class="QLabel" name="lblSelectTower">
+     <property name="text">
+      <string>Select &amp; move tower</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="1">
+    <widget class="QComboBox" name="cbSelectTower"/>
+   </item>
+   <item row="13" column="0" colspan="2">
+    <widget class="Line" name="line_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="0">
     <widget class="QLabel" name="lblGuiLang">
      <property name="text">
       <string>GUI language</string>
      </property>
     </widget>
    </item>
-   <item row="10" column="1">
+   <item row="14" column="1">
     <widget class="QComboBox" name="cbGuiLanguage"/>
    </item>
-   <item row="11" column="1">
+   <item row="15" column="1">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

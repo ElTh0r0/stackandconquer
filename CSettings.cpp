@@ -51,6 +51,12 @@ CSettings::CSettings(const QString &sSharePath, QWidget *pParent)
                               qApp->applicationName().toLower());
 #endif
 
+  m_sListMouseButtons << trUtf8("Left") << trUtf8("Middle") << trUtf8("Right")
+                      << trUtf8("First X") << trUtf8("Second X");
+  m_listMouseButtons << Qt::LeftButton << Qt::MidButton << Qt::RightButton
+                     << Qt::XButton1 << Qt::XButton2;
+  m_pUi->cbPlaceTower->addItems(m_sListMouseButtons);
+  m_pUi->cbSelectTower->addItems(m_sListMouseButtons);
 
   connect(m_pUi->buttonBox, SIGNAL(accepted()),
           this, SLOT(accept()));
@@ -97,6 +103,22 @@ void CSettings::accept() {
 
   m_bShowPossibleMoveTowers = m_pUi->checkShowPossibleMoves->isChecked();
   m_pSettings->setValue("ShowPossibleMoveTowers", m_bShowPossibleMoveTowers);
+
+  m_listMouseControls[0] =
+      m_listMouseButtons[m_pUi->cbPlaceTower->currentIndex()];
+  m_listMouseControls[1] =
+      m_listMouseButtons[m_pUi->cbSelectTower->currentIndex()];
+  m_pSettings->beginGroup("MouseControls");
+  m_pSettings->setValue("PlaceTower", m_listMouseControls[0]);
+  m_pSettings->setValue("SelectTower", m_listMouseControls[1]);
+  m_pSettings->endGroup();
+
+  if (m_listMouseControls[0] == m_listMouseControls[1]) {
+    QMessageBox::warning(0, this->windowTitle(),
+                             trUtf8("Please change your settings. Same mouse "
+                                    "button is used for several actions."));
+    return;
+  }
 
   m_pSettings->beginGroup("Colors");
   m_pSettings->setValue("BgColor", m_bgColor.name());
@@ -177,6 +199,19 @@ void CSettings::readSettings() {
                                                  true).toBool();
   m_pUi->checkShowPossibleMoves->setChecked(m_bShowPossibleMoveTowers);
 
+  m_listMouseControls.clear();
+  m_listMouseControls << 0 << 0;
+  m_pSettings->beginGroup("MouseControls");
+  m_listMouseControls[0] = m_pSettings->value("PlaceTower",
+                                              Qt::LeftButton).toUInt();
+  m_listMouseControls[1] = m_pSettings->value("SelectTower",
+                                              Qt::RightButton).toUInt();
+  m_pUi->cbPlaceTower->setCurrentIndex(
+        m_listMouseButtons.indexOf(m_listMouseControls[0]));
+  m_pUi->cbSelectTower->setCurrentIndex(
+        m_listMouseButtons.indexOf(m_listMouseControls[1]));
+  m_pSettings->endGroup();
+
   m_bgColor = this->readColor("BgColor", "#EEEEEC");
   m_highlightColor = this->readColor("HighlightColor", "#8ae234");
   m_highlightBorderColor = this->readColor("HighlightBorderColor", "#888A85");
@@ -224,6 +259,9 @@ quint8 CSettings::getWinTowers() {
 }
 bool CSettings::getShowPossibleMoveTowers() {
   return m_bShowPossibleMoveTowers;
+}
+QList<quint8> CSettings::getMouseControls() const {
+  return m_listMouseControls;
 }
 
 // ----------------------------------------------------------------------------
