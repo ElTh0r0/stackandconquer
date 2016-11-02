@@ -251,7 +251,7 @@ QString CSettings::getNameP2() {
 QString CSettings::getP2HumanCpu() {
   return m_sP2HumanCpu;
 }
-quint8 CSettings::getStartPlaner() {
+quint8 CSettings::getStartPlayer() {
   return m_nStartPlayer;
 }
 quint8 CSettings::getWinTowers() {

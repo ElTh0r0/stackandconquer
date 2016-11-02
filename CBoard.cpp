@@ -30,17 +30,16 @@
 
 #include "./CBoard.h"
 
-CBoard::CBoard(QGraphicsView *pGraphView, quint16 nGridSize,
+CBoard::CBoard(quint8 nNumOfFields, quint16 nGridSize,
                quint8 nMaxStones, CSettings *pSettings)
-  : m_pGraphView(pGraphView),
-    m_nGridSize(nGridSize),
+  : m_nGridSize(nGridSize),
     m_nMaxStones(nMaxStones),
     m_pSettings(pSettings),
-    m_numOfFields(5),
+    m_numOfFields(nNumOfFields),
     m_pSvgRenderer(NULL) {
   qDebug() << Q_FUNC_INFO;
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
-  this->drawGrid();
+  this->drawBoard();
 
   // Field highlighter
   m_pHighlightRect = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
@@ -104,7 +103,7 @@ CBoard::CBoard(QGraphicsView *pGraphView, quint16 nGridSize,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::drawGrid() {
+void CBoard::drawBoard() {
   qDebug() << Q_FUNC_INFO;
   m_BoardRect.setTopLeft(QPoint(0, 0));
   m_BoardRect.setBottomRight(QPoint(m_numOfFields * m_nGridSize -1,
@@ -113,7 +112,6 @@ void CBoard::drawGrid() {
   // Draw board
   QPen linePen(m_pSettings->getOutlineBoardColor());
   this->addRect(m_BoardRect, linePen, QBrush(m_pSettings->getBgBoardColor()));
-  m_pGraphView->setSceneRect(m_BoardRect);
 
   // Draw lines
   QLineF lineGrid;
@@ -149,7 +147,7 @@ void CBoard::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
     if (nIndex >= 0) {
       switch (nIndex) {
         case 0:  // Place tower
-          selectField(QPointF(-1, -1));
+          this->selectField(QPointF(-1, -1));
           emit setStone(this->getGridField(p_Event->scenePos()));
           break;
         case 1:  // Select and move tower

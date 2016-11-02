@@ -27,7 +27,6 @@
 #ifndef STACKANDCONQUER_CPLAYER_H_
 #define STACKANDCONQUER_CPLAYER_H_
 
-#include <QObject>
 #include <QString>
 
 /**

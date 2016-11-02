@@ -35,8 +35,7 @@
 #include <QLabel>
 #include <QMainWindow>
 
-#include "./CBoard.h"
-#include "./CPlayer.h"
+#include "./CGame.h"
 #include "./CSettings.h"
 
 namespace Ui {
@@ -59,30 +58,18 @@ class CStackAndConquer : public QMainWindow {
 
  private slots:
   void startNewGame();
-  void setStone(QPoint field);
-  void moveTower(QPoint tower, QPoint moveTo);
+  void setViewInteractive(bool bEnabled);
+  void highlightActivePlayer(bool bPlayer1);
   void reportBug();
   void showInfoBox();
 
  private:
   void setupMenu();
-  void checkPossibleMoves();
-  bool checkPreviousMoveReverted(const QString sMove);
 
   Ui::CStackAndConquer *m_pUi;
-  QGraphicsView *m_pGraphView;
   CSettings *m_pSettings;
-
-  CBoard *m_pBoard;
-  CPlayer *m_pPlayer1;
-  CPlayer *m_pPlayer2;
-
-  const quint8 m_nMaxTowerHeight;
-  const quint8 m_nMaxStones;
-  const quint16 m_nGridSize;
-  QString m_sSharePath;
-  QString m_sPreviousMove;
-
+  QGraphicsView *m_pGraphView;
+  CGame *m_pGame;
   QLabel *m_plblPlayer1;
   QLabel *m_plblPlayer2;
   QLabel *m_plblPlayer1StonesLeft;
@@ -93,10 +80,6 @@ class CStackAndConquer : public QMainWindow {
   QFrame *m_pFrame2;
   QFormLayout *m_pLayout1;
   QFormLayout *m_pLayout2;
-
-  void checkTowerWin(QPoint field);
-  void returnStones(QPoint field);
-  void updatePlayers(bool bInitial = false);
 };
 
 #endif  // STACKANDCONQUER_CSTACKANDCONQUER_H_

@@ -45,7 +45,7 @@ class CBoard : public QGraphicsScene {
   Q_OBJECT
 
  public:
-  CBoard(QGraphicsView *pGraphView, quint16 nGridSize, quint8 nMaxStones,
+  CBoard(quint8 nNumOfFields, quint16 nGridSize, quint8 nMaxStones,
          CSettings *pSettings);
 
   void addStone(QPoint field, quint8 stone);
@@ -63,7 +63,13 @@ class CBoard : public QGraphicsScene {
   void mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event);
 
  private:
-  QGraphicsView *m_pGraphView;
+  void drawBoard();
+  QPointF snapToGrid(QPointF point) const;
+  QPoint getGridField(QPointF point) const;
+  void selectField(QPointF point);
+  QList<QPoint> checkNeighbourhood(QPoint field);
+  void highlightNeighbourhood(QList<QPoint> neighbours);
+
   const quint16 m_nGridSize;
   const quint8 m_nMaxStones;
   CSettings *m_pSettings;
@@ -77,13 +83,6 @@ class CBoard : public QGraphicsScene {
 
   QList<QList<QList<quint8> > > m_Fields;
   QList<QList<QList<QGraphicsSvgItem *> > > m_FieldStones;
-
-  void drawGrid();
-  QPointF snapToGrid(QPointF point) const;
-  QPoint getGridField(QPointF point) const;
-  void selectField(QPointF point);
-  QList<QPoint> checkNeighbourhood(QPoint field);
-  void highlightNeighbourhood(QList<QPoint> neighbours);
 };
 
 #endif  // STACKANDCONQUER_CBOARD_H_

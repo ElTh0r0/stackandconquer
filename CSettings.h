@@ -50,7 +50,7 @@ class CSettings : public QDialog {
   QString getNameP1();
   QString getNameP2();
   QString getP2HumanCpu();
-  quint8 getStartPlaner();
+  quint8 getStartPlayer();
   quint8 getWinTowers();
   bool getShowPossibleMoveTowers();
   QList<quint8> getMouseControls() const;

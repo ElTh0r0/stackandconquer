@@ -62,7 +62,11 @@ bool CPlayer::getIsHuman() const {
 }
 
 QString CPlayer::getName() const {
-  return m_sName;
+  if (m_bIsHuman) {
+    return m_sName;
+  } else {
+    return "Computer";
+  }
 }
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------

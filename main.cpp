@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
   if (!AppTranslator.load(app.applicationName().toLower() + "_" + sLang,
                           sSharePath + "/lang")) {
     qWarning() << "Could not load application translation:"
-               << qAppName().toLower() + "_" + sLang;
+               << app.applicationName().toLower() + "_" + sLang;
   }
   app.installTranslator(&AppTranslator);
 
@@ -207,7 +207,8 @@ void LoggingHandler(QtMsgType type, const char *sMsg) {
 QString getLanguage(const QString &sSharePath) {
 #if defined _WIN32
   QSettings settings(QSettings::IniFormat, QSettings::UserScope,
-                     qAppName().toLower(), qAppName().toLower());
+                     qApp->applicationName().toLower(),
+                     qApp->applicationName().toLower());
 #else
   QSettings settings(QSettings::NativeFormat, QSettings::UserScope,
                      qApp->applicationName().toLower(),
@@ -224,7 +225,7 @@ QString getLanguage(const QString &sSharePath) {
 #endif
     return QLocale::system().name();
   } else if (!QFile(sSharePath + "/lang/"
-                    + qAppName().toLower() + "_" + sLang + ".qm").exists()) {
+                    + qApp->applicationName().toLower() + "_" + sLang + ".qm").exists()) {
     settings.setValue("GuiLanguage", "en");
     return "en";
   }

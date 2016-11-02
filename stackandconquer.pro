@@ -22,7 +22,7 @@ unix: !macx {
        TARGET = StackAndConquer
 }
 
-VERSION       = 0.4.0
+VERSION       = 0.5.0
 QMAKE_TARGET_PRODUCT     = "StackAndConquer"
 QMAKE_TARGET_DESCRIPTION = "Challenging tower conquest board game"
 QMAKE_TARGET_COPYRIGHT   = "(C) 2015-2016 Thorsten Roth"
@@ -42,11 +42,13 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 SOURCES      += main.cpp\
                 CStackAndConquer.cpp \
+                CGame.cpp \
                 CBoard.cpp \
                 CPlayer.cpp \
                 CSettings.cpp
 
 HEADERS      += CStackAndConquer.h \
+                CGame.h \
                 CBoard.h \
                 CPlayer.h \
                 CSettings.h
