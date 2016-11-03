@@ -27,6 +27,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QMessageBox>
+#include <QTimer>
 
 #include "./CBoard.h"
 
@@ -55,6 +56,20 @@ CBoard::CBoard(quint8 nNumOfFields, quint16 nGridSize,
   m_pSelectedField->setVisible(false);
   m_pSelectedField->setZValue(0);
   this->addItem(m_pSelectedField);
+  // Animation
+  m_pAnimateField = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
+  m_pAnimateField->setBrush(QBrush(m_pSettings->getAnimateColor()));
+  m_pAnimateField->setPen(QPen(m_pSettings->getAnimateBorderColor()));
+  m_pAnimateField->setVisible(false);
+  m_pAnimateField->setZValue(0);
+  this->addItem(m_pAnimateField);
+  // Animation2
+  m_pAnimateField2 = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
+  m_pAnimateField2->setBrush(QBrush(m_pSettings->getAnimateColor()));
+  m_pAnimateField2->setPen(QPen(m_pSettings->getAnimateBorderColor()));
+  m_pAnimateField2->setVisible(false);
+  m_pAnimateField2->setZValue(0);
+  this->addItem(m_pAnimateField2);
 
   // Generate stones
   QSvgRenderer *m_pSvgRenderer = new QSvgRenderer(
@@ -236,6 +251,8 @@ void CBoard::addStone(QPoint field, quint8 stone) {
     return;
   }
 
+  this->startAnimation(field);
+
   m_FieldStones[field.x()][field.y()].last()->setPos(field*m_nGridSize);
   m_FieldStones[field.x()][field.y()].last()->setPos(
         m_FieldStones[field.x()][field.y()].last()->x() - 16 - 13*nExisting,
@@ -245,6 +262,31 @@ void CBoard::addStone(QPoint field, quint8 stone) {
   for (int z = 0; z < m_FieldStones[field.x()][field.y()].size(); z++) {
     m_FieldStones[field.x()][field.y()][z]->setZValue(6 + z);
   }
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CBoard::startAnimation(QPoint field) {
+  m_pAnimateField->setPos(this->snapToGrid(field*m_nGridSize));
+  m_pAnimateField->setVisible(true);
+  m_pHighlightRect->setVisible(false);
+  QTimer::singleShot(300, this, SLOT(resetAnimation()));
+}
+void CBoard::resetAnimation() {
+  m_pHighlightRect->setVisible(true);
+  m_pAnimateField->setVisible(false);
+}
+
+void CBoard::startAnimation2(QPoint field) {
+  m_pAnimateField2->setPos(this->snapToGrid(field*m_nGridSize));
+  m_pAnimateField2->setVisible(true);
+  m_pHighlightRect->setVisible(false);
+  QTimer::singleShot(300, this, SLOT(resetAnimation2()));
+}
+void CBoard::resetAnimation2() {
+  m_pHighlightRect->setVisible(true);
+  m_pAnimateField2->setVisible(false);
 }
 
 // ---------------------------------------------------------------------------
@@ -321,6 +363,7 @@ void CBoard::selectField(QPointF point) {
       neighbours.clear();
       this->highlightNeighbourhood(neighbours);
       m_pSelectedField->setVisible(false);
+      this->startAnimation2(field);
       emit moveTower(field, currentField);
       currentField = QPoint(-1, -1);
     } else {

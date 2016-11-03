@@ -60,6 +60,8 @@ class CSettings : public QDialog {
   QColor getHighlightBorderColor() const;
   QColor getSelectedColor() const;
   QColor getSelectedBorderColor() const;
+  QColor getAnimateColor() const;
+  QColor getAnimateBorderColor() const;
   QColor getBgBoardColor() const;
   QColor getOutlineBoardColor() const;
   QColor getGridBoardColor() const;
@@ -95,6 +97,8 @@ class CSettings : public QDialog {
   QColor m_highlightBorderColor;
   QColor m_selectedColor;
   QColor m_selectedBorderColor;
+  QColor m_animateColor;
+  QColor m_animateBorderColor;
   QColor m_bgBoardColor;
   QColor m_outlineBoardColor;
   QColor m_gridBoardColor;

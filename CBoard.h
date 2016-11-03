@@ -62,8 +62,14 @@ class CBoard : public QGraphicsScene {
   void mousePressEvent(QGraphicsSceneMouseEvent *p_Event);
   void mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event);
 
+ private slots:
+  void resetAnimation();
+  void resetAnimation2();
+
  private:
   void drawBoard();
+  void startAnimation(QPoint field);
+  void startAnimation2(QPoint field);
   QPointF snapToGrid(QPointF point) const;
   QPoint getGridField(QPointF point) const;
   void selectField(QPointF point);
@@ -77,6 +83,8 @@ class CBoard : public QGraphicsScene {
   QRect m_BoardRect;
   QGraphicsRectItem *m_pHighlightRect;
   QGraphicsRectItem *m_pSelectedField;
+  QGraphicsRectItem *m_pAnimateField;
+  QGraphicsRectItem *m_pAnimateField2;
   QSvgRenderer *m_pSvgRenderer;
   QList<QGraphicsSvgItem *> m_listStonesP1;
   QList<QGraphicsSvgItem *> m_listStonesP2;

@@ -126,6 +126,8 @@ void CSettings::accept() {
   m_pSettings->setValue("HighlightBorderColor", m_highlightBorderColor.name());
   m_pSettings->setValue("SelectedColor", m_selectedColor.name());
   m_pSettings->setValue("SelectedBorderColor", m_selectedBorderColor.name());
+  m_pSettings->setValue("AnimateColor", m_animateColor.name());
+  m_pSettings->setValue("AnimateBorderColor", m_animateBorderColor.name());
   m_pSettings->setValue("BgBoardColor", m_bgBoardColor.name());
   m_pSettings->setValue("OutlineBoardColor", m_outlineBoardColor.name());
   m_pSettings->setValue("GridBoardColor", m_gridBoardColor.name());
@@ -217,6 +219,8 @@ void CSettings::readSettings() {
   m_highlightBorderColor = this->readColor("HighlightBorderColor", "#888A85");
   m_selectedColor = this->readColor("SelectedColor", "#fce94f");
   m_selectedBorderColor = this->readColor("SelectedBorderColor", "#000000");
+  m_animateColor = this->readColor("AnimateColor", "#fce94f");
+  m_animateBorderColor = this->readColor("AnimateBorderColor", "#000000");
   m_bgBoardColor = this->readColor("BgBoardColor", "#FFFFFF");
   m_outlineBoardColor = this->readColor("OutlineBoardColor", "#2E3436");
   m_gridBoardColor = this->readColor("GridBoardColor", "#888A85");
@@ -281,6 +285,12 @@ QColor CSettings::getSelectedColor() const {
 }
 QColor CSettings::getSelectedBorderColor() const {
   return m_selectedBorderColor;
+}
+QColor CSettings::getAnimateColor() const {
+  return m_animateColor;
+}
+QColor CSettings::getAnimateBorderColor() const {
+  return m_animateBorderColor;
 }
 QColor CSettings::getBgBoardColor() const {
   return m_bgBoardColor;
