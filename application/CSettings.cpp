@@ -31,9 +31,9 @@
 #include "./CSettings.h"
 #include "ui_CSettings.h"
 
-CSettings::CSettings(const QString &sSharePath, QWidget *pParent)
-  : QDialog(pParent),
-    m_sSharePath(sSharePath) {
+CSettings::CSettings(const QString &sSharePath, const QStringList slistCPUs,
+                     QWidget *pParent)
+  : QDialog(pParent) {
   qDebug() << "Calling" << Q_FUNC_INFO;
 
   m_pUi = new Ui::CSettingsDialog();
@@ -58,8 +58,32 @@ CSettings::CSettings(const QString &sSharePath, QWidget *pParent)
   m_pUi->cbPlaceTower->addItems(m_sListMouseButtons);
   m_pUi->cbSelectTower->addItems(m_sListMouseButtons);
 
+  QStringList sListGuiLanguages;
+  sListGuiLanguages << "auto" << "en";
+  QDir appDir(sSharePath + "/lang");
+  QFileInfoList fiListFiles = appDir.entryInfoList(
+                                QDir::NoDotAndDotDot | QDir::Files);
+  foreach (QFileInfo fi, fiListFiles) {
+    if ("qm" == fi.suffix() && fi.baseName().startsWith(qAppName().toLower() + "_")) {
+      sListGuiLanguages << fi.baseName().remove(qAppName().toLower() + "_");
+    }
+  }
+  m_pUi->cbGuiLanguage->addItems(sListGuiLanguages);
+
+  QStringList sListP2HumanCpu;
+  sListP2HumanCpu << "Human" << slistCPUs;
+  m_pUi->cbP2HumanCpu->addItems(sListP2HumanCpu);
+
+  QStringList sListStartPlayer;
+  sListStartPlayer << trUtf8("Random")
+                   << trUtf8("Player 1")
+                   << trUtf8("Player 2");
+  m_pUi->cbStartPlayer->addItems(sListStartPlayer);
+
   connect(m_pUi->buttonBox, SIGNAL(accepted()),
           this, SLOT(accept()));
+  connect(m_pUi->buttonBox, SIGNAL(rejected()),
+          this, SLOT(reject()));
 
   this->readSettings();
 }
@@ -77,6 +101,22 @@ CSettings::~CSettings() {
 void CSettings::accept() {
   qDebug() << "Calling" << Q_FUNC_INFO;
 
+  QList<quint8> tmp_listMouseControls;
+  tmp_listMouseControls << m_listMouseButtons[
+                           m_pUi->cbPlaceTower->currentIndex()];
+  tmp_listMouseControls << m_listMouseButtons[
+                           m_pUi->cbSelectTower->currentIndex()];
+
+  if (tmp_listMouseControls[0] == tmp_listMouseControls[1]) {
+    QMessageBox::warning(0, this->windowTitle(),
+                             trUtf8("Please change your settings. Same mouse "
+                                    "button is used for several actions."));
+    return;
+  } else {
+    m_listMouseControls[0] = tmp_listMouseControls[0];
+    m_listMouseControls[1] = tmp_listMouseControls[1];
+  }
+
   QString sOldGuiLang = m_sGuiLanguage;
   m_sGuiLanguage = m_pUi->cbGuiLanguage->currentText();
   m_pSettings->setValue("GuiLanguage", m_sGuiLanguage);
@@ -92,33 +132,16 @@ void CSettings::accept() {
   m_sNameP2 = m_pUi->leNameP2->text();
   m_pSettings->setValue("NameP2", m_sNameP2);
 
-  m_sP2HumanCpu = m_pUi->cbP2HumanCpu->currentText();
-  m_pSettings->setValue("P2HumanCpu", m_sP2HumanCpu);
-
   m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
   m_pSettings->setValue("StartPlayer", m_nStartPlayer);
-
-  m_nWinTowers = m_pUi->spinNumToWin->value();
-  m_pSettings->setValue("NumWinTowers", m_nWinTowers);
 
   m_bShowPossibleMoveTowers = m_pUi->checkShowPossibleMoves->isChecked();
   m_pSettings->setValue("ShowPossibleMoveTowers", m_bShowPossibleMoveTowers);
 
-  m_listMouseControls[0] =
-      m_listMouseButtons[m_pUi->cbPlaceTower->currentIndex()];
-  m_listMouseControls[1] =
-      m_listMouseButtons[m_pUi->cbSelectTower->currentIndex()];
   m_pSettings->beginGroup("MouseControls");
   m_pSettings->setValue("PlaceTower", m_listMouseControls[0]);
   m_pSettings->setValue("SelectTower", m_listMouseControls[1]);
   m_pSettings->endGroup();
-
-  if (m_listMouseControls[0] == m_listMouseControls[1]) {
-    QMessageBox::warning(0, this->windowTitle(),
-                             trUtf8("Please change your settings. Same mouse "
-                                    "button is used for several actions."));
-    return;
-  }
 
   m_pSettings->beginGroup("Colors");
   m_pSettings->setValue("BgColor", m_bgColor.name());
@@ -135,7 +158,36 @@ void CSettings::accept() {
   m_pSettings->setValue("NeighboursBorderColor", m_neighboursBorderColor.name());
   m_pSettings->endGroup();
 
+  QString sNewP2HumanCpu(m_pUi->cbP2HumanCpu->currentText());
+  int nNewWinTowers(m_pUi->spinNumToWin->value());
+
+  if (sNewP2HumanCpu != m_sP2HumanCpu ||
+      nNewWinTowers != m_nWinTowers) {
+    int nRet = QMessageBox::question(0, this->windowTitle(),
+                                     trUtf8("Main game settings had been changed.<br>"
+                                            "Do you want to start a new game?"));
+    if (nRet == QMessageBox::Yes) {
+      m_sP2HumanCpu = sNewP2HumanCpu;
+      m_nWinTowers = nNewWinTowers;
+      m_pSettings->setValue("P2HumanCpu", m_sP2HumanCpu);
+      m_pSettings->setValue("NumWinTowers", m_nWinTowers);
+      emit this->newGame();
+    } else {
+      this->readSettings();
+      return;
+    }
+  }
+
   QDialog::accept();
+}
+
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void CSettings::reject() {
+  this->readSettings();
+  QDialog::reject();
 }
 
 // ----------------------------------------------------------------------------
@@ -143,17 +195,6 @@ void CSettings::accept() {
 
 void CSettings::readSettings() {
   m_sGuiLanguage = m_pSettings->value("GuiLanguage", "auto").toString();
-  QStringList sListGuiLanguages;
-  sListGuiLanguages << "auto" << "en";
-  QDir appDir(m_sSharePath + "/lang");
-  QFileInfoList fiListFiles = appDir.entryInfoList(
-                                QDir::NoDotAndDotDot | QDir::Files);
-  foreach (QFileInfo fi, fiListFiles) {
-    if ("qm" == fi.suffix() && fi.baseName().startsWith(qAppName().toLower() + "_")) {
-      sListGuiLanguages << fi.baseName().remove(qAppName().toLower() + "_");
-    }
-  }
-  m_pUi->cbGuiLanguage->addItems(sListGuiLanguages);
   if (-1 != m_pUi->cbGuiLanguage->findText(m_sGuiLanguage)) {
     m_pUi->cbGuiLanguage->setCurrentIndex(
           m_pUi->cbGuiLanguage->findText(m_sGuiLanguage));
@@ -169,9 +210,6 @@ void CSettings::readSettings() {
   m_pUi->leNameP2->setText(m_sNameP2);
 
   m_sP2HumanCpu = m_pSettings->value("P2HumanCpu", "Human").toString();
-  QStringList sListP2HumanCpu;
-  sListP2HumanCpu << "Human";
-  m_pUi->cbP2HumanCpu->addItems(sListP2HumanCpu);
   if (-1 != m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)) {
     m_pUi->cbP2HumanCpu->setCurrentIndex(
           m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu));
@@ -181,18 +219,13 @@ void CSettings::readSettings() {
   }
   m_sP2HumanCpu = m_pUi->cbP2HumanCpu->currentText();
 
-  QStringList sListStartPlayer;
-  sListStartPlayer << trUtf8("Random")
-                   << trUtf8("Player 1")
-                   << trUtf8("Player 2");
   m_nStartPlayer = m_pSettings->value("StartPlayer", 1).toUInt();
-  m_pUi->cbStartPlayer->addItems(sListStartPlayer);
   if (m_nStartPlayer < m_pUi->cbStartPlayer->count()) {
     m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);
   } else {
     m_pUi->cbStartPlayer->setCurrentIndex(1);
   }
-  m_nStartPlayer = m_pUi->cbStartPlayer->currentText().toUInt();
+  m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
 
   m_nWinTowers = m_pSettings->value("NumWinTowers", 1).toUInt();
   m_pUi->spinNumToWin->setValue(m_nWinTowers);

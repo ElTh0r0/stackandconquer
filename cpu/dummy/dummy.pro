@@ -14,22 +14,23 @@
 #  You should have received a copy of the GNU General Public License
 #  along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
 
-TEMPLATE       = subdirs
-CONFIG        += ordered
-SUBDIRS        = cpu/dummy \
-                 application
+TEMPLATE      = lib
+CONFIG       += plugin
+TARGET        = cpudummy
+DESTDIR       = ../
 
-unix: !macx {
-    isEmpty(PREFIX) {
-        PREFIX = /usr/local
-    }
+VERSION       = 0.1.0
+QMAKE_TARGET_DESCRIPTION = "Dummy CPU opponent for StackAndConquer"
+QMAKE_TARGET_COPYRIGHT   = "(C) 2016 Thorsten Roth"
 
-    desktop.path    = $$PREFIX/share/applications
-    desktop.files  += stackandconquer.desktop
+DEFINES      += PLUGIN_NAME=\\\"$$TARGET\\\" \
+                PLUGIN_VERSION=\"\\\"$$VERSION\\\"\"
 
-    man.path        = $$PREFIX/share
-    man.files      += man
+MOC_DIR       = ./.moc
+OBJECTS_DIR   = ./.objs
+UI_DIR        = ./.ui
+RCC_DIR       = ./.rcc
 
-    INSTALLS       += desktop \
-                      man
-}
+HEADERS       = CDummy.h
+
+SOURCES       = CDummy.cpp

@@ -35,6 +35,7 @@
 #include <QLabel>
 #include <QMainWindow>
 
+#include "./CCpuOpponents.h"
 #include "./CGame.h"
 #include "./CSettings.h"
 
@@ -50,7 +51,9 @@ class CStackAndConquer : public QMainWindow {
   Q_OBJECT
 
  public:
-  explicit CStackAndConquer(const QDir &sharePath, QWidget *pParent = 0);
+  explicit CStackAndConquer(const QDir &sharePath,
+                            const QDir &userDataPath,
+                            QWidget *pParent = 0);
   ~CStackAndConquer();
 
  protected:
@@ -65,8 +68,11 @@ class CStackAndConquer : public QMainWindow {
 
  private:
   void setupMenu();
+  void setupGraphView();
 
   Ui::CStackAndConquer *m_pUi;
+  CCpuOpponents *m_pCpu;
+  QObject *m_piCpu;
   CSettings *m_pSettings;
   QGraphicsView *m_pGraphView;
   CGame *m_pGame;

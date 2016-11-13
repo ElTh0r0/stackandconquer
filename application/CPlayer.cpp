@@ -37,6 +37,9 @@ CPlayer::CPlayer(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones)
     m_nStonesLeft(nMaxStones),
     m_nWonTowers(0),
     m_bCanMove(false) {
+  if (!m_bIsHuman) {
+    m_sName = "Computer";
+  }
   qDebug() << "Generated player" << m_sName;
 }
 
@@ -62,11 +65,7 @@ bool CPlayer::getIsHuman() const {
 }
 
 QString CPlayer::getName() const {
-  if (m_bIsHuman) {
-    return m_sName;
-  } else {
-    return "Computer";
-  }
+  return m_sName;
 }
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------

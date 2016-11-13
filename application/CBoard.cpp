@@ -40,63 +40,10 @@ CBoard::CBoard(quint8 nNumOfFields, quint16 nGridSize,
     m_pSvgRenderer(NULL) {
   qDebug() << Q_FUNC_INFO;
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
+
   this->drawBoard();
-
-  // Field highlighter
-  m_pHighlightRect = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
-  m_pHighlightRect->setBrush(QBrush(m_pSettings->getHighlightColor()));
-  m_pHighlightRect->setPen(QPen(m_pSettings->getHighlightBorderColor()));
-  m_pHighlightRect->setVisible(false);
-  m_pHighlightRect->setZValue(0);
-  this->addItem(m_pHighlightRect);
-  // Selected field
-  m_pSelectedField = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
-  m_pSelectedField->setBrush(QBrush(m_pSettings->getSelectedColor()));
-  m_pSelectedField->setPen(QPen(m_pSettings->getSelectedBorderColor()));
-  m_pSelectedField->setVisible(false);
-  m_pSelectedField->setZValue(0);
-  this->addItem(m_pSelectedField);
-  // Animation
-  m_pAnimateField = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
-  m_pAnimateField->setBrush(QBrush(m_pSettings->getAnimateColor()));
-  m_pAnimateField->setPen(QPen(m_pSettings->getAnimateBorderColor()));
-  m_pAnimateField->setVisible(false);
-  m_pAnimateField->setZValue(0);
-  this->addItem(m_pAnimateField);
-  // Animation2
-  m_pAnimateField2 = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
-  m_pAnimateField2->setBrush(QBrush(m_pSettings->getAnimateColor()));
-  m_pAnimateField2->setPen(QPen(m_pSettings->getAnimateBorderColor()));
-  m_pAnimateField2->setVisible(false);
-  m_pAnimateField2->setZValue(0);
-  this->addItem(m_pAnimateField2);
-
-  // Generate stones
-  QSvgRenderer *m_pSvgRenderer = new QSvgRenderer(
-                                   QLatin1String(":/images/stones.svg"));
-  // Create a few more than maximum of stones because of wrong
-  // order during move tower add/remove
-  for (int i = 0; i < m_nMaxStones + 4; i++) {
-    m_listStonesP1.append(new QGraphicsSvgItem());
-    // Don't transform graphics to isometric view!
-    m_listStonesP1.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    m_listStonesP1.last()->setSharedRenderer(m_pSvgRenderer);
-    m_listStonesP1.last()->setElementId(QLatin1String("Stone1"));
-    this->addItem(m_listStonesP1.last());
-    m_listStonesP1.last()->setPos(0, 0);
-    m_listStonesP1.last()->setZValue(5);
-    m_listStonesP1.last()->setVisible(false);
-
-    m_listStonesP2.append(new QGraphicsSvgItem());
-    // Don't transform graphics to isometric view!
-    m_listStonesP2.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    m_listStonesP2.last()->setSharedRenderer(m_pSvgRenderer);
-    m_listStonesP2.last()->setElementId(QLatin1String("Stone2"));
-    this->addItem(m_listStonesP2.last());
-    m_listStonesP2.last()->setPos(0, 0);
-    m_listStonesP2.last()->setZValue(5);
-    m_listStonesP2.last()->setVisible(false);
-  }
+  this->createHighlighters();
+  this->createStones();
 
   // Generate field matrix
   QList<quint8> tower;
@@ -142,6 +89,71 @@ void CBoard::drawBoard() {
     lineGrid.setPoints(QPointF(i*m_nGridSize, 1),
                        QPointF(i*m_nGridSize, m_BoardRect.height()-1));
     this->addLine(lineGrid, linePen);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CBoard::createHighlighters() {
+  // Field highlighter
+  m_pHighlightRect = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
+  m_pHighlightRect->setBrush(QBrush(m_pSettings->getHighlightColor()));
+  m_pHighlightRect->setPen(QPen(m_pSettings->getHighlightBorderColor()));
+  m_pHighlightRect->setVisible(false);
+  m_pHighlightRect->setZValue(0);
+  this->addItem(m_pHighlightRect);
+  // Selected field
+  m_pSelectedField = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
+  m_pSelectedField->setBrush(QBrush(m_pSettings->getSelectedColor()));
+  m_pSelectedField->setPen(QPen(m_pSettings->getSelectedBorderColor()));
+  m_pSelectedField->setVisible(false);
+  m_pSelectedField->setZValue(0);
+  this->addItem(m_pSelectedField);
+  // Animation
+  m_pAnimateField = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
+  m_pAnimateField->setBrush(QBrush(m_pSettings->getAnimateColor()));
+  m_pAnimateField->setPen(QPen(m_pSettings->getAnimateBorderColor()));
+  m_pAnimateField->setVisible(false);
+  m_pAnimateField->setZValue(0);
+  this->addItem(m_pAnimateField);
+  // Animation2
+  m_pAnimateField2 = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
+  m_pAnimateField2->setBrush(QBrush(m_pSettings->getAnimateColor()));
+  m_pAnimateField2->setPen(QPen(m_pSettings->getAnimateBorderColor()));
+  m_pAnimateField2->setVisible(false);
+  m_pAnimateField2->setZValue(0);
+  this->addItem(m_pAnimateField2);
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CBoard::createStones() {
+  QSvgRenderer *m_pSvgRenderer = new QSvgRenderer(
+                                   QLatin1String(":/images/stones.svg"));
+  // Create a few more than maximum of stones because of wrong
+  // order during move tower add/remove
+  for (int i = 0; i < m_nMaxStones + 4; i++) {
+    m_listStonesP1.append(new QGraphicsSvgItem());
+    // Don't transform graphics to isometric view!
+    m_listStonesP1.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+    m_listStonesP1.last()->setSharedRenderer(m_pSvgRenderer);
+    m_listStonesP1.last()->setElementId(QLatin1String("Stone1"));
+    this->addItem(m_listStonesP1.last());
+    m_listStonesP1.last()->setPos(0, 0);
+    m_listStonesP1.last()->setZValue(5);
+    m_listStonesP1.last()->setVisible(false);
+
+    m_listStonesP2.append(new QGraphicsSvgItem());
+    // Don't transform graphics to isometric view!
+    m_listStonesP2.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+    m_listStonesP2.last()->setSharedRenderer(m_pSvgRenderer);
+    m_listStonesP2.last()->setElementId(QLatin1String("Stone2"));
+    this->addItem(m_listStonesP2.last());
+    m_listStonesP2.last()->setPos(0, 0);
+    m_listStonesP2.last()->setZValue(5);
+    m_listStonesP2.last()->setVisible(false);
   }
 }
 
@@ -271,10 +283,9 @@ void CBoard::startAnimation(QPoint field) {
   m_pAnimateField->setPos(this->snapToGrid(field*m_nGridSize));
   m_pAnimateField->setVisible(true);
   m_pHighlightRect->setVisible(false);
-  QTimer::singleShot(300, this, SLOT(resetAnimation()));
+  QTimer::singleShot(400, this, SLOT(resetAnimation()));
 }
 void CBoard::resetAnimation() {
-  m_pHighlightRect->setVisible(true);
   m_pAnimateField->setVisible(false);
 }
 
@@ -282,10 +293,9 @@ void CBoard::startAnimation2(QPoint field) {
   m_pAnimateField2->setPos(this->snapToGrid(field*m_nGridSize));
   m_pAnimateField2->setVisible(true);
   m_pHighlightRect->setVisible(false);
-  QTimer::singleShot(300, this, SLOT(resetAnimation2()));
+  QTimer::singleShot(400, this, SLOT(resetAnimation2()));
 }
 void CBoard::resetAnimation2() {
-  m_pHighlightRect->setVisible(true);
   m_pAnimateField2->setVisible(false);
 }
 
@@ -321,6 +331,13 @@ void CBoard::removeStone(QPoint field, bool bAll) {
     }
     m_Fields[field.x()][field.y()].removeLast();
   }
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+QList<QList<QList<quint8> > > CBoard::getBoard() const {
+  return m_Fields;
 }
 
 // ---------------------------------------------------------------------------

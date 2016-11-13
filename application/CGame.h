@@ -29,12 +29,13 @@
 
 #include "./CBoard.h"
 #include "./CPlayer.h"
+#include "./ICpuOpponent.h"
 
 class CGame : public QObject {
   Q_OBJECT
 
  public:
-  explicit CGame(CSettings *pSettings);
+  explicit CGame(CSettings *pSettings, QObject *pCpu);
   QGraphicsScene* getScene();
   QRectF getSceneRect();
   void updatePlayers(bool bInitial = false);
@@ -48,10 +49,12 @@ class CGame : public QObject {
   void updateWonP2(QString sWon);
   void setInteractive(bool bEnabled);
   void highlightActivePlayer(bool bPlayer1);
+  void makeMoveCpu(QList<QList<QList<quint8> > > board, bool bStonesLeft);
 
  private slots:
   void setStone(QPoint field);
-  void moveTower(QPoint tower, QPoint moveTo);
+  void moveTower(QPoint tower, QPoint moveTo, quint8 nStones = 0);
+  void delayCpu();
 
  private:
   void checkPossibleMoves();
@@ -62,6 +65,7 @@ class CGame : public QObject {
 
   CSettings *m_pSettings;
   CBoard *m_pBoard;
+  QObject *m_piCpu;
   CPlayer *m_pPlayer1;
   CPlayer *m_pPlayer2;
 

@@ -27,12 +27,14 @@
 #include <QDebug>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QTimer>
 
 #include "./CGame.h"
 
-CGame::CGame(CSettings *pSettings)
+CGame::CGame(CSettings *pSettings, QObject *pCpu)
   : m_pSettings(pSettings),
     m_pBoard(NULL),
+    m_piCpu(pCpu),
     m_pPlayer1(NULL),
     m_pPlayer2(NULL),
     m_nMaxTowerHeight(5),
@@ -63,9 +65,13 @@ CGame::CGame(CSettings *pSettings)
   if ("Human" == sP2HumanCpu) {
     bP2HumanCpu = true;
   } else {
-    // TODO: Implement CPU opponent
-    qWarning() << "CPU Player not implemeted, yet!";
-    // bP2HumanCpu = false;
+    bP2HumanCpu = false;
+    connect(this, SIGNAL(makeMoveCpu(QList<QList<QList<quint8> > >, bool)),
+            m_piCpu, SLOT(makeMove(QList<QList<QList<quint8> > >, bool)));
+    connect(m_piCpu, SIGNAL(setStone(QPoint)),
+            this, SLOT(setStone(QPoint)));
+    connect(m_piCpu, SIGNAL(moveTower(QPoint, QPoint, quint8)),
+            this, SLOT(moveTower(QPoint, QPoint, quint8)));
   }
 
   // Select start player
@@ -136,22 +142,30 @@ void CGame::setStone(QPoint field) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CGame::moveTower(QPoint tower, QPoint moveTo) {
+void CGame::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
   QList<quint8> listStones = m_pBoard->getField(tower);
   if (0 == listStones.size()) {
-    qWarning() << "Move tower size == 0!";
+    qWarning() << "Move tower size == 0! Tower:" << tower;
     QMessageBox::warning(NULL, trUtf8("Warning"),
                          trUtf8("Something went wrong!"));
     return;
   }
 
   int nStonesToMove = 1;
-  if (listStones.size() > 1) {
+  if (listStones.size() > 1 && 0 == nStones) {
     bool ok;
     nStonesToMove = QInputDialog::getInt(NULL, trUtf8("Move tower"),
                                          trUtf8("How many stones shall be moved:"),
                                          1, 1, listStones.size(), 1, &ok);
     if (!ok) {
+      return;
+    }
+  } else if (0 != nStones) {
+    if (nStones > listStones.size()) {
+      qWarning() << "Trying to move more stones as available. Tower:" << tower
+                 << "Stones:" << nStones;
+      QMessageBox::warning(NULL, trUtf8("Warning"),
+                           trUtf8("Something went wrong!"));
       return;
     }
   }
@@ -227,8 +241,8 @@ void CGame::returnStones(QPoint field) {
 // ---------------------------------------------------------------------------
 
 void CGame::updatePlayers(bool bInitial) {
-  emit updateNameP1(m_pSettings->getNameP1());
-  emit updateNameP2(m_pSettings->getNameP2());
+  emit updateNameP1(m_pPlayer1->getName());
+  emit updateNameP2(m_pPlayer2->getName());
 
   emit updateStonesP1(trUtf8("Stones left:") + " "  +
                       QString::number(m_pPlayer1->getStonesLeft()));
@@ -256,12 +270,25 @@ void CGame::updatePlayers(bool bInitial) {
       m_pPlayer1->setActive(!m_pPlayer1->getIsActive());
       m_pPlayer2->setActive(!m_pPlayer2->getIsActive());
     }
-
     emit highlightActivePlayer(m_pPlayer1->getIsActive());
     this->checkPossibleMoves();
+
+    if (m_pPlayer2->getIsActive() && !m_pPlayer2->getIsHuman()) {
+      emit setInteractive(false);
+      QTimer::singleShot(800, this, SLOT(delayCpu()));
+    } else {
+      emit setInteractive(true);
+    }
   }
 
   m_pBoard->printDebugFields();
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CGame::delayCpu() {
+  emit makeMoveCpu(m_pBoard->getBoard(), m_pPlayer2->getStonesLeft() > 0);
 }
 
 // ---------------------------------------------------------------------------

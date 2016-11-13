@@ -44,7 +44,8 @@ class CSettings : public QDialog {
   Q_OBJECT
 
  public:
-  explicit CSettings(const QString &sSharePath, QWidget *pParent = 0);
+  explicit CSettings(const QString &sSharePath, const QStringList slistCPUs,
+                     QWidget *pParent = 0);
   virtual ~CSettings();
 
   QString getNameP1();
@@ -70,6 +71,10 @@ class CSettings : public QDialog {
 
  public slots:
   void accept();
+  void reject();
+
+ signals:
+  void newGame();
 
  private:
   void readSettings();
@@ -79,7 +84,6 @@ class CSettings : public QDialog {
   Ui::CSettingsDialog *m_pUi;
   QSettings *m_pSettings;
 
-  QString m_sSharePath;
   QString m_sGuiLanguage;
   QString m_sNameP1;
   QString m_sNameP2;

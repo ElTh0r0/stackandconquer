@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
   setupLogger(userDataDir.absolutePath() + "/" + sDebugFile,
               app.applicationName(), app.applicationVersion());
 
-  CStackAndConquer myStackAndConquer(sSharePath);
+  CStackAndConquer myStackAndConquer(sSharePath, userDataDir);
   myStackAndConquer.show();
   int nRet = app.exec();
 

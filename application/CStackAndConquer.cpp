@@ -31,54 +31,26 @@
 #include "./CStackAndConquer.h"
 #include "ui_CStackAndConquer.h"
 
-CStackAndConquer::CStackAndConquer(const QDir &sharePath, QWidget *pParent)
+CStackAndConquer::CStackAndConquer(const QDir &sharePath,
+                                   const QDir &userDataPath,
+                                   QWidget *pParent)
   : QMainWindow(pParent),
     m_pUi(new Ui::CStackAndConquer),
+    m_piCpu(NULL),
     m_pGame(NULL) {
   qDebug() << Q_FUNC_INFO;
 
   m_pUi->setupUi(this);
   this->setWindowTitle(qApp->applicationName());
-  m_pSettings = new CSettings(sharePath.absolutePath(), this);
+
+  m_pCpu = new CCpuOpponents(userDataPath);
+  m_pSettings = new CSettings(sharePath.absolutePath(),
+                              m_pCpu->getCpuList(), this);
+  connect(m_pSettings, SIGNAL(newGame()),
+          this, SLOT(startNewGame()));
+
   this->setupMenu();
-
-  m_pGraphView = new QGraphicsView(this);
-  // Set mouse tracking to true, otherwise mouse move event
-  // for the *scene* is only triggered on a mouse click!
-  // QGraphicsView forwards the event to the scene.
-  m_pGraphView->setMouseTracking(true);
-
-  // TODO: Scalable window/board/stones
-  // Transform coordinate system to "isometric" view
-  QTransform transfISO;
-  transfISO = transfISO.scale(1.0, 0.5).rotate(45);
-  m_pGraphView->setTransform(transfISO);
-  this->setCentralWidget(m_pGraphView);
-
-  m_pFrame1 = new QFrame(m_pGraphView);
-  m_pLayout1 = new QFormLayout;
-  m_plblPlayer1 = new QLabel(m_pSettings->getNameP1());
-  m_plblPlayer1StonesLeft = new QLabel(trUtf8("Stones left:") + " " +
-                                       QString::number(99));
-  m_plblPlayer1Won = new QLabel(trUtf8("Won:") + " 0");
-  m_pLayout1->setVerticalSpacing(0);
-  m_pLayout1->addRow(m_plblPlayer1);
-  m_pLayout1->addRow(m_plblPlayer1StonesLeft);
-  m_pLayout1->addRow(m_plblPlayer1Won);
-  m_pFrame1->setLayout(m_pLayout1);
-
-  m_pFrame2 = new QFrame(m_pGraphView);
-  m_pLayout2 = new QFormLayout;
-  m_plblPlayer2 = new QLabel(m_pSettings->getNameP2());
-  m_plblPlayer2->setAlignment(Qt::AlignRight);
-  m_plblPlayer2StonesLeft = new QLabel(QString::number(99));
-  m_plblPlayer2Won = new QLabel("0");
-  m_pLayout2->setVerticalSpacing(0);
-  m_pLayout2->addRow(m_plblPlayer2);
-  m_pLayout2->addRow(trUtf8("Stones left:"), m_plblPlayer2StonesLeft);
-  m_pLayout2->addRow(trUtf8("Won:"), m_plblPlayer2Won);
-  m_pFrame2->setLayout(m_pLayout2);
-  m_pFrame2->move(this->width() - m_pLayout2->sizeHint().width(), 0);
+  this->setupGraphView();
 
   // Seed random number generator
   QTime time = QTime::currentTime();
@@ -140,13 +112,62 @@ void CStackAndConquer::setupMenu() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
+void CStackAndConquer::setupGraphView() {
+  qDebug() << Q_FUNC_INFO;
+
+  m_pGraphView = new QGraphicsView(this);
+  // Set mouse tracking to true, otherwise mouse move event
+  // for the *scene* is only triggered on a mouse click!
+  // QGraphicsView forwards the event to the scene.
+  m_pGraphView->setMouseTracking(true);
+
+  // TODO: Scalable window/board/stones
+  // Transform coordinate system to "isometric" view
+  QTransform transfISO;
+  transfISO = transfISO.scale(1.0, 0.5).rotate(45);
+  m_pGraphView->setTransform(transfISO);
+  this->setCentralWidget(m_pGraphView);
+
+  m_pFrame1 = new QFrame(m_pGraphView);
+  m_pLayout1 = new QFormLayout;
+  m_plblPlayer1 = new QLabel(m_pSettings->getNameP1());
+  m_plblPlayer1StonesLeft = new QLabel(trUtf8("Stones left:") + " " +
+                                       QString::number(99));
+  m_plblPlayer1Won = new QLabel(trUtf8("Won:") + " 0");
+  m_pLayout1->setVerticalSpacing(0);
+  m_pLayout1->addRow(m_plblPlayer1);
+  m_pLayout1->addRow(m_plblPlayer1StonesLeft);
+  m_pLayout1->addRow(m_plblPlayer1Won);
+  m_pFrame1->setLayout(m_pLayout1);
+
+  m_pFrame2 = new QFrame(m_pGraphView);
+  m_pLayout2 = new QFormLayout;
+  m_plblPlayer2 = new QLabel(m_pSettings->getNameP2());
+  m_plblPlayer2->setAlignment(Qt::AlignRight);
+  m_plblPlayer2StonesLeft = new QLabel(QString::number(99));
+  m_plblPlayer2Won = new QLabel("0");
+  m_pLayout2->setVerticalSpacing(0);
+  m_pLayout2->addRow(m_plblPlayer2);
+  m_pLayout2->addRow(trUtf8("Stones left:"), m_plblPlayer2StonesLeft);
+  m_pLayout2->addRow(trUtf8("Won:"), m_plblPlayer2Won);
+  m_pFrame2->setLayout(m_pLayout2);
+  m_pFrame2->move(this->width() - m_pLayout2->sizeHint().width(), 0);
+
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 void CStackAndConquer::startNewGame() {
   qDebug() << Q_FUNC_INFO;
 
   if (NULL != m_pGame) {
     delete m_pGame;
   }
-  m_pGame = new CGame(m_pSettings);
+
+  m_piCpu = m_pCpu->getCurrentCpu(
+              m_pCpu->getCpuList().indexOf(m_pSettings->getP2HumanCpu()));
+  m_pGame = new CGame(m_pSettings, m_piCpu);
 
   connect(m_pGame, SIGNAL(updateNameP1(QString)),
           m_plblPlayer1, SLOT(setText(QString)));

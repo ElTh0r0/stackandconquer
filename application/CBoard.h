@@ -50,6 +50,7 @@ class CBoard : public QGraphicsScene {
 
   void addStone(QPoint field, quint8 stone);
   void removeStone(QPoint field, bool bAll = false);
+  QList<QList<QList<quint8> > > getBoard() const;
   QList<quint8> getField(QPoint field) const;
   bool findPossibleMoves(bool bStonesLeft);
   void printDebugFields() const;
@@ -68,6 +69,8 @@ class CBoard : public QGraphicsScene {
 
  private:
   void drawBoard();
+  void createHighlighters();
+  void createStones();
   void startAnimation(QPoint field);
   void startAnimation2(QPoint field);
   QPointF snapToGrid(QPointF point) const;
