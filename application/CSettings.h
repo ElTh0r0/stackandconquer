@@ -54,7 +54,6 @@ class CSettings : public QDialog {
   quint8 getStartPlayer();
   quint8 getWinTowers();
   bool getShowPossibleMoveTowers();
-  QList<quint8> getMouseControls() const;
 
   QColor getBgColor() const;
   QColor getHighlightColor() const;
@@ -91,10 +90,6 @@ class CSettings : public QDialog {
   int m_nStartPlayer;
   int m_nWinTowers;
   bool m_bShowPossibleMoveTowers;
-
-  QStringList m_sListMouseButtons;
-  QList<quint8> m_listMouseButtons;
-  QList<quint8> m_listMouseControls;
 
   QColor m_bgColor;
   QColor m_highlightColor;

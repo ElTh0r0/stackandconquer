@@ -4,14 +4,14 @@
 <context>
     <name>CBoard</name>
     <message>
-        <location filename="../CBoard.cpp" line="261"/>
-        <location filename="../CBoard.cpp" line="308"/>
+        <location filename="../CBoard.cpp" line="250"/>
+        <location filename="../CBoard.cpp" line="297"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../CBoard.cpp" line="262"/>
-        <location filename="../CBoard.cpp" line="309"/>
+        <location filename="../CBoard.cpp" line="251"/>
+        <location filename="../CBoard.cpp" line="298"/>
         <source>Something went wrong!</source>
         <translation>Etwas ist schief gelaufen!</translation>
     </message>
@@ -108,59 +108,29 @@ Das Spiel endet unentschieden!</translation>
 <context>
     <name>CSettings</name>
     <message>
-        <location filename="../CSettings.cpp" line="54"/>
-        <source>Left</source>
-        <translation>Links</translation>
-    </message>
-    <message>
-        <location filename="../CSettings.cpp" line="54"/>
-        <source>Middle</source>
-        <translation>Mittlere</translation>
-    </message>
-    <message>
-        <location filename="../CSettings.cpp" line="54"/>
-        <source>Right</source>
-        <translation>Rechts</translation>
-    </message>
-    <message>
-        <location filename="../CSettings.cpp" line="55"/>
-        <source>First X</source>
-        <translation>First X</translation>
-    </message>
-    <message>
-        <location filename="../CSettings.cpp" line="55"/>
-        <source>Second X</source>
-        <translation>Second X</translation>
-    </message>
-    <message>
-        <location filename="../CSettings.cpp" line="126"/>
+        <location filename="../CSettings.cpp" line="103"/>
         <source>The game has to be restarted for applying the changes.</source>
         <translation>Das Spiel muss neu gestartet werden, um die Änderungen zu übernehmen.</translation>
     </message>
     <message>
-        <location filename="../CSettings.cpp" line="167"/>
+        <location filename="../CSettings.cpp" line="139"/>
         <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
         <translation>Grundlegende Spieleinstellungen wurden geändert.&lt;br&gt;Soll ein neues Spiel gestartet werden?</translation>
     </message>
     <message>
-        <location filename="../CSettings.cpp" line="112"/>
-        <source>Please change your settings. Same mouse button is used for several actions.</source>
-        <translation>Bitte ändern Sie Ihre Einstellungen. Die gleiche Maustaste wurde für mehrere Aktionen gewählt.</translation>
-    </message>
-    <message>
-        <location filename="../CSettings.cpp" line="79"/>
-        <location filename="../CSettings.cpp" line="207"/>
+        <location filename="../CSettings.cpp" line="72"/>
+        <location filename="../CSettings.cpp" line="179"/>
         <source>Player 1</source>
         <translation>Spieler 1</translation>
     </message>
     <message>
-        <location filename="../CSettings.cpp" line="80"/>
-        <location filename="../CSettings.cpp" line="209"/>
+        <location filename="../CSettings.cpp" line="73"/>
+        <location filename="../CSettings.cpp" line="181"/>
         <source>Player 2</source>
         <translation>Spieler 2</translation>
     </message>
     <message>
-        <location filename="../CSettings.cpp" line="78"/>
+        <location filename="../CSettings.cpp" line="71"/>
         <source>Random</source>
         <translation>Zufällig</translation>
     </message>
@@ -218,22 +188,7 @@ Das Spiel endet unentschieden!</translation>
         <translation>Bewegbare Türme nach Selektion anzeigen</translation>
     </message>
     <message>
-        <location filename="../CSettings.ui" line="143"/>
-        <source>Mouse Controls</source>
-        <translation>Maustasten</translation>
-    </message>
-    <message>
-        <location filename="../CSettings.ui" line="150"/>
-        <source>Place tower</source>
-        <translation>Turm platzieren</translation>
-    </message>
-    <message>
-        <location filename="../CSettings.ui" line="160"/>
-        <source>Select &amp; move tower</source>
-        <translation>Turm markieren &amp; bewegen</translation>
-    </message>
-    <message>
-        <location filename="../CSettings.ui" line="177"/>
+        <location filename="../CSettings.ui" line="137"/>
         <source>GUI language</source>
         <translation>Gui Sprache</translation>
     </message>

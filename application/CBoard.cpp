@@ -170,23 +170,12 @@ void CBoard::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
     // qDebug() << "SNAP:" << this->snapToGrid(p_Event->scenePos());
     // qDebug() << "GRID:" << this->getGridField(p_Event->scenePos());
 
-    qint8 nIndex(m_pSettings->getMouseControls().indexOf(p_Event->button()));
-    if (nIndex >= 0) {
-      switch (nIndex) {
-        case 0:  // Place tower
-          this->selectField(QPointF(-1, -1));
-          emit setStone(this->getGridField(p_Event->scenePos()));
-          break;
-        case 1:  // Select and move tower
-          this->selectField(p_Event->scenePos());
-          break;
-        default:
-          selectField(QPointF(-1, -1));
-          qWarning() << "Unexpected mouse press control:" << nIndex;
-      }
-    } else {
-      selectField(QPointF(-1, -1));
-      qWarning() << "Unexpected mouse press control:" << nIndex;
+    // Place tower, if field is empty
+    if (this->getField(this->getGridField(p_Event->scenePos())).isEmpty()) {
+      this->selectField(QPointF(-1, -1));
+      emit setStone(this->getGridField(p_Event->scenePos()));
+    } else {  // Otherwise select / move tower
+      this->selectField(p_Event->scenePos());
     }
   }
 
