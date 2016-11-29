@@ -33,7 +33,8 @@
 
 CSettings::CSettings(const QString &sSharePath, const QStringList slistCPUs,
                      QWidget *pParent)
-  : QDialog(pParent) {
+  : QDialog(pParent),
+    m_sSharePath(sSharePath) {
   qDebug() << "Calling" << Q_FUNC_INFO;
 
   m_pUi = new Ui::CSettingsDialog();
@@ -53,7 +54,7 @@ CSettings::CSettings(const QString &sSharePath, const QStringList slistCPUs,
 
   QStringList sListGuiLanguages;
   sListGuiLanguages << "auto" << "en";
-  QDir appDir(sSharePath + "/lang");
+  QDir appDir(m_sSharePath + "/lang");
   QFileInfoList fiListFiles = appDir.entryInfoList(
                                 QDir::NoDotAndDotDot | QDir::Files);
   foreach (QFileInfo fi, fiListFiles) {
@@ -99,9 +100,7 @@ void CSettings::accept() {
   m_pSettings->setValue("GuiLanguage", m_sGuiLanguage);
 
   if (sOldGuiLang != m_sGuiLanguage) {
-    QMessageBox::information(0, this->windowTitle(),
-                             trUtf8("The game has to be restarted for "
-                                    "applying the changes."));
+    emit changeLang(this->getLanguage());
   }
 
   m_sNameP1 = m_pUi->leNameP1->text();
@@ -233,6 +232,43 @@ QColor CSettings::readColor(const QString sKey, const QString sFallback) {
     qWarning() << "Found invalid color for key" << sKey;
   }
   return color;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void CSettings::updateUiLang() {
+  m_pUi->retranslateUi(this);
+
+  QStringList sListStartPlayer;
+  sListStartPlayer << trUtf8("Random")
+                   << trUtf8("Player 1")
+                   << trUtf8("Player 2");
+  m_pUi->cbStartPlayer->clear();
+  m_pUi->cbStartPlayer->addItems(sListStartPlayer);
+  m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+QString CSettings::getLanguage() {
+  if ("auto" == m_sGuiLanguage) {
+#ifdef Q_OS_UNIX
+    QByteArray lang = qgetenv("LANG");
+    if (!lang.isEmpty()) {
+      return QLocale(lang).name();
+    }
+#endif
+    return QLocale::system().name();
+  } else if (!QFile(m_sSharePath + "/lang/" +
+                    qApp->applicationName().toLower() +
+                    "_" + m_sGuiLanguage + ".qm").exists()) {
+    m_sGuiLanguage = "en";
+    m_pSettings->setValue("GuiLanguage", m_sGuiLanguage);
+    return m_sGuiLanguage;
+  }
+  return m_sGuiLanguage;
 }
 
 // ----------------------------------------------------------------------------

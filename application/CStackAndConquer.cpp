@@ -36,6 +36,8 @@ CStackAndConquer::CStackAndConquer(const QDir &sharePath,
                                    QWidget *pParent)
   : QMainWindow(pParent),
     m_pUi(new Ui::CStackAndConquer),
+    m_sSharePath(sharePath.absolutePath()),
+    m_sCurrLang(""),
     m_piCpu(NULL),
     m_pGame(NULL) {
   qDebug() << Q_FUNC_INFO;
@@ -44,10 +46,15 @@ CStackAndConquer::CStackAndConquer(const QDir &sharePath,
   this->setWindowTitle(qApp->applicationName());
 
   m_pCpu = new CCpuOpponents(userDataPath);
-  m_pSettings = new CSettings(sharePath.absolutePath(),
+  m_pSettings = new CSettings(m_sSharePath,
                               m_pCpu->getCpuList(), this);
   connect(m_pSettings, SIGNAL(newGame()),
           this, SLOT(startNewGame()));
+  connect(m_pSettings, SIGNAL(changeLang(QString)),
+          this, SLOT(loadLanguage(QString)));
+  connect(this, SIGNAL(updateUiLang()),
+          m_pSettings, SLOT(updateUiLang()));
+  this->loadLanguage(m_pSettings->getLanguage());
 
   this->setupMenu();
   this->setupGraphView();
@@ -215,6 +222,42 @@ void CStackAndConquer::highlightActivePlayer(bool bPlayer1) {
   }
 }
 
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void CStackAndConquer::loadLanguage(const QString &sLang) {
+  if (m_sCurrLang != sLang) {
+    m_sCurrLang = sLang;
+    if (!this->switchTranslator(m_translatorQt, "qt_" + sLang,
+                                QLibraryInfo::location(
+                                  QLibraryInfo::TranslationsPath))) {
+      this->switchTranslator(m_translatorQt, "qt_" + sLang,
+                             m_sSharePath + "/lang");
+    }
+    this->switchTranslator(m_translator,
+                           qApp->applicationName().toLower() + "_" + sLang,
+                           m_sSharePath + "/lang");
+  }
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+bool CStackAndConquer::switchTranslator(QTranslator &translator,
+                                        const QString &sFile,
+                                        const QString &sPath) {
+  qApp->removeTranslator(&translator);
+  if (translator.load(sFile, sPath)) {
+    qApp->installTranslator(&translator);
+  } else {
+    if (!sFile.endsWith("_en")) {  // EN is build in translation -> no file
+      qWarning() << "Could not find translation" << sFile << "in" << sPath;
+    }
+    return false;
+  }
+  return true;
+}
+
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
@@ -247,6 +290,20 @@ void CStackAndConquer::showInfoBox() {
                           "GNU General Public License Version 3</a>")
                      .arg("<i>" + trUtf8("Translations") +
                           "</i><br />&nbsp;&nbsp;- German: ElThoro"));
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CStackAndConquer::changeEvent(QEvent *pEvent) {
+  if (0 != pEvent) {
+    if (QEvent::LanguageChange == pEvent->type()) {
+      m_pUi->retranslateUi(this);
+      emit updateUiLang();
+      // TODO: Update labels in GraphView
+    }
+  }
+  QMainWindow::changeEvent(pEvent);
 }
 
 // ---------------------------------------------------------------------------

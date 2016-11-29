@@ -54,6 +54,7 @@ class CSettings : public QDialog {
   quint8 getStartPlayer();
   quint8 getWinTowers();
   bool getShowPossibleMoveTowers();
+  QString getLanguage();
 
   QColor getBgColor() const;
   QColor getHighlightColor() const;
@@ -71,9 +72,11 @@ class CSettings : public QDialog {
  public slots:
   void accept();
   void reject();
+  void updateUiLang();
 
  signals:
   void newGame();
+  void changeLang(const QString &sLang);
 
  private:
   void readSettings();
@@ -83,6 +86,7 @@ class CSettings : public QDialog {
   Ui::CSettingsDialog *m_pUi;
   QSettings *m_pSettings;
 
+  QString m_sSharePath;
   QString m_sGuiLanguage;
   QString m_sNameP1;
   QString m_sNameP2;

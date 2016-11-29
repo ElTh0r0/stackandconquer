@@ -56,21 +56,33 @@ class CStackAndConquer : public QMainWindow {
                             QWidget *pParent = 0);
   ~CStackAndConquer();
 
+ signals:
+  void updateUiLang();
+
  protected:
+  void changeEvent(QEvent *pEvent);
   void closeEvent(QCloseEvent *pEvent);
 
  private slots:
   void startNewGame();
   void setViewInteractive(bool bEnabled);
   void highlightActivePlayer(bool bPlayer1);
+  void loadLanguage(const QString &sLang);
   void reportBug();
   void showInfoBox();
 
  private:
+  bool switchTranslator(QTranslator &translator,
+                        const QString &sFile,
+                        const QString &sPath);
   void setupMenu();
   void setupGraphView();
 
   Ui::CStackAndConquer *m_pUi;
+  QString m_sSharePath;
+  QTranslator m_translator;  // App translations
+  QTranslator m_translatorQt;  // Qt translations
+  QString m_sCurrLang;
   CCpuOpponents *m_pCpu;
   QObject *m_piCpu;
   CSettings *m_pSettings;

@@ -274,9 +274,13 @@ void CBoard::startAnimation(QPoint field) {
   m_pHighlightRect->setVisible(false);
   QTimer::singleShot(400, this, SLOT(resetAnimation()));
 }
+
 void CBoard::resetAnimation() {
   m_pAnimateField->setVisible(false);
 }
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 
 void CBoard::startAnimation2(QPoint field) {
   m_pAnimateField2->setPos(this->snapToGrid(field*m_nGridSize));
@@ -284,6 +288,7 @@ void CBoard::startAnimation2(QPoint field) {
   m_pHighlightRect->setVisible(false);
   QTimer::singleShot(400, this, SLOT(resetAnimation2()));
 }
+
 void CBoard::resetAnimation2() {
   m_pAnimateField2->setVisible(false);
 }
