@@ -88,16 +88,17 @@ class CStackAndConquer : public QMainWindow {
   CSettings *m_pSettings;
   QGraphicsView *m_pGraphView;
   CGame *m_pGame;
+
+  QFrame *m_pFrame;
+  QGridLayout *m_pLayout;
   QLabel *m_plblPlayer1;
   QLabel *m_plblPlayer2;
-  QLabel *m_plblPlayer1StonesLeft;
-  QLabel *m_plblPlayer2StonesLeft;
-  QLabel *m_plblPlayer1Won;
-  QLabel *m_plblPlayer2Won;
-  QFrame *m_pFrame1;
-  QFrame *m_pFrame2;
-  QFormLayout *m_pLayout1;
-  QFormLayout *m_pLayout2;
+  QLabel *m_plblIconStones;
+  QLabel *m_plblIconWin;
+  QLabel *m_plblP1StonesLeft;
+  QLabel *m_plblP2StonesLeft;
+  QLabel *m_plblP1Won;
+  QLabel *m_plblP2Won;
 };
 
 #endif  // STACKANDCONQUER_CSTACKANDCONQUER_H_

@@ -243,15 +243,10 @@ void CGame::returnStones(QPoint field) {
 void CGame::updatePlayers(bool bInitial) {
   emit updateNameP1(m_pPlayer1->getName());
   emit updateNameP2(m_pPlayer2->getName());
-
-  emit updateStonesP1(trUtf8("Stones left:") + " "  +
-                      QString::number(m_pPlayer1->getStonesLeft()));
+  emit updateStonesP1(QString::number(m_pPlayer1->getStonesLeft()));
   emit updateStonesP2(QString::number(m_pPlayer2->getStonesLeft()));
-
-  emit updateWonP1(trUtf8("Won:") + " "  +
-                   QString::number(m_pPlayer1->getWonTowers()));
+  emit updateWonP1(QString::number(m_pPlayer1->getWonTowers()));
   emit updateWonP2(QString::number(m_pPlayer2->getWonTowers()));
-
 
   if (m_pSettings->getWinTowers() == m_pPlayer1->getWonTowers()) {
     qDebug() << "PLAYER 1 WON!";

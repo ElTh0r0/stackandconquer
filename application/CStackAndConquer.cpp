@@ -135,31 +135,37 @@ void CStackAndConquer::setupGraphView() {
   m_pGraphView->setTransform(transfISO);
   this->setCentralWidget(m_pGraphView);
 
-  m_pFrame1 = new QFrame(m_pGraphView);
-  m_pLayout1 = new QFormLayout;
+  m_pFrame = new QFrame(m_pGraphView);
+  m_pLayout = new QGridLayout;
+  m_pLayout->setVerticalSpacing(0);
   m_plblPlayer1 = new QLabel(m_pSettings->getNameP1());
-  m_plblPlayer1StonesLeft = new QLabel(trUtf8("Stones left:") + " " +
-                                       QString::number(99));
-  m_plblPlayer1Won = new QLabel(trUtf8("Won:") + " 0");
-  m_pLayout1->setVerticalSpacing(0);
-  m_pLayout1->addRow(m_plblPlayer1);
-  m_pLayout1->addRow(m_plblPlayer1StonesLeft);
-  m_pLayout1->addRow(m_plblPlayer1Won);
-  m_pFrame1->setLayout(m_pLayout1);
-
-  m_pFrame2 = new QFrame(m_pGraphView);
-  m_pLayout2 = new QFormLayout;
+  m_plblP1StonesLeft = new QLabel("99");
+  m_plblP1Won = new QLabel("0");
   m_plblPlayer2 = new QLabel(m_pSettings->getNameP2());
-  m_plblPlayer2->setAlignment(Qt::AlignRight);
-  m_plblPlayer2StonesLeft = new QLabel(QString::number(99));
-  m_plblPlayer2Won = new QLabel("0");
-  m_pLayout2->setVerticalSpacing(0);
-  m_pLayout2->addRow(m_plblPlayer2);
-  m_pLayout2->addRow(trUtf8("Stones left:"), m_plblPlayer2StonesLeft);
-  m_pLayout2->addRow(trUtf8("Won:"), m_plblPlayer2Won);
-  m_pFrame2->setLayout(m_pLayout2);
-  m_pFrame2->move(this->width() - m_pLayout2->sizeHint().width(), 0);
+  m_plblP2StonesLeft = new QLabel("99");
+  m_plblP2StonesLeft->setAlignment(Qt::AlignRight);
+  m_plblP2Won = new QLabel("0");
+  m_plblP2Won->setAlignment(Qt::AlignRight);
 
+  QPixmap iconStones(":/images/stones.png");
+  m_plblIconStones = new QLabel();
+  m_plblIconStones->setPixmap(iconStones);
+  m_plblIconStones->setAlignment(Qt::AlignCenter);
+  QPixmap iconWin(":/images/win.png");
+  m_plblIconWin = new QLabel();
+  m_plblIconWin->setPixmap(iconWin);
+  m_plblIconWin->setAlignment(Qt::AlignCenter);
+
+  // addWidget(*widget, row, column, rowspan, colspan)
+  m_pLayout->addWidget(m_plblPlayer1, 0, 0, 1, 1);
+  m_pLayout->addWidget(m_plblPlayer2, 0, 2, 1, 1);
+  m_pLayout->addWidget(m_plblP1StonesLeft, 1, 0, 1, 1);
+  m_pLayout->addWidget(m_plblIconStones, 1, 1, 1, 1);
+  m_pLayout->addWidget(m_plblP2StonesLeft, 1, 2, 1, 1);
+  m_pLayout->addWidget(m_plblP1Won, 2, 0, 1, 1);
+  m_pLayout->addWidget(m_plblIconWin, 2, 1, 1, 1);
+  m_pLayout->addWidget(m_plblP2Won, 2, 2, 1, 1);
+  m_pFrame->setLayout(m_pLayout);
 }
 
 // ---------------------------------------------------------------------------
@@ -182,14 +188,14 @@ void CStackAndConquer::startNewGame() {
           m_plblPlayer2, SLOT(setText(QString)));
 
   connect(m_pGame, SIGNAL(updateStonesP1(QString)),
-          m_plblPlayer1StonesLeft, SLOT(setText(QString)));
+          m_plblP1StonesLeft, SLOT(setText(QString)));
   connect(m_pGame, SIGNAL(updateStonesP2(QString)),
-          m_plblPlayer2StonesLeft, SLOT(setText(QString)));
+          m_plblP2StonesLeft, SLOT(setText(QString)));
 
   connect(m_pGame, SIGNAL(updateWonP1(QString)),
-          m_plblPlayer1Won, SLOT(setText(QString)));
+          m_plblP1Won, SLOT(setText(QString)));
   connect(m_pGame, SIGNAL(updateWonP2(QString)),
-          m_plblPlayer2Won, SLOT(setText(QString)));
+          m_plblP2Won, SLOT(setText(QString)));
 
   connect(m_pGame, SIGNAL(setInteractive(bool)),
           this, SLOT(setViewInteractive(bool)));
@@ -216,9 +222,11 @@ void CStackAndConquer::highlightActivePlayer(bool bPlayer1) {
   if (bPlayer1) {
     m_plblPlayer1->setStyleSheet("color: #FF0000");
     m_plblPlayer2->setStyleSheet("color: #000000");
+    m_pUi->statusBar->showMessage(trUtf8("%1's turn").arg(m_plblPlayer1->text()));
   } else {
     m_plblPlayer1->setStyleSheet("color: #000000");
     m_plblPlayer2->setStyleSheet("color: #FF0000");
+    m_pUi->statusBar->showMessage(trUtf8("%1's turn").arg(m_plblPlayer2->text()));
   }
 }
 
@@ -300,7 +308,6 @@ void CStackAndConquer::changeEvent(QEvent *pEvent) {
     if (QEvent::LanguageChange == pEvent->type()) {
       m_pUi->retranslateUi(this);
       emit updateUiLang();
-      // TODO: Update labels in GraphView
     }
   }
   QMainWindow::changeEvent(pEvent);

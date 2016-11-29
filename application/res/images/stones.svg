@@ -12,7 +12,7 @@
    id="svg1923"
    sodipodi:version="0.32"
    inkscape:version="0.91 r13725"
-   width="101.45869"
+   width="109.45869"
    height="36.395069"
    version="1.0"
    sodipodi:docname="stones.svg">
@@ -60,7 +60,7 @@
      pagecolor="#ffffff"
      id="base"
      inkscape:zoom="2.787757"
-     inkscape:cx="1.1961378"
+     inkscape:cx="-76.877458"
      inkscape:cy="35.89065"
      inkscape:window-x="0"
      inkscape:window-y="24"
@@ -74,7 +74,7 @@
      fit-margin-bottom="0" />
   <g
      id="Stone1"
-     transform="matrix(1.3898789,0,0,1.3898789,3.5636109e-8,6.4978526e-6)">
+     transform="matrix(1.3898789,0,0,1.3898789,3.5636113e-8,6.4978525e-6)">
     <g
        transform="translate(-9.5562144,-307.07547)"
        id="g4591">
@@ -102,7 +102,7 @@
        style="fill:#ef2929;fill-opacity:1;stroke:#000000;stroke-width:0.07210098;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
   <g
-     transform="matrix(1.3898789,0,0,1.3898789,51.458694,6.4978526e-6)"
+     transform="matrix(1.3898789,0,0,1.3898789,59.458694,6.4978525e-6)"
      id="Stone2">
     <g
        transform="translate(-9.5562144,-307.07547)"

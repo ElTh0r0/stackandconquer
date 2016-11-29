@@ -5,13 +5,13 @@
     <name>CBoard</name>
     <message>
         <location filename="../CBoard.cpp" line="250"/>
-        <location filename="../CBoard.cpp" line="297"/>
+        <location filename="../CBoard.cpp" line="302"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
         <location filename="../CBoard.cpp" line="251"/>
-        <location filename="../CBoard.cpp" line="298"/>
+        <location filename="../CBoard.cpp" line="303"/>
         <source>Something went wrong!</source>
         <translation>Etwas ist schief gelaufen!</translation>
     </message>
@@ -22,11 +22,11 @@
         <location filename="../CGame.cpp" line="127"/>
         <location filename="../CGame.cpp" line="136"/>
         <location filename="../CGame.cpp" line="180"/>
-        <location filename="../CGame.cpp" line="259"/>
-        <location filename="../CGame.cpp" line="265"/>
+        <location filename="../CGame.cpp" line="254"/>
+        <location filename="../CGame.cpp" line="260"/>
+        <location filename="../CGame.cpp" line="312"/>
         <location filename="../CGame.cpp" line="317"/>
-        <location filename="../CGame.cpp" line="322"/>
-        <location filename="../CGame.cpp" line="328"/>
+        <location filename="../CGame.cpp" line="323"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
@@ -44,8 +44,8 @@
         <location filename="../CGame.cpp" line="149"/>
         <location filename="../CGame.cpp" line="167"/>
         <location filename="../CGame.cpp" line="218"/>
-        <location filename="../CGame.cpp" line="362"/>
-        <location filename="../CGame.cpp" line="369"/>
+        <location filename="../CGame.cpp" line="357"/>
+        <location filename="../CGame.cpp" line="364"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
@@ -53,8 +53,8 @@
         <location filename="../CGame.cpp" line="150"/>
         <location filename="../CGame.cpp" line="168"/>
         <location filename="../CGame.cpp" line="219"/>
-        <location filename="../CGame.cpp" line="363"/>
-        <location filename="../CGame.cpp" line="370"/>
+        <location filename="../CGame.cpp" line="358"/>
+        <location filename="../CGame.cpp" line="365"/>
         <source>Something went wrong!</source>
         <translation>Etwas ist schief gelaufen!</translation>
     </message>
@@ -74,31 +74,21 @@
         <translation>Ist ist nicht erlaubt, den vorangegangenen Zug des Gegners direkt rückgängig zu machen!</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="247"/>
-        <source>Stones left:</source>
-        <translation>Verbleibende Steine:</translation>
-    </message>
-    <message>
-        <location filename="../CGame.cpp" line="251"/>
-        <source>Won:</source>
-        <translation>Gewonnen:</translation>
-    </message>
-    <message>
-        <location filename="../CGame.cpp" line="260"/>
-        <location filename="../CGame.cpp" line="266"/>
+        <location filename="../CGame.cpp" line="255"/>
+        <location filename="../CGame.cpp" line="261"/>
         <source>%1 won the game!</source>
         <translation>%1 hat das Spiel gewonnen!</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="318"/>
+        <location filename="../CGame.cpp" line="313"/>
         <source>No moves possible anymore.
 Game ends in a tie!</source>
         <translation>Keine Züge mehr möglich.
 Das Spiel endet unentschieden!</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="323"/>
-        <location filename="../CGame.cpp" line="329"/>
+        <location filename="../CGame.cpp" line="318"/>
+        <location filename="../CGame.cpp" line="324"/>
         <source>No move possible!
 %1 has to pass.</source>
         <translation>Keine Züge möglich!
@@ -108,29 +98,27 @@ Das Spiel endet unentschieden!</translation>
 <context>
     <name>CSettings</name>
     <message>
-        <location filename="../CSettings.cpp" line="103"/>
-        <source>The game has to be restarted for applying the changes.</source>
-        <translation>Das Spiel muss neu gestartet werden, um die Änderungen zu übernehmen.</translation>
-    </message>
-    <message>
-        <location filename="../CSettings.cpp" line="139"/>
+        <location filename="../CSettings.cpp" line="138"/>
         <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
         <translation>Grundlegende Spieleinstellungen wurden geändert.&lt;br&gt;Soll ein neues Spiel gestartet werden?</translation>
     </message>
     <message>
-        <location filename="../CSettings.cpp" line="72"/>
-        <location filename="../CSettings.cpp" line="179"/>
+        <location filename="../CSettings.cpp" line="73"/>
+        <location filename="../CSettings.cpp" line="178"/>
+        <location filename="../CSettings.cpp" line="245"/>
         <source>Player 1</source>
         <translation>Spieler 1</translation>
     </message>
     <message>
-        <location filename="../CSettings.cpp" line="73"/>
-        <location filename="../CSettings.cpp" line="181"/>
+        <location filename="../CSettings.cpp" line="74"/>
+        <location filename="../CSettings.cpp" line="180"/>
+        <location filename="../CSettings.cpp" line="246"/>
         <source>Player 2</source>
         <translation>Spieler 2</translation>
     </message>
     <message>
-        <location filename="../CSettings.cpp" line="71"/>
+        <location filename="../CSettings.cpp" line="72"/>
+        <location filename="../CSettings.cpp" line="244"/>
         <source>Random</source>
         <translation>Zufällig</translation>
     </message>
@@ -206,79 +194,73 @@ Das Spiel endet unentschieden!</translation>
         <translation>&amp;Hilfe</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.ui" line="75"/>
+        <location filename="../CStackAndConquer.ui" line="76"/>
         <source>&amp;New game</source>
         <translation>&amp;Neues Spiel</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.ui" line="78"/>
+        <location filename="../CStackAndConquer.ui" line="79"/>
         <source>New game</source>
         <translation>Neues Spiel</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.ui" line="83"/>
+        <location filename="../CStackAndConquer.ui" line="84"/>
         <source>&amp;Quit</source>
         <translation>B&amp;eenden</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.ui" line="88"/>
+        <location filename="../CStackAndConquer.ui" line="89"/>
         <source>&amp;About</source>
         <translation>Ü&amp;ber</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.ui" line="96"/>
+        <location filename="../CStackAndConquer.ui" line="97"/>
         <source>&amp;Save game</source>
         <translation>Spiel &amp;speichern</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.ui" line="99"/>
+        <location filename="../CStackAndConquer.ui" line="100"/>
         <source>Save game</source>
         <translation>Spiel speichern</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.ui" line="104"/>
+        <location filename="../CStackAndConquer.ui" line="105"/>
         <source>&amp;Load game</source>
         <translation>Spiel &amp;laden</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.ui" line="107"/>
+        <location filename="../CStackAndConquer.ui" line="108"/>
         <source>Load game</source>
         <translation>Spiel laden</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.ui" line="112"/>
+        <location filename="../CStackAndConquer.ui" line="113"/>
         <source>Report &amp;bug</source>
         <translation>F&amp;ehler melden</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.ui" line="117"/>
-        <source>Settings</source>
-        <translation>Einstellungen</translation>
+        <location filename="../CStackAndConquer.ui" line="118"/>
+        <source>S&amp;ettings</source>
+        <translation>&amp;Einstellungen</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="134"/>
-        <location filename="../CStackAndConquer.cpp" line="151"/>
-        <source>Stones left:</source>
-        <translation>Verbleibende Steine:</translation>
-    </message>
-    <message>
-        <location filename="../CStackAndConquer.cpp" line="136"/>
-        <location filename="../CStackAndConquer.cpp" line="152"/>
-        <source>Won:</source>
-        <translation>Gewonnen:</translation>
-    </message>
-    <message>
+        <location filename="../CStackAndConquer.cpp" line="225"/>
         <location filename="../CStackAndConquer.cpp" line="229"/>
+        <source>%1&apos;s turn</source>
+        <translation>%1 ist am Zug</translation>
+    </message>
+    <message>
+        <location filename="../CStackAndConquer.cpp" line="280"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="244"/>
+        <location filename="../CStackAndConquer.cpp" line="295"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="248"/>
+        <location filename="../CStackAndConquer.cpp" line="299"/>
         <source>Translations</source>
         <translation>Übersetzungen</translation>
     </message>

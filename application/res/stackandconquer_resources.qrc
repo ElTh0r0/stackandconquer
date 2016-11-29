@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>images/stackandconquer_64x64.png</file>
         <file>images/stones.svg</file>
+        <file>images/stones.png</file>
+        <file>images/win.png</file>
     </qresource>
 </RCC>

@@ -70,6 +70,7 @@
    <addaction name="menuGame"/>
    <addaction name="menu_Help"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="action_NewGame">
    <property name="text">
     <string>&amp;New game</string>
@@ -114,7 +115,7 @@
   </action>
   <action name="action_Preferences">
    <property name="text">
-    <string>Settings</string>
+    <string>S&amp;ettings</string>
    </property>
   </action>
  </widget>
