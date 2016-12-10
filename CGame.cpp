@@ -267,10 +267,20 @@ void CGame::checkTowerWin(QPoint field) {
   if (m_pBoard->getField(field).size() >= m_nMaxTowerHeight) {
     if (1 == m_pBoard->getField(field).last()) {
       m_pPlayer1->increaseWonTowers();
-      qDebug() << "Player 1 won tower" << field;
+      qDebug() << "Player 1 conquered tower" << field;
+      if (m_pSettings->getWinTowers() != m_pPlayer1->getWonTowers()) {
+        QMessageBox::information(NULL, trUtf8("Information"),
+                                 trUtf8("%1 conquered a tower!")
+                                 .arg(m_pPlayer1->getName()));
+      }
     } else if (2 == m_pBoard->getField(field).last()) {
       m_pPlayer2->increaseWonTowers();
-      qDebug() << "Player 2 won tower" << field;
+      qDebug() << "Player 2 conquered tower" << field;
+      if (m_pSettings->getWinTowers() != m_pPlayer2->getWonTowers()) {
+        QMessageBox::information(NULL, trUtf8("Information"),
+                                 trUtf8("%1 conquered a tower!")
+                                 .arg(m_pPlayer2->getName()));
+      }
     } else {
       qDebug() << Q_FUNC_INFO;
       qWarning() << "Last stone neither 1 nor 2!";
@@ -317,12 +327,14 @@ void CGame::updatePlayers(bool bInitial) {
   if (m_pSettings->getWinTowers() == m_pPlayer1->getWonTowers()) {
     qDebug() << "PLAYER 1 WON!";
     emit setInteractive(false);
+    emit highlightActivePlayer(false, true);
     QMessageBox::information(NULL, trUtf8("Information"),
                              trUtf8("%1 won the game!")
                              .arg(m_pPlayer1->getName()));
   } else if (m_pSettings->getWinTowers() == m_pPlayer2->getWonTowers()) {
     qDebug() << "PLAYER 2 WON!";
     emit setInteractive(false);
+    emit highlightActivePlayer(false, false, true);
     QMessageBox::information(NULL, trUtf8("Information"),
                              trUtf8("%1 won the game!")
                              .arg(m_pPlayer2->getName()));

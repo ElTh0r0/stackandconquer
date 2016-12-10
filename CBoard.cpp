@@ -306,9 +306,11 @@ void CBoard::removeStone(QPoint field, bool bAll) {
     foreach (quint8 i, m_Fields[field.x()][field.y()]) {
       if (1 == i) {
         m_listStonesP1.append(m_FieldStones[field.x()][field.y()].last());
+        m_FieldStones[field.x()][field.y()].last()->setVisible(false);
         m_FieldStones[field.x()][field.y()].removeLast();
       } else {
         m_listStonesP2.append(m_FieldStones[field.x()][field.y()].last());
+        m_FieldStones[field.x()][field.y()].last()->setVisible(false);
         m_FieldStones[field.x()][field.y()].removeLast();
       }
     }

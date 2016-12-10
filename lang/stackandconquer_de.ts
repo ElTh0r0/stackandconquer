@@ -22,11 +22,13 @@
         <location filename="../CGame.cpp" line="147"/>
         <location filename="../CGame.cpp" line="165"/>
         <location filename="../CGame.cpp" line="247"/>
-        <location filename="../CGame.cpp" line="320"/>
-        <location filename="../CGame.cpp" line="326"/>
-        <location filename="../CGame.cpp" line="378"/>
-        <location filename="../CGame.cpp" line="383"/>
-        <location filename="../CGame.cpp" line="389"/>
+        <location filename="../CGame.cpp" line="272"/>
+        <location filename="../CGame.cpp" line="280"/>
+        <location filename="../CGame.cpp" line="331"/>
+        <location filename="../CGame.cpp" line="338"/>
+        <location filename="../CGame.cpp" line="390"/>
+        <location filename="../CGame.cpp" line="395"/>
+        <location filename="../CGame.cpp" line="401"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
@@ -47,9 +49,9 @@
         <location filename="../CGame.cpp" line="191"/>
         <location filename="../CGame.cpp" line="213"/>
         <location filename="../CGame.cpp" line="217"/>
-        <location filename="../CGame.cpp" line="279"/>
-        <location filename="../CGame.cpp" line="423"/>
-        <location filename="../CGame.cpp" line="430"/>
+        <location filename="../CGame.cpp" line="289"/>
+        <location filename="../CGame.cpp" line="435"/>
+        <location filename="../CGame.cpp" line="442"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
@@ -64,9 +66,9 @@
     <message>
         <location filename="../CGame.cpp" line="188"/>
         <location filename="../CGame.cpp" line="214"/>
-        <location filename="../CGame.cpp" line="280"/>
-        <location filename="../CGame.cpp" line="424"/>
-        <location filename="../CGame.cpp" line="431"/>
+        <location filename="../CGame.cpp" line="290"/>
+        <location filename="../CGame.cpp" line="436"/>
+        <location filename="../CGame.cpp" line="443"/>
         <source>Something went wrong!</source>
         <translation>Etwas ist schief gelaufen!</translation>
     </message>
@@ -86,21 +88,27 @@
         <translation>Ist ist nicht erlaubt, den vorangegangenen Zug des Gegners direkt rückgängig zu machen!</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="321"/>
-        <location filename="../CGame.cpp" line="327"/>
+        <location filename="../CGame.cpp" line="273"/>
+        <location filename="../CGame.cpp" line="281"/>
+        <source>%1 conquered a tower!</source>
+        <translation>%1 hat einen Turm erobert!</translation>
+    </message>
+    <message>
+        <location filename="../CGame.cpp" line="332"/>
+        <location filename="../CGame.cpp" line="339"/>
         <source>%1 won the game!</source>
         <translation>%1 hat das Spiel gewonnen!</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="379"/>
+        <location filename="../CGame.cpp" line="391"/>
         <source>No moves possible anymore.
 Game ends in a tie!</source>
         <translation>Keine Züge mehr möglich.
 Das Spiel endet unentschieden!</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="384"/>
-        <location filename="../CGame.cpp" line="390"/>
+        <location filename="../CGame.cpp" line="396"/>
+        <location filename="../CGame.cpp" line="402"/>
         <source>No move possible!
 %1 has to pass.</source>
         <translation>Keine Züge möglich!
@@ -289,21 +297,27 @@ Das Spiel endet unentschieden!</translation>
     <message>
         <location filename="../CStackAndConquer.cpp" line="245"/>
         <location filename="../CStackAndConquer.cpp" line="249"/>
+        <source>%1 won the game!</source>
+        <translation>%1 hat das Spiel gewonnen!</translation>
+    </message>
+    <message>
+        <location filename="../CStackAndConquer.cpp" line="257"/>
+        <location filename="../CStackAndConquer.cpp" line="262"/>
         <source>%1&apos;s turn</source>
         <translation>%1 ist am Zug</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="300"/>
+        <location filename="../CStackAndConquer.cpp" line="313"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="315"/>
+        <location filename="../CStackAndConquer.cpp" line="328"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="319"/>
+        <location filename="../CStackAndConquer.cpp" line="332"/>
         <source>Translations</source>
         <translation>Übersetzungen</translation>
     </message>

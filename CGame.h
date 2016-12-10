@@ -49,7 +49,8 @@ class CGame : public QObject {
   void updateWonP1(QString sWon);
   void updateWonP2(QString sWon);
   void setInteractive(bool bEnabled);
-  void highlightActivePlayer(bool bPlayer1);
+  void highlightActivePlayer(bool bPlayer1,
+                             bool bP1Won = false, bool bP2Won = false);
   void makeMoveCpu(QList<QList<QList<quint8> > > board, bool bStonesLeft);
 
  private slots:

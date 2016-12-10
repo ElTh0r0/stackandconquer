@@ -210,8 +210,8 @@ void CStackAndConquer::startNewGame(QString sCmdArg) {
 
   connect(m_pGame, SIGNAL(setInteractive(bool)),
           this, SLOT(setViewInteractive(bool)));
-  connect(m_pGame, SIGNAL(highlightActivePlayer(bool)),
-          this, SLOT(highlightActivePlayer(bool)));
+  connect(m_pGame, SIGNAL(highlightActivePlayer(bool, bool, bool)),
+          this, SLOT(highlightActivePlayer(bool, bool, bool)));
 
   m_pGraphView->setScene(m_pGame->getScene());
   m_pGraphView->updateSceneRect(m_pGame->getSceneRect());
@@ -238,15 +238,28 @@ void CStackAndConquer::setViewInteractive(bool bEnabled) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::highlightActivePlayer(bool bPlayer1) {
+void CStackAndConquer::highlightActivePlayer(bool bPlayer1,
+                                             bool bP1Won, bool bP2Won) {
+  if (bP1Won) {
+    m_pUi->statusBar->showMessage(
+          trUtf8("%1 won the game!").arg(m_plblPlayer1->text()));
+    return;
+  } else if (bP2Won) {
+    m_pUi->statusBar->showMessage(
+          trUtf8("%1 won the game!").arg(m_plblPlayer2->text()));
+    return;
+  }
+
   if (bPlayer1) {
     m_plblPlayer1->setStyleSheet("color: #FF0000");
     m_plblPlayer2->setStyleSheet("color: #000000");
-    m_pUi->statusBar->showMessage(trUtf8("%1's turn").arg(m_plblPlayer1->text()));
+    m_pUi->statusBar->showMessage(
+          trUtf8("%1's turn").arg(m_plblPlayer1->text()));
   } else {
     m_plblPlayer1->setStyleSheet("color: #000000");
     m_plblPlayer2->setStyleSheet("color: #FF0000");
-    m_pUi->statusBar->showMessage(trUtf8("%1's turn").arg(m_plblPlayer2->text()));
+    m_pUi->statusBar->showMessage(
+          trUtf8("%1's turn").arg(m_plblPlayer2->text()));
   }
 }
 
