@@ -29,16 +29,17 @@
 
 #include "./CBoard.h"
 #include "./CPlayer.h"
-#include "./ICpuOpponent.h"
+#include "./COpponentJS.h"
 
 class CGame : public QObject {
   Q_OBJECT
 
  public:
-  explicit CGame(CSettings *pSettings, QObject *pCpu);
+  explicit CGame(CSettings *pSettings, const QString &sJsFile);
   QGraphicsScene* getScene();
   QRectF getSceneRect();
   void updatePlayers(bool bInitial = false);
+  bool initCpu();
 
  signals:
   void updateNameP1(QString sName);
@@ -55,17 +56,17 @@ class CGame : public QObject {
   void setStone(QPoint field);
   void moveTower(QPoint tower, QPoint moveTo, quint8 nStones = 0);
   void delayCpu();
+  void caughtScriptError();
 
  private:
   void checkPossibleMoves();
   bool checkPreviousMoveReverted(const QString sMove);
-
   void checkTowerWin(QPoint field);
   void returnStones(QPoint field);
 
   CSettings *m_pSettings;
   CBoard *m_pBoard;
-  QObject *m_piCpu;
+  COpponentJS *m_jsCpu;
   CPlayer *m_pPlayer1;
   CPlayer *m_pPlayer2;
 
@@ -74,6 +75,8 @@ class CGame : public QObject {
   const quint16 m_nGridSize;
   const quint8 m_nNumOfFields;
 
+  QString m_sJsFile;
+  bool m_bScriptError;
   QString m_sPreviousMove;
 };
 

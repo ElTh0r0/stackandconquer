@@ -31,33 +31,28 @@
 
 #include "./CGame.h"
 
-CGame::CGame(CSettings *pSettings, QObject *pCpu)
+CGame::CGame(CSettings *pSettings, const QString &sJsFile)
   : m_pSettings(pSettings),
     m_pBoard(NULL),
-    m_piCpu(pCpu),
+    m_jsCpu(NULL),
     m_pPlayer1(NULL),
     m_pPlayer2(NULL),
     m_nMaxTowerHeight(5),
     m_nMaxStones(20),
     m_nGridSize(70),
-    m_nNumOfFields(5) {
+    m_nNumOfFields(5),
+    m_sJsFile(""),
+    m_bScriptError(false) {
   qDebug() << Q_FUNC_INFO;
 
-  if (NULL != m_pBoard) {
-    delete m_pBoard;
-  }
   m_pBoard = new CBoard(m_nNumOfFields, m_nGridSize, m_nMaxStones, m_pSettings);
-
   connect(m_pBoard, SIGNAL(setStone(QPoint)),
           this, SLOT(setStone(QPoint)));
   connect(m_pBoard, SIGNAL(moveTower(QPoint, QPoint)),
           this, SLOT(moveTower(QPoint, QPoint)));
 
-  if (NULL != m_pPlayer1) {
-    delete m_pPlayer1;
-  }
-  if (NULL != m_pPlayer2) {
-    delete m_pPlayer2;
+  if (sJsFile.endsWith(".json", Qt::CaseInsensitive)) {
+    // TODO: Load saved game
   }
 
   QString sP2HumanCpu(m_pSettings->getP2HumanCpu());
@@ -66,12 +61,21 @@ CGame::CGame(CSettings *pSettings, QObject *pCpu)
     bP2HumanCpu = true;
   } else {
     bP2HumanCpu = false;
+    if (sJsFile.endsWith(".js", Qt::CaseInsensitive)) {
+      m_sJsFile = sJsFile;
+    } else {
+      m_sJsFile = m_pSettings->getP2HumanCpu();
+    }
+
+    m_jsCpu = new COpponentJS(m_nNumOfFields);
     connect(this, SIGNAL(makeMoveCpu(QList<QList<QList<quint8> > >, bool)),
-            m_piCpu, SLOT(makeMove(QList<QList<QList<quint8> > >, bool)));
-    connect(m_piCpu, SIGNAL(setStone(QPoint)),
+            m_jsCpu, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, bool)));
+    connect(m_jsCpu, SIGNAL(setStone(QPoint)),
             this, SLOT(setStone(QPoint)));
-    connect(m_piCpu, SIGNAL(moveTower(QPoint, QPoint, quint8)),
+    connect(m_jsCpu, SIGNAL(moveTower(QPoint, QPoint, quint8)),
             this, SLOT(moveTower(QPoint, QPoint, quint8)));
+    connect(m_jsCpu, SIGNAL(scriptError()),
+            this, SLOT(caughtScriptError()));
   }
 
   // Select start player
@@ -93,6 +97,20 @@ CGame::CGame(CSettings *pSettings, QObject *pCpu)
 
   // m_pUi->action_SaveGame->setEnabled(true);
   m_sPreviousMove.clear();
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+bool CGame::initCpu() {
+  if (!m_jsCpu->loadAndEvalCpuScript(m_sJsFile)) {
+    return false;
+  }
+  return true;
+}
+
+void CGame::caughtScriptError() {
+  m_bScriptError = true;
 }
 
 // ---------------------------------------------------------------------------
@@ -124,8 +142,17 @@ void CGame::setStone(QPoint field) {
       m_pBoard->addStone(field, 2);
       qDebug() << "P2 >>" << sMove;
     } else {
-      QMessageBox::information(NULL, trUtf8("Information"),
-                               trUtf8("No stones left! Please move a tower."));
+      if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
+          (m_pPlayer2->getIsActive() && m_pPlayer2->getIsHuman())) {
+        QMessageBox::information(NULL, trUtf8("Information"),
+                                 trUtf8("No stones left! Please move a tower."));
+      } else {
+        m_bScriptError = true;
+        qWarning() << "CPU tried to set stone, but no stones left!";
+        QMessageBox::warning(NULL, trUtf8("Warning"),
+                             trUtf8("CPU script made an invalid move! "
+                                    "Please check the debug log."));
+      }
       return;
     }
     m_sPreviousMove.clear();
@@ -133,9 +160,18 @@ void CGame::setStone(QPoint field) {
     this->checkTowerWin(field);
     this->updatePlayers();
   } else {
-    QMessageBox::information(NULL, trUtf8("Information"),
-                             trUtf8("It is only allowed to place a "
-                                    "stone on a free field."));
+    if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
+        (m_pPlayer2->getIsActive() && m_pPlayer2->getIsHuman())) {
+      QMessageBox::information(NULL, trUtf8("Information"),
+                               trUtf8("It is only allowed to place a "
+                                      "stone on a free field."));
+    } else {
+      m_bScriptError = true;
+      qWarning() << "CPU tried to set stone >>" << sMove;
+      QMessageBox::warning(NULL, trUtf8("Warning"),
+                           trUtf8("CPU script made an invalid move! "
+                                  "Please check the debug log."));
+    }
   }
 }
 
@@ -146,8 +182,16 @@ void CGame::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
   QList<quint8> listStones = m_pBoard->getField(tower);
   if (0 == listStones.size()) {
     qWarning() << "Move tower size == 0! Tower:" << tower;
-    QMessageBox::warning(NULL, trUtf8("Warning"),
-                         trUtf8("Something went wrong!"));
+    if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
+        (m_pPlayer2->getIsActive() && m_pPlayer2->getIsHuman())) {
+      QMessageBox::warning(NULL, trUtf8("Warning"),
+                           trUtf8("Something went wrong!"));
+    } else {
+      m_bScriptError = true;
+      QMessageBox::warning(NULL, trUtf8("Warning"),
+                           trUtf8("CPU script made an invalid move! "
+                                  "Please check the debug log."));
+    }
     return;
   }
 
@@ -162,10 +206,18 @@ void CGame::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
     }
   } else if (0 != nStones) {
     if (nStones > listStones.size()) {
-      qWarning() << "Trying to move more stones as available. Tower:" << tower
-                 << "Stones:" << nStones;
-      QMessageBox::warning(NULL, trUtf8("Warning"),
-                           trUtf8("Something went wrong!"));
+      qWarning() << "Trying to move more stones than available! From:" << tower
+                 << "Stones:" << nStones << "To:" << moveTo;
+      if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
+          (m_pPlayer2->getIsActive() && m_pPlayer2->getIsHuman())) {
+        QMessageBox::warning(NULL, trUtf8("Warning"),
+                             trUtf8("Something went wrong!"));
+      } else {
+        m_bScriptError = true;
+        QMessageBox::warning(NULL, trUtf8("Warning"),
+                             trUtf8("CPU script made an invalid move! "
+                                    "Please check the debug log."));
+      }
       return;
     }
   }
@@ -176,17 +228,26 @@ void CGame::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
                 QString::number(nStonesToMove) + "-" +
                 static_cast<char>(moveTo.x() + 65) +
                 QString::number(moveTo.y() + 1));
+
+  if (m_pPlayer1->getIsActive()) {
+    qDebug() << "P1 >>" << sMove;
+    if (!m_pPlayer1->getIsHuman()) {
+      m_pBoard->selectField(moveTo);
+      m_pBoard->selectField(QPoint(-1, -1));
+    }
+  } else {
+    qDebug() << "P2 >>" << sMove;
+    if (!m_pPlayer2->getIsHuman()) {
+      m_pBoard->selectField(moveTo);
+      m_pBoard->selectField(QPoint(-1, -1));
+    }
+  }
+
   if (this->checkPreviousMoveReverted(sMove)) {
     QMessageBox::information(NULL, trUtf8("Information"),
                              trUtf8("It is not allowed to revert the "
                                     "previous oppenents move directly!"));
     return;
-  }
-
-  if (m_pPlayer1->getIsActive()) {
-    qDebug() << "P1 >>" << sMove;
-  } else {
-    qDebug() << "P2 >>" << sMove;
   }
 
   for (int i = 0; i < nStonesToMove; i++) {
@@ -241,6 +302,11 @@ void CGame::returnStones(QPoint field) {
 // ---------------------------------------------------------------------------
 
 void CGame::updatePlayers(bool bInitial) {
+  if (m_bScriptError) {
+    emit setInteractive(false);
+    return;
+  }
+
   emit updateNameP1(m_pPlayer1->getName());
   emit updateNameP2(m_pPlayer2->getName());
   emit updateStonesP1(QString::number(m_pPlayer1->getStonesLeft()));

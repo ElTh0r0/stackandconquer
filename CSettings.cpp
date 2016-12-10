@@ -26,12 +26,13 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QIcon>
 #include <QMessageBox>
 
 #include "./CSettings.h"
 #include "ui_CSettings.h"
 
-CSettings::CSettings(const QString &sSharePath, const QStringList slistCPUs,
+CSettings::CSettings(const QString &sSharePath, const QString &userDataDir,
                      QWidget *pParent)
   : QDialog(pParent),
     m_sSharePath(sSharePath) {
@@ -52,21 +53,8 @@ CSettings::CSettings(const QString &sSharePath, const QStringList slistCPUs,
                               qApp->applicationName().toLower());
 #endif
 
-  QStringList sListGuiLanguages;
-  sListGuiLanguages << "auto" << "en";
-  QDir appDir(m_sSharePath + "/lang");
-  QFileInfoList fiListFiles = appDir.entryInfoList(
-                                QDir::NoDotAndDotDot | QDir::Files);
-  foreach (QFileInfo fi, fiListFiles) {
-    if ("qm" == fi.suffix() && fi.baseName().startsWith(qAppName().toLower() + "_")) {
-      sListGuiLanguages << fi.baseName().remove(qAppName().toLower() + "_");
-    }
-  }
-  m_pUi->cbGuiLanguage->addItems(sListGuiLanguages);
-
-  QStringList sListP2HumanCpu;
-  sListP2HumanCpu << "Human" << slistCPUs;
-  m_pUi->cbP2HumanCpu->addItems(sListP2HumanCpu);
+  m_pUi->cbGuiLanguage->addItems(this->searchLanguages());
+  this->searchCpuScripts(userDataDir);
 
   QStringList sListStartPlayer;
   sListStartPlayer << trUtf8("Random")
@@ -86,6 +74,59 @@ CSettings::~CSettings() {
   if (m_pUi) {
     delete m_pUi;
     m_pUi = NULL;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+QStringList CSettings::searchLanguages() {
+  QStringList sListGuiLanguages;
+  sListGuiLanguages << "auto" << "en";
+  QDir appDir(m_sSharePath + "/lang");
+  QFileInfoList fiListFiles = appDir.entryInfoList(
+                                QDir::NoDotAndDotDot | QDir::Files);
+  foreach (QFileInfo fi, fiListFiles) {
+    if ("qm" == fi.suffix() && fi.baseName().startsWith(qAppName().toLower() + "_")) {
+      sListGuiLanguages << fi.baseName().remove(qAppName().toLower() + "_");
+    }
+  }
+
+  return sListGuiLanguages;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void CSettings::searchCpuScripts(const QString &userDataDir) {
+  QStringList sListAvailableCpu;
+  sListAvailableCpu << "Human";
+  m_sListCPUs.clear();
+  m_sListCPUs << "Human";
+  QDir cpuDir = m_sSharePath;
+
+  // Cpu scripts in share folder
+  if (cpuDir.cd("cpu")) {
+    foreach (QFileInfo file, cpuDir.entryInfoList(QDir::Files)) {
+      if ("js" == file.suffix().toLower()) {
+        sListAvailableCpu << file.baseName();
+        m_sListCPUs << file.absoluteFilePath();
+      }
+    }
+  }
+  m_pUi->cbP2HumanCpu->addItems(sListAvailableCpu);
+
+  // Cpu scripts in user folder
+  cpuDir = userDataDir;
+  if (cpuDir.cd("cpu")) {
+    foreach (QFileInfo file, cpuDir.entryInfoList(QDir::Files)) {
+      if ("js" == file.suffix().toLower()) {
+        sListAvailableCpu << file.baseName();
+        m_pUi->cbP2HumanCpu->addItem(QIcon(":/images/user.png"),
+                                     sListAvailableCpu.last());
+        m_sListCPUs << file.absoluteFilePath();
+      }
+    }
   }
 }
 
@@ -280,9 +321,6 @@ QString CSettings::getNameP1() {
 QString CSettings::getNameP2() {
   return m_sNameP2;
 }
-QString CSettings::getP2HumanCpu() {
-  return m_sP2HumanCpu;
-}
 quint8 CSettings::getStartPlayer() {
   return m_nStartPlayer;
 }
@@ -291,6 +329,14 @@ quint8 CSettings::getWinTowers() {
 }
 bool CSettings::getShowPossibleMoveTowers() {
   return m_bShowPossibleMoveTowers;
+}
+
+QString CSettings::getP2HumanCpu() {
+  if (-1 != m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)) {
+    return m_sListCPUs[m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)];
+  } else {
+    return "Human";
+  }
 }
 
 // ----------------------------------------------------------------------------

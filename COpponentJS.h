@@ -1,5 +1,5 @@
 /**
- * \file CCpuOpponents.h
+ * \file COpponentJS.h
  *
  * \section LICENSE
  *
@@ -21,30 +21,41 @@
  * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
- * Class definition CPU opponents.
+ * Interface to CPU script JS engine.
  */
 
-#ifndef STACKANDCONQUER_CCPUOPPONENTS_H_
-#define STACKANDCONQUER_CCPUOPPONENTS_H_
+#ifndef COPPONENTJS_H
+#define COPPONENTJS_H
 
-#include <QDir>
+#include <QObject>
+#include <QPoint>
+#include <QJSEngine>
 
-#include "./ICpuOpponent.h"
-
-class CCpuOpponents : public QObject {
+class COpponentJS : public QObject {
   Q_OBJECT
 
  public:
-  CCpuOpponents(const QDir userDataDir);
-  QStringList getCpuList();
-  QObject* getCurrentCpu(qint8 nCpu);
+  explicit COpponentJS(quint8 nNumOfFields, QObject *parent = 0);
+  bool loadAndEvalCpuScript(const QString &sFilepath);
+
+ public slots:
+  void makeMoveCpu(QList<QList<QList<quint8> > > board, bool bStonesLeft);
+  void log(const QString &sMsg) const;
+
+ signals:
+  void setStone(QPoint field);
+  void moveTower(QPoint tower, QPoint moveTo, quint8 nStones = 0);
+  void scriptError();
 
  private:
-  QList<ICpuOpponent *> m_listCPUs;
-  QList<QObject *> m_listCpuObjects;
-  QStringList m_sListAvailableCPUs;
+  QJsonDocument convertBoardToJSON(QList<QList<QList<quint8> > > board);
+  QList<QPoint> evalMoveReturn(QString sReturn);
 
-  QDir m_userDataDir;
+  QJSEngine *m_jsEngine;
+  QJSValue m_obj;
+  QList<QList<QList<quint8> > > m_board;
+
+  const quint8 m_nNumOfFields;
 };
 
-#endif  // STACKANDCONQUER_CCPUOPPONENTS_H_
+#endif  // COPPONENTJS_H

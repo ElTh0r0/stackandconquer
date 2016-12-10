@@ -19,76 +19,88 @@
 <context>
     <name>CGame</name>
     <message>
-        <location filename="../CGame.cpp" line="127"/>
-        <location filename="../CGame.cpp" line="136"/>
-        <location filename="../CGame.cpp" line="180"/>
-        <location filename="../CGame.cpp" line="254"/>
-        <location filename="../CGame.cpp" line="260"/>
-        <location filename="../CGame.cpp" line="312"/>
-        <location filename="../CGame.cpp" line="317"/>
-        <location filename="../CGame.cpp" line="323"/>
+        <location filename="../CGame.cpp" line="147"/>
+        <location filename="../CGame.cpp" line="165"/>
+        <location filename="../CGame.cpp" line="247"/>
+        <location filename="../CGame.cpp" line="320"/>
+        <location filename="../CGame.cpp" line="326"/>
+        <location filename="../CGame.cpp" line="378"/>
+        <location filename="../CGame.cpp" line="383"/>
+        <location filename="../CGame.cpp" line="389"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="128"/>
+        <location filename="../CGame.cpp" line="148"/>
         <source>No stones left! Please move a tower.</source>
         <translation>Keine Steine verfügbar! Bitte einen Turm bewegen.</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="137"/>
+        <location filename="../CGame.cpp" line="166"/>
         <source>It is only allowed to place a stone on a free field.</source>
         <translation>Es ist nur erlaubt, Steine auf freie Felder zu setzen.</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="149"/>
-        <location filename="../CGame.cpp" line="167"/>
-        <location filename="../CGame.cpp" line="218"/>
-        <location filename="../CGame.cpp" line="357"/>
-        <location filename="../CGame.cpp" line="364"/>
+        <location filename="../CGame.cpp" line="152"/>
+        <location filename="../CGame.cpp" line="171"/>
+        <location filename="../CGame.cpp" line="187"/>
+        <location filename="../CGame.cpp" line="191"/>
+        <location filename="../CGame.cpp" line="213"/>
+        <location filename="../CGame.cpp" line="217"/>
+        <location filename="../CGame.cpp" line="279"/>
+        <location filename="../CGame.cpp" line="423"/>
+        <location filename="../CGame.cpp" line="430"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="150"/>
-        <location filename="../CGame.cpp" line="168"/>
-        <location filename="../CGame.cpp" line="219"/>
-        <location filename="../CGame.cpp" line="358"/>
-        <location filename="../CGame.cpp" line="365"/>
+        <location filename="../CGame.cpp" line="153"/>
+        <location filename="../CGame.cpp" line="172"/>
+        <location filename="../CGame.cpp" line="192"/>
+        <location filename="../CGame.cpp" line="218"/>
+        <source>CPU script made an invalid move! Please check the debug log.</source>
+        <translation>CPU hat einen ungültigen Zug ausgeführt! Bitte überprüfe die Debugdatei.</translation>
+    </message>
+    <message>
+        <location filename="../CGame.cpp" line="188"/>
+        <location filename="../CGame.cpp" line="214"/>
+        <location filename="../CGame.cpp" line="280"/>
+        <location filename="../CGame.cpp" line="424"/>
+        <location filename="../CGame.cpp" line="431"/>
         <source>Something went wrong!</source>
         <translation>Etwas ist schief gelaufen!</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="157"/>
+        <location filename="../CGame.cpp" line="201"/>
         <source>Move tower</source>
         <translation>Turm bewegen</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="158"/>
+        <location filename="../CGame.cpp" line="202"/>
         <source>How many stones shall be moved:</source>
         <translation>Wie viele Steine sollen verschoben werden:</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="181"/>
+        <location filename="../CGame.cpp" line="248"/>
         <source>It is not allowed to revert the previous oppenents move directly!</source>
         <translation>Ist ist nicht erlaubt, den vorangegangenen Zug des Gegners direkt rückgängig zu machen!</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="255"/>
-        <location filename="../CGame.cpp" line="261"/>
+        <location filename="../CGame.cpp" line="321"/>
+        <location filename="../CGame.cpp" line="327"/>
         <source>%1 won the game!</source>
         <translation>%1 hat das Spiel gewonnen!</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="313"/>
+        <location filename="../CGame.cpp" line="379"/>
         <source>No moves possible anymore.
 Game ends in a tie!</source>
         <translation>Keine Züge mehr möglich.
 Das Spiel endet unentschieden!</translation>
     </message>
     <message>
-        <location filename="../CGame.cpp" line="318"/>
-        <location filename="../CGame.cpp" line="324"/>
+        <location filename="../CGame.cpp" line="384"/>
+        <location filename="../CGame.cpp" line="390"/>
         <source>No move possible!
 %1 has to pass.</source>
         <translation>Keine Züge möglich!
@@ -96,29 +108,44 @@ Das Spiel endet unentschieden!</translation>
     </message>
 </context>
 <context>
+    <name>COpponentJS</name>
+    <message>
+        <location filename="../COpponentJS.cpp" line="96"/>
+        <location filename="../COpponentJS.cpp" line="126"/>
+        <source>Warning</source>
+        <translation>Warnung</translation>
+    </message>
+    <message>
+        <location filename="../COpponentJS.cpp" line="97"/>
+        <location filename="../COpponentJS.cpp" line="127"/>
+        <source>CPU script execution error! Please check the debug log.</source>
+        <translation>CPU-Skriptausführungsfehler! Bitte überprüfe die Debugdatei.</translation>
+    </message>
+</context>
+<context>
     <name>CSettings</name>
     <message>
-        <location filename="../CSettings.cpp" line="138"/>
+        <location filename="../CSettings.cpp" line="179"/>
         <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
         <translation>Grundlegende Spieleinstellungen wurden geändert.&lt;br&gt;Soll ein neues Spiel gestartet werden?</translation>
     </message>
     <message>
-        <location filename="../CSettings.cpp" line="73"/>
-        <location filename="../CSettings.cpp" line="178"/>
-        <location filename="../CSettings.cpp" line="245"/>
+        <location filename="../CSettings.cpp" line="61"/>
+        <location filename="../CSettings.cpp" line="219"/>
+        <location filename="../CSettings.cpp" line="286"/>
         <source>Player 1</source>
         <translation>Spieler 1</translation>
     </message>
     <message>
-        <location filename="../CSettings.cpp" line="74"/>
-        <location filename="../CSettings.cpp" line="180"/>
-        <location filename="../CSettings.cpp" line="246"/>
+        <location filename="../CSettings.cpp" line="62"/>
+        <location filename="../CSettings.cpp" line="221"/>
+        <location filename="../CSettings.cpp" line="287"/>
         <source>Player 2</source>
         <translation>Spieler 2</translation>
     </message>
     <message>
-        <location filename="../CSettings.cpp" line="72"/>
-        <location filename="../CSettings.cpp" line="244"/>
+        <location filename="../CSettings.cpp" line="60"/>
+        <location filename="../CSettings.cpp" line="285"/>
         <source>Random</source>
         <translation>Zufällig</translation>
     </message>
@@ -244,23 +271,39 @@ Das Spiel endet unentschieden!</translation>
         <translation>&amp;Einstellungen</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="225"/>
-        <location filename="../CStackAndConquer.cpp" line="229"/>
+        <location filename="../CStackAndConquer.cpp" line="72"/>
+        <location filename="../CStackAndConquer.cpp" line="223"/>
+        <source>Warning</source>
+        <translation>Warnung</translation>
+    </message>
+    <message>
+        <location filename="../CStackAndConquer.cpp" line="73"/>
+        <source>Specified file not found:</source>
+        <translation>Die ausgewählte Datei konnte nicht gefunden werden:</translation>
+    </message>
+    <message>
+        <location filename="../CStackAndConquer.cpp" line="224"/>
+        <source>An error occured during CPU initialization.</source>
+        <translation>Bei der CPU-Initialisierung ist ein Fehler aufgetreten.</translation>
+    </message>
+    <message>
+        <location filename="../CStackAndConquer.cpp" line="245"/>
+        <location filename="../CStackAndConquer.cpp" line="249"/>
         <source>%1&apos;s turn</source>
         <translation>%1 ist am Zug</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="280"/>
+        <location filename="../CStackAndConquer.cpp" line="300"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="295"/>
+        <location filename="../CStackAndConquer.cpp" line="315"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="299"/>
+        <location filename="../CStackAndConquer.cpp" line="319"/>
         <source>Translations</source>
         <translation>Übersetzungen</translation>
     </message>

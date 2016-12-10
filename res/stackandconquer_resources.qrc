@@ -4,5 +4,6 @@
         <file>images/stones.svg</file>
         <file>images/stones.png</file>
         <file>images/win.png</file>
+        <file>images/user.png</file>
     </qresource>
 </RCC>

@@ -35,7 +35,6 @@
 #include <QLabel>
 #include <QMainWindow>
 
-#include "./CCpuOpponents.h"
 #include "./CGame.h"
 #include "./CSettings.h"
 
@@ -64,7 +63,7 @@ class CStackAndConquer : public QMainWindow {
   void closeEvent(QCloseEvent *pEvent);
 
  private slots:
-  void startNewGame();
+  void startNewGame(QString sCmdArg = "");
   void setViewInteractive(bool bEnabled);
   void highlightActivePlayer(bool bPlayer1);
   void loadLanguage(const QString &sLang);
@@ -83,8 +82,6 @@ class CStackAndConquer : public QMainWindow {
   QTranslator m_translator;  // App translations
   QTranslator m_translatorQt;  // Qt translations
   QString m_sCurrLang;
-  CCpuOpponents *m_pCpu;
-  QObject *m_piCpu;
   CSettings *m_pSettings;
   QGraphicsView *m_pGraphView;
   CGame *m_pGame;

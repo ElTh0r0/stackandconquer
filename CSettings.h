@@ -44,7 +44,7 @@ class CSettings : public QDialog {
   Q_OBJECT
 
  public:
-  explicit CSettings(const QString &sSharePath, const QStringList slistCPUs,
+  explicit CSettings(const QString &sSharePath, const QString &userDataDir,
                      QWidget *pParent = 0);
   virtual ~CSettings();
 
@@ -81,6 +81,8 @@ class CSettings : public QDialog {
  private:
   void readSettings();
   QColor readColor(const QString sKey, const QString sFallback);
+  QStringList searchLanguages();
+  void searchCpuScripts(const QString &userDataDir);
 
   QWidget *m_pParent;
   Ui::CSettingsDialog *m_pUi;
@@ -91,6 +93,7 @@ class CSettings : public QDialog {
   QString m_sNameP1;
   QString m_sNameP2;
   QString m_sP2HumanCpu;
+  QStringList m_sListCPUs;
   int m_nStartPlayer;
   int m_nWinTowers;
   bool m_bShowPossibleMoveTowers;
