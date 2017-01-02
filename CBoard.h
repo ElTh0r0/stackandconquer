@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2016 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -94,6 +94,8 @@ class CBoard : public QGraphicsScene {
 
   QList<QList<QList<quint8> > > m_Fields;
   QList<QList<QList<QGraphicsSvgItem *> > > m_FieldStones;
+
+  QList<QGraphicsSimpleTextItem *> m_FieldCaptions;
 };
 
 #endif  // STACKANDCONQUER_CBOARD_H_

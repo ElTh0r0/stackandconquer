@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2016 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -79,16 +79,34 @@ void CBoard::drawBoard() {
   QLineF lineGrid;
   linePen.setColor(m_pSettings->getGridBoardColor());
   // Horizontal
-  for (int i = 1; i < m_numOfFields; i++) {
-    lineGrid.setPoints(QPointF(1, i*m_nGridSize),
-                       QPointF(m_BoardRect.width()-1, i*m_nGridSize));
-    this->addLine(lineGrid, linePen);
+  for (int i = 0; i < m_numOfFields; i++) {
+    if (i > 0) {
+      lineGrid.setPoints(QPointF(1, i*m_nGridSize),
+                         QPointF(m_BoardRect.width()-1, i*m_nGridSize));
+      this->addLine(lineGrid, linePen);
+    }
+
+    if (qApp->arguments().contains("--debug")) {
+      m_FieldCaptions << this->addSimpleText(QString(static_cast<char>(i + 65)));
+      m_FieldCaptions.last()->setPos(i*m_nGridSize,-m_nGridSize/2);
+      m_FieldCaptions.last()->setFont(QFont("Arial", m_nGridSize/5));
+      m_FieldCaptions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+    }
   }
   // Vertical
-  for (int i = 1; i < m_numOfFields; i++) {
-    lineGrid.setPoints(QPointF(i*m_nGridSize, 1),
-                       QPointF(i*m_nGridSize, m_BoardRect.height()-1));
-    this->addLine(lineGrid, linePen);
+  for (int i = 0; i < m_numOfFields; i++) {
+    if (i > 0) {
+      lineGrid.setPoints(QPointF(i*m_nGridSize, 1),
+                         QPointF(i*m_nGridSize, m_BoardRect.height()-1));
+      this->addLine(lineGrid, linePen);
+    }
+
+    if (qApp->arguments().contains("--debug")) {
+      m_FieldCaptions << this->addSimpleText(QString::number(i+1));
+      m_FieldCaptions.last()->setPos(-m_nGridSize/1.75, i*m_nGridSize+m_nGridSize/8);
+      m_FieldCaptions.last()->setFont(QFont("Arial", m_nGridSize/5));
+      m_FieldCaptions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+    }
   }
 }
 
