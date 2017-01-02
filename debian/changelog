@@ -1,3 +1,20 @@
+stackandconquer (0.6.0-0ubuntu1) xenial; urgency=low
+
+  [ Thorsten Roth ]
+  * Added JS engine for CPU scripts and removed plugin interface.
+  * Minor gui changes and graphic fixes.
+  * Change gui language without restarting the game.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Sat, 10 Dec 2016 16:32:00 +0200
+
+stackandconquer (0.5.0-0ubuntu1) xenial; urgency=low
+
+  [ Thorsten Roth ]
+  * Added CPU plugin interface.
+  * Highlight moves.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Sun, 13 Nov 2016 17:26:00 +0200
+
 stackandconquer (0.4.0-0ubuntu1) xenial; urgency=low
 
   [ Thorsten Roth ]
