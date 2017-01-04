@@ -5,5 +5,11 @@
         <file>images/stones.png</file>
         <file>images/win.png</file>
         <file>images/user.png</file>
+        <file>images/menu/document-new.png</file>
+        <file>images/menu/document-open.png</file>
+        <file>images/menu/document-save.png</file>
+        <file>images/menu/help-browser.png</file>
+        <file>images/menu/preferences-system.png</file>
+        <file>images/menu/system-log-out.png</file>
     </qresource>
 </RCC>

@@ -4,14 +4,14 @@
 <context>
     <name>CBoard</name>
     <message>
-        <location filename="../CBoard.cpp" line="250"/>
-        <location filename="../CBoard.cpp" line="302"/>
+        <location filename="../CBoard.cpp" line="268"/>
+        <location filename="../CBoard.cpp" line="320"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../CBoard.cpp" line="251"/>
-        <location filename="../CBoard.cpp" line="303"/>
+        <location filename="../CBoard.cpp" line="269"/>
+        <location filename="../CBoard.cpp" line="321"/>
         <source>Something went wrong!</source>
         <translation>Etwas ist schief gelaufen!</translation>
     </message>
@@ -280,7 +280,7 @@ Das Spiel endet unentschieden!</translation>
     </message>
     <message>
         <location filename="../CStackAndConquer.cpp" line="72"/>
-        <location filename="../CStackAndConquer.cpp" line="223"/>
+        <location filename="../CStackAndConquer.cpp" line="235"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
@@ -290,34 +290,39 @@ Das Spiel endet unentschieden!</translation>
         <translation>Die ausgewählte Datei konnte nicht gefunden werden:</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="224"/>
+        <location filename="../CStackAndConquer.cpp" line="236"/>
         <source>An error occured during CPU initialization.</source>
         <translation>Bei der CPU-Initialisierung ist ein Fehler aufgetreten.</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="245"/>
-        <location filename="../CStackAndConquer.cpp" line="249"/>
+        <location filename="../CStackAndConquer.cpp" line="257"/>
+        <location filename="../CStackAndConquer.cpp" line="261"/>
         <source>%1 won the game!</source>
         <translation>%1 hat das Spiel gewonnen!</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="257"/>
-        <location filename="../CStackAndConquer.cpp" line="262"/>
+        <location filename="../CStackAndConquer.cpp" line="269"/>
+        <location filename="../CStackAndConquer.cpp" line="274"/>
         <source>%1&apos;s turn</source>
         <translation>%1 ist am Zug</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="313"/>
+        <location filename="../CStackAndConquer.cpp" line="325"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="328"/>
+        <location filename="../CStackAndConquer.cpp" line="341"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="../CStackAndConquer.cpp" line="332"/>
+        <location filename="../CStackAndConquer.cpp" line="345"/>
+        <source>This application uses icons from &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;Tango project&lt;/a&gt;.</source>
+        <translation>Diese Anwendung verwendet Symbole aus dem &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;Tango Projekt&lt;/a&gt;.</translation>
+    </message>
+    <message>
+        <location filename="../CStackAndConquer.cpp" line="348"/>
         <source>Translations</source>
         <translation>Übersetzungen</translation>
     </message>

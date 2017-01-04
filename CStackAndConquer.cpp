@@ -90,32 +90,42 @@ void CStackAndConquer::setupMenu() {
 
   // New game
   m_pUi->action_NewGame->setShortcut(QKeySequence::New);
-  m_pUi->action_NewGame->setIcon(QIcon::fromTheme("document-new"));
+  m_pUi->action_NewGame->setIcon(
+        QIcon::fromTheme("document-new",
+                         QIcon(":images/menu/document-new.png")));
   connect(m_pUi->action_NewGame, SIGNAL(triggered()),
           this, SLOT(startNewGame()));
 
   // TODO: Load / save game, json?
   // Load game
   m_pUi->action_LoadGame->setShortcut(QKeySequence::Open);
-  m_pUi->action_LoadGame->setIcon(QIcon::fromTheme("document-open"));
+  m_pUi->action_LoadGame->setIcon(
+        QIcon::fromTheme("document-open",
+                         QIcon(":images/menu/document-open.png")));
   // connect(m_pUi->action_LoadGame, SIGNAL(triggered()),
   //         this, SLOT(loadGame()));
   m_pUi->action_LoadGame->setEnabled(false);
 
   // Save game
   m_pUi->action_SaveGame->setShortcut(QKeySequence::Save);
-  m_pUi->action_SaveGame->setIcon(QIcon::fromTheme("document-save"));
+  m_pUi->action_SaveGame->setIcon(
+        QIcon::fromTheme("document-save",
+                         QIcon(":images/menu/document-save.png")));
   // connect(m_pUi->action_SaveGame, SIGNAL(triggered()),
   //         this, SLOT(saveGame()));
 
   // Settings
-  m_pUi->action_Preferences->setIcon(QIcon::fromTheme("preferences-system"));
+  m_pUi->action_Preferences->setIcon(
+        QIcon::fromTheme("preferences-system",
+                         QIcon(":images/menu/preferences-system.png")));
   connect(m_pUi->action_Preferences, SIGNAL(triggered()),
           m_pSettings, SLOT(show()));
 
   // Exit game
   m_pUi->action_Quit->setShortcut(QKeySequence::Quit);
-  m_pUi->action_Quit->setIcon(QIcon::fromTheme("application-exit"));
+  m_pUi->action_Quit->setIcon(
+        QIcon::fromTheme("application-exit",
+                         QIcon(":images/menu/system-log-out.png")));
   connect(m_pUi->action_Quit, SIGNAL(triggered()),
           this, SLOT(close()));
 
@@ -124,7 +134,9 @@ void CStackAndConquer::setupMenu() {
           this, SLOT(reportBug()));
 
   // About
-  m_pUi->action_Info->setIcon(QIcon::fromTheme("help-about"));
+  m_pUi->action_Info->setIcon(
+        QIcon::fromTheme("help-about",
+                         QIcon(":images/menu/help-browser.png")));
   connect(m_pUi->action_Info, SIGNAL(triggered()),
           this, SLOT(showInfoBox()));
 }
@@ -316,9 +328,10 @@ void CStackAndConquer::showInfoBox() {
                              "%3<br/>"
                              "<small>%4</small><br/><br/>"
                              "%5<br/>"
-                             "%6"
-                             "</center><br />"
-                             "%7")
+                             "%6<br/>"
+                             "<small>%7</small>"
+                             "</center><br/>"
+                             "%8")
                      .arg(qApp->applicationName())
                      .arg(qApp->applicationVersion())
                      .arg(APP_DESC)
@@ -329,6 +342,9 @@ void CStackAndConquer::showInfoBox() {
                           ": "
                           "<a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">"
                           "GNU General Public License Version 3</a>")
+                     .arg(trUtf8("This application uses icons from "
+                                 "<a href=\"http://tango.freedesktop.org\">"
+                                 "Tango project</a>."))
                      .arg("<i>" + trUtf8("Translations") +
                           "</i><br />&nbsp;&nbsp;- German: ElThoro"));
 }
