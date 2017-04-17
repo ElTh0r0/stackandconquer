@@ -315,7 +315,7 @@ bool CStackAndConquer::switchTranslator(QTranslator &translator,
 // ---------------------------------------------------------------------------
 
 void CStackAndConquer::reportBug() {
-  QDesktopServices::openUrl(QUrl("https://bugs.launchpad.net/stackandconquer"));
+  QDesktopServices::openUrl(QUrl("https://github.com/ElTh0r0/stackandconquer/issues"));
 }
 
 // ----------------------------------------------------------------------------
@@ -336,8 +336,8 @@ void CStackAndConquer::showInfoBox() {
                      .arg(qApp->applicationVersion())
                      .arg(APP_DESC)
                      .arg(APP_COPY)
-                     .arg("URL: <a href=\"https://launchpad.net/stackandconquer\">"
-                          "https://launchpad.net/stackandconquer</a>")
+                     .arg("URL: <a href=\"https://github.com/ElTh0r0/stackandconquer/issues\">"
+                          "https://github.com/ElTh0r0/stackandconquer/issues</a>")
                      .arg(trUtf8("License") +
                           ": "
                           "<a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">"

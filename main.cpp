@@ -27,7 +27,7 @@
 /** \mainpage
  * \section Introduction
  * StackAndConquer is a challenging tower conquest board game. Inspired by Mixtour.<br />
- * Launchpad: https://launchpad.net/stackandconquer
+ * GitHub: https://github.com/ElTh0r0/stackandconquer
  */
 
 #include <QApplication>
