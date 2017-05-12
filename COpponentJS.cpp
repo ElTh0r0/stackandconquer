@@ -35,8 +35,8 @@
 
 COpponentJS::COpponentJS(quint8 nNumOfFields, QObject *parent)
   : QObject(parent),
-    m_nNumOfFields(nNumOfFields) {
-  m_jsEngine = new QJSEngine(parent);
+    m_nNumOfFields(nNumOfFields),
+    m_jsEngine(new QJSEngine(parent)) {
   m_obj = m_jsEngine->globalObject();
   m_obj.setProperty("cpu", m_jsEngine->newQObject(this));
 
@@ -56,7 +56,7 @@ bool COpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
   f.close();
   qDebug() << "CPU script:" << sFilepath;
 
-  QJSValue result = m_jsEngine->evaluate(source, sFilepath);
+  QJSValue result(m_jsEngine->evaluate(source, sFilepath));
   if (result.isError()) {
     qCritical() << "Error in CPU script at line" <<
                    result.property("lineNumber").toInt() <<
@@ -81,8 +81,8 @@ bool COpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void COpponentJS::makeMoveCpu(QList<QList<QList<quint8> > > board,
-                              bool bStonesLeft) {
+void COpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
+                              const bool bStonesLeft) {
   QJsonDocument jsdoc(this->convertBoardToJSON(board));
 
   QString sJsBoard(jsdoc.toJson(QJsonDocument::Compact));
@@ -133,7 +133,7 @@ void COpponentJS::makeMoveCpu(QList<QList<QList<quint8> > > board,
 // ---------------------------------------------------------------------------
 
 QJsonDocument COpponentJS::convertBoardToJSON(
-    QList<QList<QList<quint8> > > board) {
+    const QList<QList<QList<quint8> > > board) {
   QJsonArray tower;
   QVariantList vartower;
   QJsonArray jsboard;

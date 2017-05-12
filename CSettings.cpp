@@ -35,10 +35,10 @@
 CSettings::CSettings(const QString &sSharePath, const QString &userDataDir,
                      QWidget *pParent)
   : QDialog(pParent),
+    m_pUi(new Ui::CSettingsDialog()),
     m_sSharePath(sSharePath) {
   qDebug() << "Calling" << Q_FUNC_INFO;
 
-  m_pUi = new Ui::CSettingsDialog();
   m_pUi->setupUi(this);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
   this->setModal(true);
@@ -80,7 +80,7 @@ CSettings::~CSettings() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QStringList CSettings::searchLanguages() {
+QStringList CSettings::searchLanguages() const {
   QStringList sListGuiLanguages;
   sListGuiLanguages << "auto" << "en";
   QDir appDir(m_sSharePath + "/lang");
@@ -263,7 +263,7 @@ void CSettings::readSettings() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QColor CSettings::readColor(const QString sKey, const QString sFallback) {
+QColor CSettings::readColor(const QString sKey, const QString sFallback) const {
   QString sValue = m_pSettings->value("Colors/" + sKey, sFallback).toString();
   QColor color(sFallback);
 
@@ -315,23 +315,23 @@ QString CSettings::getLanguage() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QString CSettings::getNameP1() {
+QString CSettings::getNameP1() const {
   return m_sNameP1;
 }
-QString CSettings::getNameP2() {
+QString CSettings::getNameP2() const {
   return m_sNameP2;
 }
-quint8 CSettings::getStartPlayer() {
+quint8 CSettings::getStartPlayer() const {
   return m_nStartPlayer;
 }
-quint8 CSettings::getWinTowers() {
+quint8 CSettings::getWinTowers() const {
   return m_nWinTowers;
 }
-bool CSettings::getShowPossibleMoveTowers() {
+bool CSettings::getShowPossibleMoveTowers() const {
   return m_bShowPossibleMoveTowers;
 }
 
-QString CSettings::getP2HumanCpu() {
+QString CSettings::getP2HumanCpu() const {
   if (-1 != m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)) {
     return m_sListCPUs[m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)];
   } else {

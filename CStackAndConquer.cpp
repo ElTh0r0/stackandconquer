@@ -196,7 +196,7 @@ void CStackAndConquer::setupGraphView() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::startNewGame(QString sCmdArg) {
+void CStackAndConquer::startNewGame(const QString sCmdArg) {
   qDebug() << Q_FUNC_INFO;
 
   if (NULL != m_pGame) {
@@ -243,15 +243,16 @@ void CStackAndConquer::startNewGame(QString sCmdArg) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::setViewInteractive(bool bEnabled) {
+void CStackAndConquer::setViewInteractive(const bool bEnabled) {
   m_pGraphView->setInteractive(bEnabled);
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::highlightActivePlayer(bool bPlayer1,
-                                             bool bP1Won, bool bP2Won) {
+void CStackAndConquer::highlightActivePlayer(const bool bPlayer1,
+                                             const bool bP1Won,
+                                             const bool bP2Won) {
   if (bP1Won) {
     m_pUi->statusBar->showMessage(
           trUtf8("%1 won the game!").arg(m_plblPlayer1->text()));
@@ -314,7 +315,7 @@ bool CStackAndConquer::switchTranslator(QTranslator &translator,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::reportBug() {
+void CStackAndConquer::reportBug() const {
   QDesktopServices::openUrl(QUrl("https://github.com/ElTh0r0/stackandconquer/issues"));
 }
 

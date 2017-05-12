@@ -38,15 +38,15 @@ class CPlayer {
   CPlayer(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones);
   ~CPlayer();
 
-  void setActive(bool bActive);
+  void setActive(const bool bActive);
   bool getIsActive() const;
   bool getIsHuman() const;
   QString getName() const;
-  void setStonesLeft(quint8 nStones);
+  void setStonesLeft(const quint8 nStones);
   quint8 getStonesLeft() const;
   void increaseWonTowers();
   quint8 getWonTowers() const;
-  void setCanMove(bool bCanMove);
+  void setCanMove(const bool bCanMove);
   bool getCanMove() const;
 
  private:

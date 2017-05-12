@@ -49,7 +49,7 @@ CPlayer::~CPlayer() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CPlayer::setActive(bool bActive) {
+void CPlayer::setActive(const bool bActive) {
   m_bIsActive = bActive;
 }
 
@@ -70,7 +70,7 @@ QString CPlayer::getName() const {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CPlayer::setCanMove(bool bCanMove) {
+void CPlayer::setCanMove(const bool bCanMove) {
   m_bCanMove = bCanMove;
 }
 
@@ -81,7 +81,7 @@ bool CPlayer::getCanMove() const {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CPlayer::setStonesLeft(quint8 nStones) {
+void CPlayer::setStonesLeft(const quint8 nStones) {
   if (nStones <= m_nMaxStones) {
     m_nStonesLeft = nStones;
   } else {

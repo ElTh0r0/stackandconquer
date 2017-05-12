@@ -48,12 +48,12 @@ class CBoard : public QGraphicsScene {
   CBoard(quint8 nNumOfFields, quint16 nGridSize, quint8 nMaxStones,
          CSettings *pSettings);
 
-  void addStone(QPoint field, quint8 stone);
-  void removeStone(QPoint field, bool bAll = false);
-  void selectField(QPointF point);
+  void addStone(const QPoint field, const quint8 stone);
+  void removeStone(const QPoint field, const bool bAll = false);
+  void selectField(const QPointF point);
   QList<QList<QList<quint8> > > getBoard() const;
-  QList<quint8> getField(QPoint field) const;
-  bool findPossibleMoves(bool bStonesLeft);
+  QList<quint8> getField(const QPoint field) const;
+  bool findPossibleMoves(const bool bStonesLeft);
   void printDebugFields() const;
 
  signals:
@@ -72,12 +72,12 @@ class CBoard : public QGraphicsScene {
   void drawBoard();
   void createHighlighters();
   void createStones();
-  void startAnimation(QPoint field);
-  void startAnimation2(QPoint field);
-  QPointF snapToGrid(QPointF point) const;
-  QPoint getGridField(QPointF point) const;
-  QList<QPoint> checkNeighbourhood(QPoint field);
-  void highlightNeighbourhood(QList<QPoint> neighbours);
+  void startAnimation(const QPoint field);
+  void startAnimation2(const QPoint field);
+  QPointF snapToGrid(const QPointF point) const;
+  QPoint getGridField(const QPointF point) const;
+  QList<QPoint> checkNeighbourhood(const QPoint field);
+  void highlightNeighbourhood(const QList<QPoint> neighbours);
 
   const quint16 m_nGridSize;
   const quint8 m_nMaxStones;

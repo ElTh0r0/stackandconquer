@@ -39,7 +39,8 @@ class COpponentJS : public QObject {
   bool loadAndEvalCpuScript(const QString &sFilepath);
 
  public slots:
-  void makeMoveCpu(QList<QList<QList<quint8> > > board, bool bStonesLeft);
+  void makeMoveCpu(const QList<QList<QList<quint8> > > board,
+                   const bool bStonesLeft);
   void log(const QString &sMsg) const;
 
  signals:
@@ -48,14 +49,13 @@ class COpponentJS : public QObject {
   void scriptError();
 
  private:
-  QJsonDocument convertBoardToJSON(QList<QList<QList<quint8> > > board);
+  QJsonDocument convertBoardToJSON(const QList<QList<QList<quint8> > > board);
   QList<QPoint> evalMoveReturn(QString sReturn);
 
+  const quint8 m_nNumOfFields;
   QJSEngine *m_jsEngine;
   QJSValue m_obj;
   QList<QList<QList<quint8> > > m_board;
-
-  const quint8 m_nNumOfFields;
 };
 
 #endif  // COPPONENTJS_H

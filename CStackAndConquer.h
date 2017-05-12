@@ -63,12 +63,13 @@ class CStackAndConquer : public QMainWindow {
   void closeEvent(QCloseEvent *pEvent);
 
  private slots:
-  void startNewGame(QString sCmdArg = "");
-  void setViewInteractive(bool bEnabled);
-  void highlightActivePlayer(bool bPlayer1,
-                             bool bP1Won = false, bool bP2Won = false);
+  void startNewGame(const QString sCmdArg = "");
+  void setViewInteractive(const bool bEnabled);
+  void highlightActivePlayer(const bool bPlayer1,
+                             const bool bP1Won = false,
+                             const bool bP2Won = false);
   void loadLanguage(const QString &sLang);
-  void reportBug();
+  void reportBug() const;
   void showInfoBox();
 
  private:

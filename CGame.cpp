@@ -116,11 +116,11 @@ void CGame::caughtScriptError() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QGraphicsScene* CGame::getScene() {
+QGraphicsScene* CGame::getScene() const {
   return m_pBoard;
 }
 
-QRectF CGame::getSceneRect() {
+QRectF CGame::getSceneRect() const {
   return QRectF(0, 0,
                 m_nNumOfFields * m_nGridSize-1, m_nNumOfFields * m_nGridSize-1);
 }
@@ -179,7 +179,7 @@ void CGame::setStone(QPoint field) {
 // ---------------------------------------------------------------------------
 
 void CGame::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
-  QList<quint8> listStones = m_pBoard->getField(tower);
+  QList<quint8> listStones(m_pBoard->getField(tower));
   if (0 == listStones.size()) {
     qWarning() << "Move tower size == 0! Tower:" << tower;
     if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
@@ -298,8 +298,8 @@ void CGame::checkTowerWin(QPoint field) {
 // ---------------------------------------------------------------------------
 
 void CGame::returnStones(QPoint field) {
-  QList<quint8> tower = m_pBoard->getField(field);
-  quint8 stones = tower.count(1);
+  QList<quint8> tower(m_pBoard->getField(field));
+  quint8 stones(tower.count(1));
   m_pPlayer1->setStonesLeft(m_pPlayer1->getStonesLeft() + stones);
   stones = tower.count(2);
   m_pPlayer2->setStonesLeft(m_pPlayer2->getStonesLeft() + stones);

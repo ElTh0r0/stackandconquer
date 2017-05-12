@@ -48,12 +48,12 @@ class CSettings : public QDialog {
                      QWidget *pParent = 0);
   virtual ~CSettings();
 
-  QString getNameP1();
-  QString getNameP2();
-  QString getP2HumanCpu();
-  quint8 getStartPlayer();
-  quint8 getWinTowers();
-  bool getShowPossibleMoveTowers();
+  QString getNameP1() const;
+  QString getNameP2() const;
+  QString getP2HumanCpu() const;
+  quint8 getStartPlayer() const;
+  quint8 getWinTowers() const;
+  bool getShowPossibleMoveTowers() const;
   QString getLanguage();
 
   QColor getBgColor() const;
@@ -80,8 +80,8 @@ class CSettings : public QDialog {
 
  private:
   void readSettings();
-  QColor readColor(const QString sKey, const QString sFallback);
-  QStringList searchLanguages();
+  QColor readColor(const QString sKey, const QString sFallback) const;
+  QStringList searchLanguages() const;
   void searchCpuScripts(const QString &userDataDir);
 
   QWidget *m_pParent;

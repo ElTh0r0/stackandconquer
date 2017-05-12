@@ -36,8 +36,8 @@ class CGame : public QObject {
 
  public:
   explicit CGame(CSettings *pSettings, const QString &sJsFile);
-  QGraphicsScene* getScene();
-  QRectF getSceneRect();
+  QGraphicsScene* getScene() const;
+  QRectF getSceneRect() const;
   void updatePlayers(bool bInitial = false);
   bool initCpu();
 
