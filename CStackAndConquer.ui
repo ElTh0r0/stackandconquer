@@ -72,6 +72,11 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_NewGame">
+   <property name="icon">
+    <iconset theme="document-new">
+     <normalon>:/images/menu/document-new.png</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;New game</string>
    </property>
@@ -80,11 +85,21 @@
    </property>
   </action>
   <action name="action_Quit">
+   <property name="icon">
+    <iconset theme="application-exit">
+     <normalon>:/images/menu/system-log-out.png</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Quit</string>
    </property>
   </action>
   <action name="action_Info">
+   <property name="icon">
+    <iconset theme="help-about">
+     <normalon>:/images/menu/help-browser.png</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;About</string>
    </property>
@@ -92,6 +107,11 @@
   <action name="action_SaveGame">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="document-save">
+     <normalon>:/images/menu/document-save.png</normalon>
+    </iconset>
    </property>
    <property name="text">
     <string>&amp;Save game</string>
@@ -101,6 +121,11 @@
    </property>
   </action>
   <action name="action_LoadGame">
+   <property name="icon">
+    <iconset theme="document-open">
+     <normalon>:/images/menu/document-open.png</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>&amp;Load game</string>
    </property>
@@ -114,6 +139,11 @@
    </property>
   </action>
   <action name="action_Preferences">
+   <property name="icon">
+    <iconset theme="preferences-system">
+     <normalon>:/images/menu/preferences-system.png</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>S&amp;ettings</string>
    </property>
