@@ -37,8 +37,6 @@ CSettings::CSettings(const QString &sSharePath, const QString &userDataDir,
   : QDialog(pParent),
     m_pUi(new Ui::CSettingsDialog()),
     m_sSharePath(sSharePath) {
-  qDebug() << "Calling" << Q_FUNC_INFO;
-
   m_pUi->setupUi(this);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
   this->setModal(true);
@@ -134,8 +132,6 @@ void CSettings::searchCpuScripts(const QString &userDataDir) {
 // ----------------------------------------------------------------------------
 
 void CSettings::accept() {
-  qDebug() << "Calling" << Q_FUNC_INFO;
-
   QString sOldGuiLang = m_sGuiLanguage;
   m_sGuiLanguage = m_pUi->cbGuiLanguage->currentText();
   m_pSettings->setValue("GuiLanguage", m_sGuiLanguage);

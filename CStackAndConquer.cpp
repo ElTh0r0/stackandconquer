@@ -39,7 +39,7 @@ CStackAndConquer::CStackAndConquer(const QDir &sharePath,
     m_sSharePath(sharePath.absolutePath()),
     m_sCurrLang(""),
     m_pGame(NULL) {
-  qDebug() << Q_FUNC_INFO;
+  qDebug() << "Starting...";
 
   m_pUi->setupUi(this);
   this->setWindowTitle(qApp->applicationName());
@@ -86,14 +86,12 @@ CStackAndConquer::~CStackAndConquer() {
 // ---------------------------------------------------------------------------
 
 void CStackAndConquer::setupMenu() {
-  qDebug() << Q_FUNC_INFO;
-
   // New game
   m_pUi->action_NewGame->setShortcut(QKeySequence::New);
   connect(m_pUi->action_NewGame, SIGNAL(triggered()),
           this, SLOT(startNewGame()));
 
-  // TODO: Load / save game, json?
+  // TODO: Load / save game
   // Load game
   m_pUi->action_LoadGame->setShortcut(QKeySequence::Open);
   // connect(m_pUi->action_LoadGame, SIGNAL(triggered()),
@@ -127,8 +125,6 @@ void CStackAndConquer::setupMenu() {
 // ---------------------------------------------------------------------------
 
 void CStackAndConquer::setupGraphView() {
-  qDebug() << Q_FUNC_INFO;
-
   m_pGraphView = new QGraphicsView(this);
   // Set mouse tracking to true, otherwise mouse move event
   // for the *scene* is only triggered on a mouse click!
@@ -352,15 +348,15 @@ void CStackAndConquer::changeEvent(QEvent *pEvent) {
 void CStackAndConquer::closeEvent(QCloseEvent *pEvent) {
   pEvent->accept();
   /*
-    int nRet = QMessageBox::question(this, trUtf8("Quit") + " - " +
-                                     qApp->applicationName(),
-                                     trUtf8("Do you really want to quit?"),
-                                     QMessageBox::Yes | QMessageBox::No);
+  int nRet = QMessageBox::question(this, trUtf8("Quit") + " - " +
+                                   qApp->applicationName(),
+                                   trUtf8("Do you really want to quit?"),
+                                   QMessageBox::Yes | QMessageBox::No);
 
-    if (QMessageBox::Yes == nRet) {
-        pEvent->accept();
-    } else {
-        pEvent->ignore();
-    }
-    */
+  if (QMessageBox::Yes == nRet) {
+    pEvent->accept();
+  } else {
+    pEvent->ignore();
+  }
+  */
 }

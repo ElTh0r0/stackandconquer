@@ -54,6 +54,7 @@ class CBoard : public QGraphicsScene {
   QList<QList<QList<quint8> > > getBoard() const;
   QList<quint8> getField(const QPoint field) const;
   bool findPossibleMoves(const bool bStonesLeft);
+  QList<QPoint> checkNeighbourhood(const QPoint field) const;
   void printDebugFields() const;
 
  signals:
@@ -76,7 +77,6 @@ class CBoard : public QGraphicsScene {
   void startAnimation2(const QPoint field);
   QPointF snapToGrid(const QPointF point) const;
   QPoint getGridField(const QPointF point) const;
-  QList<QPoint> checkNeighbourhood(const QPoint field);
   void highlightNeighbourhood(const QList<QPoint> neighbours);
 
   const quint16 m_nGridSize;

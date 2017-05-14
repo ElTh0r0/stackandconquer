@@ -371,7 +371,6 @@ void CBoard::selectField(const QPointF point) {
   pointSnap = this->snapToGrid(pointSnap);
   QList<QPoint> neighbours;
 
-  // TODO: Optimize calls (e.g. deselect)
   if (QPointF(-1, -1) == point) {
     currentField = QPoint(-1, -1);
     m_pSelectedField->setVisible(false);
@@ -389,14 +388,14 @@ void CBoard::selectField(const QPointF point) {
       return;
     }
     neighbours = this->checkNeighbourhood(currentField);
-    if (neighbours.contains(field) && m_pSelectedField->isVisible()) {
+    if (neighbours.contains(field) && m_pSelectedField->isVisible()) {  // Move
       neighbours.clear();
       this->highlightNeighbourhood(neighbours);
       m_pSelectedField->setVisible(false);
       this->startAnimation2(field);
       emit moveTower(field, currentField);
       currentField = QPoint(-1, -1);
-    } else {
+    } else {  // Select
       currentField = field;
       m_pSelectedField->setVisible(true);
       m_pSelectedField->setPos(pointSnap);
@@ -411,7 +410,7 @@ void CBoard::selectField(const QPointF point) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QList<QPoint> CBoard::checkNeighbourhood(const QPoint field) {
+QList<QPoint> CBoard::checkNeighbourhood(const QPoint field) const {
   QList<QPoint> neighbours;
   if (QPoint(-1, -1) == field) {
     return neighbours;
@@ -420,7 +419,6 @@ QList<QPoint> CBoard::checkNeighbourhood(const QPoint field) {
   quint8 nMoves = m_Fields[field.x()][field.y()].size();
   // qDebug() << "Selected:" << field << "- Moves:" << nMoves;
 
-  // TODO: Optimize loops...
   for (int y = field.y() - nMoves; y <= field.y() + nMoves; y += nMoves) {
     for (int x = field.x() - nMoves; x <= field.x() + nMoves; x += nMoves) {
       if (x < 0 || y < 0 || x >= m_numOfFields || y >= m_numOfFields ||

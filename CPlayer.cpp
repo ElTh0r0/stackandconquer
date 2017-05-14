@@ -40,7 +40,7 @@ CPlayer::CPlayer(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones)
   if (!m_bIsHuman) {
     m_sName = "Computer";
   }
-  qDebug() << "Generated player" << m_sName;
+  qDebug() << "Generate player" << m_sName;
 }
 
 CPlayer::~CPlayer() {

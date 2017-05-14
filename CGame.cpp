@@ -43,7 +43,7 @@ CGame::CGame(CSettings *pSettings, const QString &sJsFile)
     m_nNumOfFields(5),
     m_sJsFile(""),
     m_bScriptError(false) {
-  qDebug() << Q_FUNC_INFO;
+  qDebug() << "New game" << sJsFile;
 
   m_pBoard = new CBoard(m_nNumOfFields, m_nGridSize, m_nMaxStones, m_pSettings);
   connect(m_pBoard, SIGNAL(setStone(QPoint)),
@@ -204,7 +204,7 @@ void CGame::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
     if (!ok) {
       return;
     }
-  } else if (0 != nStones) {
+  } else if (0 != nStones) {  // Call from CPU
     if (nStones > listStones.size()) {
       qWarning() << "Trying to move more stones than available! From:" << tower
                  << "Stones:" << nStones << "To:" << moveTo;
@@ -244,9 +244,28 @@ void CGame::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
   }
 
   if (this->checkPreviousMoveReverted(sMove)) {
+    if ((m_pPlayer1->getIsActive() && !m_pPlayer1->getIsHuman()) ||
+        (m_pPlayer2->getIsActive() && !m_pPlayer2->getIsHuman())) {
+      m_bScriptError = true;
+      qWarning() << "CPU tried to revert previous move.";
+      QMessageBox::warning(NULL, trUtf8("Warning"),
+                           trUtf8("CPU script made an invalid move! "
+                                  "Please check the debug log."));
+    }
     QMessageBox::information(NULL, trUtf8("Information"),
                              trUtf8("It is not allowed to revert the "
                                     "previous oppenents move directly!"));
+    return;
+  }
+
+  // Check, if CPU made a valid move
+  if (!m_pBoard->checkNeighbourhood(moveTo).contains(tower)) {
+    qWarning() << "CPU tried to move a tower, which is not in the "
+                  "neighbourhood of the selected tower.";
+    m_bScriptError = true;
+    QMessageBox::warning(NULL, trUtf8("Warning"),
+                         trUtf8("CPU script made an invalid move! "
+                                "Please check the debug log."));
     return;
   }
 
