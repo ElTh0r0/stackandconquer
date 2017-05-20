@@ -67,7 +67,7 @@ CGame::CGame(CSettings *pSettings, const QString &sJsFile)
       m_sJsFile = m_pSettings->getP2HumanCpu();
     }
 
-    m_jsCpu = new COpponentJS(m_nNumOfFields);
+    m_jsCpu = new COpponentJS(m_nNumOfFields, m_nMaxTowerHeight);
     connect(this, SIGNAL(makeMoveCpu(QList<QList<QList<quint8> > >, bool)),
             m_jsCpu, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, bool)));
     connect(m_jsCpu, SIGNAL(setStone(QPoint)),
@@ -219,6 +219,8 @@ void CGame::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
                                     "Please check the debug log."));
       }
       return;
+    } else {
+      nStonesToMove = nStones;
     }
   }
 
@@ -286,7 +288,9 @@ void CGame::checkTowerWin(QPoint field) {
   if (m_pBoard->getField(field).size() >= m_nMaxTowerHeight) {
     if (1 == m_pBoard->getField(field).last()) {
       m_pPlayer1->increaseWonTowers();
-      qDebug() << "Player 1 conquered tower" << field;
+      qDebug() << "Player 1 conquered tower" <<
+                  static_cast<char>(field.x() + 65) +
+                  QString::number(field.y() + 1);
       if (m_pSettings->getWinTowers() != m_pPlayer1->getWonTowers()) {
         QMessageBox::information(NULL, trUtf8("Information"),
                                  trUtf8("%1 conquered a tower!")
@@ -294,7 +298,9 @@ void CGame::checkTowerWin(QPoint field) {
       }
     } else if (2 == m_pBoard->getField(field).last()) {
       m_pPlayer2->increaseWonTowers();
-      qDebug() << "Player 2 conquered tower" << field;
+      qDebug() << "Player 2 conquered tower" <<
+                  static_cast<char>(field.x() + 65) +
+                  QString::number(field.y() + 1);
       if (m_pSettings->getWinTowers() != m_pPlayer2->getWonTowers()) {
         QMessageBox::information(NULL, trUtf8("Information"),
                                  trUtf8("%1 conquered a tower!")

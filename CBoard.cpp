@@ -319,25 +319,26 @@ void CBoard::removeStone(const QPoint field, const bool bAll) {
     QMessageBox::warning(NULL, trUtf8("Warning"),
                          trUtf8("Something went wrong!"));
     return;
-  } else if (bAll) {
+  } else if (bAll) {  // Remove all (tower conquered)
     foreach (quint8 i, m_Fields[field.x()][field.y()]) {
-      if (1 == i) {
-        m_listStonesP1.append(m_FieldStones[field.x()][field.y()].last());
-        m_FieldStones[field.x()][field.y()].last()->setVisible(false);
-        m_FieldStones[field.x()][field.y()].removeLast();
-      } else {
-        m_listStonesP2.append(m_FieldStones[field.x()][field.y()].last());
-        m_FieldStones[field.x()][field.y()].last()->setVisible(false);
-        m_FieldStones[field.x()][field.y()].removeLast();
+      // Foreach starts at the beginning of the list
+      if (1 == i) {  // Player 1
+        m_listStonesP1.append(m_FieldStones[field.x()][field.y()].first());
+        m_FieldStones[field.x()][field.y()].first()->setVisible(false);
+        m_FieldStones[field.x()][field.y()].removeFirst();
+      } else {  // Player 2
+        m_listStonesP2.append(m_FieldStones[field.x()][field.y()].first());
+        m_FieldStones[field.x()][field.y()].first()->setVisible(false);
+        m_FieldStones[field.x()][field.y()].removeFirst();
       }
     }
     m_Fields[field.x()][field.y()].clear();
-  } else {
-    if (1 == m_Fields[field.x()][field.y()].last()) {
+  } else {  // Remove only one
+    if (1 == m_Fields[field.x()][field.y()].last()) {  // Player 1
       m_listStonesP1.append(m_FieldStones[field.x()][field.y()].last());
       m_FieldStones[field.x()][field.y()].last()->setVisible(false);
       m_FieldStones[field.x()][field.y()].removeLast();
-    } else {
+    } else {  // Player 2
       m_listStonesP2.append(m_FieldStones[field.x()][field.y()].last());
       m_FieldStones[field.x()][field.y()].last()->setVisible(false);
       m_FieldStones[field.x()][field.y()].removeLast();

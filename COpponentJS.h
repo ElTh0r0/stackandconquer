@@ -35,7 +35,8 @@ class COpponentJS : public QObject {
   Q_OBJECT
 
  public:
-  explicit COpponentJS(quint8 nNumOfFields, QObject *parent = 0);
+  explicit COpponentJS(quint8 nNumOfFields, const quint8 nHeightTowerWin,
+                       QObject *parent = 0);
   bool loadAndEvalCpuScript(const QString &sFilepath);
 
  public slots:
@@ -53,6 +54,7 @@ class COpponentJS : public QObject {
   QList<QPoint> evalMoveReturn(QString sReturn);
 
   const quint8 m_nNumOfFields;
+  const quint8 m_nHeightTowerWin;
   QJSEngine *m_jsEngine;
   QJSValue m_obj;
   QList<QList<QList<quint8> > > m_board;

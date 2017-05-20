@@ -33,9 +33,11 @@
 
 #include "./COpponentJS.h"
 
-COpponentJS::COpponentJS(quint8 nNumOfFields, QObject *parent)
+COpponentJS::COpponentJS(const quint8 nNumOfFields, const quint8 nHeightTowerWin,
+                         QObject *parent)
   : QObject(parent),
     m_nNumOfFields(nNumOfFields),
+    m_nHeightTowerWin(nHeightTowerWin),
     m_jsEngine(new QJSEngine(parent)) {
   m_obj = m_jsEngine->globalObject();
   m_obj.setProperty("cpu", m_jsEngine->newQObject(this));
@@ -75,6 +77,7 @@ bool COpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
   }
 
   m_obj.setProperty("nNumOfFields", m_nNumOfFields);
+  m_obj.setProperty("nHeightTowerWin", m_nHeightTowerWin);
   return true;
 }
 
@@ -115,7 +118,7 @@ void COpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
         listRet[0].x() < m_nNumOfFields && listRet[0].y() < m_nNumOfFields &&
         listRet[1].x() >= 0 && listRet[1].y() >= 0 &&
         listRet[1].x() < m_nNumOfFields && listRet[1].y() < m_nNumOfFields &&
-        listRet[2].x() > 0 && listRet[2].x() < 5) {
+        listRet[2].x() > 0 && listRet[2].x() < m_nHeightTowerWin) {
       emit moveTower(listRet[0], listRet[1], quint8(listRet[2].x()));
       return;
     }
@@ -171,7 +174,7 @@ QList<QPoint> COpponentJS::evalMoveReturn(QString sReturn) {
     sListPoint.clear();
 
     sListPoint = sListRet[i].split(",");
-    if (2 == sListPoint.size()) {
+    if (2 == sListPoint.size() && (0 == i || 1 == i)) {
       point.setX(sListPoint[0].trimmed().toInt(&bOk1, 10));
       point.setY(sListPoint[1].trimmed().toInt(&bOk2, 10));
 
