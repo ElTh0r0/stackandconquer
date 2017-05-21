@@ -50,6 +50,7 @@ class CSettings : public QDialog {
 
   QString getNameP1() const;
   QString getNameP2() const;
+  QString getP1HumanCpu() const;
   QString getP2HumanCpu() const;
   quint8 getStartPlayer() const;
   quint8 getWinTowers() const;
@@ -92,6 +93,7 @@ class CSettings : public QDialog {
   QString m_sGuiLanguage;
   QString m_sNameP1;
   QString m_sNameP2;
+  QString m_sP1HumanCpu;
   QString m_sP2HumanCpu;
   QStringList m_sListCPUs;
   int m_nStartPlayer;

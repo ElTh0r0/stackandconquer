@@ -207,7 +207,8 @@ void CStackAndConquer::startNewGame(const QString sCmdArg) {
   m_pGraphView->updateSceneRect(m_pGame->getSceneRect());
   m_pGraphView->setInteractive(true);
 
-  if ("Human" != m_pSettings->getP2HumanCpu()) {
+  if ("Human" != m_pSettings->getP1HumanCpu() ||
+      "Human" != m_pSettings->getP2HumanCpu()) {
     if (!m_pGame->initCpu()) {
       m_pGraphView->setInteractive(false);
       QMessageBox::warning(this, trUtf8("Warning"),

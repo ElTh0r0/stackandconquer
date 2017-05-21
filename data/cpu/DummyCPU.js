@@ -25,6 +25,7 @@
  *
  * Variables provided externally from game:
  * jsboard
+ * nID (1 or 2 = player 1 / player 2)
  * nNumOfFields
  * nHeightTowerWin
  */
@@ -39,7 +40,7 @@ function makeMove(bStonesLeft) {
   //cpu.log("[0][0][0]: " + board[0][0][0]);
   //cpu.log("[1][0].length: " + board[1][0].length);
   
-  sMoveToWin = canWin();
+  sMoveToWin = canWin(nID);
   if (0 !== sMoveToWin.length) {
     return sMoveToWin;
   }
@@ -130,7 +131,7 @@ function checkNeighbourhood(nFieldX, nFieldY)  {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function canWin()  {
+function canWin(nPlayerID)  {
   for (var nRow = 0; nRow < nNumOfFields; nRow++) {
     for (var nCol = 0; nCol < nNumOfFields; nCol++) {
       neighbours = checkNeighbourhood(nRow, nCol);
@@ -140,7 +141,7 @@ function canWin()  {
       for (var point = 0; point < neighbours.length; point++) {
         var tower = board[(neighbours[point])[0]][(neighbours[point])[1]];
         if ((board[nRow][nCol].length + tower.length >= nHeightTowerWin) &&
-            2 === tower[tower.length - 1]) {  // 2 = Second player - CPU
+            nPlayerID === tower[tower.length - 1]) {  // Top stone = own color
           return (neighbours[point])[0] + "," + (neighbours[point])[1] + "|" +
               nRow + "," + nCol + "|" + tower.length;
         }
@@ -156,8 +157,8 @@ function canWin()  {
 function setRandom() {
   // Seed random?
   do {
-    nRandX = Math.floor(Math.random() * 5);
-    nRandY = Math.floor(Math.random() * 5);
+    nRandX = Math.floor(Math.random() * nNumOfFields);
+    nRandY = Math.floor(Math.random() * nNumOfFields);
   } while (0 !== board[nRandX][nRandY].length);
   
   return nRandX + "," + nRandY;

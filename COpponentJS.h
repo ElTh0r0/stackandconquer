@@ -35,8 +35,8 @@ class COpponentJS : public QObject {
   Q_OBJECT
 
  public:
-  explicit COpponentJS(quint8 nNumOfFields, const quint8 nHeightTowerWin,
-                       QObject *parent = 0);
+  explicit COpponentJS(const quint8 nID, const quint8 nNumOfFields,
+                       const quint8 nHeightTowerWin, QObject *parent = 0);
   bool loadAndEvalCpuScript(const QString &sFilepath);
 
  public slots:
@@ -53,6 +53,7 @@ class COpponentJS : public QObject {
   QJsonDocument convertBoardToJSON(const QList<QList<QList<quint8> > > board);
   QList<QPoint> evalMoveReturn(QString sReturn);
 
+  const quint8 m_nID;
   const quint8 m_nNumOfFields;
   const quint8 m_nHeightTowerWin;
   QJSEngine *m_jsEngine;

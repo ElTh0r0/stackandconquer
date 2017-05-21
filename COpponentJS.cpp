@@ -33,9 +33,10 @@
 
 #include "./COpponentJS.h"
 
-COpponentJS::COpponentJS(const quint8 nNumOfFields, const quint8 nHeightTowerWin,
-                         QObject *parent)
+COpponentJS::COpponentJS(const quint8 nID, const quint8 nNumOfFields,
+                         const quint8 nHeightTowerWin, QObject *parent)
   : QObject(parent),
+    m_nID(nID),
     m_nNumOfFields(nNumOfFields),
     m_nHeightTowerWin(nHeightTowerWin),
     m_jsEngine(new QJSEngine(parent)) {
@@ -56,11 +57,11 @@ bool COpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
   }
   QString source = QString::fromUtf8(f.readAll());
   f.close();
-  qDebug() << "CPU script:" << sFilepath;
+  qDebug() << "CPU" << m_nID << "script:" << sFilepath;
 
   QJSValue result(m_jsEngine->evaluate(source, sFilepath));
   if (result.isError()) {
-    qCritical() << "Error in CPU script at line" <<
+    qCritical() << "Error in CPU" << m_nID << "script at line" <<
                    result.property("lineNumber").toInt() <<
                    "\n" << result.toString();
     emit scriptError();
@@ -70,12 +71,13 @@ bool COpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
   // Check if makeMove() is available for calling the script
   if (!m_obj.hasProperty("makeMove") ||
       !m_obj.property("makeMove").isCallable()) {
-    qCritical() << "Error in CPU script - function makeMove() " <<
+    qCritical() << "Error in CPU" << m_nID << "script - function makeMove() " <<
                    "not found or not callable!";
     emit scriptError();
     return false;
   }
 
+  m_obj.setProperty("nID", m_nID);
   m_obj.setProperty("nNumOfFields", m_nNumOfFields);
   m_obj.setProperty("nHeightTowerWin", m_nHeightTowerWin);
   return true;
@@ -93,7 +95,7 @@ void COpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
 
   QJSValue result = m_obj.property("makeMove").call(QJSValueList() << bStonesLeft);
   if (result.isError()) {
-    qCritical() << "Error calling \"makeMove\" function at line:" <<
+    qCritical() << "CPU" << m_nID << "- Error calling \"makeMove\" function at line:" <<
                    result.property("lineNumber").toInt() <<
                    "\n" << result.toString();
     QMessageBox::warning(NULL, trUtf8("Warning"),
@@ -124,7 +126,7 @@ void COpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
     }
   }
 
-  qCritical() << "CPU script invalid return value from makeMove():" <<
+  qCritical() << "CPU" << m_nID << "script invalid return value from makeMove():" <<
                  result.toString();
   QMessageBox::warning(NULL, trUtf8("Warning"),
                        trUtf8("CPU script execution error! "

@@ -34,14 +34,16 @@
 CGame::CGame(CSettings *pSettings, const QString &sJsFile)
   : m_pSettings(pSettings),
     m_pBoard(NULL),
-    m_jsCpu(NULL),
+    m_jsCpuP1(NULL),
+    m_jsCpuP2(NULL),
     m_pPlayer1(NULL),
     m_pPlayer2(NULL),
+    m_sJsFileP1(""),
+    m_sJsFileP2(""),
     m_nMaxTowerHeight(5),
     m_nMaxStones(20),
     m_nGridSize(70),
     m_nNumOfFields(5),
-    m_sJsFile(""),
     m_bScriptError(false) {
   qDebug() << "New game" << sJsFile;
 
@@ -55,6 +57,25 @@ CGame::CGame(CSettings *pSettings, const QString &sJsFile)
     // TODO: Load saved game
   }
 
+  QString sP1HumanCpu(m_pSettings->getP1HumanCpu());
+  bool bP1HumanCpu(true);
+  if ("Human" == sP1HumanCpu) {
+    bP1HumanCpu = true;
+  } else {
+    bP1HumanCpu = false;
+    m_sJsFileP1 = sP1HumanCpu;
+
+    m_jsCpuP1 = new COpponentJS(1, m_nNumOfFields, m_nMaxTowerHeight);
+    connect(this, SIGNAL(makeMoveCpuP1(QList<QList<QList<quint8> > >, bool)),
+            m_jsCpuP1, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, bool)));
+    connect(m_jsCpuP1, SIGNAL(setStone(QPoint)),
+            this, SLOT(setStone(QPoint)));
+    connect(m_jsCpuP1, SIGNAL(moveTower(QPoint, QPoint, quint8)),
+            this, SLOT(moveTower(QPoint, QPoint, quint8)));
+    connect(m_jsCpuP1, SIGNAL(scriptError()),
+            this, SLOT(caughtScriptError()));
+  }
+
   QString sP2HumanCpu(m_pSettings->getP2HumanCpu());
   bool bP2HumanCpu(true);
   if ("Human" == sP2HumanCpu) {
@@ -62,19 +83,19 @@ CGame::CGame(CSettings *pSettings, const QString &sJsFile)
   } else {
     bP2HumanCpu = false;
     if (sJsFile.endsWith(".js", Qt::CaseInsensitive)) {
-      m_sJsFile = sJsFile;
+      m_sJsFileP2 = sJsFile;
     } else {
-      m_sJsFile = m_pSettings->getP2HumanCpu();
+      m_sJsFileP2 = sP2HumanCpu;
     }
 
-    m_jsCpu = new COpponentJS(m_nNumOfFields, m_nMaxTowerHeight);
-    connect(this, SIGNAL(makeMoveCpu(QList<QList<QList<quint8> > >, bool)),
-            m_jsCpu, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, bool)));
-    connect(m_jsCpu, SIGNAL(setStone(QPoint)),
+    m_jsCpuP2 = new COpponentJS(2, m_nNumOfFields, m_nMaxTowerHeight);
+    connect(this, SIGNAL(makeMoveCpuP2(QList<QList<QList<quint8> > >, bool)),
+            m_jsCpuP2, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, bool)));
+    connect(m_jsCpuP2, SIGNAL(setStone(QPoint)),
             this, SLOT(setStone(QPoint)));
-    connect(m_jsCpu, SIGNAL(moveTower(QPoint, QPoint, quint8)),
+    connect(m_jsCpuP2, SIGNAL(moveTower(QPoint, QPoint, quint8)),
             this, SLOT(moveTower(QPoint, QPoint, quint8)));
-    connect(m_jsCpu, SIGNAL(scriptError()),
+    connect(m_jsCpuP2, SIGNAL(scriptError()),
             this, SLOT(caughtScriptError()));
   }
 
@@ -90,7 +111,7 @@ CGame::CGame(CSettings *pSettings, const QString &sJsFile)
     bStartPlayer = true;
   }
 
-  m_pPlayer1 = new CPlayer(bStartPlayer, true,
+  m_pPlayer1 = new CPlayer(bStartPlayer, bP1HumanCpu,
                            m_pSettings->getNameP1(), m_nMaxStones);
   m_pPlayer2 = new CPlayer(!bStartPlayer, bP2HumanCpu,
                            m_pSettings->getNameP2(), m_nMaxStones);
@@ -103,8 +124,15 @@ CGame::CGame(CSettings *pSettings, const QString &sJsFile)
 // ---------------------------------------------------------------------------
 
 bool CGame::initCpu() {
-  if (!m_jsCpu->loadAndEvalCpuScript(m_sJsFile)) {
-    return false;
+  if (!m_pPlayer1->getIsHuman()) {
+    if (!m_jsCpuP1->loadAndEvalCpuScript(m_sJsFileP1)) {
+      return false;
+    }
+  }
+  if (!m_pPlayer2->getIsHuman()) {
+    if (!m_jsCpuP2->loadAndEvalCpuScript(m_sJsFileP2)) {
+      return false;
+    }
   }
   return true;
 }
@@ -371,7 +399,8 @@ void CGame::updatePlayers(bool bInitial) {
     emit highlightActivePlayer(m_pPlayer1->getIsActive());
     this->checkPossibleMoves();
 
-    if (m_pPlayer2->getIsActive() && !m_pPlayer2->getIsHuman()) {
+    if ((m_pPlayer1->getIsActive() && !m_pPlayer1->getIsHuman()) ||
+        (m_pPlayer2->getIsActive() && !m_pPlayer2->getIsHuman())) {
       emit setInteractive(false);
       QTimer::singleShot(800, this, SLOT(delayCpu()));
     } else {
@@ -386,7 +415,11 @@ void CGame::updatePlayers(bool bInitial) {
 // ---------------------------------------------------------------------------
 
 void CGame::delayCpu() {
-  emit makeMoveCpu(m_pBoard->getBoard(), m_pPlayer2->getStonesLeft() > 0);
+  if (m_pPlayer1->getIsActive()) {
+    emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getStonesLeft() > 0);
+  } else {
+    emit makeMoveCpuP2(m_pBoard->getBoard(), m_pPlayer2->getStonesLeft() > 0);
+  }
 }
 
 // ---------------------------------------------------------------------------

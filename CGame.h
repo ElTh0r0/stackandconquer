@@ -51,7 +51,8 @@ class CGame : public QObject {
   void setInteractive(bool bEnabled);
   void highlightActivePlayer(bool bPlayer1,
                              bool bP1Won = false, bool bP2Won = false);
-  void makeMoveCpu(QList<QList<QList<quint8> > > board, bool bStonesLeft);
+  void makeMoveCpuP1(QList<QList<QList<quint8> > > board, bool bStonesLeft);
+  void makeMoveCpuP2(QList<QList<QList<quint8> > > board, bool bStonesLeft);
 
  private slots:
   void setStone(QPoint field);
@@ -67,16 +68,18 @@ class CGame : public QObject {
 
   CSettings *m_pSettings;
   CBoard *m_pBoard;
-  COpponentJS *m_jsCpu;
+  COpponentJS *m_jsCpuP1;
+  COpponentJS *m_jsCpuP2;
   CPlayer *m_pPlayer1;
   CPlayer *m_pPlayer2;
+  QString m_sJsFileP1;
+  QString m_sJsFileP2;
 
   const quint8 m_nMaxTowerHeight;
   const quint8 m_nMaxStones;
   const quint16 m_nGridSize;
   const quint8 m_nNumOfFields;
 
-  QString m_sJsFile;
   bool m_bScriptError;
   QString m_sPreviousMove;
 };

@@ -112,6 +112,7 @@ void CSettings::searchCpuScripts(const QString &userDataDir) {
       }
     }
   }
+  m_pUi->cbP1HumanCpu->addItems(sListAvailableCpu);
   m_pUi->cbP2HumanCpu->addItems(sListAvailableCpu);
 
   // Cpu scripts in user folder
@@ -120,6 +121,8 @@ void CSettings::searchCpuScripts(const QString &userDataDir) {
     foreach (QFileInfo file, cpuDir.entryInfoList(QDir::Files)) {
       if ("js" == file.suffix().toLower()) {
         sListAvailableCpu << file.baseName();
+        m_pUi->cbP1HumanCpu->addItem(QIcon(":/images/user.png"),
+                                     sListAvailableCpu.last());
         m_pUi->cbP2HumanCpu->addItem(QIcon(":/images/user.png"),
                                      sListAvailableCpu.last());
         m_sListCPUs << file.absoluteFilePath();
@@ -166,17 +169,21 @@ void CSettings::accept() {
   m_pSettings->setValue("NeighboursBorderColor", m_neighboursBorderColor.name());
   m_pSettings->endGroup();
 
+  QString sNewP1HumanCpu(m_pUi->cbP1HumanCpu->currentText());
   QString sNewP2HumanCpu(m_pUi->cbP2HumanCpu->currentText());
   int nNewWinTowers(m_pUi->spinNumToWin->value());
 
-  if (sNewP2HumanCpu != m_sP2HumanCpu ||
+  if (sNewP1HumanCpu != m_sP1HumanCpu ||
+      sNewP2HumanCpu != m_sP2HumanCpu ||
       nNewWinTowers != m_nWinTowers) {
     int nRet = QMessageBox::question(0, this->windowTitle(),
                                      trUtf8("Main game settings had been changed.<br>"
                                             "Do you want to start a new game?"));
     if (nRet == QMessageBox::Yes) {
+      m_sP1HumanCpu = sNewP1HumanCpu;
       m_sP2HumanCpu = sNewP2HumanCpu;
       m_nWinTowers = nNewWinTowers;
+      m_pSettings->setValue("P1HumanCpu", m_sP1HumanCpu);
       m_pSettings->setValue("P2HumanCpu", m_sP2HumanCpu);
       m_pSettings->setValue("NumWinTowers", m_nWinTowers);
       emit this->newGame();
@@ -216,6 +223,16 @@ void CSettings::readSettings() {
   m_pUi->leNameP1->setText(m_sNameP1);
   m_sNameP2 = m_pSettings->value("NameP2", trUtf8("Player 2")).toString();
   m_pUi->leNameP2->setText(m_sNameP2);
+
+  m_sP1HumanCpu = m_pSettings->value("P1HumanCpu", "Human").toString();
+  if (-1 != m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)) {
+    m_pUi->cbP1HumanCpu->setCurrentIndex(
+          m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu));
+  } else {
+    m_pUi->cbP1HumanCpu->setCurrentIndex(
+          m_pUi->cbP1HumanCpu->findText("Human"));
+  }
+  m_sP1HumanCpu = m_pUi->cbP1HumanCpu->currentText();
 
   m_sP2HumanCpu = m_pSettings->value("P2HumanCpu", "Human").toString();
   if (-1 != m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)) {
@@ -325,6 +342,14 @@ quint8 CSettings::getWinTowers() const {
 }
 bool CSettings::getShowPossibleMoveTowers() const {
   return m_bShowPossibleMoveTowers;
+}
+
+QString CSettings::getP1HumanCpu() const {
+  if (-1 != m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)) {
+    return m_sListCPUs[m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)];
+  } else {
+    return "Human";
+  }
 }
 
 QString CSettings::getP2HumanCpu() const {
