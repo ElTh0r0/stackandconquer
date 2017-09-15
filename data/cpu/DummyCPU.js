@@ -182,9 +182,10 @@ function preventWin(sMoveToWin, nPossibleMove) {
   var nNumber = sMove[2];
 
   // Check if a blocking towers in between can be placed
-  var route = [pointTo[0] - pointFrom[0], pointTo[1] - pointFrom[1]];
+  var route = [Number(pointTo[0]) - Number(pointFrom[0]),
+               Number(pointTo[1]) - Number(pointFrom[1])];
   var nMoves = board[pointTo[0]][pointTo[1]].length;
-  var check = pointFrom;
+  var check = [Number(pointFrom[0]), Number(pointFrom[1])];
 
   // cpu.log("Win? " + sMoveToWin);
   // cpu.log("Route: " + route[0] + "," + route[1]);
@@ -196,15 +197,15 @@ function preventWin(sMoveToWin, nPossibleMove) {
     for (var i = 1; i < nMoves; i++) {
 
       if (route[1] < 0) {
-        check[1] = Number(check[1] - i);
+        check[1] = Number(check[1] - 1);
       } else if (route[1] > 0) {
-        check[1] = Number(check[1] + i);
+        check[1] = Number(check[1] + 1);
       }
 
       if (route[0] < 0) {
-        check[0] = Number(check[0] - i);
+        check[0] = Number(check[0] - 1);
       } else if (route[0] > 0) {
-        check[0] = Number(check[0] + i);
+        check[0] = Number(check[0] + 1);
       }
 
       // cpu.log("Check " + i + ": " + check[0] + "," + check[1]);
