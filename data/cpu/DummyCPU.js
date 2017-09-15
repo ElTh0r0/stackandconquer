@@ -36,13 +36,26 @@ cpu.log("Loading CPU script DummyCPU...")
 // ---------------------------------------------------------------------------
 
 function makeMove(bStonesLeft) {
-  board = JSON.parse(jsboard);
+  board = JSON.parse(jsboard);  // Global
   //cpu.log("[0][0][0]: " + board[0][0][0]);
   //cpu.log("[1][0].length: " + board[1][0].length);
   
-  sMoveToWin = canWin(nID);
+  var sMoveToWin = canWin(nID);
   if (0 !== sMoveToWin.length) {
     return sMoveToWin;
+  }
+
+  // Check if opponent can win
+  if (2 === nID) {
+    sMoveToWin = canWin(1);
+  } else {
+    sMoveToWin = canWin(2);
+  }
+  if (0 !== sMoveToWin.length) {
+    var sPreventWin = preventWin(sMoveToWin, bStonesLeft);
+    if (sPreventWin.length > 0) {
+      return sPreventWin;
+    }
   }
 
   if (bStonesLeft) {
@@ -134,7 +147,7 @@ function checkNeighbourhood(nFieldX, nFieldY)  {
 function canWin(nPlayerID)  {
   for (var nRow = 0; nRow < nNumOfFields; nRow++) {
     for (var nCol = 0; nCol < nNumOfFields; nCol++) {
-      neighbours = checkNeighbourhood(nRow, nCol);
+      var neighbours = checkNeighbourhood(nRow, nCol);
       // cpu.log("Check: " + (nRow+1) + "," + (nCol+1));
       // cpu.log("Neighbours: " + neighbours);
 
@@ -154,11 +167,58 @@ function canWin(nPlayerID)  {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
+function preventWin(sMoveToWin, bStonesLeft) {
+  var sMove = sMoveToWin.split("|");
+  var pointFrom = sMove[0].split(",");
+  var pointTo = sMove[1].split(",");
+  var nNumber = sMove[2];
+
+  // Check if a blocking towers in between can be placed
+  var route = [pointTo[0] - pointFrom[0], pointTo[1] - pointFrom[1]];
+  var nMoves = board[pointTo[0]][pointTo[1]].length;
+  var check = pointFrom;
+
+  // cpu.log("Win? " + sMoveToWin);
+  // cpu.log("Route: " + route[0] + "," + route[1]);
+  // cpu.log("Moves: " + nMoves);
+  // cpu.log("Check 0: " + check[0] + "," + check[1]);
+
+  if (nMoves > 1 && bStonesLeft) {
+    for (var i = 1; i < nMoves; i++) {
+
+      if (route[1] < 0) {
+        check[1] = Number(check[1] - i);
+      } else if (route[1] > 0) {
+        check[1] = Number(check[1] + i);
+      }
+
+      if (route[0] < 0) {
+        check[0] = Number(check[0] - i);
+      } else if (route[0] > 0) {
+        check[0] = Number(check[0] + i);
+      }
+
+      // cpu.log("Check " + i + ": " + check[0] + "," + check[1]);
+      if (0 === board[check[0]][check[1]].length) {
+        return check[0] + "," + check[1]
+      }
+    }
+  }
+  // else {
+  // TODO: Try to move tower to prevent win
+  // }
+
+  return ""
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 function setRandom() {
   // Seed random?
   do {
-    nRandX = Math.floor(Math.random() * nNumOfFields);
-    nRandY = Math.floor(Math.random() * nNumOfFields);
+    var nRandX = Math.floor(Math.random() * nNumOfFields);
+    var nRandY = Math.floor(Math.random() * nNumOfFields);
   } while (0 !== board[nRandX][nRandY].length);
   
   return nRandX + "," + nRandY;
