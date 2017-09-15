@@ -495,19 +495,29 @@ void CBoard::highlightNeighbourhood(const QList<QPoint> neighbours) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool CBoard::findPossibleMoves(const bool bStonesLeft) {
+quint8 CBoard::findPossibleMoves(const bool bStonesLeft) {
+  // Return: 0 = no moves
+  // 1 = stone can be set
+  // 2 = tower can be moved
+  // 3 = stone can be set and tower can be moved
+  quint8 nRet(0);
+
   for (int y = 0; y < m_numOfFields; y++) {
     for (int x = 0; x < m_numOfFields; x++) {
-      if (0 == m_Fields[x][y].size() && bStonesLeft) {
-        return true;
-      } else if (m_Fields[x][y].size() > 0) {
+      if (0 == m_Fields[x][y].size() && bStonesLeft && 1 != nRet) {
+        nRet++;
+      }
+      if (m_Fields[x][y].size() > 0 && 2 != nRet) {
         if (this->checkNeighbourhood(QPoint(x, y)).size() > 0) {
-          return true;
+          nRet += 2;
         }
+      }
+      if (3 == nRet) {
+        return nRet;
       }
     }
   }
-  return false;
+  return nRet;
 }
 
 // ---------------------------------------------------------------------------

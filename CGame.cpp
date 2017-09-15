@@ -66,8 +66,8 @@ CGame::CGame(CSettings *pSettings, const QString &sJsFile)
     m_sJsFileP1 = sP1HumanCpu;
 
     m_jsCpuP1 = new COpponentJS(1, m_nNumOfFields, m_nMaxTowerHeight);
-    connect(this, SIGNAL(makeMoveCpuP1(QList<QList<QList<quint8> > >, bool)),
-            m_jsCpuP1, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, bool)));
+    connect(this, SIGNAL(makeMoveCpuP1(QList<QList<QList<quint8> > >, quint8)),
+            m_jsCpuP1, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, quint8)));
     connect(m_jsCpuP1, SIGNAL(setStone(QPoint)),
             this, SLOT(setStone(QPoint)));
     connect(m_jsCpuP1, SIGNAL(moveTower(QPoint, QPoint, quint8)),
@@ -89,8 +89,8 @@ CGame::CGame(CSettings *pSettings, const QString &sJsFile)
     }
 
     m_jsCpuP2 = new COpponentJS(2, m_nNumOfFields, m_nMaxTowerHeight);
-    connect(this, SIGNAL(makeMoveCpuP2(QList<QList<QList<quint8> > >, bool)),
-            m_jsCpuP2, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, bool)));
+    connect(this, SIGNAL(makeMoveCpuP2(QList<QList<QList<quint8> > >, quint8)),
+            m_jsCpuP2, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, quint8)));
     connect(m_jsCpuP2, SIGNAL(setStone(QPoint)),
             this, SLOT(setStone(QPoint)));
     connect(m_jsCpuP2, SIGNAL(moveTower(QPoint, QPoint, quint8)),
@@ -416,9 +416,9 @@ void CGame::updatePlayers(bool bInitial) {
 
 void CGame::delayCpu() {
   if (m_pPlayer1->getIsActive()) {
-    emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getStonesLeft() > 0);
+    emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getCanMove());
   } else {
-    emit makeMoveCpuP2(m_pBoard->getBoard(), m_pPlayer2->getStonesLeft() > 0);
+    emit makeMoveCpuP2(m_pBoard->getBoard(), m_pPlayer2->getCanMove());
   }
 }
 
@@ -427,34 +427,32 @@ void CGame::delayCpu() {
 
 void CGame::checkPossibleMoves() {
   if (m_pPlayer1->getIsActive()) {
-    if (m_pBoard->findPossibleMoves(m_pPlayer1->getStonesLeft() > 0)) {
-      m_pPlayer1->setCanMove(true);
+    m_pPlayer1->setCanMove(
+          m_pBoard->findPossibleMoves(m_pPlayer1->getStonesLeft() > 0));
+    if (0 != m_pPlayer1->getCanMove()) {
       return;
-    } else {
-      m_pPlayer1->setCanMove(false);
     }
   } else {
-    if (m_pBoard->findPossibleMoves(m_pPlayer2->getStonesLeft() > 0)) {
-      m_pPlayer2->setCanMove(true);
+    m_pPlayer2->setCanMove(
+          m_pBoard->findPossibleMoves(m_pPlayer2->getStonesLeft() > 0));
+    if (0 != m_pPlayer2->getCanMove()) {
       return;
-    } else {
-      m_pPlayer2->setCanMove(false);
     }
   }
 
-  if (!m_pPlayer1->getCanMove() && !m_pPlayer2->getCanMove()) {
+  if (0 == m_pPlayer1->getCanMove() && 0 == m_pPlayer2->getCanMove()) {
     emit setInteractive(false);
     qDebug() << "NO MOVES POSSIBLE ANYMORE!";
     QMessageBox::information(NULL, trUtf8("Information"),
                              trUtf8("No moves possible anymore.\n"
                                     "Game ends in a tie!"));
-  } else if (!m_pPlayer1->getCanMove()) {
+  } else if (0 == m_pPlayer1->getCanMove()) {
     qDebug() << "PLAYER 1 HAS TO PASS!";
     QMessageBox::information(NULL, trUtf8("Information"),
                              trUtf8("No move possible!\n%1 has to pass.")
                              .arg(m_pPlayer1->getName()));
     this->updatePlayers();
-  } else if (!m_pPlayer2->getCanMove()) {
+  } else if (0 == m_pPlayer2->getCanMove()) {
     qDebug() << "PLAYER 2 HAS TO PASS!";
     QMessageBox::information(NULL, trUtf8("Information"),
                              trUtf8("No move possible!\n%1 has to pass.")

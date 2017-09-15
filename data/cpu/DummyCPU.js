@@ -30,13 +30,14 @@
  * nHeightTowerWin
  */
 
-cpu.log("Loading CPU script DummyCPU...")
+cpu.log("Loading CPU script DummyCPU...");
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function makeMove(bStonesLeft) {
+function makeMove(nPossible) {
   board = JSON.parse(jsboard);  // Global
+  nPossibleMove = Number(nPossible);
   //cpu.log("[0][0][0]: " + board[0][0][0]);
   //cpu.log("[1][0].length: " + board[1][0].length);
   
@@ -52,21 +53,28 @@ function makeMove(bStonesLeft) {
     sMoveToWin = canWin(2);
   }
   if (0 !== sMoveToWin.length) {
-    var sPreventWin = preventWin(sMoveToWin, bStonesLeft);
+    var sPreventWin = preventWin(sMoveToWin, nPossibleMove);
     if (sPreventWin.length > 0) {
       return sPreventWin;
     }
   }
 
-  if (bStonesLeft) {
-    if (findFreeFields()) {
+  if (1 === nPossibleMove && findFreeFields()) {
+    return setStone();
+  } else if (2 === nPossibleMove) {
+    return moveTower();
+  } else if (3 === nPossibleMove) {
+    var nRand = Math.floor(Math.random() * 2);
+    if (0 === nRand) {
       return setStone();
     } else {
       return moveTower();
     }
-  } else {
-    return moveTower();
   }
+
+  // This line never should be reached!
+  cpu.log("ERROR: Script couldn't call setStone() / moveTower()!");
+  return "";
 }
 
 // ---------------------------------------------------------------------------
@@ -80,7 +88,7 @@ function setStone() {
 // ---------------------------------------------------------------------------
 
 function moveTower() {
-  return "0,0|1,1|1";
+  return moveRandom();
 }
 
 // ---------------------------------------------------------------------------
@@ -88,7 +96,7 @@ function moveTower() {
 
 function checkNeighbourhood(nFieldX, nFieldY)  {
   var neighbours = [];
-  var nMoves = board[nFieldX][nFieldY].length
+  var nMoves = board[nFieldX][nFieldY].length;
 
   if (0 === nMoves) {
     return neighbours;
@@ -167,7 +175,7 @@ function canWin(nPlayerID)  {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function preventWin(sMoveToWin, bStonesLeft) {
+function preventWin(sMoveToWin, nPossibleMove) {
   var sMove = sMoveToWin.split("|");
   var pointFrom = sMove[0].split(",");
   var pointTo = sMove[1].split(",");
@@ -182,8 +190,9 @@ function preventWin(sMoveToWin, bStonesLeft) {
   // cpu.log("Route: " + route[0] + "," + route[1]);
   // cpu.log("Moves: " + nMoves);
   // cpu.log("Check 0: " + check[0] + "," + check[1]);
+  // cpu.log("Possible: " + nPossibleMove);
 
-  if (nMoves > 1 && bStonesLeft) {
+  if (nMoves > 1 && (1 === nPossibleMove || 3 === nPossibleMove)) {
     for (var i = 1; i < nMoves; i++) {
 
       if (route[1] < 0) {
@@ -200,15 +209,15 @@ function preventWin(sMoveToWin, bStonesLeft) {
 
       // cpu.log("Check " + i + ": " + check[0] + "," + check[1]);
       if (0 === board[check[0]][check[1]].length) {
-        return check[0] + "," + check[1]
+        return check[0] + "," + check[1];
       }
     }
   }
-  // else {
+  // if (nPossibleMove >= 2) {
   // TODO: Try to move tower to prevent win
   // }
 
-  return ""
+  return "";
 }
 
 // ---------------------------------------------------------------------------
@@ -222,6 +231,24 @@ function setRandom() {
   } while (0 !== board[nRandX][nRandY].length);
   
   return nRandX + "," + nRandY;
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+function moveRandom() {
+  do {
+    var nRandX = Math.floor(Math.random() * nNumOfFields);
+    var nRandY = Math.floor(Math.random() * nNumOfFields);
+    var neighbours = checkNeighbourhood(nRandX, nRandY);
+
+    if (neighbours.length > 0) {
+      var choose = Math.floor(Math.random() * neighbours.length);
+      var tower = board[(neighbours[choose])[0]][(neighbours[choose])[1]];
+      return (neighbours[choose])[0] + "," + (neighbours[choose])[1] + "|" +
+          nRandX + "," + nRandY + "|" + tower.length;
+    }
+  } while (true);
 }
 
 // ---------------------------------------------------------------------------

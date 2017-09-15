@@ -41,7 +41,7 @@ class COpponentJS : public QObject {
 
  public slots:
   void makeMoveCpu(const QList<QList<QList<quint8> > > board,
-                   const bool bStonesLeft);
+                   const quint8 nPossibleMove);
   void log(const QString &sMsg) const;
 
  signals:

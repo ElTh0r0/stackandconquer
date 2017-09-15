@@ -53,7 +53,7 @@ class CBoard : public QGraphicsScene {
   void selectField(const QPointF point);
   QList<QList<QList<quint8> > > getBoard() const;
   QList<quint8> getField(const QPoint field) const;
-  bool findPossibleMoves(const bool bStonesLeft);
+  quint8 findPossibleMoves(const bool bStonesLeft);
   QList<QPoint> checkNeighbourhood(const QPoint field) const;
   void printDebugFields() const;
 

@@ -36,7 +36,7 @@ CPlayer::CPlayer(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones)
     m_nMaxStones(nMaxStones),
     m_nStonesLeft(nMaxStones),
     m_nWonTowers(0),
-    m_bCanMove(false) {
+    m_nCanMove(0) {
   if (!m_bIsHuman) {
     m_sName = "Computer";
   }
@@ -70,12 +70,12 @@ QString CPlayer::getName() const {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CPlayer::setCanMove(const bool bCanMove) {
-  m_bCanMove = bCanMove;
+void CPlayer::setCanMove(const quint8 nCanMove) {
+  m_nCanMove = nCanMove;
 }
 
-bool CPlayer::getCanMove() const {
-  return m_bCanMove;
+quint8 CPlayer::getCanMove() const {
+  return m_nCanMove;
 }
 
 // ---------------------------------------------------------------------------

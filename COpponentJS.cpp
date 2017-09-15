@@ -87,13 +87,13 @@ bool COpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
 // ---------------------------------------------------------------------------
 
 void COpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
-                              const bool bStonesLeft) {
+                              const quint8 nPossibleMove) {
   QJsonDocument jsdoc(this->convertBoardToJSON(board));
 
   QString sJsBoard(jsdoc.toJson(QJsonDocument::Compact));
   m_obj.setProperty("jsboard", sJsBoard);
 
-  QJSValue result = m_obj.property("makeMove").call(QJSValueList() << bStonesLeft);
+  QJSValue result = m_obj.property("makeMove").call(QJSValueList() << nPossibleMove);
   if (result.isError()) {
     qCritical() << "CPU" << m_nID << "- Error calling \"makeMove\" function at line:" <<
                    result.property("lineNumber").toInt() <<
