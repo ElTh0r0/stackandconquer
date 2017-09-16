@@ -1,0 +1,38 @@
+version: '0.7.0-{build}'
+
+environment:
+  matrix:
+    - BUILD: mingw32 
+      QTDIR: C:\Qt\5.9.1\mingw53_32
+      MINGW_DIR: C:\Qt\Tools\mingw530_32
+      PRO_MAKE: mingw32-make
+    - BUILD: msvc2015_64
+      QTDIR: C:\Qt\5.9.1\msvc2015_64
+      PRO_MAKE: nmake
+  
+install:
+  - set PATH=%QTDIR%\bin;%MINGW_DIR%\bin;%PATH%
+  - if %BUILD%==msvc2015_64 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
+
+configuration: Release
+
+before_build:
+  - qmake stackandconquer.pro
+  - lrelease stackandconquer.pro
+
+build_script:
+  - '%PRO_MAKE%'
+
+after_build:
+  - mkdir StackAndConquer\lang
+  - mkdir StackAndConquer\cpu
+  - copy release\StackAndConquer.exe StackAndConquer\StackAndConquer.exe
+  - windeployqt --release --no-translations --no-angle --no-opengl-sw StackAndConquer\StackAndConquer.exe
+  - copy COPYING StackAndConquer\
+  - copy README.md StackAndConquer\
+  - copy lang\*.qm StackAndConquer\lang\
+  - xcopy /i /e /s data\cpu\* StackAndConquer\cpu\
+  - 7z a StackAndConquer-%APPVEYOR_BUILD_VERSION%-Windows_%BUILD%.zip .\StackAndConquer\
+
+artifacts:
+  - path: StackAndConquer-%APPVEYOR_BUILD_VERSION%-Windows_%BUILD%.zip
