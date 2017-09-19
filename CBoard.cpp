@@ -36,7 +36,7 @@ CBoard::CBoard(quint8 nNumOfFields, quint16 nGridSize,
   : m_nGridSize(nGridSize),
     m_nMaxStones(nMaxStones),
     m_pSettings(pSettings),
-    m_numOfFields(nNumOfFields),
+    m_nNumOfFields(nNumOfFields),
     m_pSvgRenderer(NULL) {
   qDebug() << Q_FUNC_INFO;
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
@@ -50,13 +50,13 @@ CBoard::CBoard(quint8 nNumOfFields, quint16 nGridSize,
   QList<QList<quint8> > line;
   QList<QGraphicsSvgItem *> tower2;
   QList<QList<QGraphicsSvgItem *> > line2;
-  for (int i = 0; i < m_numOfFields; i++) {
+  for (int i = 0; i < m_nNumOfFields; i++) {
     line.append(tower);
     line2.append(tower2);
   }
   m_Fields.clear();
   m_FieldStones.clear();
-  for (int i = 0; i < m_numOfFields; i++) {
+  for (int i = 0; i < m_nNumOfFields; i++) {
     m_Fields.append(line);
     m_FieldStones.append(line2);
   }
@@ -68,8 +68,8 @@ CBoard::CBoard(quint8 nNumOfFields, quint16 nGridSize,
 void CBoard::drawBoard() {
   qDebug() << Q_FUNC_INFO;
   m_BoardRect.setTopLeft(QPoint(0, 0));
-  m_BoardRect.setBottomRight(QPoint(m_numOfFields * m_nGridSize -1,
-                                    m_numOfFields * m_nGridSize -1));
+  m_BoardRect.setBottomRight(QPoint(m_nNumOfFields * m_nGridSize -1,
+                                    m_nNumOfFields * m_nGridSize -1));
 
   // Draw board
   QPen linePen(m_pSettings->getOutlineBoardColor());
@@ -79,7 +79,7 @@ void CBoard::drawBoard() {
   QLineF lineGrid;
   linePen.setColor(m_pSettings->getGridBoardColor());
   // Horizontal
-  for (int i = 0; i < m_numOfFields; i++) {
+  for (int i = 0; i < m_nNumOfFields; i++) {
     if (i > 0) {
       lineGrid.setPoints(QPointF(1, i*m_nGridSize),
                          QPointF(m_BoardRect.width()-1, i*m_nGridSize));
@@ -94,7 +94,7 @@ void CBoard::drawBoard() {
     }
   }
   // Vertical
-  for (int i = 0; i < m_numOfFields; i++) {
+  for (int i = 0; i < m_nNumOfFields; i++) {
     if (i > 0) {
       lineGrid.setPoints(QPointF(i*m_nGridSize, 1),
                          QPointF(i*m_nGridSize, m_BoardRect.height()-1));
@@ -236,12 +236,12 @@ QPoint CBoard::getGridField(const QPointF point) const {
   qint8 x(point.toPoint().x() / m_nGridSize);
   qint8 y(point.toPoint().y() / m_nGridSize);
 
-  if (x < 0 || y < 0 || x >= m_numOfFields || y >= m_numOfFields) {
+  if (x < 0 || y < 0 || x >= m_nNumOfFields || y >= m_nNumOfFields) {
     qWarning() << "Point out of grid! (" << x << "," << y << ")";
     if (x < 0) { x = 0; }
     if (y < 0) { y = 0; }
-    if (x >= m_numOfFields) { x = m_numOfFields - 1; }
-    if (y >= m_numOfFields) { y = m_numOfFields - 1; }
+    if (x >= m_nNumOfFields) { x = m_nNumOfFields - 1; }
+    if (y >= m_nNumOfFields) { y = m_nNumOfFields - 1; }
     qWarning() << "Changed point to (" << x << "," << y << ")";
   }
 
@@ -280,6 +280,10 @@ void CBoard::addStone(const QPoint field, const quint8 stone) {
   for (int z = 0; z < m_FieldStones[field.x()][field.y()].size(); z++) {
     m_FieldStones[field.x()][field.y()][z]->setZValue(6 + z);
   }
+
+  // Redraw board
+  this->update(QRectF(0, 0, m_nNumOfFields * m_nGridSize-1,
+                      m_nNumOfFields * m_nGridSize-1));
 }
 
 // ---------------------------------------------------------------------------
@@ -289,7 +293,7 @@ void CBoard::startAnimation(const QPoint field) {
   m_pAnimateField->setPos(this->snapToGrid(field*m_nGridSize));
   m_pAnimateField->setVisible(true);
   m_pHighlightRect->setVisible(false);
-  QTimer::singleShot(400, this, SLOT(resetAnimation()));
+  QTimer::singleShot(500, this, SLOT(resetAnimation()));
 }
 
 void CBoard::resetAnimation() {
@@ -303,7 +307,7 @@ void CBoard::startAnimation2(const QPoint field) {
   m_pAnimateField2->setPos(this->snapToGrid(field*m_nGridSize));
   m_pAnimateField2->setVisible(true);
   m_pHighlightRect->setVisible(false);
-  QTimer::singleShot(400, this, SLOT(resetAnimation2()));
+  QTimer::singleShot(500, this, SLOT(resetAnimation2()));
 }
 
 void CBoard::resetAnimation2() {
@@ -345,6 +349,9 @@ void CBoard::removeStone(const QPoint field, const bool bAll) {
     }
     m_Fields[field.x()][field.y()].removeLast();
   }
+  // Redraw board
+  this->update(QRectF(0, 0, m_nNumOfFields * m_nGridSize-1,
+                      m_nNumOfFields * m_nGridSize-1));
 }
 
 // ---------------------------------------------------------------------------
@@ -422,7 +429,7 @@ QList<QPoint> CBoard::checkNeighbourhood(const QPoint field) const {
 
   for (int y = field.y() - nMoves; y <= field.y() + nMoves; y += nMoves) {
     for (int x = field.x() - nMoves; x <= field.x() + nMoves; x += nMoves) {
-      if (x < 0 || y < 0 || x >= m_numOfFields || y >= m_numOfFields ||
+      if (x < 0 || y < 0 || x >= m_nNumOfFields || y >= m_nNumOfFields ||
           field == QPoint(x, y)) {
         continue;
       } else if (m_Fields[x][y].size() > 0) {
@@ -502,8 +509,8 @@ quint8 CBoard::findPossibleMoves(const bool bStonesLeft) {
   // 3 = stone can be set and tower can be moved
   quint8 nRet(0);
 
-  for (int y = 0; y < m_numOfFields; y++) {
-    for (int x = 0; x < m_numOfFields; x++) {
+  for (int y = 0; y < m_nNumOfFields; y++) {
+    for (int x = 0; x < m_nNumOfFields; x++) {
       if (0 == m_Fields[x][y].size() && bStonesLeft && 1 != nRet) {
         nRet++;
       }
@@ -525,7 +532,7 @@ quint8 CBoard::findPossibleMoves(const bool bStonesLeft) {
 
 void CBoard::printDebugFields() const {
   qDebug() << "FIELDS";
-  for (int i = 0; i < m_numOfFields; i++) {
+  for (int i = 0; i < m_nNumOfFields; i++) {
     qDebug() << m_Fields[0][i] << m_Fields[1][i] << m_Fields[2][i]
         << m_Fields[3][i] << m_Fields[4][i];
   }

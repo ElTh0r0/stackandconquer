@@ -82,7 +82,7 @@ class CBoard : public QGraphicsScene {
   const quint16 m_nGridSize;
   const quint8 m_nMaxStones;
   CSettings *m_pSettings;
-  const quint8 m_numOfFields;
+  const quint8 m_nNumOfFields;
   QRect m_BoardRect;
   QGraphicsRectItem *m_pHighlightRect;
   QGraphicsRectItem *m_pSelectedField;
