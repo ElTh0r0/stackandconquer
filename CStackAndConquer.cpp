@@ -27,6 +27,7 @@
 #include <QApplication>
 #include <QGridLayout>
 #include <QMessageBox>
+#include <QTextEdit>
 
 #include "./CStackAndConquer.h"
 #include "ui_CStackAndConquer.h"
@@ -111,6 +112,10 @@ void CStackAndConquer::setupMenu() {
   m_pUi->action_Quit->setShortcut(QKeySequence::Quit);
   connect(m_pUi->action_Quit, SIGNAL(triggered()),
           this, SLOT(close()));
+
+  // Show rules
+  connect(m_pUi->action_Rules, SIGNAL(triggered()),
+          this, SLOT(showRules()));
 
   // Report bug
   connect(m_pUi->action_ReportBug, SIGNAL(triggered()),
@@ -289,6 +294,68 @@ bool CStackAndConquer::switchTranslator(QTranslator &translator,
     return false;
   }
   return true;
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CStackAndConquer::showRules() {
+  QDialog* dialog = new QDialog(this, this->windowFlags()
+                                & ~Qt::WindowContextHelpButtonHint);
+  QGridLayout* layout = new QGridLayout(dialog);
+  dialog->setWindowTitle(trUtf8("Rules"));
+  dialog->setMinimumSize(700, 450);
+
+  QTextEdit* textEdit = new QTextEdit;
+  textEdit->setReadOnly(true);
+  QLabel* credits = new QLabel;
+  credits->setOpenExternalLinks(true);
+
+  layout->setMargin(2);
+  layout->setSpacing(0);
+  layout->addWidget(textEdit);
+  layout->addWidget(credits);
+
+  QString s("");
+  s += "<h2>" + trUtf8("Objective") + "</h2>" +
+       "<p>" + trUtf8("Players try to build stacks, at least five pieces high, with a piece of their own color on top.") + "</p>";
+  s += "<h2>" + trUtf8("Play") + "</h2>" +
+       "<p>" + trUtf8("<strong>Note:</strong> In the following, a single piece is also be referred as a \"stack\".") + "</p>" +
+       "<p>" + trUtf8("In each turn players have two options, one of which they must choose:") + "</p>" +
+       "<ul><li>" + trUtf8("<strong>Enter</strong> a piece") + "</li><li>" + trUtf8("<strong>Move</strong> a stack") + "</li></ul>";
+  s += "<h3>" + trUtf8("Enter a piece") + "</h3>" +
+       "<p>" + trUtf8("A player places a new piece of his own color on any empty space on the board.") + "</p>";
+  s += "<h3>" + trUtf8("Move a stack") + "</h3>" +
+       "<p>" + trUtf8("A player chooses a stack and moves one or more pieces from there.") + "</p>" +
+       "<ul><li>" + trUtf8("Pieces move <strong>orthogonally</strong> or <strong>diagonally</strong> in straight lines.") + "</li>"
+       "<li>" + trUtf8("Pieces are always taken from the top of a stack.") + "</li>" +
+       "<li>" + trUtf8("Stacks may be <strong>split</strong> at <strong>any</strong> level. Remaining pieces stay behind.") + "</li>" +
+       "<li>" + trUtf8("Players may move pieces of <strong>any</strong>(!) color. It is possible to move single opponent piece or a stack with an opponent piece on top.") + "</li>" +
+       "<li>" + trUtf8("It is not allowed to move such that the last move of the opponent is effectively taken back. Please note that such a move is often not available.") + "</li>" +
+       "<li>" + trUtf8("Stacks may <strong>not</strong> cross occupied spaces.") + "</li>" +
+       "<li>" + trUtf8("A move <strong>must end on another stack</strong>, moved pieces are placed on top of the target stack.") + "</li>" +
+       "<li>" + trUtf8("Stacks may be <strong>any</strong> height.") + "</li></ul>";
+  s += "<p>" + trUtf8("And, most important:") + "</p>" +
+       "<ul><li>" + trUtf8("<strong>The height of the <u>target stack</u> determines the exact distance from where it can be reached.</strong>") + "</li></ul>" +
+       "<p>" + trUtf8("<strong>Note:</strong>") + "</p>" +
+       "<ul><li>" + trUtf8("The top piece does <strong>not</strong> determine ownership of a stack when it comes to move options.") + "</li>" +
+       "<li>" + trUtf8("It is <strong>not</strong> the height of the moving stack that determines the length of a move. It is the height of the target stack that defines it.") + "</li></ul>";
+  s += "<h3>" + trUtf8("Examples") + "</h3>";
+  s += "<p></p><img src=\"" + m_sSharePath + "/example1.png\" alt=\"Example 1\" />";
+  s += "<p>" + trUtf8("The stack at e4 may move three spaces onto the stack at b4 (because it is three pieces high). The stack at e1 cannot reach b4 because it is blocked by c3. Please note that b4 may <strong>not</strong> jump on e4!") + "</p>";
+  s += "<p></p><img src=\"" + m_sSharePath + "/example2.png\" alt=\"Example 2\" />";
+  s += "<p>" + trUtf8("The piece in the center (at c3) is within reach of all adjacent stacks because it is a stack of height one and each of the surrounding stacks is one step away.") + "</p>";
+  s += "<h3>" + trUtf8("Pass") + "</h3>" +
+       "<p>" + trUtf8("If a player cannot enter a new piece they must <strong>move</strong> a stack. If no move is available, the player must pass. The game ends in a draw if both players pass in sequence.") + "</p>";
+  s += "<h2>" + trUtf8("End of the game") + "</h2>" +
+       "<p>" + trUtf8("When a player builds a stack of height 5 (or higher), this stack is removed from the board, the pieces are put back to the reserve and the player who owned the top piece of said stack, scores <strong>1 point</strong>.") + "</p>" +
+       "<p>" + trUtf8("For a standard game only <strong>1 point</strong> is needed to win, but players can agree upon any other number at the beginning of the game.") + "</p>";
+  textEdit->setHtml(s);
+
+  credits->setText("<p>" + trUtf8("These rules are licensed under Creative Commons <a href=\"https://creativecommons.org/licenses/by-nc/4.0/\">Attribution-Noncommercial 4.0 International</a> license.") +
+                   "<br />Designer: Dieter Stein, <a href=\"https://spielstein.com/games/mixtour/rules\">spielstein.com</a></p>");
+
+  dialog->show();
 }
 
 // ---------------------------------------------------------------------------

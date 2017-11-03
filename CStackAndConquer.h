@@ -69,6 +69,7 @@ class CStackAndConquer : public QMainWindow {
                              const bool bP1Won = false,
                              const bool bP2Won = false);
   void loadLanguage(const QString &sLang);
+  void showRules();
   void reportBug() const;
   void showInfoBox();
 

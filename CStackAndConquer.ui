@@ -64,6 +64,8 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="action_Rules"/>
+    <addaction name="separator"/>
     <addaction name="action_ReportBug"/>
     <addaction name="action_Info"/>
    </widget>
@@ -146,6 +148,11 @@
    </property>
    <property name="text">
     <string>S&amp;ettings</string>
+   </property>
+  </action>
+  <action name="action_Rules">
+   <property name="text">
+    <string>&amp;Rules</string>
    </property>
   </action>
  </widget>
