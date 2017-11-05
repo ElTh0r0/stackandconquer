@@ -25,6 +25,7 @@
  */
 
 #include <QApplication>
+#include <QFileDialog>
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QTextEdit>
@@ -37,6 +38,7 @@ CStackAndConquer::CStackAndConquer(const QDir &sharePath,
                                    QWidget *pParent)
   : QMainWindow(pParent),
     m_pUi(new Ui::CStackAndConquer),
+    m_userDataDir(userDataPath),
     m_sSharePath(sharePath.absolutePath()),
     m_sCurrLang(""),
     m_pGame(NULL) {
@@ -45,7 +47,7 @@ CStackAndConquer::CStackAndConquer(const QDir &sharePath,
   m_pUi->setupUi(this);
   this->setWindowTitle(qApp->applicationName());
 
-  m_pSettings = new CSettings(m_sSharePath, userDataPath.absolutePath(), this);
+  m_pSettings = new CSettings(m_sSharePath, m_userDataDir.absolutePath(), this);
   connect(m_pSettings, SIGNAL(newGame()),
           this, SLOT(startNewGame()));
   connect(m_pSettings, SIGNAL(changeLang(QString)),
@@ -61,26 +63,54 @@ CStackAndConquer::CStackAndConquer(const QDir &sharePath,
   QTime time = QTime::currentTime();
   qsrand((uint)time.msec());
 
-  // Choose CPU script or load game from command line
-  QString sCmdArg("");
+  this->checkCmdArgs();
+}
+
+CStackAndConquer::~CStackAndConquer() {
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CStackAndConquer::checkCmdArgs() {
+  // Choose CPU script(s) or load game from command line
+  QStringList sListArgs;
   if (qApp->arguments().size() > 1) {
-    if (qApp->arguments()[1].endsWith(".js", Qt::CaseInsensitive) ||
-        qApp->arguments()[1].endsWith(".json", Qt::CaseInsensitive)) {
-      if (QFile::exists(qApp->arguments()[1])) {
-        sCmdArg = qApp->arguments()[1];
-      } else {
-        qWarning() << "Specified JS file not found:" << qApp->arguments()[1];
-        QMessageBox::warning(this, trUtf8("Warning"),
-                             trUtf8("Specified file not found:") + "\n" +
-                             qApp->arguments()[1]);
+    for (int i = 1; i < qApp->arguments().size(); i++) {
+      // Load save game
+      if (qApp->arguments()[i].endsWith(".json", Qt::CaseInsensitive)) {
+        if (QFile::exists(qApp->arguments()[i])) {
+          sListArgs.clear();
+          sListArgs << qApp->arguments()[i];
+          break;
+        } else {
+          qWarning() << "Specified JS file not found:" << qApp->arguments()[i];
+          QMessageBox::warning(this, trUtf8("Warning"),
+                               trUtf8("Specified file not found:") + "\n" +
+                               qApp->arguments()[i]);
+          sListArgs.clear();
+          break;
+        }
+      } else if (qApp->arguments()[i].endsWith(".js", Qt::CaseInsensitive)) {
+        // Load CPU script(s)
+        if (QFile::exists(qApp->arguments()[i])) {
+          if (2 == sListArgs.size()) {
+            break;
+          }
+          sListArgs << qApp->arguments()[i];
+        } else {
+          qWarning() << "Specified JS file not found:" << qApp->arguments()[i];
+          QMessageBox::warning(this, trUtf8("Warning"),
+                               trUtf8("Specified file not found:") + "\n" +
+                               qApp->arguments()[i]);
+          sListArgs.clear();
+          break;
+        }
       }
     }
   }
 
-  this->startNewGame(sCmdArg);
-}
-
-CStackAndConquer::~CStackAndConquer() {
+  this->startNewGame(sListArgs);
 }
 
 // ---------------------------------------------------------------------------
@@ -95,14 +125,14 @@ void CStackAndConquer::setupMenu() {
   // TODO: Load / save game
   // Load game
   m_pUi->action_LoadGame->setShortcut(QKeySequence::Open);
-  // connect(m_pUi->action_LoadGame, SIGNAL(triggered()),
-  //         this, SLOT(loadGame()));
+  connect(m_pUi->action_LoadGame, SIGNAL(triggered()),
+          this, SLOT(loadGame()));
   m_pUi->action_LoadGame->setEnabled(false);
 
   // Save game
   m_pUi->action_SaveGame->setShortcut(QKeySequence::Save);
-  // connect(m_pUi->action_SaveGame, SIGNAL(triggered()),
-  //         this, SLOT(saveGame()));
+  connect(m_pUi->action_SaveGame, SIGNAL(triggered()),
+          this, SLOT(saveGame()));
 
   // Settings
   connect(m_pUi->action_Preferences, SIGNAL(triggered()),
@@ -179,14 +209,14 @@ void CStackAndConquer::setupGraphView() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::startNewGame(const QString sCmdArg) {
+void CStackAndConquer::startNewGame(const QStringList sListArgs) {
   qDebug() << Q_FUNC_INFO;
 
   if (NULL != m_pGame) {
     delete m_pGame;
   }
 
-  m_pGame = new CGame(m_pSettings, sCmdArg);
+  m_pGame = new CGame(m_pSettings, sListArgs);
 
   connect(m_pGame, SIGNAL(updateNameP1(QString)),
           m_plblPlayer1, SLOT(setText(QString)));
@@ -212,16 +242,45 @@ void CStackAndConquer::startNewGame(const QString sCmdArg) {
   m_pGraphView->updateSceneRect(m_pGame->getSceneRect());
   m_pGraphView->setInteractive(true);
 
-  if ("Human" != m_pSettings->getP1HumanCpu() ||
-      "Human" != m_pSettings->getP2HumanCpu()) {
-    if (!m_pGame->initCpu()) {
-      m_pGraphView->setInteractive(false);
-      QMessageBox::warning(this, trUtf8("Warning"),
-                           trUtf8("An error occured during CPU initialization."));
-      return;
-    }
+  if (!m_pGame->initCpu()) {
+    m_pGraphView->setInteractive(false);
+    QMessageBox::warning(this, trUtf8("Warning"),
+                         trUtf8("An error occured during CPU initialization."));
+    return;
   }
   m_pGame->updatePlayers(true);
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CStackAndConquer::loadGame() {
+  QString sFile = QFileDialog::getOpenFileName(this, trUtf8("Load game"),
+                                               m_userDataDir.absolutePath(),
+                                               trUtf8("Save games") + "(*.json)");
+  if (!sFile.isEmpty()) {
+    if (!sFile.endsWith(".json", Qt::CaseInsensitive)) {
+      QMessageBox::warning(this, trUtf8("Warning"),
+                           trUtf8("Invalid save game file."));
+    } else {
+      this->startNewGame(QStringList() << sFile);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CStackAndConquer::saveGame() {
+  QString sFile = QFileDialog::getSaveFileName(this, trUtf8("Save game"),
+                                               m_userDataDir.absolutePath(),
+                                               trUtf8("Save games") + "(*.json)");
+  if (!sFile.isEmpty()) {
+    if (!sFile.endsWith(".json", Qt::CaseInsensitive)) {
+      sFile += ".json";
+    }
+    //m_pGame->saveGame(sFile);
+  }
 }
 
 // ---------------------------------------------------------------------------

@@ -31,7 +31,7 @@
 
 #include "./CGame.h"
 
-CGame::CGame(CSettings *pSettings, const QString &sJsFile)
+CGame::CGame(CSettings *pSettings, const QStringList &sListFiles)
   : m_pSettings(pSettings),
     m_pBoard(NULL),
     m_jsCpuP1(NULL),
@@ -45,7 +45,7 @@ CGame::CGame(CSettings *pSettings, const QString &sJsFile)
     m_nGridSize(70),
     m_nNumOfFields(5),
     m_bScriptError(false) {
-  qDebug() << "New game" << sJsFile;
+  qDebug() << "New game" << sListFiles;
 
   m_pBoard = new CBoard(m_nNumOfFields, m_nGridSize, m_nMaxStones, m_pSettings);
   connect(m_pBoard, SIGNAL(setStone(QPoint)),
@@ -53,54 +53,67 @@ CGame::CGame(CSettings *pSettings, const QString &sJsFile)
   connect(m_pBoard, SIGNAL(moveTower(QPoint, QPoint)),
           this, SLOT(moveTower(QPoint, QPoint)));
 
-  if (sJsFile.endsWith(".json", Qt::CaseInsensitive)) {
-    // TODO: Load saved game
-  }
+  QString sP1HumanCpu("");
+  QString sName1("P1");
+  QString sP2HumanCpu("");
+  QString sName2("P2");
+  quint8 nStartPlayer(0);
 
-  QString sP1HumanCpu(m_pSettings->getP1HumanCpu());
-  bool bP1HumanCpu(true);
-  if ("Human" == sP1HumanCpu) {
-    bP1HumanCpu = true;
-  } else {
-    bP1HumanCpu = false;
-    m_sJsFileP1 = sP1HumanCpu;
+  if (1 == sListFiles.size()) {
+    if (sListFiles[0].endsWith(".json", Qt::CaseInsensitive)) {  // Load game
+      // TODO: Load saved game
+      //sP1HumanCpu = xxx;
+      //sP2HumanCpu = xxx;
+      //sName1 = xxx;
+      //sName2 = xxx;
+      //nStartPlayer = xxx;
+      // Create board + towers
 
-    m_jsCpuP1 = new COpponentJS(1, m_nNumOfFields, m_nMaxTowerHeight);
-    connect(this, SIGNAL(makeMoveCpuP1(QList<QList<QList<quint8> > >, quint8)),
-            m_jsCpuP1, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, quint8)));
-    connect(m_jsCpuP1, SIGNAL(setStone(QPoint)),
-            this, SLOT(setStone(QPoint)));
-    connect(m_jsCpuP1, SIGNAL(moveTower(QPoint, QPoint, quint8)),
-            this, SLOT(moveTower(QPoint, QPoint, quint8)));
-    connect(m_jsCpuP1, SIGNAL(scriptError()),
-            this, SLOT(caughtScriptError()));
-  }
-
-  QString sP2HumanCpu(m_pSettings->getP2HumanCpu());
-  bool bP2HumanCpu(true);
-  if ("Human" == sP2HumanCpu) {
-    bP2HumanCpu = true;
-  } else {
-    bP2HumanCpu = false;
-    if (sJsFile.endsWith(".js", Qt::CaseInsensitive)) {
-      m_sJsFileP2 = sJsFile;
-    } else {
-      m_sJsFileP2 = sP2HumanCpu;
+      QMessageBox::critical(NULL, "Warning",
+                           "Loading save game not implemented, yet!");
+      qCritical() << "Loading save game not implemented, yet!";
+      exit(-1);
+    } else if (sListFiles[0].endsWith(".js", Qt::CaseInsensitive)) {  // 1 CPU
+      sP1HumanCpu = "Human";
+      sName1 = m_pSettings->getNameP1();
+      sP2HumanCpu = sListFiles[0];
+      sName2 = "Computer";
+      nStartPlayer = m_pSettings->getStartPlayer();
     }
+  } else if (2 == sListFiles.size()) {  // 2 CPU
+    sP1HumanCpu = sListFiles[0];
+    sName2 = "Computer";
+    sP2HumanCpu = sListFiles[1];
+    sName2 = "Computer";
+    nStartPlayer = m_pSettings->getStartPlayer();
+  } else {  // Start game with current settings
+    sP1HumanCpu = m_pSettings->getP1HumanCpu();
+    sName1 = m_pSettings->getNameP1();
+    sP2HumanCpu = m_pSettings->getP2HumanCpu();
+    sName2 = m_pSettings->getNameP2();
+    nStartPlayer = m_pSettings->getStartPlayer();
+  }
 
-    m_jsCpuP2 = new COpponentJS(2, m_nNumOfFields, m_nMaxTowerHeight);
-    connect(this, SIGNAL(makeMoveCpuP2(QList<QList<QList<quint8> > >, quint8)),
-            m_jsCpuP2, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, quint8)));
-    connect(m_jsCpuP2, SIGNAL(setStone(QPoint)),
-            this, SLOT(setStone(QPoint)));
-    connect(m_jsCpuP2, SIGNAL(moveTower(QPoint, QPoint, quint8)),
-            this, SLOT(moveTower(QPoint, QPoint, quint8)));
-    connect(m_jsCpuP2, SIGNAL(scriptError()),
-            this, SLOT(caughtScriptError()));
+  bool bP1IsHuman(true);
+  bool bP2IsHuman(true);
+
+  if ("Human" == sP1HumanCpu) {
+    bP1IsHuman = true;
+  } else {
+    bP1IsHuman = false;
+    m_sJsFileP1 = sP1HumanCpu;
+    this->createCPU1();
+  }
+
+  if ("Human" == sP2HumanCpu) {
+    bP2IsHuman = true;
+  } else {
+    bP2IsHuman = false;
+    m_sJsFileP2 = sP2HumanCpu;
+    this->createCPU2();
   }
 
   // Select start player
-  quint8 nStartPlayer(m_pSettings->getStartPlayer());
   bool bStartPlayer(true);
   if (0 == nStartPlayer) {  // Random
     nStartPlayer = qrand() % 2 + 1;
@@ -111,13 +124,41 @@ CGame::CGame(CSettings *pSettings, const QString &sJsFile)
     bStartPlayer = true;
   }
 
-  m_pPlayer1 = new CPlayer(bStartPlayer, bP1HumanCpu,
-                           m_pSettings->getNameP1(), m_nMaxStones);
-  m_pPlayer2 = new CPlayer(!bStartPlayer, bP2HumanCpu,
-                           m_pSettings->getNameP2(), m_nMaxStones);
+  m_pPlayer1 = new CPlayer(bStartPlayer, bP1IsHuman, sName1, m_nMaxStones);
+  m_pPlayer2 = new CPlayer(!bStartPlayer, bP2IsHuman, sName2, m_nMaxStones);
 
   // m_pUi->action_SaveGame->setEnabled(true);
   m_sPreviousMove.clear();
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CGame::createCPU1() {
+  m_jsCpuP1 = new COpponentJS(1, m_nNumOfFields, m_nMaxTowerHeight);
+  connect(this, SIGNAL(makeMoveCpuP1(QList<QList<QList<quint8> > >, quint8)),
+          m_jsCpuP1, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, quint8)));
+  connect(m_jsCpuP1, SIGNAL(setStone(QPoint)),
+          this, SLOT(setStone(QPoint)));
+  connect(m_jsCpuP1, SIGNAL(moveTower(QPoint, QPoint, quint8)),
+          this, SLOT(moveTower(QPoint, QPoint, quint8)));
+  connect(m_jsCpuP1, SIGNAL(scriptError()),
+          this, SLOT(caughtScriptError()));
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void CGame::createCPU2() {
+  m_jsCpuP2 = new COpponentJS(2, m_nNumOfFields, m_nMaxTowerHeight);
+  connect(this, SIGNAL(makeMoveCpuP2(QList<QList<QList<quint8> > >, quint8)),
+          m_jsCpuP2, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, quint8)));
+  connect(m_jsCpuP2, SIGNAL(setStone(QPoint)),
+          this, SLOT(setStone(QPoint)));
+  connect(m_jsCpuP2, SIGNAL(moveTower(QPoint, QPoint, quint8)),
+          this, SLOT(moveTower(QPoint, QPoint, quint8)));
+  connect(m_jsCpuP2, SIGNAL(scriptError()),
+          this, SLOT(caughtScriptError()));
 }
 
 // ---------------------------------------------------------------------------

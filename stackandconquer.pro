@@ -95,7 +95,6 @@ unix: !macx {
     INSTALLS       += target \
                       data \
                       lang \
-                      exampl \
                       desktop \
                       pixmap \
                       #icons \

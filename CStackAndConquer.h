@@ -63,7 +63,9 @@ class CStackAndConquer : public QMainWindow {
   void closeEvent(QCloseEvent *pEvent);
 
  private slots:
-  void startNewGame(const QString sCmdArg = "");
+  void startNewGame(const QStringList sListArgs = QStringList());
+  void loadGame();
+  void saveGame();
   void setViewInteractive(const bool bEnabled);
   void highlightActivePlayer(const bool bPlayer1,
                              const bool bP1Won = false,
@@ -74,6 +76,7 @@ class CStackAndConquer : public QMainWindow {
   void showInfoBox();
 
  private:
+  void checkCmdArgs();
   bool switchTranslator(QTranslator &translator,
                         const QString &sFile,
                         const QString &sPath);
@@ -81,7 +84,8 @@ class CStackAndConquer : public QMainWindow {
   void setupGraphView();
 
   Ui::CStackAndConquer *m_pUi;
-  QString m_sSharePath;
+  const QDir m_userDataDir;
+  const QString m_sSharePath;
   QTranslator m_translator;  // App translations
   QTranslator m_translatorQt;  // Qt translations
   QString m_sCurrLang;
