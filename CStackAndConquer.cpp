@@ -341,9 +341,9 @@ void CStackAndConquer::showRules() {
        "<ul><li>" + trUtf8("The top piece does <strong>not</strong> determine ownership of a stack when it comes to move options.") + "</li>" +
        "<li>" + trUtf8("It is <strong>not</strong> the height of the moving stack that determines the length of a move. It is the height of the target stack that defines it.") + "</li></ul>";
   s += "<h3>" + trUtf8("Examples") + "</h3>";
-  s += "<p></p><img src=\"" + m_sSharePath + "/example1.png\" alt=\"Example 1\" />";
+  s += "<p></p><img src=\":/images/example1.png\" alt=\"Example 1\" />";
   s += "<p>" + trUtf8("The stack at e4 may move three spaces onto the stack at b4 (because it is three pieces high). The stack at e1 cannot reach b4 because it is blocked by c3. Please note that b4 may <strong>not</strong> jump on e4!") + "</p>";
-  s += "<p></p><img src=\"" + m_sSharePath + "/example2.png\" alt=\"Example 2\" />";
+  s += "<p></p><img src=\":/images/example2.png\" alt=\"Example 2\" />";
   s += "<p>" + trUtf8("The piece in the center (at c3) is within reach of all adjacent stacks because it is a stack of height one and each of the surrounding stacks is one step away.") + "</p>";
   s += "<h3>" + trUtf8("Pass") + "</h3>" +
        "<p>" + trUtf8("If a player cannot enter a new piece they must <strong>move</strong> a stack. If no move is available, the player must pass. The game ends in a draw if both players pass in sequence.") + "</p>";

@@ -11,5 +11,7 @@
         <file>images/menu/help-browser.png</file>
         <file>images/menu/preferences-system.png</file>
         <file>images/menu/system-log-out.png</file>
+        <file>images/example1.png</file>
+        <file>images/example2.png</file>
     </qresource>
 </RCC>
