@@ -79,9 +79,6 @@ unix: !macx {
     lang.path       = $$PREFIX/share/stackandconquer/lang
     lang.files     += lang/*.qm
 
-    exampl.path     = $$PREFIX/share/stackandconquer
-    exampl.files   += data/*.png
-
     desktop.path    = $$PREFIX/share/applications
     desktop.files  += data/stackandconquer.desktop
 
