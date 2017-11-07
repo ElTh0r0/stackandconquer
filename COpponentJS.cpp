@@ -141,7 +141,7 @@ QJsonDocument COpponentJS::convertBoardToJSON(
     const QList<QList<QList<quint8> > > board) {
   QJsonArray tower;
   QVariantList vartower;
-  QJsonArray jsboard;
+  QJsonArray jsBoard;
 
   for (int nRow = 0; nRow < m_nNumOfFields; nRow++) {
     QJsonArray line;
@@ -153,11 +153,11 @@ QJsonDocument COpponentJS::convertBoardToJSON(
       tower = QJsonArray::fromVariantList(vartower);
       line.append(tower);
     }
-    jsboard.append(line);
+    jsBoard.append(line);
   }
 
-  QJsonDocument jsdoc(jsboard);
-  return jsdoc;
+  QJsonDocument jsDoc(jsBoard);
+  return jsDoc;
 }
 
 // ---------------------------------------------------------------------------

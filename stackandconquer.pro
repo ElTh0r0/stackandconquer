@@ -22,7 +22,7 @@ unix: !macx {
        TARGET = StackAndConquer
 }
 
-VERSION       = 0.7.0
+VERSION       = 0.8.0
 QMAKE_TARGET_PRODUCT     = "StackAndConquer"
 QMAKE_TARGET_DESCRIPTION = "Challenging tower conquest board game"
 QMAKE_TARGET_COPYRIGHT   = "(C) 2015-2017 Thorsten Roth"

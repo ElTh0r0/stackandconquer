@@ -78,7 +78,7 @@ void CStackAndConquer::checkCmdArgs() {
   if (qApp->arguments().size() > 1) {
     for (int i = 1; i < qApp->arguments().size(); i++) {
       // Load save game
-      if (qApp->arguments()[i].endsWith(".json", Qt::CaseInsensitive)) {
+      if (qApp->arguments()[i].endsWith(".stacksav", Qt::CaseInsensitive)) {
         if (QFile::exists(qApp->arguments()[i])) {
           sListArgs.clear();
           sListArgs << qApp->arguments()[i];
@@ -122,12 +122,10 @@ void CStackAndConquer::setupMenu() {
   connect(m_pUi->action_NewGame, SIGNAL(triggered()),
           this, SLOT(startNewGame()));
 
-  // TODO: Load / save game
   // Load game
   m_pUi->action_LoadGame->setShortcut(QKeySequence::Open);
   connect(m_pUi->action_LoadGame, SIGNAL(triggered()),
           this, SLOT(loadGame()));
-  m_pUi->action_LoadGame->setEnabled(false);
 
   // Save game
   m_pUi->action_SaveGame->setShortcut(QKeySequence::Save);
@@ -257,9 +255,9 @@ void CStackAndConquer::startNewGame(const QStringList sListArgs) {
 void CStackAndConquer::loadGame() {
   QString sFile = QFileDialog::getOpenFileName(this, trUtf8("Load game"),
                                                m_userDataDir.absolutePath(),
-                                               trUtf8("Save games") + "(*.json)");
+                                               trUtf8("Save games") + "(*.stacksav)");
   if (!sFile.isEmpty()) {
-    if (!sFile.endsWith(".json", Qt::CaseInsensitive)) {
+    if (!sFile.endsWith(".stacksav", Qt::CaseInsensitive)) {
       QMessageBox::warning(this, trUtf8("Warning"),
                            trUtf8("Invalid save game file."));
     } else {
@@ -274,12 +272,15 @@ void CStackAndConquer::loadGame() {
 void CStackAndConquer::saveGame() {
   QString sFile = QFileDialog::getSaveFileName(this, trUtf8("Save game"),
                                                m_userDataDir.absolutePath(),
-                                               trUtf8("Save games") + "(*.json)");
+                                               trUtf8("Save games") + "(*.stacksav)");
   if (!sFile.isEmpty()) {
-    if (!sFile.endsWith(".json", Qt::CaseInsensitive)) {
-      sFile += ".json";
+    if (!sFile.endsWith(".stacksav", Qt::CaseInsensitive)) {
+      sFile += ".stacksav";
     }
-    //m_pGame->saveGame(sFile);
+    if (!m_pGame->saveGame(sFile)) {
+      QMessageBox::warning(this, trUtf8("Warning"),
+                           trUtf8("Game could not be saved."));
+    }
   }
 }
 
@@ -288,6 +289,7 @@ void CStackAndConquer::saveGame() {
 
 void CStackAndConquer::setViewInteractive(const bool bEnabled) {
   m_pGraphView->setInteractive(bEnabled);
+  m_pUi->action_SaveGame->setEnabled(bEnabled);
 }
 
 // ---------------------------------------------------------------------------

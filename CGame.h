@@ -38,6 +38,7 @@ class CGame : public QObject {
   explicit CGame(CSettings *pSettings, const QStringList &sListFiles);
   QGraphicsScene* getScene() const;
   QRectF getSceneRect() const;
+  bool saveGame(const QString &sFile);
   void updatePlayers(bool bInitial = false);
   bool initCpu();
 
@@ -63,6 +64,7 @@ class CGame : public QObject {
  private:
   void createCPU1();
   void createCPU2();
+  QJsonObject loadGame(const QString &sFile);
   void checkPossibleMoves();
   bool checkPreviousMoveReverted(const QString sMove);
   void checkTowerWin(QPoint field);

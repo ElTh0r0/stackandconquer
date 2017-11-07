@@ -25,7 +25,12 @@
  */
 
 #include <QDebug>
+#include <QFile>
 #include <QInputDialog>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QList>
 #include <QMessageBox>
 #include <QTimer>
 
@@ -58,21 +63,70 @@ CGame::CGame(CSettings *pSettings, const QStringList &sListFiles)
   QString sP2HumanCpu("");
   QString sName2("P2");
   quint8 nStartPlayer(0);
+  quint8 nStonesLeftP1(m_nMaxStones);
+  quint8 nStonesLeftP2(m_nMaxStones);
+  quint8 nWonP1(0);
+  quint8 nWonP2(0);
 
   if (1 == sListFiles.size()) {
-    if (sListFiles[0].endsWith(".json", Qt::CaseInsensitive)) {  // Load game
-      // TODO: Load saved game
-      //sP1HumanCpu = xxx;
-      //sP2HumanCpu = xxx;
-      //sName1 = xxx;
-      //sName2 = xxx;
-      //nStartPlayer = xxx;
-      // Create board + towers
+    if (sListFiles[0].endsWith(".stacksav", Qt::CaseInsensitive)) {  // Load game
+      QJsonObject jsonObj(this->loadGame(sListFiles[0]));
+      if (jsonObj.isEmpty()) {
+        qWarning() << "Save file is empty!";
+        QMessageBox::critical(NULL, trUtf8("Warning"),
+                             trUtf8("Error while opening save game."));
+        exit(-1);
+      }
 
-      QMessageBox::critical(NULL, "Warning",
-                           "Loading save game not implemented, yet!");
-      qCritical() << "Loading save game not implemented, yet!";
-      exit(-1);
+      sP1HumanCpu = jsonObj["HumanCpu1"].toString();
+      sName1 = jsonObj["Name1"].toString("P1");
+      nWonP1 = jsonObj["Won1"].toInt(0);
+      sP2HumanCpu = jsonObj["HumanCpu2"].toString();
+      sName2 = jsonObj["Name2"].toString("P2");
+      nWonP2 = jsonObj["Won2"].toInt(0);
+      nStartPlayer = jsonObj["Current"].toInt(1);
+
+      // Convert json array to board
+      QJsonArray jsBoard = jsonObj["Board"].toArray();
+      QJsonArray jsTower;
+      QJsonArray jsLine;
+      QList<quint8> tower;
+      QList<QList<quint8> > line;
+      QList<QList<QList<quint8> > > board;
+
+      if (m_nNumOfFields != jsBoard.size()) {
+        qWarning() << "Save game contains invalid data"
+                   << "(m_nNumOfFields != jsBoard.size):"
+                   << m_nNumOfFields << "!=" << jsBoard.size();
+        QMessageBox::critical(NULL, trUtf8("Warning"),
+                              trUtf8("Save game contains invalid data."));
+        exit(-1);
+      }
+
+      for (int i = 0; i < m_nNumOfFields; i++) {
+        line.clear();
+        jsLine = jsBoard.at(i).toArray();
+        if (m_nNumOfFields != jsLine.size()) {
+          qWarning() << "Save game contains invalid data"
+                     << "(m_nNumOfFields != jsLine.size). Line" << i << "size:"
+                     << m_nNumOfFields << "!=" << jsLine.size();
+          QMessageBox::critical(NULL, trUtf8("Warning"),
+                                trUtf8("Save game contains invalid data."));
+          exit(-1);
+        }
+        for (int j = 0; j < m_nNumOfFields; j++) {
+          tower.clear();
+          jsTower = jsLine.at(j).toArray();
+          foreach (QJsonValue n, jsTower) {
+            tower << n.toDouble();
+            (1 == tower.last()) ? nStonesLeftP1-- : nStonesLeftP2--;
+          }
+          line.append(tower);
+        }
+        board.append(line);
+      }
+
+      m_pBoard->setupSavegame(board);
     } else if (sListFiles[0].endsWith(".js", Qt::CaseInsensitive)) {  // 1 CPU
       sP1HumanCpu = "Human";
       sName1 = m_pSettings->getNameP1();
@@ -126,8 +180,11 @@ CGame::CGame(CSettings *pSettings, const QStringList &sListFiles)
 
   m_pPlayer1 = new CPlayer(bStartPlayer, bP1IsHuman, sName1, m_nMaxStones);
   m_pPlayer2 = new CPlayer(!bStartPlayer, bP2IsHuman, sName2, m_nMaxStones);
+  m_pPlayer1->setStonesLeft(nStonesLeftP1);
+  m_pPlayer1->setWonTowers(nWonP1);
+  m_pPlayer2->setStonesLeft(nStonesLeftP2);
+  m_pPlayer2->setWonTowers(nWonP2);
 
-  // m_pUi->action_SaveGame->setEnabled(true);
   m_sPreviousMove.clear();
 }
 
@@ -356,7 +413,7 @@ void CGame::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
 void CGame::checkTowerWin(QPoint field) {
   if (m_pBoard->getField(field).size() >= m_nMaxTowerHeight) {
     if (1 == m_pBoard->getField(field).last()) {
-      m_pPlayer1->increaseWonTowers();
+      m_pPlayer1->setWonTowers(m_pPlayer1->getWonTowers() + 1);
       qDebug() << "Player 1 conquered tower" <<
                   static_cast<char>(field.x() + 65) +
                   QString::number(field.y() + 1);
@@ -366,7 +423,7 @@ void CGame::checkTowerWin(QPoint field) {
                                  .arg(m_pPlayer1->getName()));
       }
     } else if (2 == m_pBoard->getField(field).last()) {
-      m_pPlayer2->increaseWonTowers();
+      m_pPlayer2->setWonTowers(m_pPlayer2->getWonTowers() + 1);
       qDebug() << "Player 2 conquered tower" <<
                   static_cast<char>(field.x() + 65) +
                   QString::number(field.y() + 1);
@@ -544,4 +601,68 @@ bool CGame::checkPreviousMoveReverted(const QString sMove) {
 
   m_sPreviousMove = sMove;
   return false;
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+QJsonObject CGame::loadGame(const QString &sFile) {
+  QFile loadFile(sFile);
+
+  if (!loadFile.open(QIODevice::ReadOnly)) {
+    qWarning() << "Couldn't open save file:" << sFile;
+    return QJsonObject();
+  }
+
+  QByteArray saveData = loadFile.readAll();
+  // QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+  QJsonDocument loadDoc(QJsonDocument::fromBinaryData(saveData));
+  return loadDoc.object();
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+bool CGame::saveGame(const QString &sFile) {
+  QFile saveFile(sFile);
+  QJsonArray tower;
+  QVariantList vartower;
+  QJsonArray jsBoard;
+  QList<QList<QList<quint8> > > board(m_pBoard->getBoard());
+
+  if (!saveFile.open(QIODevice::WriteOnly)) {
+    qWarning() << "Couldn't open save file:" << sFile;
+    return false;
+  }
+
+  // Convert board to json array
+  for (int nRow = 0; nRow < m_nNumOfFields; nRow++) {
+    QJsonArray line;
+    for (int nCol = 0; nCol < m_nNumOfFields; nCol++) {
+      vartower.clear();
+      foreach (quint8 n, board[nRow][nCol]) {
+        vartower << n;
+      }
+      tower = QJsonArray::fromVariantList(vartower);
+      line.append(tower);
+    }
+    jsBoard.append(line);
+  }
+
+  QJsonObject jsonObj;
+  jsonObj["Name1"] = m_pPlayer1->getName();
+  jsonObj["Name2"] = m_pPlayer2->getName();
+  jsonObj["Won1"] = m_pPlayer1->getWonTowers();
+  jsonObj["Won2"] = m_pPlayer2->getWonTowers();
+  jsonObj["HumanCpu1"] = m_pPlayer1->getIsHuman() ? "Human" : m_sJsFileP1;
+  jsonObj["HumanCpu2"] = m_pPlayer2->getIsHuman() ? "Human" : m_sJsFileP2;
+  jsonObj["Current"] = m_pPlayer1->getIsActive() ? 1 : 2;
+  jsonObj["Board"] = jsBoard;
+
+  QJsonDocument jsDoc(jsonObj);
+  // if (-1 == saveFile.write(jsDoc.toJson())) {
+  if (-1 == saveFile.write(jsDoc.toBinaryData())) {
+    return false;
+  }
+  return true;
 }

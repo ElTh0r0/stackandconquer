@@ -98,8 +98,8 @@ quint8 CPlayer::getStonesLeft() const {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CPlayer::increaseWonTowers() {
-  m_nWonTowers++;
+void CPlayer::setWonTowers(const quint8 nWonTowers) {
+  m_nWonTowers = nWonTowers;
 }
 
 quint8 CPlayer::getWonTowers() const {

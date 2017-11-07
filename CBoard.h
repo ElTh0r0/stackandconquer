@@ -48,7 +48,8 @@ class CBoard : public QGraphicsScene {
   CBoard(quint8 nNumOfFields, quint16 nGridSize, quint8 nMaxStones,
          CSettings *pSettings);
 
-  void addStone(const QPoint field, const quint8 stone);
+  void setupSavegame(const QList<QList<QList<quint8> > > board);
+  void addStone(const QPoint field, const quint8 stone, const bool bAnim = true);
   void removeStone(const QPoint field, const bool bAll = false);
   void selectField(const QPointF point);
   QList<QList<QList<quint8> > > getBoard() const;

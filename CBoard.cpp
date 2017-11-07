@@ -178,6 +178,23 @@ void CBoard::createStones() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
+void CBoard::setupSavegame(const QList<QList<QList<quint8> > > board) {
+  for (int nRow = 0; nRow < m_nNumOfFields; nRow++) {
+    for (int nCol = 0; nCol < m_nNumOfFields; nCol++) {
+      foreach (quint8 stone, board[nRow][nCol]) {
+        this->addStone(QPoint(nRow, nCol), stone);
+      }
+    }
+  }
+
+  // Redraw board
+  this->update(QRectF(0, 0, m_nNumOfFields * m_nGridSize-1,
+                      m_nNumOfFields * m_nGridSize-1));
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 void CBoard::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
   // Check, if mouse is inside the board rectangle (+1/-1 for border line)
   static QRectF board(m_BoardRect.topLeft() + QPoint(1, 1),
@@ -251,7 +268,7 @@ QPoint CBoard::getGridField(const QPointF point) const {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::addStone(const QPoint field, const quint8 stone) {
+void CBoard::addStone(const QPoint field, const quint8 stone, const bool bAnim) {
   quint8 nExisting(m_Fields[field.x()][field.y()].size());
 
   if (1 == stone) {
@@ -269,7 +286,9 @@ void CBoard::addStone(const QPoint field, const quint8 stone) {
     return;
   }
 
-  this->startAnimation(field);
+  if (bAnim) {
+    this->startAnimation(field);
+  }
 
   m_FieldStones[field.x()][field.y()].last()->setPos(field*m_nGridSize);
   m_FieldStones[field.x()][field.y()].last()->setPos(
@@ -281,9 +300,11 @@ void CBoard::addStone(const QPoint field, const quint8 stone) {
     m_FieldStones[field.x()][field.y()][z]->setZValue(6 + z);
   }
 
-  // Redraw board
-  this->update(QRectF(0, 0, m_nNumOfFields * m_nGridSize-1,
-                      m_nNumOfFields * m_nGridSize-1));
+  if (bAnim) {
+    // Redraw board
+    this->update(QRectF(0, 0, m_nNumOfFields * m_nGridSize-1,
+                        m_nNumOfFields * m_nGridSize-1));
+  }
 }
 
 // ---------------------------------------------------------------------------

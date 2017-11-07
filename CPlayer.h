@@ -44,7 +44,7 @@ class CPlayer {
   QString getName() const;
   void setStonesLeft(const quint8 nStones);
   quint8 getStonesLeft() const;
-  void increaseWonTowers();
+  void setWonTowers(const quint8 nWonTowers);
   quint8 getWonTowers() const;
   void setCanMove(const quint8 nCanMove);
   quint8 getCanMove() const;
