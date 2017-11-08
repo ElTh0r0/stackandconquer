@@ -6,6 +6,8 @@ Build-Depends:
    debhelper (>= 9),
    qt5-default,
    qt5-qmake,
+   libqt5svg5-dev,
+   qtdeclarative5-dev,
    pkg-config
 Standards-Version: 4.1.1
 Homepage: https://github.com/ElTh0r0/stackandconquer
