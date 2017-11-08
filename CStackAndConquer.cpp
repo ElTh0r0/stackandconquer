@@ -42,8 +42,6 @@ CStackAndConquer::CStackAndConquer(const QDir &sharePath,
     m_sSharePath(sharePath.absolutePath()),
     m_sCurrLang(""),
     m_pGame(NULL) {
-  qDebug() << "Starting...";
-
   m_pUi->setupUi(this);
   this->setWindowTitle(qApp->applicationName());
 
@@ -208,8 +206,6 @@ void CStackAndConquer::setupGraphView() {
 // ---------------------------------------------------------------------------
 
 void CStackAndConquer::startNewGame(const QStringList sListArgs) {
-  qDebug() << Q_FUNC_INFO;
-
   if (NULL != m_pGame) {
     delete m_pGame;
   }

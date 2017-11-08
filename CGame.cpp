@@ -50,7 +50,7 @@ CGame::CGame(CSettings *pSettings, const QStringList &sListFiles)
     m_nGridSize(70),
     m_nNumOfFields(5),
     m_bScriptError(false) {
-  qDebug() << "New game" << sListFiles;
+  qDebug() << "Starting new game" << sListFiles;
 
   m_pBoard = new CBoard(m_nNumOfFields, m_nGridSize, m_nMaxStones, m_pSettings);
   connect(m_pBoard, SIGNAL(setStone(QPoint)),

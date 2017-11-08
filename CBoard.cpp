@@ -38,7 +38,6 @@ CBoard::CBoard(quint8 nNumOfFields, quint16 nGridSize,
     m_pSettings(pSettings),
     m_nNumOfFields(nNumOfFields),
     m_pSvgRenderer(NULL) {
-  qDebug() << Q_FUNC_INFO;
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
 
   this->drawBoard();
@@ -66,7 +65,6 @@ CBoard::CBoard(quint8 nNumOfFields, quint16 nGridSize,
 // ---------------------------------------------------------------------------
 
 void CBoard::drawBoard() {
-  qDebug() << Q_FUNC_INFO;
   m_BoardRect.setTopLeft(QPoint(0, 0));
   m_BoardRect.setBottomRight(QPoint(m_nNumOfFields * m_nGridSize -1,
                                     m_nNumOfFields * m_nGridSize -1));
@@ -88,7 +86,7 @@ void CBoard::drawBoard() {
 
     if (qApp->arguments().contains("--debug")) {
       m_FieldCaptions << this->addSimpleText(QString(static_cast<char>(i + 65)));
-      m_FieldCaptions.last()->setPos(i*m_nGridSize,-m_nGridSize/2);
+      m_FieldCaptions.last()->setPos(i*m_nGridSize, -m_nGridSize/2);
       m_FieldCaptions.last()->setFont(QFont("Arial", m_nGridSize/5));
       m_FieldCaptions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     }
@@ -552,7 +550,7 @@ quint8 CBoard::findPossibleMoves(const bool bStonesLeft) {
 // ---------------------------------------------------------------------------
 
 void CBoard::printDebugFields() const {
-  qDebug() << "FIELDS";
+  qDebug() << "BOARD:";
   for (int i = 0; i < m_nNumOfFields; i++) {
     qDebug() << m_Fields[0][i] << m_Fields[1][i] << m_Fields[2][i]
         << m_Fields[3][i] << m_Fields[4][i];
