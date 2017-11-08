@@ -1,9 +1,9 @@
-stackandconquer (0.8.0-1) xenial; urgency=low
+stackandconquer (0.8.0-2) xenial; urgency=low
 
   [ Thorsten Roth ]
-  * Improved CPU
-  * Bug fixes
-  * Qt 4 not supported anymore.
+  * Added rules.
+  * Load/save game.
+  * Fixed cmd argument handling.
 
  -- Thorsten Roth <elthoro@gmx.de>  Wed, 08 Nov 2017 16:23:00 +0200
 
