@@ -78,13 +78,22 @@ CGame::CGame(CSettings *pSettings, const QStringList &sListFiles)
         exit(-1);
       }
 
-      sP1HumanCpu = jsonObj["HumanCpu1"].toString();
-      sName1 = jsonObj["Name1"].toString("P1");
-      nWonP1 = jsonObj["Won1"].toInt(0);
-      sP2HumanCpu = jsonObj["HumanCpu2"].toString();
-      sName2 = jsonObj["Name2"].toString("P2");
-      nWonP2 = jsonObj["Won2"].toInt(0);
-      nStartPlayer = jsonObj["Current"].toInt(1);
+      sP1HumanCpu = jsonObj["HumanCpu1"].toString().trimmed();
+      sName1 = jsonObj["Name1"].toString().trimmed();
+      nWonP1 = jsonObj["Won1"].toInt();
+      sP2HumanCpu = jsonObj["HumanCpu2"].toString().trimmed();
+      sName2 = jsonObj["Name2"].toString().trimmed();
+      nWonP2 = jsonObj["Won2"].toInt();
+      nStartPlayer = jsonObj["Current"].toInt();
+
+      if (sP1HumanCpu.isEmpty() || sP2HumanCpu.isEmpty() ||
+          sName1.isEmpty() || sName2.isEmpty()) {
+        qWarning() << "Save game contains invalid data:"
+                   << "sP1HumanCpu / sP2HumanCpu / sName1 / sName2 is empty.";
+        QMessageBox::critical(NULL, trUtf8("Warning"),
+                              trUtf8("Save game contains invalid data."));
+        exit(-1);
+      }
 
       // Convert json array to board
       QJsonArray jsBoard = jsonObj["Board"].toArray();

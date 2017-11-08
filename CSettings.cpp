@@ -144,8 +144,16 @@ void CSettings::accept() {
   }
 
   m_sNameP1 = m_pUi->leNameP1->text();
+  if (m_sNameP1.trimmed().isEmpty()) {
+    m_sNameP1 = trUtf8("Player 1");
+    m_pUi->leNameP1->setText(m_sNameP1);
+  }
   m_pSettings->setValue("NameP1", m_sNameP1);
   m_sNameP2 = m_pUi->leNameP2->text();
+  if (m_sNameP2.trimmed().isEmpty()) {
+    m_sNameP2 = trUtf8("Player 2");
+    m_pUi->leNameP2->setText(m_sNameP2);
+  }
   m_pSettings->setValue("NameP2", m_sNameP2);
 
   m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
