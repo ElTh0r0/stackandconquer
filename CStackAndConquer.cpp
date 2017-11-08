@@ -176,30 +176,45 @@ void CStackAndConquer::setupGraphView() {
   m_plblP1StonesLeft = new QLabel("99");
   m_plblP1Won = new QLabel("0");
   m_plblPlayer2 = new QLabel(m_pSettings->getNameP2());
+  m_plblPlayer2->setAlignment(Qt::AlignRight);
   m_plblP2StonesLeft = new QLabel("99");
   m_plblP2StonesLeft->setAlignment(Qt::AlignRight);
   m_plblP2Won = new QLabel("0");
   m_plblP2Won->setAlignment(Qt::AlignRight);
 
-  QPixmap iconStones(":/images/stones.png");
-  m_plblIconStones = new QLabel();
-  m_plblIconStones->setPixmap(iconStones);
-  m_plblIconStones->setAlignment(Qt::AlignCenter);
+  QPixmap iconStone1(":/images/stone1.png");
+  m_plblIconStones1 = new QLabel();
+  m_plblIconStones1->setPixmap(iconStone1);
+  m_plblIconStones1->setAlignment(Qt::AlignCenter);
+  QPixmap iconStone2(":/images/stone2.png");
+  m_plblIconStones2 = new QLabel();
+  m_plblIconStones2->setPixmap(iconStone2);
+  m_plblIconStones2->setAlignment(Qt::AlignCenter);
   QPixmap iconWin(":/images/win.png");
-  m_plblIconWin = new QLabel();
-  m_plblIconWin->setPixmap(iconWin);
-  m_plblIconWin->setAlignment(Qt::AlignCenter);
+  m_plblIconWin1 = new QLabel();
+  m_plblIconWin1->setPixmap(iconWin);
+  m_plblIconWin1->setAlignment(Qt::AlignCenter);
+  m_plblIconWin2 = new QLabel();
+  m_plblIconWin2->setPixmap(iconWin);
+  m_plblIconWin2->setAlignment(Qt::AlignCenter);
 
   // addWidget(*widget, row, column, rowspan, colspan)
-  m_pLayout->addWidget(m_plblPlayer1, 0, 0, 1, 1);
-  m_pLayout->addWidget(m_plblPlayer2, 0, 2, 1, 1);
-  m_pLayout->addWidget(m_plblP1StonesLeft, 1, 0, 1, 1);
-  m_pLayout->addWidget(m_plblIconStones, 1, 1, 1, 1);
+  m_pLayout->addWidget(m_plblPlayer1, 0, 0, 1, 2);
+  m_pLayout->addWidget(m_plblIconStones1, 1, 0, 1, 1);
+  m_pLayout->addWidget(m_plblP1StonesLeft, 1, 1, 1, 1);
+  m_pLayout->addWidget(m_plblIconWin1, 2, 0, 1, 1);
+  m_pLayout->addWidget(m_plblP1Won, 2, 1, 1, 1);
+
+  m_pLayout->addWidget(m_plblPlayer2, 0, 2, 1, 2);
   m_pLayout->addWidget(m_plblP2StonesLeft, 1, 2, 1, 1);
-  m_pLayout->addWidget(m_plblP1Won, 2, 0, 1, 1);
-  m_pLayout->addWidget(m_plblIconWin, 2, 1, 1, 1);
+  m_pLayout->addWidget(m_plblIconStones2, 1, 3, 1, 1);
   m_pLayout->addWidget(m_plblP2Won, 2, 2, 1, 1);
+  m_pLayout->addWidget(m_plblIconWin2, 2, 3, 1, 1);
+
+  m_pFrame->setMinimumWidth(this->width());
   m_pFrame->setLayout(m_pLayout);
+  m_pLayout->setColumnStretch(1, 1);
+  m_pLayout->setColumnStretch(2, 1);
 }
 
 // ---------------------------------------------------------------------------
