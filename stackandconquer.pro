@@ -37,8 +37,7 @@ OBJECTS_DIR   = ./.objs
 UI_DIR        = ./.ui
 RCC_DIR       = ./.rcc
 
-QT           += core gui svg qml
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT           += core gui svg qml widgets
 
 SOURCES      += main.cpp\
                 CStackAndConquer.cpp \

@@ -42,13 +42,9 @@ void setupLogger(const QString &sDebugFilePath,
                  const QString &sAppName,
                  const QString &sVersion);
 
-#if QT_VERSION >= 0x050000
 void LoggingHandler(QtMsgType type,
                     const QMessageLogContext &context,
                     const QString &sMsg);
-#else
-void LoggingHandler(QtMsgType type, const char *sMsg);
-#endif
 
 int main(int argc, char *argv[]) {
   Q_INIT_RESOURCE(stackandconquer_resources);
@@ -74,7 +70,6 @@ int main(int argc, char *argv[]) {
                  + app.applicationName().toLower();
   }
 
-#if QT_VERSION >= 0x050000
   QStringList sListPaths = QStandardPaths::standardLocations(
                              QStandardPaths::DataLocation);
   if (sListPaths.isEmpty()) {
@@ -82,11 +77,7 @@ int main(int argc, char *argv[]) {
     sListPaths << app.applicationDirPath();
   }
   const QDir userDataDir(sListPaths[0].toLower());
-#else
-  const QDir userDataDir(
-        QDesktopServices::storageLocation(
-          QDesktopServices::DataLocation).toLower());
-#endif
+
   // Create folder including possible parent directories (mkPATH)
   if (!userDataDir.exists()) {
     userDataDir.mkpath(userDataDir.absolutePath());
@@ -120,11 +111,7 @@ void setupLogger(const QString &sDebugFilePath,
   if (!logfile.open(QIODevice::WriteOnly)) {
     qWarning() << "Couldn't create logging file: " << sDebugFilePath;
   } else {
-#if QT_VERSION >= 0x050000
     qInstallMessageHandler(LoggingHandler);
-#else
-    qInstallMsgHandler(LoggingHandler);
-#endif
   }
 
   qDebug() << sAppName << sVersion;
@@ -135,7 +122,6 @@ void setupLogger(const QString &sDebugFilePath,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-#if QT_VERSION >= 0x050000
 void LoggingHandler(QtMsgType type,
                     const QMessageLogContext &context,
                     const QString &sMsg) {
@@ -144,11 +130,6 @@ void LoggingHandler(QtMsgType type,
                      QString(context.file) + ":" +
                      QString::number(context.line) + ", " +
                      QString(context.function) + ")";
-#else
-void LoggingHandler(QtMsgType type, const char *sMsg) {
-  QString sMsg2(sMsg);
-  QString sContext(sMsg);
-#endif
   QString sTime(QTime::currentTime().toString());
 
   switch (type) {
