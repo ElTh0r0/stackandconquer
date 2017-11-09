@@ -1,0 +1,66 @@
+stackandconquer (0.8.0-2) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Added rules.
+  * Load/save game.
+  * Fixed cmd argument handling.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Wed, 08 Nov 2017 16:23:00 +0200
+
+stackandconquer (0.7.0-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Improved CPU
+  * Bug fixes
+
+ -- Thorsten Roth <elthoro@gmx.de>  Tue, 19 Sep 2017 20:11:00 +0200
+
+stackandconquer (0.6.0-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Added JS engine for CPU scripts and removed plugin interface.
+  * Minor gui changes and graphic fixes.
+  * Added fallback menu icons.
+  * Change gui language without restarting the game.
+  * Moved project from Launchpad to GitHub.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Mon, 17 Apr 2017 20:25:00 +0200
+
+stackandconquer (0.5.0-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Added CPU plugin interface.
+  * Highlight moves.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Sun, 13 Nov 2016 17:26:00 +0200
+
+stackandconquer (0.4.0-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Check for possible moves.
+  * Check if previous move is reverted.
+  * Pretty debug output.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Sun, 29 May 2016 01:29:00 +0200
+
+stackandconquer (0.3.0-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Settings dialog.
+  * Added German translation.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Sat, 16 Apr 2016 19:40:00 +0200
+ 
+stackandconquer (0.2.0-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Improved graphics.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Fri, 08 Apr 2016 13:30:00 +0200
+
+stackandconquer (0.1.0-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Initial commit. Main game logic implemented.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Thu, 07 Apr 2016 13:29:00 +0200
