@@ -1,0 +1,50 @@
+-------------------------------------------------------------------
+Wed Nov 08 16:23:00 UTC 2017 - elthoro@gmx.de 0.8.0
+
+- Added rules.
+- Load/save game.
+- Fixed cmd argument handling.
+
+-------------------------------------------------------------------
+Tue Sep 19 20:11:00 UTC 2017 - elthoro@gmx.de 0.7.0
+
+- Improved CPU
+- Bug fixes
+
+-------------------------------------------------------------------
+Mon Apr 17 20:25:00 UTC 2017 - elthoro@gmx.de 0.6.0
+
+- Added JS engine for CPU scripts and removed plugin interface.
+- Minor gui changes and graphic fixes.
+- Added fallback menu icons.
+- Change gui language without restarting the game.
+- Moved project from Launchpad to GitHub.
+
+-------------------------------------------------------------------
+Sun Nov 13 17:26:00 UTC 2016 - elthoro@gmx.de 0.5.0
+
+- Added CPU plugin interface.
+- Highlight moves.
+
+-------------------------------------------------------------------
+Sun May 29 01:29:00 UTC 2016 - elthoro@gmx.de 0.4.0
+
+- Check for possible moves.
+- Check if previous move is reverted.
+- Pretty debug output.
+
+-------------------------------------------------------------------
+Sat Apr 16 19:40:00 UTC 2016 - elthoro@gmx.de 0.3.0
+
+- Settings dialog.
+- Added German translation.
+
+-------------------------------------------------------------------
+Fri Apr 08 13:30:00 UTC 2016 - elthoro@gmx.de 0.2.0
+
+- Improved graphics.
+
+-------------------------------------------------------------------
+Thu Apr 07 13:29:00 UTC 2016 - elthoro@gmx.de 0.1.0
+
+- Initial commit. Main game logic implemented.
