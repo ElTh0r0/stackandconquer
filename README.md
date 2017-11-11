@@ -1,7 +1,7 @@
 # StackAndConquer [![Build status](https://ci.appveyor.com/api/projects/status/7dluq45hv378t1t9/branch/master?svg=true)](https://ci.appveyor.com/project/ElTh0r0/stackandconquer/branch/master)
-StackAndConquer is a challenging tower conquest board game inspired by [Mixtour](https://spielstein.com/games/mixtour).
+StackAndConquer is a challenging tower conquest board game inspired by [Mixtour](https://spielstein.com/games/mixtour). Objective is to build a stack of stones with at least five stones and a stone with the players color on top.
 
-Objective is to build a stack of stones with at least five stones and a stone with the players color on top.
+![alt tag](https://cn.pling.com/img/9/5/0/5/02fedfd6068b725a0ca594d013cd221f95eb.png)
 
 ## Installation
 * Ubuntu PPA: https://launchpad.net/~elthoro/+archive/stackandconquer
