@@ -1,5 +1,5 @@
 /**
- * \file CGame.cpp
+ * \file game.cpp
  *
  * \section LICENSE
  *
@@ -34,9 +34,9 @@
 #include <QMessageBox>
 #include <QTimer>
 
-#include "./CGame.h"
+#include "./game.h"
 
-CGame::CGame(CSettings *pSettings, const QStringList &sListFiles)
+Game::Game(Settings *pSettings, const QStringList &sListFiles)
   : m_pSettings(pSettings),
     m_pBoard(NULL),
     m_jsCpuP1(NULL),
@@ -52,7 +52,7 @@ CGame::CGame(CSettings *pSettings, const QStringList &sListFiles)
     m_bScriptError(false) {
   qDebug() << "Starting new game" << sListFiles;
 
-  m_pBoard = new CBoard(m_nNumOfFields, m_nGridSize, m_nMaxStones, m_pSettings);
+  m_pBoard = new Board(m_nNumOfFields, m_nGridSize, m_nMaxStones, m_pSettings);
   connect(m_pBoard, SIGNAL(setStone(QPoint)),
           this, SLOT(setStone(QPoint)));
   connect(m_pBoard, SIGNAL(moveTower(QPoint, QPoint)),
@@ -187,8 +187,8 @@ CGame::CGame(CSettings *pSettings, const QStringList &sListFiles)
     bStartPlayer = true;
   }
 
-  m_pPlayer1 = new CPlayer(bStartPlayer, bP1IsHuman, sName1, m_nMaxStones);
-  m_pPlayer2 = new CPlayer(!bStartPlayer, bP2IsHuman, sName2, m_nMaxStones);
+  m_pPlayer1 = new Player(bStartPlayer, bP1IsHuman, sName1, m_nMaxStones);
+  m_pPlayer2 = new Player(!bStartPlayer, bP2IsHuman, sName2, m_nMaxStones);
   m_pPlayer1->setStonesLeft(nStonesLeftP1);
   m_pPlayer1->setWonTowers(nWonP1);
   m_pPlayer2->setStonesLeft(nStonesLeftP2);
@@ -200,8 +200,8 @@ CGame::CGame(CSettings *pSettings, const QStringList &sListFiles)
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CGame::createCPU1() {
-  m_jsCpuP1 = new COpponentJS(1, m_nNumOfFields, m_nMaxTowerHeight);
+void Game::createCPU1() {
+  m_jsCpuP1 = new OpponentJS(1, m_nNumOfFields, m_nMaxTowerHeight);
   connect(this, SIGNAL(makeMoveCpuP1(QList<QList<QList<quint8> > >, quint8)),
           m_jsCpuP1, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, quint8)));
   connect(m_jsCpuP1, SIGNAL(setStone(QPoint)),
@@ -215,8 +215,8 @@ void CGame::createCPU1() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CGame::createCPU2() {
-  m_jsCpuP2 = new COpponentJS(2, m_nNumOfFields, m_nMaxTowerHeight);
+void Game::createCPU2() {
+  m_jsCpuP2 = new OpponentJS(2, m_nNumOfFields, m_nMaxTowerHeight);
   connect(this, SIGNAL(makeMoveCpuP2(QList<QList<QList<quint8> > >, quint8)),
           m_jsCpuP2, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, quint8)));
   connect(m_jsCpuP2, SIGNAL(setStone(QPoint)),
@@ -230,7 +230,7 @@ void CGame::createCPU2() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool CGame::initCpu() {
+bool Game::initCpu() {
   if (!m_pPlayer1->getIsHuman()) {
     if (!m_jsCpuP1->loadAndEvalCpuScript(m_sJsFileP1)) {
       return false;
@@ -244,18 +244,18 @@ bool CGame::initCpu() {
   return true;
 }
 
-void CGame::caughtScriptError() {
+void Game::caughtScriptError() {
   m_bScriptError = true;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QGraphicsScene* CGame::getScene() const {
+QGraphicsScene* Game::getScene() const {
   return m_pBoard;
 }
 
-QRectF CGame::getSceneRect() const {
+QRectF Game::getSceneRect() const {
   return QRectF(0, 0,
                 m_nNumOfFields * m_nGridSize-1, m_nNumOfFields * m_nGridSize-1);
 }
@@ -263,7 +263,7 @@ QRectF CGame::getSceneRect() const {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CGame::setStone(QPoint field) {
+void Game::setStone(QPoint field) {
   QString sMove(static_cast<char>(field.x() + 65)
                 + QString::number(field.y() + 1));
 
@@ -313,7 +313,7 @@ void CGame::setStone(QPoint field) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CGame::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
+void Game::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
   QList<quint8> listStones(m_pBoard->getField(tower));
   if (0 == listStones.size()) {
     qWarning() << "Move tower size == 0! Tower:" << tower;
@@ -419,7 +419,7 @@ void CGame::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CGame::checkTowerWin(QPoint field) {
+void Game::checkTowerWin(QPoint field) {
   if (m_pBoard->getField(field).size() >= m_nMaxTowerHeight) {
     if (1 == m_pBoard->getField(field).last()) {
       m_pPlayer1->setWonTowers(m_pPlayer1->getWonTowers() + 1);
@@ -457,7 +457,7 @@ void CGame::checkTowerWin(QPoint field) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CGame::returnStones(QPoint field) {
+void Game::returnStones(QPoint field) {
   QList<quint8> tower(m_pBoard->getField(field));
   quint8 stones(tower.count(1));
   m_pPlayer1->setStonesLeft(m_pPlayer1->getStonesLeft() + stones);
@@ -471,7 +471,7 @@ void CGame::returnStones(QPoint field) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CGame::updatePlayers(bool bInitial) {
+void Game::updatePlayers(bool bInitial) {
   if (m_bScriptError) {
     emit setInteractive(false);
     return;
@@ -521,7 +521,7 @@ void CGame::updatePlayers(bool bInitial) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CGame::delayCpu() {
+void Game::delayCpu() {
   if (m_pPlayer1->getIsActive()) {
     emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getCanMove());
   } else {
@@ -532,7 +532,7 @@ void CGame::delayCpu() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CGame::checkPossibleMoves() {
+void Game::checkPossibleMoves() {
   if (m_pPlayer1->getIsActive()) {
     m_pPlayer1->setCanMove(
           m_pBoard->findPossibleMoves(m_pPlayer1->getStonesLeft() > 0));
@@ -571,7 +571,7 @@ void CGame::checkPossibleMoves() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool CGame::checkPreviousMoveReverted(const QString sMove) {
+bool Game::checkPreviousMoveReverted(const QString sMove) {
   if (!m_sPreviousMove.isEmpty()) {
     QStringList sListPrev;
     QStringList sListCur;
@@ -615,7 +615,7 @@ bool CGame::checkPreviousMoveReverted(const QString sMove) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QJsonObject CGame::loadGame(const QString &sFile) {
+QJsonObject Game::loadGame(const QString &sFile) {
   QFile loadFile(sFile);
 
   if (!loadFile.open(QIODevice::ReadOnly)) {
@@ -632,7 +632,7 @@ QJsonObject CGame::loadGame(const QString &sFile) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool CGame::saveGame(const QString &sFile) {
+bool Game::saveGame(const QString &sFile) {
   QFile saveFile(sFile);
   QJsonArray tower;
   QVariantList vartower;

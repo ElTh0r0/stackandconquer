@@ -1,5 +1,5 @@
 /**
- * \file CBoard.h
+ * \file board.h
  *
  * \section LICENSE
  *
@@ -24,8 +24,8 @@
  * Class definition for a board.
  */
 
-#ifndef STACKANDCONQUER_CBOARD_H_
-#define STACKANDCONQUER_CBOARD_H_
+#ifndef STACKANDCONQUER_BOARD_H_
+#define STACKANDCONQUER_BOARD_H_
 
 #include <QGraphicsEllipseItem>
 #include <QGraphicsScene>
@@ -35,18 +35,18 @@
 #include <QGraphicsSvgItem>
 #include <QPolygonF>
 
-#include <./CSettings.h>
+#include <./settings.h>
 
 /**
- * \class CBoard
+ * \class Board
  * \brief Game board generation.
  */
-class CBoard : public QGraphicsScene {
+class Board : public QGraphicsScene {
   Q_OBJECT
 
  public:
-  CBoard(quint8 nNumOfFields, quint16 nGridSize, quint8 nMaxStones,
-         CSettings *pSettings);
+  Board(quint8 nNumOfFields, quint16 nGridSize, quint8 nMaxStones,
+        Settings *pSettings);
 
   void setupSavegame(const QList<QList<QList<quint8> > > board);
   void addStone(const QPoint field, const quint8 stone, const bool bAnim = true);
@@ -82,7 +82,7 @@ class CBoard : public QGraphicsScene {
 
   const quint16 m_nGridSize;
   const quint8 m_nMaxStones;
-  CSettings *m_pSettings;
+  Settings *m_pSettings;
   const quint8 m_nNumOfFields;
   QRect m_BoardRect;
   QGraphicsRectItem *m_pHighlightRect;
@@ -99,4 +99,4 @@ class CBoard : public QGraphicsScene {
   QList<QGraphicsSimpleTextItem *> m_FieldCaptions;
 };
 
-#endif  // STACKANDCONQUER_CBOARD_H_
+#endif  // STACKANDCONQUER_BOARD_H_

@@ -40,25 +40,25 @@ RCC_DIR       = ./.rcc
 QT           += core gui svg qml widgets
 
 SOURCES      += main.cpp\
-                CStackAndConquer.cpp \
-                CGame.cpp \
-                CBoard.cpp \
-                CPlayer.cpp \
-                CSettings.cpp \
-                COpponentJS.cpp
+                stackandconquer.cpp \
+                game.cpp \
+                board.cpp \
+                player.cpp \
+                settings.cpp \
+                opponentjs.cpp
 
-HEADERS      += CStackAndConquer.h \
-                CGame.h \
-                CBoard.h \
-                CPlayer.h \
-                CSettings.h \
-                COpponentJS.h
+HEADERS      += stackandconquer.h \
+                game.h \
+                board.h \
+                player.h \
+                settings.h \
+                opponentjs.h
 
-FORMS        += CStackAndConquer.ui \
-                CSettings.ui
+FORMS        += stackandconquer.ui \
+                settings.ui
 
 RESOURCES    += res/stackandconquer_resources.qrc
-win32:RC_FILE = res/stackandconquer.rc
+win32:RC_FILE = res/stackandconquer_win.rc
 
 TRANSLATIONS += lang/stackandconquer_de.ts
 

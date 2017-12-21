@@ -1,5 +1,5 @@
 /**
- * \file CStackAndConquer.h
+ * \file stackandconquer.h
  *
  * \section LICENSE
  *
@@ -24,8 +24,8 @@
  * Class definition main application.
  */
 
-#ifndef STACKANDCONQUER_CSTACKANDCONQUER_H_
-#define STACKANDCONQUER_CSTACKANDCONQUER_H_
+#ifndef STACKANDCONQUER_STACKANDCONQUER_H_
+#define STACKANDCONQUER_STACKANDCONQUER_H_
 
 #include <QtCore>
 #include <QFormLayout>
@@ -35,25 +35,25 @@
 #include <QLabel>
 #include <QMainWindow>
 
-#include "./CGame.h"
-#include "./CSettings.h"
+#include "./game.h"
+#include "./settings.h"
 
 namespace Ui {
-class CStackAndConquer;
+class StackAndConquer;
 }
 
 /**
- * \class CStackAndConquer
+ * \class StackAndConquer
  * \brief Main application definition (gui, objects, etc.)
  */
-class CStackAndConquer : public QMainWindow {
+class StackAndConquer : public QMainWindow {
   Q_OBJECT
 
  public:
-  explicit CStackAndConquer(const QDir &sharePath,
-                            const QDir &userDataPath,
-                            QWidget *pParent = 0);
-  ~CStackAndConquer();
+  explicit StackAndConquer(const QDir &sharePath,
+                           const QDir &userDataPath,
+                           QWidget *pParent = 0);
+  ~StackAndConquer();
 
  signals:
   void updateUiLang();
@@ -83,15 +83,15 @@ class CStackAndConquer : public QMainWindow {
   void setupMenu();
   void setupGraphView();
 
-  Ui::CStackAndConquer *m_pUi;
+  Ui::StackAndConquer *m_pUi;
   const QDir m_userDataDir;
   const QString m_sSharePath;
   QTranslator m_translator;  // App translations
   QTranslator m_translatorQt;  // Qt translations
   QString m_sCurrLang;
-  CSettings *m_pSettings;
+  Settings *m_pSettings;
   QGraphicsView *m_pGraphView;
-  CGame *m_pGame;
+  Game *m_pGame;
 
   QFrame *m_pFrame;
   QGridLayout *m_pLayout;
@@ -107,4 +107,4 @@ class CStackAndConquer : public QMainWindow {
   QLabel *m_plblP2Won;
 };
 
-#endif  // STACKANDCONQUER_CSTACKANDCONQUER_H_
+#endif  // STACKANDCONQUER_STACKANDCONQUER_H_

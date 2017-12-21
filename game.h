@@ -1,5 +1,5 @@
 /**
- * \file CGame.h
+ * \file game.h
  *
  * \section LICENSE
  *
@@ -24,18 +24,18 @@
  * Class definition game engine.
  */
 
-#ifndef STACKANDCONQUER_CGAME_H_
-#define STACKANDCONQUER_CGAME_H_
+#ifndef STACKANDCONQUER_GAME_H_
+#define STACKANDCONQUER_GAME_H_
 
-#include "./CBoard.h"
-#include "./CPlayer.h"
-#include "./COpponentJS.h"
+#include "./board.h"
+#include "./player.h"
+#include "./opponentjs.h"
 
-class CGame : public QObject {
+class Game : public QObject {
   Q_OBJECT
 
  public:
-  explicit CGame(CSettings *pSettings, const QStringList &sListFiles);
+  explicit Game(Settings *pSettings, const QStringList &sListFiles);
   QGraphicsScene* getScene() const;
   QRectF getSceneRect() const;
   bool saveGame(const QString &sFile);
@@ -70,12 +70,12 @@ class CGame : public QObject {
   void checkTowerWin(QPoint field);
   void returnStones(QPoint field);
 
-  CSettings *m_pSettings;
-  CBoard *m_pBoard;
-  COpponentJS *m_jsCpuP1;
-  COpponentJS *m_jsCpuP2;
-  CPlayer *m_pPlayer1;
-  CPlayer *m_pPlayer2;
+  Settings *m_pSettings;
+  Board *m_pBoard;
+  OpponentJS *m_jsCpuP1;
+  OpponentJS *m_jsCpuP2;
+  Player *m_pPlayer1;
+  Player *m_pPlayer2;
   QString m_sJsFileP1;
   QString m_sJsFileP2;
 
@@ -88,4 +88,4 @@ class CGame : public QObject {
   QString m_sPreviousMove;
 };
 
-#endif  // STACKANDCONQUER_CGAME_H_
+#endif  // STACKANDCONQUER_GAME_H_

@@ -1,5 +1,5 @@
 /**
- * \file CPlayer.h
+ * \file player.h
  *
  * \section LICENSE
  *
@@ -24,19 +24,19 @@
  * Class definition for player.
  */
 
-#ifndef STACKANDCONQUER_CPLAYER_H_
-#define STACKANDCONQUER_CPLAYER_H_
+#ifndef STACKANDCONQUER_PLAYER_H_
+#define STACKANDCONQUER_PLAYER_H_
 
 #include <QString>
 
 /**
- * \class CPlayer
+ * \class Player
  * \brief Player class.
  */
-class CPlayer {
+class Player {
  public:
-  CPlayer(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones);
-  ~CPlayer();
+  Player(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones);
+  ~Player();
 
   void setActive(const bool bActive);
   bool getIsActive() const;
@@ -59,4 +59,4 @@ class CPlayer {
   quint8 m_nCanMove;
 };
 
-#endif  // STACKANDCONQUER_CPLAYER_H_
+#endif  // STACKANDCONQUER_PLAYER_H_

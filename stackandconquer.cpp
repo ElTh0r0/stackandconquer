@@ -1,5 +1,5 @@
 /**
- * \file CStackAndConquer.cpp
+ * \file stackandconquer.cpp
  *
  * \section LICENSE
  *
@@ -30,14 +30,14 @@
 #include <QMessageBox>
 #include <QTextEdit>
 
-#include "./CStackAndConquer.h"
-#include "ui_CStackAndConquer.h"
+#include "./stackandconquer.h"
+#include "ui_stackandconquer.h"
 
-CStackAndConquer::CStackAndConquer(const QDir &sharePath,
-                                   const QDir &userDataPath,
-                                   QWidget *pParent)
+StackAndConquer::StackAndConquer(const QDir &sharePath,
+                                 const QDir &userDataPath,
+                                 QWidget *pParent)
   : QMainWindow(pParent),
-    m_pUi(new Ui::CStackAndConquer),
+    m_pUi(new Ui::StackAndConquer),
     m_userDataDir(userDataPath),
     m_sSharePath(sharePath.absolutePath()),
     m_sCurrLang(""),
@@ -45,7 +45,7 @@ CStackAndConquer::CStackAndConquer(const QDir &sharePath,
   m_pUi->setupUi(this);
   this->setWindowTitle(qApp->applicationName());
 
-  m_pSettings = new CSettings(m_sSharePath, m_userDataDir.absolutePath(), this);
+  m_pSettings = new Settings(m_sSharePath, m_userDataDir.absolutePath(), this);
   connect(m_pSettings, SIGNAL(newGame()),
           this, SLOT(startNewGame()));
   connect(m_pSettings, SIGNAL(changeLang(QString)),
@@ -64,13 +64,13 @@ CStackAndConquer::CStackAndConquer(const QDir &sharePath,
   this->checkCmdArgs();
 }
 
-CStackAndConquer::~CStackAndConquer() {
+StackAndConquer::~StackAndConquer() {
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::checkCmdArgs() {
+void StackAndConquer::checkCmdArgs() {
   // Choose CPU script(s) or load game from command line
   QStringList sListArgs;
   if (qApp->arguments().size() > 1) {
@@ -114,7 +114,7 @@ void CStackAndConquer::checkCmdArgs() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::setupMenu() {
+void StackAndConquer::setupMenu() {
   // New game
   m_pUi->action_NewGame->setShortcut(QKeySequence::New);
   connect(m_pUi->action_NewGame, SIGNAL(triggered()),
@@ -155,7 +155,7 @@ void CStackAndConquer::setupMenu() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::setupGraphView() {
+void StackAndConquer::setupGraphView() {
   m_pGraphView = new QGraphicsView(this);
   // Set mouse tracking to true, otherwise mouse move event
   // for the *scene* is only triggered on a mouse click!
@@ -220,12 +220,11 @@ void CStackAndConquer::setupGraphView() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::startNewGame(const QStringList sListArgs) {
+void StackAndConquer::startNewGame(const QStringList sListArgs) {
   if (NULL != m_pGame) {
     delete m_pGame;
   }
-
-  m_pGame = new CGame(m_pSettings, sListArgs);
+  m_pGame = new Game(m_pSettings, sListArgs);
 
   connect(m_pGame, SIGNAL(updateNameP1(QString)),
           m_plblPlayer1, SLOT(setText(QString)));
@@ -263,7 +262,7 @@ void CStackAndConquer::startNewGame(const QStringList sListArgs) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::loadGame() {
+void StackAndConquer::loadGame() {
   QString sFile = QFileDialog::getOpenFileName(this, trUtf8("Load game"),
                                                m_userDataDir.absolutePath(),
                                                trUtf8("Save games") + "(*.stacksav)");
@@ -280,7 +279,7 @@ void CStackAndConquer::loadGame() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::saveGame() {
+void StackAndConquer::saveGame() {
   QString sFile = QFileDialog::getSaveFileName(this, trUtf8("Save game"),
                                                m_userDataDir.absolutePath(),
                                                trUtf8("Save games") + "(*.stacksav)");
@@ -298,7 +297,7 @@ void CStackAndConquer::saveGame() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::setViewInteractive(const bool bEnabled) {
+void StackAndConquer::setViewInteractive(const bool bEnabled) {
   m_pGraphView->setInteractive(bEnabled);
   m_pUi->action_SaveGame->setEnabled(bEnabled);
 }
@@ -306,9 +305,9 @@ void CStackAndConquer::setViewInteractive(const bool bEnabled) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::highlightActivePlayer(const bool bPlayer1,
-                                             const bool bP1Won,
-                                             const bool bP2Won) {
+void StackAndConquer::highlightActivePlayer(const bool bPlayer1,
+                                            const bool bP1Won,
+                                            const bool bP2Won) {
   if (bP1Won) {
     m_pUi->statusBar->showMessage(
           trUtf8("%1 won the game!").arg(m_plblPlayer1->text()));
@@ -335,7 +334,7 @@ void CStackAndConquer::highlightActivePlayer(const bool bPlayer1,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void CStackAndConquer::loadLanguage(const QString &sLang) {
+void StackAndConquer::loadLanguage(const QString &sLang) {
   if (m_sCurrLang != sLang) {
     m_sCurrLang = sLang;
     if (!this->switchTranslator(m_translatorQt, "qt_" + sLang,
@@ -353,9 +352,9 @@ void CStackAndConquer::loadLanguage(const QString &sLang) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool CStackAndConquer::switchTranslator(QTranslator &translator,
-                                        const QString &sFile,
-                                        const QString &sPath) {
+bool StackAndConquer::switchTranslator(QTranslator &translator,
+                                       const QString &sFile,
+                                       const QString &sPath) {
   qApp->removeTranslator(&translator);
   if (translator.load(sFile, sPath)) {
     qApp->installTranslator(&translator);
@@ -371,7 +370,7 @@ bool CStackAndConquer::switchTranslator(QTranslator &translator,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::showRules() {
+void StackAndConquer::showRules() {
   QDialog* dialog = new QDialog(this, this->windowFlags()
                                 & ~Qt::WindowContextHelpButtonHint);
   QGridLayout* layout = new QGridLayout(dialog);
@@ -433,14 +432,14 @@ void CStackAndConquer::showRules() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::reportBug() const {
+void StackAndConquer::reportBug() const {
   QDesktopServices::openUrl(QUrl("https://github.com/ElTh0r0/stackandconquer/issues"));
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void CStackAndConquer::showInfoBox() {
+void StackAndConquer::showInfoBox() {
   QMessageBox::about(this, trUtf8("About"),
                      QString("<center>"
                              "<big><b>%1 %2</b></big><br/>"
@@ -471,7 +470,7 @@ void CStackAndConquer::showInfoBox() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CStackAndConquer::changeEvent(QEvent *pEvent) {
+void StackAndConquer::changeEvent(QEvent *pEvent) {
   if (0 != pEvent) {
     if (QEvent::LanguageChange == pEvent->type()) {
       m_pUi->retranslateUi(this);
@@ -485,7 +484,7 @@ void CStackAndConquer::changeEvent(QEvent *pEvent) {
 // ---------------------------------------------------------------------------
 
 // Close event (File -> Close or X)
-void CStackAndConquer::closeEvent(QCloseEvent *pEvent) {
+void StackAndConquer::closeEvent(QCloseEvent *pEvent) {
   pEvent->accept();
   /*
   int nRet = QMessageBox::question(this, trUtf8("Quit") + " - " +

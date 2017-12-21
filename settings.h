@@ -1,5 +1,5 @@
 /**
- * \file CSettings.h
+ * \file settings.h
  *
  * \section LICENSE
  *
@@ -24,29 +24,29 @@
  * Class definition for settings.
  */
 
-#ifndef STACKANDCONQUER_CSETTINGS_H_
-#define STACKANDCONQUER_CSETTINGS_H_
+#ifndef STACKANDCONQUER_SETTINGS_H_
+#define STACKANDCONQUER_SETTINGS_H_
 
 #include <QDialog>
 #include <QSettings>
 
-#include "./CSettings.h"
+#include "./settings.h"
 
 namespace Ui {
-class CSettingsDialog;
+class SettingsDialog;
 }
 
 /**
- * \class CSettings
+ * \class Settings
  * \brief Settings dialog.
  */
-class CSettings : public QDialog {
+class Settings : public QDialog {
   Q_OBJECT
 
  public:
-  explicit CSettings(const QString &sSharePath, const QString &userDataDir,
+  explicit Settings(const QString &sSharePath, const QString &userDataDir,
                      QWidget *pParent = 0);
-  virtual ~CSettings();
+  virtual ~Settings();
 
   QString getNameP1() const;
   QString getNameP2() const;
@@ -86,7 +86,7 @@ class CSettings : public QDialog {
   void searchCpuScripts(const QString &userDataDir);
 
   QWidget *m_pParent;
-  Ui::CSettingsDialog *m_pUi;
+  Ui::SettingsDialog *m_pUi;
   QSettings *m_pSettings;
 
   QString m_sSharePath;
@@ -114,4 +114,4 @@ class CSettings : public QDialog {
   QColor m_neighboursBorderColor;
 };
 
-#endif  // STACKANDCONQUER_CSETTINGS_H_
+#endif  // STACKANDCONQUER_SETTINGS_H_

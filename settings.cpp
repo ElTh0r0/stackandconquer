@@ -1,5 +1,5 @@
 /**
- * \file CSettings.cpp
+ * \file settings.cpp
  *
  * \section LICENSE
  *
@@ -29,13 +29,13 @@
 #include <QIcon>
 #include <QMessageBox>
 
-#include "./CSettings.h"
-#include "ui_CSettings.h"
+#include "./settings.h"
+#include "ui_settings.h"
 
-CSettings::CSettings(const QString &sSharePath, const QString &userDataDir,
-                     QWidget *pParent)
+Settings::Settings(const QString &sSharePath, const QString &userDataDir,
+                   QWidget *pParent)
   : QDialog(pParent),
-    m_pUi(new Ui::CSettingsDialog()),
+    m_pUi(new Ui::SettingsDialog()),
     m_sSharePath(sSharePath) {
   m_pUi->setupUi(this);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -68,7 +68,7 @@ CSettings::CSettings(const QString &sSharePath, const QString &userDataDir,
   this->readSettings();
 }
 
-CSettings::~CSettings() {
+Settings::~Settings() {
   if (m_pUi) {
     delete m_pUi;
     m_pUi = NULL;
@@ -78,7 +78,7 @@ CSettings::~CSettings() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QStringList CSettings::searchLanguages() const {
+QStringList Settings::searchLanguages() const {
   QStringList sListGuiLanguages;
   sListGuiLanguages << "auto" << "en";
   QDir appDir(m_sSharePath + "/lang");
@@ -96,7 +96,7 @@ QStringList CSettings::searchLanguages() const {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void CSettings::searchCpuScripts(const QString &userDataDir) {
+void Settings::searchCpuScripts(const QString &userDataDir) {
   QStringList sListAvailableCpu;
   sListAvailableCpu << "Human";
   m_sListCPUs.clear();
@@ -134,7 +134,7 @@ void CSettings::searchCpuScripts(const QString &userDataDir) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void CSettings::accept() {
+void Settings::accept() {
   QString sOldGuiLang = m_sGuiLanguage;
   m_sGuiLanguage = m_pUi->cbGuiLanguage->currentText();
   m_pSettings->setValue("GuiLanguage", m_sGuiLanguage);
@@ -208,7 +208,7 @@ void CSettings::accept() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void CSettings::reject() {
+void Settings::reject() {
   this->readSettings();
   QDialog::reject();
 }
@@ -216,7 +216,7 @@ void CSettings::reject() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void CSettings::readSettings() {
+void Settings::readSettings() {
   m_sGuiLanguage = m_pSettings->value("GuiLanguage", "auto").toString();
   if (-1 != m_pUi->cbGuiLanguage->findText(m_sGuiLanguage)) {
     m_pUi->cbGuiLanguage->setCurrentIndex(
@@ -284,7 +284,7 @@ void CSettings::readSettings() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QColor CSettings::readColor(const QString sKey, const QString sFallback) const {
+QColor Settings::readColor(const QString sKey, const QString sFallback) const {
   QString sValue = m_pSettings->value("Colors/" + sKey, sFallback).toString();
   QColor color(sFallback);
 
@@ -299,7 +299,7 @@ QColor CSettings::readColor(const QString sKey, const QString sFallback) const {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void CSettings::updateUiLang() {
+void Settings::updateUiLang() {
   m_pUi->retranslateUi(this);
 
   QStringList sListStartPlayer;
@@ -314,7 +314,7 @@ void CSettings::updateUiLang() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QString CSettings::getLanguage() {
+QString Settings::getLanguage() {
   if ("auto" == m_sGuiLanguage) {
 #ifdef Q_OS_UNIX
     QByteArray lang = qgetenv("LANG");
@@ -336,23 +336,23 @@ QString CSettings::getLanguage() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QString CSettings::getNameP1() const {
+QString Settings::getNameP1() const {
   return m_sNameP1;
 }
-QString CSettings::getNameP2() const {
+QString Settings::getNameP2() const {
   return m_sNameP2;
 }
-quint8 CSettings::getStartPlayer() const {
+quint8 Settings::getStartPlayer() const {
   return m_nStartPlayer;
 }
-quint8 CSettings::getWinTowers() const {
+quint8 Settings::getWinTowers() const {
   return m_nWinTowers;
 }
-bool CSettings::getShowPossibleMoveTowers() const {
+bool Settings::getShowPossibleMoveTowers() const {
   return m_bShowPossibleMoveTowers;
 }
 
-QString CSettings::getP1HumanCpu() const {
+QString Settings::getP1HumanCpu() const {
   if (-1 != m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)) {
     return m_sListCPUs[m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)];
   } else {
@@ -360,7 +360,7 @@ QString CSettings::getP1HumanCpu() const {
   }
 }
 
-QString CSettings::getP2HumanCpu() const {
+QString Settings::getP2HumanCpu() const {
   if (-1 != m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)) {
     return m_sListCPUs[m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)];
   } else {
@@ -371,39 +371,39 @@ QString CSettings::getP2HumanCpu() const {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QColor CSettings::getBgColor() const {
+QColor Settings::getBgColor() const {
   return m_bgColor;
 }
-QColor CSettings::getHighlightColor() const {
+QColor Settings::getHighlightColor() const {
   return m_highlightColor;
 }
-QColor CSettings::getHighlightBorderColor() const {
+QColor Settings::getHighlightBorderColor() const {
   return m_highlightBorderColor;
 }
-QColor CSettings::getSelectedColor() const {
+QColor Settings::getSelectedColor() const {
   return m_selectedColor;
 }
-QColor CSettings::getSelectedBorderColor() const {
+QColor Settings::getSelectedBorderColor() const {
   return m_selectedBorderColor;
 }
-QColor CSettings::getAnimateColor() const {
+QColor Settings::getAnimateColor() const {
   return m_animateColor;
 }
-QColor CSettings::getAnimateBorderColor() const {
+QColor Settings::getAnimateBorderColor() const {
   return m_animateBorderColor;
 }
-QColor CSettings::getBgBoardColor() const {
+QColor Settings::getBgBoardColor() const {
   return m_bgBoardColor;
 }
-QColor CSettings::getOutlineBoardColor() const {
+QColor Settings::getOutlineBoardColor() const {
   return m_outlineBoardColor;
 }
-QColor CSettings::getGridBoardColor() const {
+QColor Settings::getGridBoardColor() const {
   return m_gridBoardColor;
 }
-QColor CSettings::GetNeighboursColor() const {
+QColor Settings::GetNeighboursColor() const {
   return m_neighboursColor;
 }
-QColor CSettings::GetNeighboursBorderColor() const {
+QColor Settings::GetNeighboursBorderColor() const {
   return m_neighboursBorderColor;
 }

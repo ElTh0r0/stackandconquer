@@ -1,5 +1,5 @@
 /**
- * \file COpponentJS.h
+ * \file opponentjs.h
  *
  * \section LICENSE
  *
@@ -24,19 +24,19 @@
  * Interface to CPU script JS engine.
  */
 
-#ifndef COPPONENTJS_H
-#define COPPONENTJS_H
+#ifndef STACKANDCONQUER_OPPONENTJS_H
+#define STACKANDCONQUER_OPPONENTJS_H
 
 #include <QObject>
 #include <QPoint>
 #include <QJSEngine>
 
-class COpponentJS : public QObject {
+class OpponentJS : public QObject {
   Q_OBJECT
 
  public:
-  explicit COpponentJS(const quint8 nID, const quint8 nNumOfFields,
-                       const quint8 nHeightTowerWin, QObject *parent = 0);
+  explicit OpponentJS(const quint8 nID, const quint8 nNumOfFields,
+                      const quint8 nHeightTowerWin, QObject *parent = 0);
   bool loadAndEvalCpuScript(const QString &sFilepath);
 
  public slots:
@@ -61,4 +61,4 @@ class COpponentJS : public QObject {
   QList<QList<QList<quint8> > > m_board;
 };
 
-#endif  // COPPONENTJS_H
+#endif  // STACKANDCONQUER_OPPONENTJS_H

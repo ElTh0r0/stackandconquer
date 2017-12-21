@@ -1,5 +1,5 @@
 /**
- * \file CBoard.cpp
+ * \file board.cpp
  *
  * \section LICENSE
  *
@@ -29,10 +29,10 @@
 #include <QMessageBox>
 #include <QTimer>
 
-#include "./CBoard.h"
+#include "./board.h"
 
-CBoard::CBoard(quint8 nNumOfFields, quint16 nGridSize,
-               quint8 nMaxStones, CSettings *pSettings)
+Board::Board(quint8 nNumOfFields, quint16 nGridSize,
+             quint8 nMaxStones, Settings *pSettings)
   : m_nGridSize(nGridSize),
     m_nMaxStones(nMaxStones),
     m_pSettings(pSettings),
@@ -64,7 +64,7 @@ CBoard::CBoard(quint8 nNumOfFields, quint16 nGridSize,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::drawBoard() {
+void Board::drawBoard() {
   m_BoardRect.setTopLeft(QPoint(0, 0));
   m_BoardRect.setBottomRight(QPoint(m_nNumOfFields * m_nGridSize -1,
                                     m_nNumOfFields * m_nGridSize -1));
@@ -111,7 +111,7 @@ void CBoard::drawBoard() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::createHighlighters() {
+void Board::createHighlighters() {
   // Field highlighter
   m_pHighlightRect = new QGraphicsRectItem(0, 0, m_nGridSize, m_nGridSize);
   m_pHighlightRect->setBrush(QBrush(m_pSettings->getHighlightColor()));
@@ -145,7 +145,7 @@ void CBoard::createHighlighters() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::createStones() {
+void Board::createStones() {
   QSvgRenderer *m_pSvgRenderer = new QSvgRenderer(
                                    QLatin1String(":/images/stones.svg"));
   // Create a few more than maximum of stones because of wrong
@@ -176,7 +176,7 @@ void CBoard::createStones() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::setupSavegame(const QList<QList<QList<quint8> > > board) {
+void Board::setupSavegame(const QList<QList<QList<quint8> > > board) {
   for (int nRow = 0; nRow < m_nNumOfFields; nRow++) {
     for (int nCol = 0; nCol < m_nNumOfFields; nCol++) {
       foreach (quint8 stone, board[nRow][nCol]) {
@@ -193,7 +193,7 @@ void CBoard::setupSavegame(const QList<QList<QList<quint8> > > board) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
+void Board::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
   // Check, if mouse is inside the board rectangle (+1/-1 for border line)
   static QRectF board(m_BoardRect.topLeft() + QPoint(1, 1),
                       m_BoardRect.bottomRight() - QPoint(1, 1));
@@ -218,7 +218,7 @@ void CBoard::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event) {
+void Board::mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event) {
   static QPointF point;
   // Check, if mouse is inside the board rectangle (+1/-1 for border line)
   static QRectF board(m_BoardRect.topLeft() + QPoint(1, 1),
@@ -239,7 +239,7 @@ void CBoard::mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QPointF CBoard::snapToGrid(const QPointF point) const {
+QPointF Board::snapToGrid(const QPointF point) const {
   return QPointF(qRound(point.x() / m_nGridSize) * m_nGridSize,
                  qRound(point.y() / m_nGridSize) * m_nGridSize);
 }
@@ -247,7 +247,7 @@ QPointF CBoard::snapToGrid(const QPointF point) const {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QPoint CBoard::getGridField(const QPointF point) const {
+QPoint Board::getGridField(const QPointF point) const {
   qint8 x(point.toPoint().x() / m_nGridSize);
   qint8 y(point.toPoint().y() / m_nGridSize);
 
@@ -266,7 +266,7 @@ QPoint CBoard::getGridField(const QPointF point) const {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::addStone(const QPoint field, const quint8 stone, const bool bAnim) {
+void Board::addStone(const QPoint field, const quint8 stone, const bool bAnim) {
   quint8 nExisting(m_Fields[field.x()][field.y()].size());
 
   if (1 == stone) {
@@ -308,35 +308,35 @@ void CBoard::addStone(const QPoint field, const quint8 stone, const bool bAnim) 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::startAnimation(const QPoint field) {
+void Board::startAnimation(const QPoint field) {
   m_pAnimateField->setPos(this->snapToGrid(field*m_nGridSize));
   m_pAnimateField->setVisible(true);
   m_pHighlightRect->setVisible(false);
   QTimer::singleShot(500, this, SLOT(resetAnimation()));
 }
 
-void CBoard::resetAnimation() {
+void Board::resetAnimation() {
   m_pAnimateField->setVisible(false);
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::startAnimation2(const QPoint field) {
+void Board::startAnimation2(const QPoint field) {
   m_pAnimateField2->setPos(this->snapToGrid(field*m_nGridSize));
   m_pAnimateField2->setVisible(true);
   m_pHighlightRect->setVisible(false);
   QTimer::singleShot(500, this, SLOT(resetAnimation2()));
 }
 
-void CBoard::resetAnimation2() {
+void Board::resetAnimation2() {
   m_pAnimateField2->setVisible(false);
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::removeStone(const QPoint field, const bool bAll) {
+void Board::removeStone(const QPoint field, const bool bAll) {
   if (0 == m_Fields[field.x()][field.y()].size()) {
     qWarning() << "Trying to remove stone from empty field" << field;
     QMessageBox::warning(NULL, trUtf8("Warning"),
@@ -376,21 +376,21 @@ void CBoard::removeStone(const QPoint field, const bool bAll) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QList<QList<QList<quint8> > > CBoard::getBoard() const {
+QList<QList<QList<quint8> > > Board::getBoard() const {
   return m_Fields;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QList<quint8> CBoard::getField(const QPoint field) const {
+QList<quint8> Board::getField(const QPoint field) const {
   return m_Fields[field.x()][field.y()];
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::selectField(const QPointF point) {
+void Board::selectField(const QPointF point) {
   static QPoint currentField(QPoint(-1, -1));
   QPointF pointSnap(point);
   pointSnap = QPointF(pointSnap.x() - m_nGridSize/2,
@@ -437,7 +437,7 @@ void CBoard::selectField(const QPointF point) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QList<QPoint> CBoard::checkNeighbourhood(const QPoint field) const {
+QList<QPoint> Board::checkNeighbourhood(const QPoint field) const {
   QList<QPoint> neighbours;
   if (QPoint(-1, -1) == field) {
     return neighbours;
@@ -496,7 +496,7 @@ QList<QPoint> CBoard::checkNeighbourhood(const QPoint field) const {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::highlightNeighbourhood(const QList<QPoint> neighbours) {
+void Board::highlightNeighbourhood(const QList<QPoint> neighbours) {
   static QList<QGraphicsRectItem *> listPossibleMoves;
 
   foreach (QGraphicsRectItem *rect, listPossibleMoves) {
@@ -521,7 +521,7 @@ void CBoard::highlightNeighbourhood(const QList<QPoint> neighbours) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-quint8 CBoard::findPossibleMoves(const bool bStonesLeft) {
+quint8 Board::findPossibleMoves(const bool bStonesLeft) {
   // Return: 0 = no moves
   // 1 = stone can be set
   // 2 = tower can be moved
@@ -549,7 +549,7 @@ quint8 CBoard::findPossibleMoves(const bool bStonesLeft) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CBoard::printDebugFields() const {
+void Board::printDebugFields() const {
   qDebug() << "BOARD:";
   for (int i = 0; i < m_nNumOfFields; i++) {
     qDebug() << m_Fields[0][i] << m_Fields[1][i] << m_Fields[2][i]

@@ -33,7 +33,7 @@
 #include <QApplication>
 #include <QTextStream>
 
-#include "./CStackAndConquer.h"
+#include "./stackandconquer.h"
 
 QFile logfile;
 QTextStream out(&logfile);
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
   setupLogger(userDataDir.absolutePath() + "/" + sDebugFile,
               app.applicationName(), app.applicationVersion());
 
-  CStackAndConquer myStackAndConquer(sSharePath, userDataDir);
+  StackAndConquer myStackAndConquer(sSharePath, userDataDir);
   myStackAndConquer.show();
   int nRet = app.exec();
 

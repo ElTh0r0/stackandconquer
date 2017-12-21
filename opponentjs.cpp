@@ -1,5 +1,5 @@
 /**
- * \file COpponentJS.cpp
+ * \file opponentjs.cpp
  *
  * \section LICENSE
  *
@@ -31,10 +31,10 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-#include "./COpponentJS.h"
+#include "./opponentjs.h"
 
-COpponentJS::COpponentJS(const quint8 nID, const quint8 nNumOfFields,
-                         const quint8 nHeightTowerWin, QObject *parent)
+OpponentJS::OpponentJS(const quint8 nID, const quint8 nNumOfFields,
+                       const quint8 nHeightTowerWin, QObject *parent)
   : QObject(parent),
     m_nID(nID),
     m_nNumOfFields(nNumOfFields),
@@ -49,7 +49,7 @@ COpponentJS::COpponentJS(const quint8 nID, const quint8 nNumOfFields,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool COpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
+bool OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
   QFile f(sFilepath);
   if (!f.open(QFile::ReadOnly)) {
     qWarning() << "Couldn't open JS file:" << sFilepath;
@@ -86,8 +86,8 @@ bool COpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void COpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
-                              const quint8 nPossibleMove) {
+void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
+                             const quint8 nPossibleMove) {
   QJsonDocument jsdoc(this->convertBoardToJSON(board));
 
   QString sJsBoard(jsdoc.toJson(QJsonDocument::Compact));
@@ -137,7 +137,7 @@ void COpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QJsonDocument COpponentJS::convertBoardToJSON(
+QJsonDocument OpponentJS::convertBoardToJSON(
     const QList<QList<QList<quint8> > > board) {
   QJsonArray tower;
   QVariantList vartower;
@@ -163,7 +163,7 @@ QJsonDocument COpponentJS::convertBoardToJSON(
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QList<QPoint> COpponentJS::evalMoveReturn(QString sReturn) {
+QList<QPoint> OpponentJS::evalMoveReturn(QString sReturn) {
   QList<QPoint> listReturn;
   QStringList sListRet;
   QStringList sListPoint;
@@ -209,6 +209,6 @@ QList<QPoint> COpponentJS::evalMoveReturn(QString sReturn) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void COpponentJS::log(const QString &sMsg) const {
+void OpponentJS::log(const QString &sMsg) const {
   qDebug() << sMsg;
 }

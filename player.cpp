@@ -1,5 +1,5 @@
 /**
- * \file CPlayer.cpp
+ * \file player.cpp
  *
  * \section LICENSE
  *
@@ -27,9 +27,9 @@
 #include <QDebug>
 #include <QMessageBox>
 
-#include "./CPlayer.h"
+#include "./player.h"
 
-CPlayer::CPlayer(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones)
+Player::Player(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones)
   : m_bIsActive(bActive),
     m_bIsHuman(bIsHuman),
     m_sName(sName),
@@ -43,45 +43,45 @@ CPlayer::CPlayer(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones)
   qDebug() << "Generate player" << m_sName;
 }
 
-CPlayer::~CPlayer() {
+Player::~Player() {
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CPlayer::setActive(const bool bActive) {
+void Player::setActive(const bool bActive) {
   m_bIsActive = bActive;
 }
 
-bool CPlayer::getIsActive() const {
+bool Player::getIsActive() const {
   return m_bIsActive;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool CPlayer::getIsHuman() const {
+bool Player::getIsHuman() const {
   return m_bIsHuman;
 }
 
-QString CPlayer::getName() const {
+QString Player::getName() const {
   return m_sName;
 }
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CPlayer::setCanMove(const quint8 nCanMove) {
+void Player::setCanMove(const quint8 nCanMove) {
   m_nCanMove = nCanMove;
 }
 
-quint8 CPlayer::getCanMove() const {
+quint8 Player::getCanMove() const {
   return m_nCanMove;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CPlayer::setStonesLeft(const quint8 nStones) {
+void Player::setStonesLeft(const quint8 nStones) {
   if (nStones <= m_nMaxStones) {
     m_nStonesLeft = nStones;
   } else {
@@ -91,17 +91,17 @@ void CPlayer::setStonesLeft(const quint8 nStones) {
   }
 }
 
-quint8 CPlayer::getStonesLeft() const {
+quint8 Player::getStonesLeft() const {
   return m_nStonesLeft;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void CPlayer::setWonTowers(const quint8 nWonTowers) {
+void Player::setWonTowers(const quint8 nWonTowers) {
   m_nWonTowers = nWonTowers;
 }
 
-quint8 CPlayer::getWonTowers() const {
+quint8 Player::getWonTowers() const {
   return m_nWonTowers;
 }
