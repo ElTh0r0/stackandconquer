@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -43,7 +43,7 @@ OpponentJS::OpponentJS(const quint8 nID, const quint8 nNumOfFields,
   m_obj = m_jsEngine->globalObject();
   m_obj.setProperty("cpu", m_jsEngine->newQObject(this));
 
-  // TODO: C++ function accessible via CPU script for checking previous move reverted?
+  // TODO: C++ fct accessible via CPU script for check previous move reverted?
 }
 
 // ---------------------------------------------------------------------------
@@ -93,9 +93,11 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
   QString sJsBoard(jsdoc.toJson(QJsonDocument::Compact));
   m_obj.setProperty("jsboard", sJsBoard);
 
-  QJSValue result = m_obj.property("makeMove").call(QJSValueList() << nPossibleMove);
+  QJSValue result = m_obj.property("makeMove")
+                    .call(QJSValueList() << nPossibleMove);
   if (result.isError()) {
-    qCritical() << "CPU" << m_nID << "- Error calling \"makeMove\" function at line:" <<
+    qCritical() << "CPU" << m_nID <<
+                   "- Error calling \"makeMove\" function at line:" <<
                    result.property("lineNumber").toInt() <<
                    "\n" << result.toString();
     QMessageBox::warning(NULL, trUtf8("Warning"),
@@ -126,7 +128,7 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
     }
   }
 
-  qCritical() << "CPU" << m_nID << "script invalid return value from makeMove():" <<
+  qCritical() << "CPU" << m_nID << "script invalid return from makeMove():" <<
                  result.toString();
   QMessageBox::warning(NULL, trUtf8("Warning"),
                        trUtf8("CPU script execution error! "

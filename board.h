@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -24,8 +24,8 @@
  * Class definition for a board.
  */
 
-#ifndef STACKANDCONQUER_BOARD_H_
-#define STACKANDCONQUER_BOARD_H_
+#ifndef BOARD_H_
+#define BOARD_H_
 
 #include <QGraphicsEllipseItem>
 #include <QGraphicsScene>
@@ -44,59 +44,60 @@
 class Board : public QGraphicsScene {
   Q_OBJECT
 
- public:
-  Board(quint8 nNumOfFields, quint16 nGridSize, quint8 nMaxStones,
-        Settings *pSettings);
+  public:
+    Board(quint8 nNumOfFields, quint16 nGridSize, quint8 nMaxStones,
+          Settings *pSettings);
 
-  void setupSavegame(const QList<QList<QList<quint8> > > board);
-  void addStone(const QPoint field, const quint8 stone, const bool bAnim = true);
-  void removeStone(const QPoint field, const bool bAll = false);
-  void selectField(const QPointF point);
-  QList<QList<QList<quint8> > > getBoard() const;
-  QList<quint8> getField(const QPoint field) const;
-  quint8 findPossibleMoves(const bool bStonesLeft);
-  QList<QPoint> checkNeighbourhood(const QPoint field) const;
-  void printDebugFields() const;
+    void setupSavegame(const QList<QList<QList<quint8> > > board);
+    void addStone(const QPoint field, const quint8 stone,
+                  const bool bAnim = true);
+    void removeStone(const QPoint field, const bool bAll = false);
+    void selectField(const QPointF point);
+    QList<QList<QList<quint8> > > getBoard() const;
+    QList<quint8> getField(const QPoint field) const;
+    quint8 findPossibleMoves(const bool bStonesLeft);
+    QList<QPoint> checkNeighbourhood(const QPoint field) const;
+    void printDebugFields() const;
 
- signals:
-  void setStone(QPoint);
-  void moveTower(QPoint tower, QPoint moveTo);
+  signals:
+    void setStone(QPoint);
+    void moveTower(QPoint tower, QPoint moveTo);
 
- protected:
-  void mousePressEvent(QGraphicsSceneMouseEvent *p_Event);
-  void mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event);
+  protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *p_Event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event);
 
- private slots:
-  void resetAnimation();
-  void resetAnimation2();
+  private slots:
+    void resetAnimation();
+    void resetAnimation2();
 
- private:
-  void drawBoard();
-  void createHighlighters();
-  void createStones();
-  void startAnimation(const QPoint field);
-  void startAnimation2(const QPoint field);
-  QPointF snapToGrid(const QPointF point) const;
-  QPoint getGridField(const QPointF point) const;
-  void highlightNeighbourhood(const QList<QPoint> neighbours);
+  private:
+    void drawBoard();
+    void createHighlighters();
+    void createStones();
+    void startAnimation(const QPoint field);
+    void startAnimation2(const QPoint field);
+    QPointF snapToGrid(const QPointF point) const;
+    QPoint getGridField(const QPointF point) const;
+    void highlightNeighbourhood(const QList<QPoint> neighbours);
 
-  const quint16 m_nGridSize;
-  const quint8 m_nMaxStones;
-  Settings *m_pSettings;
-  const quint8 m_nNumOfFields;
-  QRect m_BoardRect;
-  QGraphicsRectItem *m_pHighlightRect;
-  QGraphicsRectItem *m_pSelectedField;
-  QGraphicsRectItem *m_pAnimateField;
-  QGraphicsRectItem *m_pAnimateField2;
-  QSvgRenderer *m_pSvgRenderer;
-  QList<QGraphicsSvgItem *> m_listStonesP1;
-  QList<QGraphicsSvgItem *> m_listStonesP2;
+    const quint16 m_nGridSize;
+    const quint8 m_nMaxStones;
+    Settings *m_pSettings;
+    const quint8 m_nNumOfFields;
+    QRect m_BoardRect;
+    QGraphicsRectItem *m_pHighlightRect;
+    QGraphicsRectItem *m_pSelectedField;
+    QGraphicsRectItem *m_pAnimateField;
+    QGraphicsRectItem *m_pAnimateField2;
+    QSvgRenderer *m_pSvgRenderer;
+    QList<QGraphicsSvgItem *> m_listStonesP1;
+    QList<QGraphicsSvgItem *> m_listStonesP2;
 
-  QList<QList<QList<quint8> > > m_Fields;
-  QList<QList<QList<QGraphicsSvgItem *> > > m_FieldStones;
+    QList<QList<QList<quint8> > > m_Fields;
+    QList<QList<QList<QGraphicsSvgItem *> > > m_FieldStones;
 
-  QList<QGraphicsSimpleTextItem *> m_FieldCaptions;
+    QList<QGraphicsSimpleTextItem *> m_Captions;
 };
 
-#endif  // STACKANDCONQUER_BOARD_H_
+#endif  // BOARD_H_

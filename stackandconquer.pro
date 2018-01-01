@@ -1,5 +1,5 @@
 #  This file is part of StackAndConquer.
-#  Copyright (C) 2015-2017 Thorsten Roth
+#  Copyright (C) 2015-2018 Thorsten Roth
 #
 #  StackAndConquer is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ unix: !macx {
 VERSION       = 0.8.0
 QMAKE_TARGET_PRODUCT     = "StackAndConquer"
 QMAKE_TARGET_DESCRIPTION = "Challenging tower conquest board game"
-QMAKE_TARGET_COPYRIGHT   = "(C) 2015-2017 Thorsten Roth"
+QMAKE_TARGET_COPYRIGHT   = "(C) 2015-2018 Thorsten Roth"
 
 DEFINES      += APP_NAME=\"\\\"$$QMAKE_TARGET_PRODUCT\\\"\" \
                 APP_VERSION=\"\\\"$$VERSION\\\"\" \

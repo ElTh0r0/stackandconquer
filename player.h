@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -24,8 +24,8 @@
  * Class definition for player.
  */
 
-#ifndef STACKANDCONQUER_PLAYER_H_
-#define STACKANDCONQUER_PLAYER_H_
+#ifndef PLAYER_H_
+#define PLAYER_H_
 
 #include <QString>
 
@@ -34,29 +34,29 @@
  * \brief Player class.
  */
 class Player {
- public:
-  Player(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones);
-  ~Player();
+  public:
+    Player(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones);
+    ~Player();
 
-  void setActive(const bool bActive);
-  bool getIsActive() const;
-  bool getIsHuman() const;
-  QString getName() const;
-  void setStonesLeft(const quint8 nStones);
-  quint8 getStonesLeft() const;
-  void setWonTowers(const quint8 nWonTowers);
-  quint8 getWonTowers() const;
-  void setCanMove(const quint8 nCanMove);
-  quint8 getCanMove() const;
+    void setActive(const bool bActive);
+    bool getIsActive() const;
+    bool getIsHuman() const;
+    QString getName() const;
+    void setStonesLeft(const quint8 nStones);
+    quint8 getStonesLeft() const;
+    void setWonTowers(const quint8 nWonTowers);
+    quint8 getWonTowers() const;
+    void setCanMove(const quint8 nCanMove);
+    quint8 getCanMove() const;
 
- private:
-  bool m_bIsActive;
-  const bool m_bIsHuman;
-  QString m_sName;
-  const quint8 m_nMaxStones;
-  quint8 m_nStonesLeft;
-  quint8 m_nWonTowers;
-  quint8 m_nCanMove;
+  private:
+    bool m_bIsActive;
+    const bool m_bIsHuman;
+    QString m_sName;
+    const quint8 m_nMaxStones;
+    quint8 m_nStonesLeft;
+    quint8 m_nWonTowers;
+    quint8 m_nCanMove;
 };
 
-#endif  // STACKANDCONQUER_PLAYER_H_
+#endif  // PLAYER_H_

@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -85,10 +85,10 @@ void Board::drawBoard() {
     }
 
     if (qApp->arguments().contains("--debug")) {
-      m_FieldCaptions << this->addSimpleText(QString(static_cast<char>(i + 65)));
-      m_FieldCaptions.last()->setPos(i*m_nGridSize, -m_nGridSize/2);
-      m_FieldCaptions.last()->setFont(QFont("Arial", m_nGridSize/5));
-      m_FieldCaptions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+      m_Captions << this->addSimpleText(QString(static_cast<char>(i + 65)));
+      m_Captions.last()->setPos(i*m_nGridSize, -m_nGridSize/2);
+      m_Captions.last()->setFont(QFont("Arial", m_nGridSize/5));
+      m_Captions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     }
   }
   // Vertical
@@ -100,10 +100,10 @@ void Board::drawBoard() {
     }
 
     if (qApp->arguments().contains("--debug")) {
-      m_FieldCaptions << this->addSimpleText(QString::number(i+1));
-      m_FieldCaptions.last()->setPos(-m_nGridSize/1.75, i*m_nGridSize+m_nGridSize/8);
-      m_FieldCaptions.last()->setFont(QFont("Arial", m_nGridSize/5));
-      m_FieldCaptions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+      m_Captions << this->addSimpleText(QString::number(i+1));
+      m_Captions.last()->setPos(-m_nGridSize/1.75, i*m_nGridSize+m_nGridSize/8);
+      m_Captions.last()->setFont(QFont("Arial", m_nGridSize/5));
+      m_Captions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     }
   }
 }

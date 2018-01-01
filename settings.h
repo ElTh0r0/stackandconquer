@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -24,8 +24,8 @@
  * Class definition for settings.
  */
 
-#ifndef STACKANDCONQUER_SETTINGS_H_
-#define STACKANDCONQUER_SETTINGS_H_
+#ifndef SETTINGS_H_
+#define SETTINGS_H_
 
 #include <QDialog>
 #include <QSettings>
@@ -43,75 +43,75 @@ class SettingsDialog;
 class Settings : public QDialog {
   Q_OBJECT
 
- public:
-  explicit Settings(const QString &sSharePath, const QString &userDataDir,
-                     QWidget *pParent = 0);
-  virtual ~Settings();
+  public:
+    explicit Settings(const QString &sSharePath, const QString &userDataDir,
+                      QWidget *pParent = 0);
+    virtual ~Settings();
 
-  QString getNameP1() const;
-  QString getNameP2() const;
-  QString getP1HumanCpu() const;
-  QString getP2HumanCpu() const;
-  quint8 getStartPlayer() const;
-  quint8 getWinTowers() const;
-  bool getShowPossibleMoveTowers() const;
-  QString getLanguage();
+    QString getNameP1() const;
+    QString getNameP2() const;
+    QString getP1HumanCpu() const;
+    QString getP2HumanCpu() const;
+    quint8 getStartPlayer() const;
+    quint8 getWinTowers() const;
+    bool getShowPossibleMoveTowers() const;
+    QString getLanguage();
 
-  QColor getBgColor() const;
-  QColor getHighlightColor() const;
-  QColor getHighlightBorderColor() const;
-  QColor getSelectedColor() const;
-  QColor getSelectedBorderColor() const;
-  QColor getAnimateColor() const;
-  QColor getAnimateBorderColor() const;
-  QColor getBgBoardColor() const;
-  QColor getOutlineBoardColor() const;
-  QColor getGridBoardColor() const;
-  QColor GetNeighboursColor() const;
-  QColor GetNeighboursBorderColor() const;
+    QColor getBgColor() const;
+    QColor getHighlightColor() const;
+    QColor getHighlightBorderColor() const;
+    QColor getSelectedColor() const;
+    QColor getSelectedBorderColor() const;
+    QColor getAnimateColor() const;
+    QColor getAnimateBorderColor() const;
+    QColor getBgBoardColor() const;
+    QColor getOutlineBoardColor() const;
+    QColor getGridBoardColor() const;
+    QColor GetNeighboursColor() const;
+    QColor GetNeighboursBorderColor() const;
 
- public slots:
-  void accept();
-  void reject();
-  void updateUiLang();
+  public slots:
+    void accept();
+    void reject();
+    void updateUiLang();
 
- signals:
-  void newGame();
-  void changeLang(const QString &sLang);
+  signals:
+    void newGame();
+    void changeLang(const QString &sLang);
 
- private:
-  void readSettings();
-  QColor readColor(const QString sKey, const QString sFallback) const;
-  QStringList searchLanguages() const;
-  void searchCpuScripts(const QString &userDataDir);
+  private:
+    void readSettings();
+    QColor readColor(const QString sKey, const QString sFallback) const;
+    QStringList searchLanguages() const;
+    void searchCpuScripts(const QString &userDataDir);
 
-  QWidget *m_pParent;
-  Ui::SettingsDialog *m_pUi;
-  QSettings *m_pSettings;
+    QWidget *m_pParent;
+    Ui::SettingsDialog *m_pUi;
+    QSettings *m_pSettings;
 
-  QString m_sSharePath;
-  QString m_sGuiLanguage;
-  QString m_sNameP1;
-  QString m_sNameP2;
-  QString m_sP1HumanCpu;
-  QString m_sP2HumanCpu;
-  QStringList m_sListCPUs;
-  int m_nStartPlayer;
-  int m_nWinTowers;
-  bool m_bShowPossibleMoveTowers;
+    QString m_sSharePath;
+    QString m_sGuiLanguage;
+    QString m_sNameP1;
+    QString m_sNameP2;
+    QString m_sP1HumanCpu;
+    QString m_sP2HumanCpu;
+    QStringList m_sListCPUs;
+    int m_nStartPlayer;
+    int m_nWinTowers;
+    bool m_bShowPossibleMoveTowers;
 
-  QColor m_bgColor;
-  QColor m_highlightColor;
-  QColor m_highlightBorderColor;
-  QColor m_selectedColor;
-  QColor m_selectedBorderColor;
-  QColor m_animateColor;
-  QColor m_animateBorderColor;
-  QColor m_bgBoardColor;
-  QColor m_outlineBoardColor;
-  QColor m_gridBoardColor;
-  QColor m_neighboursColor;
-  QColor m_neighboursBorderColor;
+    QColor m_bgColor;
+    QColor m_highlightColor;
+    QColor m_highlightBorderColor;
+    QColor m_selectedColor;
+    QColor m_selectedBorderColor;
+    QColor m_animateColor;
+    QColor m_animateBorderColor;
+    QColor m_bgBoardColor;
+    QColor m_outlineBoardColor;
+    QColor m_gridBoardColor;
+    QColor m_neighboursColor;
+    QColor m_neighboursBorderColor;
 };
 
-#endif  // STACKANDCONQUER_SETTINGS_H_
+#endif  // SETTINGS_H_

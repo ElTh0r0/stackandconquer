@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -85,7 +85,8 @@ QStringList Settings::searchLanguages() const {
   QFileInfoList fiListFiles = appDir.entryInfoList(
                                 QDir::NoDotAndDotDot | QDir::Files);
   foreach (QFileInfo fi, fiListFiles) {
-    if ("qm" == fi.suffix() && fi.baseName().startsWith(qAppName().toLower() + "_")) {
+    if ("qm" == fi.suffix() &&
+        fi.baseName().startsWith(qAppName().toLower() + "_")) {
       sListGuiLanguages << fi.baseName().remove(qAppName().toLower() + "_");
     }
   }
@@ -174,7 +175,8 @@ void Settings::accept() {
   m_pSettings->setValue("OutlineBoardColor", m_outlineBoardColor.name());
   m_pSettings->setValue("GridBoardColor", m_gridBoardColor.name());
   m_pSettings->setValue("NeighboursColor", m_neighboursColor.name());
-  m_pSettings->setValue("NeighboursBorderColor", m_neighboursBorderColor.name());
+  m_pSettings->setValue("NeighboursBorderColor",
+                        m_neighboursBorderColor.name());
   m_pSettings->endGroup();
 
   QString sNewP1HumanCpu(m_pUi->cbP1HumanCpu->currentText());
@@ -184,9 +186,10 @@ void Settings::accept() {
   if (sNewP1HumanCpu != m_sP1HumanCpu ||
       sNewP2HumanCpu != m_sP2HumanCpu ||
       nNewWinTowers != m_nWinTowers) {
-    int nRet = QMessageBox::question(0, this->windowTitle(),
-                                     trUtf8("Main game settings had been changed.<br>"
-                                            "Do you want to start a new game?"));
+    int nRet = QMessageBox::question(
+                 0, this->windowTitle(),
+                 trUtf8("Main game settings had been changed.<br>"
+                        "Do you want to start a new game?"));
     if (nRet == QMessageBox::Yes) {
       m_sP1HumanCpu = sNewP1HumanCpu;
       m_sP2HumanCpu = sNewP2HumanCpu;

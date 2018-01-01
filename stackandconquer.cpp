@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -263,9 +263,10 @@ void StackAndConquer::startNewGame(const QStringList sListArgs) {
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::loadGame() {
-  QString sFile = QFileDialog::getOpenFileName(this, trUtf8("Load game"),
-                                               m_userDataDir.absolutePath(),
-                                               trUtf8("Save games") + "(*.stacksav)");
+  QString sFile = QFileDialog::getOpenFileName(
+                    this, trUtf8("Load game"),
+                    m_userDataDir.absolutePath(),
+                    trUtf8("Save games") + "(*.stacksav)");
   if (!sFile.isEmpty()) {
     if (!sFile.endsWith(".stacksav", Qt::CaseInsensitive)) {
       QMessageBox::warning(this, trUtf8("Warning"),
@@ -280,9 +281,10 @@ void StackAndConquer::loadGame() {
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::saveGame() {
-  QString sFile = QFileDialog::getSaveFileName(this, trUtf8("Save game"),
-                                               m_userDataDir.absolutePath(),
-                                               trUtf8("Save games") + "(*.stacksav)");
+  QString sFile = QFileDialog::getSaveFileName(
+                    this, trUtf8("Save game"),
+                    m_userDataDir.absolutePath(),
+                    trUtf8("Save games") + "(*.stacksav)");
   if (!sFile.isEmpty()) {
     if (!sFile.endsWith(".stacksav", Qt::CaseInsensitive)) {
       sFile += ".stacksav";
@@ -337,13 +339,13 @@ void StackAndConquer::highlightActivePlayer(const bool bPlayer1,
 void StackAndConquer::loadLanguage(const QString &sLang) {
   if (m_sCurrLang != sLang) {
     m_sCurrLang = sLang;
-    if (!this->switchTranslator(m_translatorQt, "qt_" + sLang,
+    if (!this->switchTranslator(&m_translatorQt, "qt_" + sLang,
                                 QLibraryInfo::location(
                                   QLibraryInfo::TranslationsPath))) {
-      this->switchTranslator(m_translatorQt, "qt_" + sLang,
+      this->switchTranslator(&m_translatorQt, "qt_" + sLang,
                              m_sSharePath + "/lang");
     }
-    this->switchTranslator(m_translator,
+    this->switchTranslator(&m_translator,
                            qApp->applicationName().toLower() + "_" + sLang,
                            m_sSharePath + "/lang");
   }
@@ -352,12 +354,12 @@ void StackAndConquer::loadLanguage(const QString &sLang) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool StackAndConquer::switchTranslator(QTranslator &translator,
+bool StackAndConquer::switchTranslator(QTranslator *translator,
                                        const QString &sFile,
                                        const QString &sPath) {
-  qApp->removeTranslator(&translator);
-  if (translator.load(sFile, sPath)) {
-    qApp->installTranslator(&translator);
+  qApp->removeTranslator(translator);
+  if (translator->load(sFile, sPath)) {
+    qApp->installTranslator(translator);
   } else {
     if (!sFile.endsWith("_en")) {  // EN is build in translation -> no file
       qWarning() << "Could not find translation" << sFile << "in" << sPath;

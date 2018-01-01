@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -24,8 +24,8 @@
  * Class definition main application.
  */
 
-#ifndef STACKANDCONQUER_STACKANDCONQUER_H_
-#define STACKANDCONQUER_STACKANDCONQUER_H_
+#ifndef STACKANDCONQUER_H_
+#define STACKANDCONQUER_H_
 
 #include <QtCore>
 #include <QFormLayout>
@@ -49,62 +49,62 @@ class StackAndConquer;
 class StackAndConquer : public QMainWindow {
   Q_OBJECT
 
- public:
-  explicit StackAndConquer(const QDir &sharePath,
-                           const QDir &userDataPath,
-                           QWidget *pParent = 0);
-  ~StackAndConquer();
+  public:
+    explicit StackAndConquer(const QDir &sharePath,
+                             const QDir &userDataPath,
+                             QWidget *pParent = 0);
+    ~StackAndConquer();
 
- signals:
-  void updateUiLang();
+  signals:
+    void updateUiLang();
 
- protected:
-  void changeEvent(QEvent *pEvent);
-  void closeEvent(QCloseEvent *pEvent);
+  protected:
+    void changeEvent(QEvent *pEvent);
+    void closeEvent(QCloseEvent *pEvent);
 
- private slots:
-  void startNewGame(const QStringList sListArgs = QStringList());
-  void loadGame();
-  void saveGame();
-  void setViewInteractive(const bool bEnabled);
-  void highlightActivePlayer(const bool bPlayer1,
-                             const bool bP1Won = false,
-                             const bool bP2Won = false);
-  void loadLanguage(const QString &sLang);
-  void showRules();
-  void reportBug() const;
-  void showInfoBox();
+  private slots:
+    void startNewGame(const QStringList sListArgs = QStringList());
+    void loadGame();
+    void saveGame();
+    void setViewInteractive(const bool bEnabled);
+    void highlightActivePlayer(const bool bPlayer1,
+                               const bool bP1Won = false,
+                               const bool bP2Won = false);
+    void loadLanguage(const QString &sLang);
+    void showRules();
+    void reportBug() const;
+    void showInfoBox();
 
- private:
-  void checkCmdArgs();
-  bool switchTranslator(QTranslator &translator,
-                        const QString &sFile,
-                        const QString &sPath);
-  void setupMenu();
-  void setupGraphView();
+  private:
+    void checkCmdArgs();
+    bool switchTranslator(QTranslator *translator,
+                          const QString &sFile,
+                          const QString &sPath);
+    void setupMenu();
+    void setupGraphView();
 
-  Ui::StackAndConquer *m_pUi;
-  const QDir m_userDataDir;
-  const QString m_sSharePath;
-  QTranslator m_translator;  // App translations
-  QTranslator m_translatorQt;  // Qt translations
-  QString m_sCurrLang;
-  Settings *m_pSettings;
-  QGraphicsView *m_pGraphView;
-  Game *m_pGame;
+    Ui::StackAndConquer *m_pUi;
+    const QDir m_userDataDir;
+    const QString m_sSharePath;
+    QTranslator m_translator;  // App translations
+    QTranslator m_translatorQt;  // Qt translations
+    QString m_sCurrLang;
+    Settings *m_pSettings;
+    QGraphicsView *m_pGraphView;
+    Game *m_pGame;
 
-  QFrame *m_pFrame;
-  QGridLayout *m_pLayout;
-  QLabel *m_plblPlayer1;
-  QLabel *m_plblPlayer2;
-  QLabel *m_plblIconStones1;
-  QLabel *m_plblIconWin1;
-  QLabel *m_plblIconStones2;
-  QLabel *m_plblIconWin2;
-  QLabel *m_plblP1StonesLeft;
-  QLabel *m_plblP2StonesLeft;
-  QLabel *m_plblP1Won;
-  QLabel *m_plblP2Won;
+    QFrame *m_pFrame;
+    QGridLayout *m_pLayout;
+    QLabel *m_plblPlayer1;
+    QLabel *m_plblPlayer2;
+    QLabel *m_plblIconStones1;
+    QLabel *m_plblIconWin1;
+    QLabel *m_plblIconStones2;
+    QLabel *m_plblIconWin2;
+    QLabel *m_plblP1StonesLeft;
+    QLabel *m_plblP2StonesLeft;
+    QLabel *m_plblP1Won;
+    QLabel *m_plblP2Won;
 };
 
-#endif  // STACKANDCONQUER_STACKANDCONQUER_H_
+#endif  // STACKANDCONQUER_H_

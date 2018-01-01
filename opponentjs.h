@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -24,8 +24,8 @@
  * Interface to CPU script JS engine.
  */
 
-#ifndef STACKANDCONQUER_OPPONENTJS_H
-#define STACKANDCONQUER_OPPONENTJS_H
+#ifndef OPPONENTJS_H_
+#define OPPONENTJS_H_
 
 #include <QObject>
 #include <QPoint>
@@ -34,31 +34,31 @@
 class OpponentJS : public QObject {
   Q_OBJECT
 
- public:
-  explicit OpponentJS(const quint8 nID, const quint8 nNumOfFields,
-                      const quint8 nHeightTowerWin, QObject *parent = 0);
-  bool loadAndEvalCpuScript(const QString &sFilepath);
+  public:
+    explicit OpponentJS(const quint8 nID, const quint8 nNumOfFields,
+                        const quint8 nHeightTowerWin, QObject *parent = 0);
+    bool loadAndEvalCpuScript(const QString &sFilepath);
 
- public slots:
-  void makeMoveCpu(const QList<QList<QList<quint8> > > board,
-                   const quint8 nPossibleMove);
-  void log(const QString &sMsg) const;
+  public slots:
+    void makeMoveCpu(const QList<QList<QList<quint8> > > board,
+                     const quint8 nPossibleMove);
+    void log(const QString &sMsg) const;
 
- signals:
-  void setStone(QPoint field);
-  void moveTower(QPoint tower, QPoint moveTo, quint8 nStones = 0);
-  void scriptError();
+  signals:
+    void setStone(QPoint field);
+    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones = 0);
+    void scriptError();
 
- private:
-  QJsonDocument convertBoardToJSON(const QList<QList<QList<quint8> > > board);
-  QList<QPoint> evalMoveReturn(QString sReturn);
+  private:
+    QJsonDocument convertBoardToJSON(const QList<QList<QList<quint8> > > board);
+    QList<QPoint> evalMoveReturn(QString sReturn);
 
-  const quint8 m_nID;
-  const quint8 m_nNumOfFields;
-  const quint8 m_nHeightTowerWin;
-  QJSEngine *m_jsEngine;
-  QJSValue m_obj;
-  QList<QList<QList<quint8> > > m_board;
+    const quint8 m_nID;
+    const quint8 m_nNumOfFields;
+    const quint8 m_nHeightTowerWin;
+    QJSEngine *m_jsEngine;
+    QJSValue m_obj;
+    QList<QList<QList<quint8> > > m_board;
 };
 
-#endif  // STACKANDCONQUER_OPPONENTJS_H
+#endif  // OPPONENTJS_H_

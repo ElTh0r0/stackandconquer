@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -24,8 +24,8 @@
  * Class definition game engine.
  */
 
-#ifndef STACKANDCONQUER_GAME_H_
-#define STACKANDCONQUER_GAME_H_
+#ifndef GAME_H_
+#define GAME_H_
 
 #include "./board.h"
 #include "./player.h"
@@ -34,58 +34,60 @@
 class Game : public QObject {
   Q_OBJECT
 
- public:
-  explicit Game(Settings *pSettings, const QStringList &sListFiles);
-  QGraphicsScene* getScene() const;
-  QRectF getSceneRect() const;
-  bool saveGame(const QString &sFile);
-  void updatePlayers(bool bInitial = false);
-  bool initCpu();
+  public:
+    explicit Game(Settings *pSettings, const QStringList &sListFiles);
+    QGraphicsScene* getScene() const;
+    QRectF getSceneRect() const;
+    bool saveGame(const QString &sFile);
+    void updatePlayers(bool bInitial = false);
+    bool initCpu();
 
- signals:
-  void updateNameP1(QString sName);
-  void updateNameP2(QString sName);
-  void updateStonesP1(QString sStones);
-  void updateStonesP2(QString sStones);
-  void updateWonP1(QString sWon);
-  void updateWonP2(QString sWon);
-  void setInteractive(bool bEnabled);
-  void highlightActivePlayer(bool bPlayer1,
-                             bool bP1Won = false, bool bP2Won = false);
-  void makeMoveCpuP1(QList<QList<QList<quint8> > > board, quint8 nPossibleMove);
-  void makeMoveCpuP2(QList<QList<QList<quint8> > > board, quint8 nPossibleMove);
+  signals:
+    void updateNameP1(QString sName);
+    void updateNameP2(QString sName);
+    void updateStonesP1(QString sStones);
+    void updateStonesP2(QString sStones);
+    void updateWonP1(QString sWon);
+    void updateWonP2(QString sWon);
+    void setInteractive(bool bEnabled);
+    void highlightActivePlayer(bool bPlayer1,
+                               bool bP1Won = false, bool bP2Won = false);
+    void makeMoveCpuP1(QList<QList<QList<quint8> > > board,
+                       quint8 nPossibleMove);
+    void makeMoveCpuP2(QList<QList<QList<quint8> > > board,
+                       quint8 nPossibleMove);
 
- private slots:
-  void setStone(QPoint field);
-  void moveTower(QPoint tower, QPoint moveTo, quint8 nStones = 0);
-  void delayCpu();
-  void caughtScriptError();
+  private slots:
+    void setStone(QPoint field);
+    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones = 0);
+    void delayCpu();
+    void caughtScriptError();
 
- private:
-  void createCPU1();
-  void createCPU2();
-  QJsonObject loadGame(const QString &sFile);
-  void checkPossibleMoves();
-  bool checkPreviousMoveReverted(const QString sMove);
-  void checkTowerWin(QPoint field);
-  void returnStones(QPoint field);
+  private:
+    void createCPU1();
+    void createCPU2();
+    QJsonObject loadGame(const QString &sFile);
+    void checkPossibleMoves();
+    bool checkPreviousMoveReverted(const QString sMove);
+    void checkTowerWin(QPoint field);
+    void returnStones(QPoint field);
 
-  Settings *m_pSettings;
-  Board *m_pBoard;
-  OpponentJS *m_jsCpuP1;
-  OpponentJS *m_jsCpuP2;
-  Player *m_pPlayer1;
-  Player *m_pPlayer2;
-  QString m_sJsFileP1;
-  QString m_sJsFileP2;
+    Settings *m_pSettings;
+    Board *m_pBoard;
+    OpponentJS *m_jsCpuP1;
+    OpponentJS *m_jsCpuP2;
+    Player *m_pPlayer1;
+    Player *m_pPlayer2;
+    QString m_sJsFileP1;
+    QString m_sJsFileP2;
 
-  const quint8 m_nMaxTowerHeight;
-  const quint8 m_nMaxStones;
-  const quint16 m_nGridSize;
-  const quint8 m_nNumOfFields;
+    const quint8 m_nMaxTowerHeight;
+    const quint8 m_nMaxStones;
+    const quint16 m_nGridSize;
+    const quint8 m_nNumOfFields;
 
-  bool m_bScriptError;
-  QString m_sPreviousMove;
+    bool m_bScriptError;
+    QString m_sPreviousMove;
 };
 
-#endif  // STACKANDCONQUER_GAME_H_
+#endif  // GAME_H_

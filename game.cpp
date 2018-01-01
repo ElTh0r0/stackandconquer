@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2017 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -69,7 +69,7 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   quint8 nWonP2(0);
 
   if (1 == sListFiles.size()) {
-    if (sListFiles[0].endsWith(".stacksav", Qt::CaseInsensitive)) {  // Load game
+    if (sListFiles[0].endsWith(".stacksav", Qt::CaseInsensitive)) {  // Load
       QJsonObject jsonObj(this->loadGame(sListFiles[0]));
       if (jsonObj.isEmpty()) {
         qWarning() << "Save file is empty!";
@@ -279,8 +279,9 @@ void Game::setStone(QPoint field) {
     } else {
       if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
           (m_pPlayer2->getIsActive() && m_pPlayer2->getIsHuman())) {
-        QMessageBox::information(NULL, trUtf8("Information"),
-                                 trUtf8("No stones left! Please move a tower."));
+        QMessageBox::information(
+              NULL, trUtf8("Information"),
+              trUtf8("No stones left! Please move a tower."));
       } else {
         m_bScriptError = true;
         qWarning() << "CPU tried to set stone, but no stones left!";
@@ -333,9 +334,10 @@ void Game::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
   int nStonesToMove = 1;
   if (listStones.size() > 1 && 0 == nStones) {
     bool ok;
-    nStonesToMove = QInputDialog::getInt(NULL, trUtf8("Move tower"),
-                                         trUtf8("How many stones shall be moved:"),
-                                         1, 1, listStones.size(), 1, &ok);
+    nStonesToMove = QInputDialog::getInt(
+                      NULL, trUtf8("Move tower"),
+                      trUtf8("How many stones shall be moved:"),
+                      1, 1, listStones.size(), 1, &ok);
     if (!ok) {
       return;
     }
