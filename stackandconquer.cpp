@@ -348,7 +348,7 @@ void StackAndConquer::loadLanguage(const QString &sLang) {
     if (!this->switchTranslator(
           &m_translator,
            ":/" + qApp->applicationName().toLower() + "_" + sLang + ".qm")) {
-      !this->switchTranslator(
+      this->switchTranslator(
             &m_translator, qApp->applicationName().toLower() + "_" + sLang,
             m_sSharePath + "/lang");
     }
