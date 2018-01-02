@@ -43,7 +43,7 @@ OpponentJS::OpponentJS(const quint8 nID, const quint8 nNumOfFields,
   m_obj = m_jsEngine->globalObject();
   m_obj.setProperty("cpu", m_jsEngine->newQObject(this));
 
-  // TODO: C++ fct accessible via CPU script for check previous move reverted?
+  // TODO(volunteer): C++ call via CPU script for check previous move reverted?
 }
 
 // ---------------------------------------------------------------------------

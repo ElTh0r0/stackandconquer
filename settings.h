@@ -82,7 +82,7 @@ class Settings : public QDialog {
   private:
     void readSettings();
     QColor readColor(const QString sKey, const QString sFallback) const;
-    QStringList searchLanguages() const;
+    QStringList searchTranslations() const;
     void searchCpuScripts(const QString &userDataDir);
 
     QWidget *m_pParent;

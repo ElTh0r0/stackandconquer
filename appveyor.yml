@@ -24,13 +24,11 @@ build_script:
   - '%PRO_MAKE%'
 
 after_build:
-  - mkdir StackAndConquer\lang
   - mkdir StackAndConquer\cpu
   - copy release\StackAndConquer.exe StackAndConquer\StackAndConquer.exe
   - windeployqt --release --no-translations --no-angle --no-opengl-sw StackAndConquer\StackAndConquer.exe
   - copy COPYING StackAndConquer\
   - copy README.md StackAndConquer\
-  - copy lang\*.qm StackAndConquer\lang\
   - xcopy /i /e /s data\cpu\* StackAndConquer\cpu\
   - 7z a StackAndConquer-%APPVEYOR_BUILD_VERSION%-Windows_%BUILD%.zip .\StackAndConquer\
 

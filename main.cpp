@@ -47,8 +47,6 @@ void LoggingHandler(QtMsgType type,
                     const QString &sMsg);
 
 int main(int argc, char *argv[]) {
-  Q_INIT_RESOURCE(stackandconquer_resources);
-
   QApplication app(argc, argv);
   app.setApplicationName(APP_NAME);
   app.setApplicationVersion(APP_VERSION);
@@ -83,7 +81,7 @@ int main(int argc, char *argv[]) {
     userDataDir.mkpath(userDataDir.absolutePath());
   }
 
-  const QString sDebugFile("Debug.log");
+  const QString sDebugFile("debug.log");
   setupLogger(userDataDir.absolutePath() + "/" + sDebugFile,
               app.applicationName(), app.applicationVersion());
 

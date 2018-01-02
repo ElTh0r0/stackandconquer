@@ -79,7 +79,7 @@ class StackAndConquer : public QMainWindow {
     void checkCmdArgs();
     bool switchTranslator(QTranslator *translator,
                           const QString &sFile,
-                          const QString &sPath);
+                          const QString &sPath = "");
     void setupMenu();
     void setupGraphView();
 

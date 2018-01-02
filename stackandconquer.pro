@@ -57,7 +57,8 @@ HEADERS      += stackandconquer.h \
 FORMS        += stackandconquer.ui \
                 settings.ui
 
-RESOURCES    += res/stackandconquer_resources.qrc
+RESOURCES    += res/stackandconquer_resources.qrc \
+                res/translations.qrc
 win32:RC_FILE = res/stackandconquer_win.rc
 
 TRANSLATIONS += lang/stackandconquer_de.ts
@@ -75,9 +76,6 @@ unix: !macx {
     data.path       = $$PREFIX/share/stackandconquer
     data.files     += data/cpu
 
-    lang.path       = $$PREFIX/share/stackandconquer/lang
-    lang.files     += lang/*.qm
-
     desktop.path    = $$PREFIX/share/applications
     desktop.files  += data/stackandconquer.desktop
 
@@ -93,7 +91,6 @@ unix: !macx {
 
     INSTALLS       += target \
                       data \
-                      lang \
                       desktop \
                       pixmap \
                       #icons \

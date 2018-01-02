@@ -162,7 +162,7 @@ void StackAndConquer::setupGraphView() {
   // QGraphicsView forwards the event to the scene.
   m_pGraphView->setMouseTracking(true);
 
-  // TODO: Scalable window/board/stones
+  // TODO(volunteer): Scalable window/board/stones
   // Transform coordinate system to "isometric" view
   QTransform transfISO;
   transfISO = transfISO.scale(1.0, 0.5).rotate(45);
@@ -345,9 +345,13 @@ void StackAndConquer::loadLanguage(const QString &sLang) {
       this->switchTranslator(&m_translatorQt, "qt_" + sLang,
                              m_sSharePath + "/lang");
     }
-    this->switchTranslator(&m_translator,
-                           qApp->applicationName().toLower() + "_" + sLang,
-                           m_sSharePath + "/lang");
+    if (!this->switchTranslator(
+          &m_translator,
+           ":/" + qApp->applicationName().toLower() + "_" + sLang + ".qm")) {
+      !this->switchTranslator(
+            &m_translator, qApp->applicationName().toLower() + "_" + sLang,
+            m_sSharePath + "/lang");
+    }
   }
 }
 
@@ -361,7 +365,8 @@ bool StackAndConquer::switchTranslator(QTranslator *translator,
   if (translator->load(sFile, sPath)) {
     qApp->installTranslator(translator);
   } else {
-    if (!sFile.endsWith("_en")) {  // EN is build in translation -> no file
+    if (!sFile.endsWith("_en") && !sFile.endsWith("_en.qm")) {
+      // EN is build in translation -> no file
       qWarning() << "Could not find translation" << sFile << "in" << sPath;
     }
     return false;
@@ -389,44 +394,31 @@ void StackAndConquer::showRules() {
   layout->addWidget(textEdit);
   layout->addWidget(credits);
 
-  QString s("");
-  s += "<h2>" + trUtf8("Objective") + "</h2>" +
-       "<p>" + trUtf8("Players try to build stacks, at least five pieces high, with a piece of their own color on top.") + "</p>";
-  s += "<h2>" + trUtf8("Play") + "</h2>" +
-       "<p>" + trUtf8("<strong>Note:</strong> In the following, a single piece is also be referred as a \"stack\".") + "</p>" +
-       "<p>" + trUtf8("In each turn players have two options, one of which they must choose:") + "</p>" +
-       "<ul><li>" + trUtf8("<strong>Enter</strong> a piece") + "</li><li>" + trUtf8("<strong>Move</strong> a stack") + "</li></ul>";
-  s += "<h3>" + trUtf8("Enter a piece") + "</h3>" +
-       "<p>" + trUtf8("A player places a new piece of his own color on any empty space on the board.") + "</p>";
-  s += "<h3>" + trUtf8("Move a stack") + "</h3>" +
-       "<p>" + trUtf8("A player chooses a stack and moves one or more pieces from there.") + "</p>" +
-       "<ul><li>" + trUtf8("Pieces move <strong>orthogonally</strong> or <strong>diagonally</strong> in straight lines.") + "</li>"
-       "<li>" + trUtf8("Pieces are always taken from the top of a stack.") + "</li>" +
-       "<li>" + trUtf8("Stacks may be <strong>split</strong> at <strong>any</strong> level. Remaining pieces stay behind.") + "</li>" +
-       "<li>" + trUtf8("Players may move pieces of <strong>any</strong>(!) color. It is possible to move single opponent piece or a stack with an opponent piece on top.") + "</li>" +
-       "<li>" + trUtf8("It is not allowed to move such that the last move of the opponent is effectively taken back. Please note that such a move is often not available.") + "</li>" +
-       "<li>" + trUtf8("Stacks may <strong>not</strong> cross occupied spaces.") + "</li>" +
-       "<li>" + trUtf8("A move <strong>must end on another stack</strong>, moved pieces are placed on top of the target stack.") + "</li>" +
-       "<li>" + trUtf8("Stacks may be <strong>any</strong> height.") + "</li></ul>";
-  s += "<p>" + trUtf8("And, most important:") + "</p>" +
-       "<ul><li>" + trUtf8("<strong>The height of the <u>target stack</u> determines the exact distance from where it can be reached.</strong>") + "</li></ul>" +
-       "<p>" + trUtf8("<strong>Note:</strong>") + "</p>" +
-       "<ul><li>" + trUtf8("The top piece does <strong>not</strong> determine ownership of a stack when it comes to move options.") + "</li>" +
-       "<li>" + trUtf8("It is <strong>not</strong> the height of the moving stack that determines the length of a move. It is the height of the target stack that defines it.") + "</li></ul>";
-  s += "<h3>" + trUtf8("Examples") + "</h3>";
-  s += "<p></p><img src=\":/images/example1.png\" alt=\"Example 1\" />";
-  s += "<p>" + trUtf8("The stack at e4 may move three spaces onto the stack at b4 (because it is three pieces high). The stack at e1 cannot reach b4 because it is blocked by c3. Please note that b4 may <strong>not</strong> jump on e4!") + "</p>";
-  s += "<p></p><img src=\":/images/example2.png\" alt=\"Example 2\" />";
-  s += "<p>" + trUtf8("The piece in the center (at c3) is within reach of all adjacent stacks because it is a stack of height one and each of the surrounding stacks is one step away.") + "</p>";
-  s += "<h3>" + trUtf8("Pass") + "</h3>" +
-       "<p>" + trUtf8("If a player cannot enter a new piece they must <strong>move</strong> a stack. If no move is available, the player must pass. The game ends in a draw if both players pass in sequence.") + "</p>";
-  s += "<h2>" + trUtf8("End of the game") + "</h2>" +
-       "<p>" + trUtf8("When a player builds a stack of height 5 (or higher), this stack is removed from the board, the pieces are put back to the reserve and the player who owned the top piece of said stack, scores <strong>1 point</strong>.") + "</p>" +
-       "<p>" + trUtf8("For a standard game only <strong>1 point</strong> is needed to win, but players can agree upon any other number at the beginning of the game.") + "</p>";
-  textEdit->setHtml(s);
+  QString sLang(m_pSettings->getLanguage());
+  sLang = sLang.left(2);
+  QFile rules(":/rules_" + sLang + ".html");
+  if (!rules.exists()) {
+    qWarning() << rules.fileName() << "does not exist. Loading EN fallback.";
+    rules.setFileName(":/rules_en.html");
+  }
 
-  credits->setText("<p>" + trUtf8("These rules are licensed under Creative Commons <a href=\"https://creativecommons.org/licenses/by-nc/4.0/\">Attribution-Noncommercial 4.0 International</a> license.") +
-                   "<br />Designer: Dieter Stein, <a href=\"https://spielstein.com/games/mixtour/rules\">spielstein.com</a></p>");
+  if (!rules.open(QFile::ReadOnly | QFile::Text)) {
+    qWarning() << "Could not open rules:" << rules.fileName();
+    QMessageBox::warning(this, trUtf8("Warning"),
+                         trUtf8("Could not open rules!"));
+    return;
+  }
+  QTextStream stream(&rules);
+  stream.setCodec("UTF-8");
+  textEdit->setHtml(stream.readAll());
+
+  credits->setText(
+        "<p>" + trUtf8("These rules are licensed under Creative Commons "
+                       "<a href=\"https://creativecommons.org/licenses/by-nc/"
+                       "4.0/\">Attribution-Noncommercial 4.0 International</a> "
+                       "license.") +
+        "<br />Designer: Dieter Stein, <a href=\"https://spielstein.com/games/"
+        "mixtour/rules\">spielstein.com</a></p>");
 
   dialog->show();
 }
@@ -435,38 +427,39 @@ void StackAndConquer::showRules() {
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::reportBug() const {
-  QDesktopServices::openUrl(QUrl("https://github.com/ElTh0r0/stackandconquer/issues"));
+  QDesktopServices::openUrl(
+        QUrl("https://github.com/ElTh0r0/stackandconquer/issues"));
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
 void StackAndConquer::showInfoBox() {
-  QMessageBox::about(this, trUtf8("About"),
-                     QString("<center>"
-                             "<big><b>%1 %2</b></big><br/>"
-                             "%3<br/>"
-                             "<small>%4</small><br/><br/>"
-                             "%5<br/>"
-                             "%6<br/>"
-                             "<small>%7</small>"
-                             "</center><br/>"
-                             "%8")
-                     .arg(qApp->applicationName())
-                     .arg(qApp->applicationVersion())
-                     .arg(APP_DESC)
-                     .arg(APP_COPY)
-                     .arg("URL: <a href=\"https://github.com/ElTh0r0/stackandconquer\">"
-                          "https://github.com/ElTh0r0/stackandconquer</a>")
-                     .arg(trUtf8("License") +
-                          ": "
-                          "<a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">"
-                          "GNU General Public License Version 3</a>")
-                     .arg(trUtf8("This application uses icons from "
-                                 "<a href=\"http://tango.freedesktop.org\">"
-                                 "Tango project</a>."))
-                     .arg("<i>" + trUtf8("Translations") +
-                          "</i><br />&nbsp;&nbsp;- German: ElThoro"));
+  QMessageBox::about(
+        this, trUtf8("About"),
+        QString("<center>"
+                "<big><b>%1 %2</b></big><br/>"
+                "%3<br/>"
+                "<small>%4</small><br/><br/>"
+                "%5<br/>"
+                "%6<br/>"
+                "<small>%7</small>"
+                "</center><br/>"
+                "%8")
+        .arg(qApp->applicationName())
+        .arg(qApp->applicationVersion())
+        .arg(APP_DESC)
+        .arg(APP_COPY)
+        .arg("URL: <a href=\"https://github.com/ElTh0r0/stackandconquer\">"
+             "https://github.com/ElTh0r0/stackandconquer</a>")
+        .arg(trUtf8("License") +
+             ": <a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">"
+             "GNU General Public License Version 3</a>")
+        .arg(trUtf8("This application uses icons from "
+                    "<a href=\"http://tango.freedesktop.org\">"
+                    "Tango project</a>."))
+        .arg("<i>" + trUtf8("Translations") +
+             "</i><br />&nbsp;&nbsp;- German: ElThoro"));
 }
 
 // ---------------------------------------------------------------------------
