@@ -8,9 +8,9 @@ project_dir=$(pwd)
 # Output macOS version
 sw_vers
 
-# Update platform
-echo "Updating platform..."
-brew update
+# Update platform (enable if needed)
+#echo "Updating platform..."
+#brew update
 
 # Install p7zip for packaging
 brew install p7zip
@@ -40,7 +40,7 @@ rm -rf obj
 rm -rf qrc
 
 echo "Creating dmg archive..."
-macdeployqt StackAndConquer.app -qmldir=../../../../../src -dmg
+macdeployqt StackAndConquer.app -dmg
 mv StackAndConquer.dmg "StackAndConquer_${TAG_NAME}.dmg"
 
 # Copy other project files
