@@ -40,8 +40,8 @@ rm -rf obj
 rm -rf qrc
 
 echo "Creating dmg archive..."
-macdeployqt iQPuzzle.app -qmldir=../../../../../src -dmg
-mv iQPuzzle.dmg "iQPuzzle_${TAG_NAME}.dmg"
+macdeployqt StackAndConquer.app -qmldir=../../../../../src -dmg
+mv StackAndConquer.dmg "StackAndConquer_${TAG_NAME}.dmg"
 
 # Copy other project files
 cp "${project_dir}/README.md" "README.md"
@@ -49,7 +49,7 @@ cp "${project_dir}/COPYING" "COPYING"
 cp -r "${project_dir}/data/cpu/" "cpu/"
 
 echo "Packaging zip archive..."
-7z a iQPuzzle_${TAG_NAME}_macos.zip "iQPuzzle_${TAG_NAME}.dmg" "README.md" "COPYING" "cpu/"
+7z a StackAndConquer_${TAG_NAME}_macos.zip "StackAndConquer_${TAG_NAME}.dmg" "README.md" "COPYING" "cpu/"
 
 echo "Done!"
 
