@@ -27,7 +27,7 @@ echo "Building..."
 cd ${project_dir}
 qmake -config release
 make
-
+ls -lRa .
 # Build and run tests here
 
 # Package
