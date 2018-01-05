@@ -18,7 +18,7 @@ cp ./res/images/stackandconquer_64x64.png ./appdir/stackandconquer.png
 find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
 
 echo "Uploading..."
-curl --upload-file stackandconquer*.AppImage https://transfer.sh/stackandconquer*.AppImage
+curl --upload-file StackAndConquer*.AppImage https://transfer.sh/StackAndConquer*.AppImage
 
 echo "Done!"
 
