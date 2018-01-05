@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
                  + app.applicationName().toLower();
   }
 #if defined(Q_OS_OSX)
-  sSharePath app.applicationDirPath() + "/../Resources/";
+  sSharePath = app.applicationDirPath() + "/../Resources/";
 #endif
 
   QStringList sListPaths = QStandardPaths::standardLocations(
