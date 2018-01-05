@@ -36,13 +36,11 @@ make
 
 # Package
 echo "Packaging..."
-mkdir "${project_dir}/build/${APP}.app/Contents/Resources/cpu"
-cp -Rpf "${project_dir}/data/cpu/*.js" "${project_dir}/build/${APP}.app/Contents/Resources/cpu"
 
 # Remove build directories that should not be deployed
-rm -rf moc
-rm -rf obj
-rm -rf qrc
+rm -rf .moc
+rm -rf .obj
+rm -rf .qrc
 
 echo "Creating dmg archive..."
 macdeployqt "${APP}.app" -dmg
@@ -53,10 +51,11 @@ cp "${project_dir}/README.md" "${project_dir}/build/README.md"
 cp "${project_dir}/COPYING" "${project_dir}/build/COPYING"
 
 echo "Packaging zip archive..."
-7z a ${APP}_${REV_NAME}_macos.zip "${APP}_${REV_NAME}.dmg" "README.md" "COPYING"
+7z a ${APP}_${REV_NAME}_macOS.zip "${APP}_${REV_NAME}.dmg" "README.md" "COPYING"
 
-echo "Uploading package..."
-curl --upload-file ${APP}_${REV_NAME}_macos.zip https://transfer.sh/${APP}_${REV_NAME}_macos.zip
+echo "Uploading to:"
+curl --upload-file ${APP}_${REV_NAME}_macOS.zip https://transfer.sh/${APP}_${REV_NAME}_macOS.zip
+echo ""
 
 echo "Done!"
 

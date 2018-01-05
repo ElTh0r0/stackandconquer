@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o errexit -o nounset
+
 echo "Building..."
 qmake CONFIG+=release PREFIX=/usr
 make -j$(nproc)
@@ -17,8 +19,9 @@ cp ./res/images/stackandconquer_64x64.png ./appdir/stackandconquer.png
 ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -appimage -bundle-non-qt-libs
 find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
 
-echo "Uploading..."
-curl --upload-file StackAndConquer*.AppImage https://transfer.sh/StackAndConquer*.AppImage
+echo "Uploading to:"
+curl --upload-file StackAndConquer-$VERSION-x86_64.AppImage https://transfer.sh/StackAndConquer-$VERSION-x86_64.AppImage
+echo ""
 
 echo "Done!"
 
