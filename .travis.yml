@@ -21,9 +21,9 @@ script:
     curl -fsSL "https://github.com/ElTh0r0/stackandconquer/raw/packaging/macOS/build_macOS.sh" > "build_macOS.sh" ;
     chmod +x build_macOS.sh ;
     REV_NAME=$(git rev-parse --short HEAD) ./build_macOS.sh ;
-  fi
+    fi
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     curl -fsSL "https://github.com/ElTh0r0/stackandconquer/raw/packaging/AppImage/build_AppImage.sh" > "build_AppImage.sh" ;
     chmod +x build_AppImage.sh ;
     ./build_AppImage.sh ;
-  fi
+    fi
