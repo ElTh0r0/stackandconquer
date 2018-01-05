@@ -7,4 +7,5 @@ StackAndConquer is a challenging tower conquest board game inspired by [Mixtour]
 * Ubuntu PPA: https://launchpad.net/~elthoro/+archive/stackandconquer
 * Builds for Arch, Cent OS, Debian, Fedora, openSUSE:
 http://software.opensuse.org/download.html?project=home%3AElThoro&package=stackandconquer
-* Build for Windows: https://github.com/ElTh0r0/stackandconquer/releases
+* Build for Windows, macOS or AppImage:
+  * https://github.com/ElTh0r0/stackandconquer/releases

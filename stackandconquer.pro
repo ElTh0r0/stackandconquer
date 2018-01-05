@@ -39,10 +39,6 @@ RCC_DIR       = ./.rcc
 
 QT           += core gui svg qml widgets
 
-macx {
-    QMAKE_INFO_PLIST = res/Info.plist
-}
-
 SOURCES      += main.cpp\
                 stackandconquer.cpp \
                 game.cpp \
@@ -64,9 +60,17 @@ FORMS        += stackandconquer.ui \
 RESOURCES    += res/stackandconquer_resources.qrc \
                 res/translations.qrc
 win32:RC_FILE = res/stackandconquer_win.rc
-macx:ICON     = res/images/icon.icns
 
 TRANSLATIONS += lang/stackandconquer_de.ts
+
+macx {
+  ICON               = res/images/icon.icns
+  QMAKE_INFO_PLIST   = res/Info.plist
+
+  CPU_DATA.path      = Contents/Resources
+  CPU_DATA.files    += data/cpu
+  QMAKE_BUNDLE_DATA += CPU_DATA
+}
 
 unix: !macx {
     isEmpty(PREFIX) {
