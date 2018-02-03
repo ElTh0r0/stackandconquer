@@ -41,54 +41,41 @@ function makeMove(nPossible) {
   //cpu.log("[0][0][0]: " + board[0][0][0]);
   //cpu.log("[1][0].length: " + board[1][0].length);
   
-  var sMoveToWin = canWin(nID);
-  if (0 !== sMoveToWin.length) {
-    return sMoveToWin;
+  var MoveToWin = canWin(nID);
+  if (0 !== MoveToWin.length) {  // CPU can win
+    return MoveToWin[0];
   }
 
   // Check if opponent can win
   if (2 === nID) {
-    sMoveToWin = canWin(1);
+    MoveToWin = canWin(1);
   } else {
-    sMoveToWin = canWin(2);
+    MoveToWin = canWin(2);
   }
-  if (0 !== sMoveToWin.length) {
-    var sPreventWin = preventWin(sMoveToWin, nPossibleMove);
+  if (0 !== MoveToWin.length) {
+    // TODO: preventWin() currently handles only first winning move!
+    var sPreventWin = preventWin(MoveToWin[0], nPossibleMove);
     if (sPreventWin.length > 0) {
       return sPreventWin;
     }
   }
 
   if (1 === nPossibleMove && findFreeFields()) {
-    return setStone();
+    return setRandom();
   } else if (2 === nPossibleMove) {
-    return moveTower();
+    return moveRandom(MoveToWin);
   } else if (3 === nPossibleMove) {
     var nRand = Math.floor(Math.random() * 2);
     if (0 === nRand) {
-      return setStone();
+      return setRandom();
     } else {
-      return moveTower();
+      return moveRandom(MoveToWin);
     }
   }
 
   // This line never should be reached!
-  cpu.log("ERROR: Script couldn't call setStone() / moveTower()!");
+  cpu.log("ERROR: Script couldn't call setRandom() / moveRandom()!");
   return "";
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-function setStone() {
-  return setRandom();
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-function moveTower() {
-  return moveRandom();
 }
 
 // ---------------------------------------------------------------------------
@@ -153,6 +140,7 @@ function checkNeighbourhood(nFieldX, nFieldY)  {
 // ---------------------------------------------------------------------------
 
 function canWin(nPlayerID)  {
+  var ret = [];
   for (var nRow = 0; nRow < nNumOfFields; nRow++) {
     for (var nCol = 0; nCol < nNumOfFields; nCol++) {
       var neighbours = checkNeighbourhood(nRow, nCol);
@@ -163,13 +151,18 @@ function canWin(nPlayerID)  {
         var tower = board[(neighbours[point])[0]][(neighbours[point])[1]];
         if ((board[nRow][nCol].length + tower.length >= nHeightTowerWin) &&
             nPlayerID === tower[tower.length - 1]) {  // Top stone = own color
-          return (neighbours[point])[0] + "," + (neighbours[point])[1] + "|" +
+          var sMove = (neighbours[point])[0] + "," + (neighbours[point])[1] + "|" +
               nRow + "," + nCol + "|" + tower.length;
+          ret.push(sMove);  // Generate list of all opponent winning moves
+
+          if (nPlayerID === nID) {  // Return first found move for CPU to win
+            return ret;
+          }
         }
       }
     }
   }
-  return "";
+  return ret;
 }
 
 // ---------------------------------------------------------------------------
@@ -237,7 +230,8 @@ function setRandom() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function moveRandom() {
+function moveRandom(oppWinning) {
+  var nCnt = 0;
   do {
     var nRandX = Math.floor(Math.random() * nNumOfFields);
     var nRandY = Math.floor(Math.random() * nNumOfFields);
@@ -246,8 +240,21 @@ function moveRandom() {
     if (neighbours.length > 0) {
       var choose = Math.floor(Math.random() * neighbours.length);
       var tower = board[(neighbours[choose])[0]][(neighbours[choose])[1]];
-      return (neighbours[choose])[0] + "," + (neighbours[choose])[1] + "|" +
-          nRandX + "," + nRandY + "|" + tower.length;
+      var sMove = (neighbours[choose])[0] + "," + (neighbours[choose])[1] +
+          "|" + nRandX + "," + nRandY + "|" + tower.length;
+
+      if (0 !== oppWinning.length) {
+        if (oppWinning.indexOf(sMove) > -1) {
+          // Dumb workaround for trying to find another
+          // move which doesn't let opponent win.
+          nCnt += 1;
+          if (nCnt < 10) {
+            // cpu.log("Trying to find another move...");
+            continue;
+          }
+        }
+      }
+      return sMove;
     }
   } while (true);
 }
