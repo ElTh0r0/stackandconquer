@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file alias="stackandconquer_de.qm">../lang/stackandconquer_de.qm</file>
+        <file alias="stackandconquer_nl.qm">../lang/stackandconquer_nl.qm</file>
         <file alias="rules_en.html">../lang/rules_en.html</file>
         <file alias="rules_de.html">../lang/rules_de.html</file>
     </qresource>

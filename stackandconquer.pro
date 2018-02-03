@@ -22,7 +22,7 @@ unix: !macx {
        TARGET = StackAndConquer
 }
 
-VERSION       = 0.8.0
+VERSION       = 0.8.1
 QMAKE_TARGET_PRODUCT     = "StackAndConquer"
 QMAKE_TARGET_DESCRIPTION = "Challenging tower conquest board game"
 QMAKE_TARGET_COPYRIGHT   = "(C) 2015-2018 Thorsten Roth"
@@ -61,7 +61,8 @@ RESOURCES    += res/stackandconquer_resources.qrc \
                 res/translations.qrc
 win32:RC_FILE = res/stackandconquer_win.rc
 
-TRANSLATIONS += lang/stackandconquer_de.ts
+TRANSLATIONS += lang/stackandconquer_de.ts \
+                lang/stackandconquer_nl.ts
 
 macx {
   ICON               = res/images/icon.icns

@@ -459,7 +459,9 @@ void StackAndConquer::showInfoBox() {
                     "<a href=\"http://tango.freedesktop.org\">"
                     "Tango project</a>."))
         .arg("<i>" + trUtf8("Translations") +
-             "</i><br />&nbsp;&nbsp;- German: ElThoro"));
+             "</i><br />"
+             "&nbsp;&nbsp;- Dutch: Vistaus<br />"
+             "&nbsp;&nbsp;- German: ElThoro"));
 }
 
 // ---------------------------------------------------------------------------
