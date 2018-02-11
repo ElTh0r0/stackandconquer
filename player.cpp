@@ -24,10 +24,10 @@
  * Player.
  */
 
+#include "./player.h"
+
 #include <QDebug>
 #include <QMessageBox>
-
-#include "./player.h"
 
 Player::Player(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones)
   : m_bIsActive(bActive),

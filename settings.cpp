@@ -24,13 +24,14 @@
  * Settings dialog.
  */
 
+#include "./settings.h"
+
 #include <QDebug>
 #include <QDir>
 #include <QDirIterator>
 #include <QIcon>
 #include <QMessageBox>
 
-#include "./settings.h"
 #include "ui_settings.h"
 
 Settings::Settings(const QString &sSharePath, const QString &userDataDir,

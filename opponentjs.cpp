@@ -24,14 +24,14 @@
  * Interface to CPU script JS engine.
  */
 
+#include "./opponentjs.h"
+
 #include <QDebug>
 #include <QFile>
 #include <QMessageBox>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-
-#include "./opponentjs.h"
 
 OpponentJS::OpponentJS(const quint8 nID, const quint8 nNumOfFields,
                        const quint8 nHeightTowerWin, QObject *parent)

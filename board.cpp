@@ -24,12 +24,12 @@
  * Game board generation.
  */
 
+#include "./board.h"
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QMessageBox>
 #include <QTimer>
-
-#include "./board.h"
 
 Board::Board(quint8 nNumOfFields, quint16 nGridSize,
              quint8 nMaxStones, Settings *pSettings)

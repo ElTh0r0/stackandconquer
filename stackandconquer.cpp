@@ -24,13 +24,14 @@
  * Main application generation (gui)
  */
 
+#include "./stackandconquer.h"
+
 #include <QApplication>
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QTextEdit>
 
-#include "./stackandconquer.h"
 #include "ui_stackandconquer.h"
 
 StackAndConquer::StackAndConquer(const QDir &sharePath,

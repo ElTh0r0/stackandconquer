@@ -24,6 +24,8 @@
  * Main game engine (object creation etc.).
  */
 
+#include "./game.h"
+
 #include <QDebug>
 #include <QFile>
 #include <QInputDialog>
@@ -33,8 +35,6 @@
 #include <QList>
 #include <QMessageBox>
 #include <QTimer>
-
-#include "./game.h"
 
 Game::Game(Settings *pSettings, const QStringList &sListFiles)
   : m_pSettings(pSettings),
