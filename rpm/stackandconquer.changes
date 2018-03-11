@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Sun Mar 11 15:40:00 UTC 2018 - elthoro@gmx.de 0.8.1
+
+- Added Dutch translation - thanks to Vistaus
+- Improved CPU opponent
+- Added macOS build (untested)
+- Added AppImage
+
+-------------------------------------------------------------------
 Wed Nov 08 16:23:00 UTC 2017 - elthoro@gmx.de 0.8.0
 
 - Added rules.

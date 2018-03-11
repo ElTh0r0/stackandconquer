@@ -1,3 +1,13 @@
+stackandconquer (0.8.1-0) xenial; urgency=low
+
+  [ Thorsten Roth ]
+  * Added Dutch translation - thanks to Vistaus
+  * Improved CPU opponent
+  * Added macOS build (untested)
+  * Added AppImage
+
+ -- Thorsten Roth <elthoro@gmx.de>  Sun, 11 Mar 2018 15:40:00 +0200
+
 stackandconquer (0.8.0-2) xenial; urgency=low
 
   [ Thorsten Roth ]

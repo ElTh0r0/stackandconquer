@@ -1,14 +1,14 @@
 # Maintainer: Thorsten Roth <elthoro@gmx.de>
 pkgname=stackandconquer
-pkgver=0.8.0
+pkgver=0.8.1
 pkgrel=1
 pkgdesc='StackAndConquer is a challenging tower conquest board game.'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='https://github.com/ElTh0r0/stackandconquer/'
 license=('GPL3')
 depends=('qt5-base' 'qt5-declarative' 'qt5-svg')
 source=("$pkgname-$pkgver.tar.gz")
-md5sums=('dab15fb05fc9536e28f77dab6c2d9b50')
+md5sums=('badee7c83d4f43cb155e6d6aebddfe5f')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
