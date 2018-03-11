@@ -115,6 +115,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%if 0%{?suse_version}
+%dir %{_datadir}/metainfo
+%endif
 %{_bindir}/%{name}
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
