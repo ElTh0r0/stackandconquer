@@ -10,3 +10,6 @@ StackAndConquer is a challenging tower conquest board game inspired by [Mixtour]
   * http://software.opensuse.org/download.html?project=home%3AElThoro&package=stackandconquer
 * Build for Windows, macOS (untested) or AppImage:
   * https://github.com/ElTh0r0/stackandconquer/releases
+
+## Create CPU opponent
+Manual for creating CPU opponents can be found in the wiki: https://github.com/ElTh0r0/stackandconquer/wiki
