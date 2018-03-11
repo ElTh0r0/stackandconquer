@@ -120,6 +120,7 @@ rm -rf %{buildroot}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}_64x64.png
 %{_datadir}/pixmaps/%{name}.xpm
+%{_datadir}/metainfo/%{name}.appdata.xml
 %doc COPYING
 %{_mandir}/*/*
 
