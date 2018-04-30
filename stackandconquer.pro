@@ -14,6 +14,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
 
+lessThan(QT_MAJOR_VERSION, 5) {
+  error("StackAndConquer requires Qt 5.0 or greater")
+}
+
 TEMPLATE      = app
 
 unix: !macx {
@@ -38,6 +42,9 @@ UI_DIR        = ./.ui
 RCC_DIR       = ./.rcc
 
 QT           += core gui svg qml widgets
+
+DEFINES      += QT_DEPRECATED_WARNINGS
+DEFINES      += QT_DISABLE_DEPRECATED_BEFORE=0x050900
 
 SOURCES      += main.cpp\
                 stackandconquer.cpp \

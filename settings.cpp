@@ -57,9 +57,9 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
   this->searchCpuScripts(userDataDir);
 
   QStringList sListStartPlayer;
-  sListStartPlayer << trUtf8("Random")
-                   << trUtf8("Player 1")
-                   << trUtf8("Player 2");
+  sListStartPlayer << tr("Random")
+                   << tr("Player 1")
+                   << tr("Player 2");
   m_pUi->cbStartPlayer->addItems(sListStartPlayer);
 
   connect(m_pUi->buttonBox, SIGNAL(accepted()),
@@ -173,13 +173,13 @@ void Settings::accept() {
 
   m_sNameP1 = m_pUi->leNameP1->text();
   if (m_sNameP1.trimmed().isEmpty()) {
-    m_sNameP1 = trUtf8("Player 1");
+    m_sNameP1 = tr("Player 1");
     m_pUi->leNameP1->setText(m_sNameP1);
   }
   m_pSettings->setValue("NameP1", m_sNameP1);
   m_sNameP2 = m_pUi->leNameP2->text();
   if (m_sNameP2.trimmed().isEmpty()) {
-    m_sNameP2 = trUtf8("Player 2");
+    m_sNameP2 = tr("Player 2");
     m_pUi->leNameP2->setText(m_sNameP2);
   }
   m_pSettings->setValue("NameP2", m_sNameP2);
@@ -215,8 +215,8 @@ void Settings::accept() {
       nNewWinTowers != m_nWinTowers) {
     int nRet = QMessageBox::question(
                  0, this->windowTitle(),
-                 trUtf8("Main game settings had been changed.<br>"
-                        "Do you want to start a new game?"));
+                 tr("Main game settings had been changed.<br>"
+                    "Do you want to start a new game?"));
     if (nRet == QMessageBox::Yes) {
       m_sP1HumanCpu = sNewP1HumanCpu;
       m_sP2HumanCpu = sNewP2HumanCpu;
@@ -257,9 +257,9 @@ void Settings::readSettings() {
   }
   m_sGuiLanguage = m_pUi->cbGuiLanguage->currentText();
 
-  m_sNameP1 = m_pSettings->value("NameP1", trUtf8("Player 1")).toString();
+  m_sNameP1 = m_pSettings->value("NameP1", tr("Player 1")).toString();
   m_pUi->leNameP1->setText(m_sNameP1);
-  m_sNameP2 = m_pSettings->value("NameP2", trUtf8("Player 2")).toString();
+  m_sNameP2 = m_pSettings->value("NameP2", tr("Player 2")).toString();
   m_pUi->leNameP2->setText(m_sNameP2);
 
   m_sP1HumanCpu = m_pSettings->value("P1HumanCpu", "Human").toString();
@@ -333,9 +333,9 @@ void Settings::updateUiLang() {
   m_pUi->retranslateUi(this);
 
   QStringList sListStartPlayer;
-  sListStartPlayer << trUtf8("Random")
-                   << trUtf8("Player 1")
-                   << trUtf8("Player 2");
+  sListStartPlayer << tr("Random")
+                   << tr("Player 1")
+                   << tr("Player 2");
   m_pUi->cbStartPlayer->clear();
   m_pUi->cbStartPlayer->addItems(sListStartPlayer);
   m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);

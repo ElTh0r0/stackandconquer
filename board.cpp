@@ -279,8 +279,7 @@ void Board::addStone(const QPoint field, const quint8 stone, const bool bAnim) {
     m_listStonesP2.removeLast();
   } else {
     qWarning() << "Trying to set stone type" << stone;
-    QMessageBox::warning(NULL, trUtf8("Warning"),
-                         trUtf8("Something went wrong!"));
+    QMessageBox::warning(NULL, tr("Warning"), tr("Something went wrong!"));
     return;
   }
 
@@ -339,8 +338,7 @@ void Board::resetAnimation2() {
 void Board::removeStone(const QPoint field, const bool bAll) {
   if (0 == m_Fields[field.x()][field.y()].size()) {
     qWarning() << "Trying to remove stone from empty field" << field;
-    QMessageBox::warning(NULL, trUtf8("Warning"),
-                         trUtf8("Something went wrong!"));
+    QMessageBox::warning(NULL, tr("Warning"), tr("Something went wrong!"));
     return;
   } else if (bAll) {  // Remove all (tower conquered)
     foreach (quint8 i, m_Fields[field.x()][field.y()]) {

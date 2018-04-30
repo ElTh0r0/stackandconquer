@@ -100,9 +100,9 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
                    "- Error calling \"makeMove\" function at line:" <<
                    result.property("lineNumber").toInt() <<
                    "\n" << result.toString();
-    QMessageBox::warning(NULL, trUtf8("Warning"),
-                         trUtf8("CPU script execution error! "
-                                "Please check the debug log."));
+    QMessageBox::warning(NULL, tr("Warning"),
+                         tr("CPU script execution error! "
+                            "Please check the debug log."));
     emit scriptError();
   }
 
@@ -130,9 +130,9 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
 
   qCritical() << "CPU" << m_nID << "script invalid return from makeMove():" <<
                  result.toString();
-  QMessageBox::warning(NULL, trUtf8("Warning"),
-                       trUtf8("CPU script execution error! "
-                              "Please check the debug log."));
+  QMessageBox::warning(NULL, tr("Warning"),
+                       tr("CPU script execution error! "
+                          "Please check the debug log."));
   emit scriptError();
 }
 

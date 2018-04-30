@@ -84,8 +84,8 @@ void StackAndConquer::checkCmdArgs() {
           break;
         } else {
           qWarning() << "Specified JS file not found:" << qApp->arguments()[i];
-          QMessageBox::warning(this, trUtf8("Warning"),
-                               trUtf8("Specified file not found:") + "\n" +
+          QMessageBox::warning(this, tr("Warning"),
+                               tr("Specified file not found:") + "\n" +
                                qApp->arguments()[i]);
           sListArgs.clear();
           break;
@@ -99,8 +99,8 @@ void StackAndConquer::checkCmdArgs() {
           sListArgs << qApp->arguments()[i];
         } else {
           qWarning() << "Specified JS file not found:" << qApp->arguments()[i];
-          QMessageBox::warning(this, trUtf8("Warning"),
-                               trUtf8("Specified file not found:") + "\n" +
+          QMessageBox::warning(this, tr("Warning"),
+                               tr("Specified file not found:") + "\n" +
                                qApp->arguments()[i]);
           sListArgs.clear();
           break;
@@ -253,8 +253,8 @@ void StackAndConquer::startNewGame(const QStringList sListArgs) {
 
   if (!m_pGame->initCpu()) {
     m_pGraphView->setInteractive(false);
-    QMessageBox::warning(this, trUtf8("Warning"),
-                         trUtf8("An error occured during CPU initialization."));
+    QMessageBox::warning(this, tr("Warning"),
+                         tr("An error occured during CPU initialization."));
     return;
   }
   m_pGame->updatePlayers(true);
@@ -265,13 +265,11 @@ void StackAndConquer::startNewGame(const QStringList sListArgs) {
 
 void StackAndConquer::loadGame() {
   QString sFile = QFileDialog::getOpenFileName(
-                    this, trUtf8("Load game"),
-                    m_userDataDir.absolutePath(),
-                    trUtf8("Save games") + "(*.stacksav)");
+                    this, tr("Load game"), m_userDataDir.absolutePath(),
+                    tr("Save games") + "(*.stacksav)");
   if (!sFile.isEmpty()) {
     if (!sFile.endsWith(".stacksav", Qt::CaseInsensitive)) {
-      QMessageBox::warning(this, trUtf8("Warning"),
-                           trUtf8("Invalid save game file."));
+      QMessageBox::warning(this, tr("Warning"), tr("Invalid save game file."));
     } else {
       this->startNewGame(QStringList() << sFile);
     }
@@ -283,16 +281,14 @@ void StackAndConquer::loadGame() {
 
 void StackAndConquer::saveGame() {
   QString sFile = QFileDialog::getSaveFileName(
-                    this, trUtf8("Save game"),
-                    m_userDataDir.absolutePath(),
-                    trUtf8("Save games") + "(*.stacksav)");
+                    this, tr("Save game"), m_userDataDir.absolutePath(),
+                    tr("Save games") + "(*.stacksav)");
   if (!sFile.isEmpty()) {
     if (!sFile.endsWith(".stacksav", Qt::CaseInsensitive)) {
       sFile += ".stacksav";
     }
     if (!m_pGame->saveGame(sFile)) {
-      QMessageBox::warning(this, trUtf8("Warning"),
-                           trUtf8("Game could not be saved."));
+      QMessageBox::warning(this, tr("Warning"), tr("Game could not be saved."));
     }
   }
 }
@@ -313,11 +309,11 @@ void StackAndConquer::highlightActivePlayer(const bool bPlayer1,
                                             const bool bP2Won) {
   if (bP1Won) {
     m_pUi->statusBar->showMessage(
-          trUtf8("%1 won the game!").arg(m_plblPlayer1->text()));
+          tr("%1 won the game!").arg(m_plblPlayer1->text()));
     return;
   } else if (bP2Won) {
     m_pUi->statusBar->showMessage(
-          trUtf8("%1 won the game!").arg(m_plblPlayer2->text()));
+          tr("%1 won the game!").arg(m_plblPlayer2->text()));
     return;
   }
 
@@ -325,12 +321,12 @@ void StackAndConquer::highlightActivePlayer(const bool bPlayer1,
     m_plblPlayer1->setStyleSheet("color: #FF0000");
     m_plblPlayer2->setStyleSheet("color: #000000");
     m_pUi->statusBar->showMessage(
-          trUtf8("%1's turn").arg(m_plblPlayer1->text()));
+          tr("%1's turn").arg(m_plblPlayer1->text()));
   } else {
     m_plblPlayer1->setStyleSheet("color: #000000");
     m_plblPlayer2->setStyleSheet("color: #FF0000");
     m_pUi->statusBar->showMessage(
-          trUtf8("%1's turn").arg(m_plblPlayer2->text()));
+          tr("%1's turn").arg(m_plblPlayer2->text()));
   }
 }
 
@@ -382,7 +378,7 @@ void StackAndConquer::showRules() {
   QDialog* dialog = new QDialog(this, this->windowFlags()
                                 & ~Qt::WindowContextHelpButtonHint);
   QGridLayout* layout = new QGridLayout(dialog);
-  dialog->setWindowTitle(trUtf8("Rules"));
+  dialog->setWindowTitle(tr("Rules"));
   dialog->setMinimumSize(700, 450);
 
   QTextEdit* textEdit = new QTextEdit;
@@ -405,8 +401,7 @@ void StackAndConquer::showRules() {
 
   if (!rules.open(QFile::ReadOnly | QFile::Text)) {
     qWarning() << "Could not open rules:" << rules.fileName();
-    QMessageBox::warning(this, trUtf8("Warning"),
-                         trUtf8("Could not open rules!"));
+    QMessageBox::warning(this, tr("Warning"), tr("Could not open rules!"));
     return;
   }
   QTextStream stream(&rules);
@@ -414,10 +409,10 @@ void StackAndConquer::showRules() {
   textEdit->setHtml(stream.readAll());
 
   credits->setText(
-        "<p>" + trUtf8("These rules are licensed under Creative Commons "
-                       "<a href=\"https://creativecommons.org/licenses/by-nc/"
-                       "4.0/\">Attribution-Noncommercial 4.0 International</a> "
-                       "license.") +
+        "<p>" + tr("These rules are licensed under Creative Commons "
+                   "<a href=\"https://creativecommons.org/licenses/by-nc/"
+                   "4.0/\">Attribution-Noncommercial 4.0 International</a> "
+                   "license.") +
         "<br />Designer: Dieter Stein, <a href=\"https://spielstein.com/games/"
         "mixtour/rules\">spielstein.com</a></p>");
 
@@ -437,7 +432,7 @@ void StackAndConquer::reportBug() const {
 
 void StackAndConquer::showInfoBox() {
   QMessageBox::about(
-        this, trUtf8("About"),
+        this, tr("About"),
         QString("<center>"
                 "<big><b>%1 %2</b></big><br/>"
                 "%3<br/>"
@@ -453,13 +448,13 @@ void StackAndConquer::showInfoBox() {
         .arg(APP_COPY)
         .arg("URL: <a href=\"https://github.com/ElTh0r0/stackandconquer\">"
              "https://github.com/ElTh0r0/stackandconquer</a>")
-        .arg(trUtf8("License") +
+        .arg(tr("License") +
              ": <a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">"
              "GNU General Public License Version 3</a>")
-        .arg(trUtf8("This application uses icons from "
-                    "<a href=\"http://tango.freedesktop.org\">"
-                    "Tango project</a>."))
-        .arg("<i>" + trUtf8("Translations") +
+        .arg(tr("This application uses icons from "
+                "<a href=\"http://tango.freedesktop.org\">"
+                "Tango project</a>."))
+        .arg("<i>" + tr("Translations") +
              "</i><br />"
              "&nbsp;&nbsp;- Dutch: Vistaus<br />"
              "&nbsp;&nbsp;- German: ElThoro"));
@@ -485,9 +480,9 @@ void StackAndConquer::changeEvent(QEvent *pEvent) {
 void StackAndConquer::closeEvent(QCloseEvent *pEvent) {
   pEvent->accept();
   /*
-  int nRet = QMessageBox::question(this, trUtf8("Quit") + " - " +
+  int nRet = QMessageBox::question(this, tr("Quit") + " - " +
                                    qApp->applicationName(),
-                                   trUtf8("Do you really want to quit?"),
+                                   tr("Do you really want to quit?"),
                                    QMessageBox::Yes | QMessageBox::No);
 
   if (QMessageBox::Yes == nRet) {
