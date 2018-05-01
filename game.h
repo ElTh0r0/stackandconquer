@@ -35,8 +35,7 @@ class Game : public QObject {
   Q_OBJECT
 
   public:
-    explicit Game(Settings *pSettings, const QStringList &sListFiles,
-                  QObject *pParent = 0);
+    explicit Game(Settings *pSettings, const QStringList &sListFiles);
     QGraphicsScene* getScene() const;
     QRectF getSceneRect() const;
     bool saveGame(const QString &sFile);

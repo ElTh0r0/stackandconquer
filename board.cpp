@@ -315,7 +315,7 @@ void Board::startAnimation(const QPoint field) {
   m_pAnimateField->setPos(this->snapToGrid(field*m_nGridSize));
   m_pAnimateField->setVisible(true);
   m_pHighlightRect->setVisible(false);
-  QTimer::singleShot(500, this, &Board::resetAnimation);
+  QTimer::singleShot(500, this, SLOT(resetAnimation()));
 }
 
 void Board::resetAnimation() {
@@ -329,7 +329,7 @@ void Board::startAnimation2(const QPoint field) {
   m_pAnimateField2->setPos(this->snapToGrid(field*m_nGridSize));
   m_pAnimateField2->setVisible(true);
   m_pHighlightRect->setVisible(false);
-  QTimer::singleShot(500, this, &Board::resetAnimation2);
+  QTimer::singleShot(500, this, SLOT(resetAnimation2()));
 }
 
 void Board::resetAnimation2() {

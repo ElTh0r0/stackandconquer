@@ -36,7 +36,7 @@
 #include <QMessageBox>
 #include <QTimer>
 
-Game::Game(Settings *pSettings, const QStringList &sListFiles, QObject *pParent)
+Game::Game(Settings *pSettings, const QStringList &sListFiles)
   : m_pSettings(pSettings),
     m_pBoard(NULL),
     m_jsCpuP1(NULL),
@@ -50,7 +50,6 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles, QObject *pParent)
     m_nGridSize(70),
     m_nNumOfFields(5),
     m_bScriptError(false) {
-  Q_UNUSED(pParent);
   qDebug() << "Starting new game" << sListFiles;
 
   m_pBoard = new Board(m_nNumOfFields, m_nGridSize, m_nMaxStones, m_pSettings);
@@ -502,7 +501,7 @@ void Game::updatePlayers(bool bInitial) {
     if ((m_pPlayer1->getIsActive() && !m_pPlayer1->getIsHuman()) ||
         (m_pPlayer2->getIsActive() && !m_pPlayer2->getIsHuman())) {
       emit setInteractive(false);
-      QTimer::singleShot(800, this, &Game::delayCpu);
+      QTimer::singleShot(800, this, SLOT(delayCpu()));
     } else {
       emit setInteractive(true);
     }
