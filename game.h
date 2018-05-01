@@ -59,7 +59,7 @@ class Game : public QObject {
 
   private slots:
     void setStone(QPoint field);
-    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones = 0);
+    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
     void delayCpu();
     void caughtScriptError();
 
@@ -68,7 +68,7 @@ class Game : public QObject {
     void createCPU2();
     QJsonObject loadGame(const QString &sFile);
     void checkPossibleMoves();
-    bool checkPreviousMoveReverted(const QString sMove);
+    bool checkPreviousMoveReverted(const QString &sMove);
     void checkTowerWin(QPoint field);
     void returnStones(QPoint field);
 

@@ -74,12 +74,12 @@ class Settings : public QDialog {
     void updateUiLang();
 
   signals:
-    void newGame();
+    void newGame(const QStringList &sListArgs);
     void changeLang(const QString &sLang);
 
   private:
     void readSettings();
-    QColor readColor(const QString sKey, const QString sFallback) const;
+    QColor readColor(const QString &sKey, const QString &sFallback) const;
     QStringList searchTranslations() const;
     void searchCpuScripts(const QString &userDataDir);
 

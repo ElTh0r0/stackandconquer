@@ -41,7 +41,7 @@ OpponentJS::OpponentJS(const quint8 nID, const quint8 nNumOfFields,
     m_nHeightTowerWin(nHeightTowerWin),
     m_jsEngine(new QJSEngine(parent)) {
   m_obj = m_jsEngine->globalObject();
-  m_obj.setProperty("cpu", m_jsEngine->newQObject(this));
+  m_obj.setProperty(QStringLiteral("cpu"), m_jsEngine->newQObject(this));
 
   // TODO(volunteer): C++ call via CPU script for check previous move reverted?
 }
@@ -62,43 +62,43 @@ bool OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
   QJSValue result(m_jsEngine->evaluate(source, sFilepath));
   if (result.isError()) {
     qCritical() << "Error in CPU" << m_nID << "script at line" <<
-                   result.property("lineNumber").toInt() <<
+                   result.property(QStringLiteral("lineNumber")).toInt() <<
                    "\n" << result.toString();
     emit scriptError();
     return false;
   }
 
   // Check if makeMove() is available for calling the script
-  if (!m_obj.hasProperty("makeMove") ||
-      !m_obj.property("makeMove").isCallable()) {
+  if (!m_obj.hasProperty(QStringLiteral("makeMove")) ||
+      !m_obj.property(QStringLiteral("makeMove")).isCallable()) {
     qCritical() << "Error in CPU" << m_nID << "script - function makeMove() " <<
                    "not found or not callable!";
     emit scriptError();
     return false;
   }
 
-  m_obj.setProperty("nID", m_nID);
-  m_obj.setProperty("nNumOfFields", m_nNumOfFields);
-  m_obj.setProperty("nHeightTowerWin", m_nHeightTowerWin);
+  m_obj.setProperty(QStringLiteral("nID"), m_nID);
+  m_obj.setProperty(QStringLiteral("nNumOfFields"), m_nNumOfFields);
+  m_obj.setProperty(QStringLiteral("nHeightTowerWin"), m_nHeightTowerWin);
   return true;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
+void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
                              const quint8 nPossibleMove) {
   QJsonDocument jsdoc(this->convertBoardToJSON(board));
 
   QString sJsBoard(jsdoc.toJson(QJsonDocument::Compact));
-  m_obj.setProperty("jsboard", sJsBoard);
+  m_obj.setProperty(QStringLiteral("jsboard"), sJsBoard);
 
-  QJSValue result = m_obj.property("makeMove")
+  QJSValue result = m_obj.property(QStringLiteral("makeMove"))
                     .call(QJSValueList() << nPossibleMove);
   if (result.isError()) {
     qCritical() << "CPU" << m_nID <<
                    "- Error calling \"makeMove\" function at line:" <<
-                   result.property("lineNumber").toInt() <<
+                   result.property(QStringLiteral("lineNumber")).toInt() <<
                    "\n" << result.toString();
     QMessageBox::warning(NULL, tr("Warning"),
                          tr("CPU script execution error! "
@@ -140,7 +140,7 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > board,
 // ---------------------------------------------------------------------------
 
 QJsonDocument OpponentJS::convertBoardToJSON(
-    const QList<QList<QList<quint8> > > board) {
+    const QList<QList<QList<quint8> > > &board) {
   QJsonArray tower;
   QVariantList vartower;
   QJsonArray jsBoard;
@@ -165,7 +165,7 @@ QJsonDocument OpponentJS::convertBoardToJSON(
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QList<QPoint> OpponentJS::evalMoveReturn(QString sReturn) {
+QList<QPoint> OpponentJS::evalMoveReturn(const QString &sReturn) {
   QList<QPoint> listReturn;
   QStringList sListRet;
   QStringList sListPoint;
@@ -173,11 +173,11 @@ QList<QPoint> OpponentJS::evalMoveReturn(QString sReturn) {
   bool bOk1(true);
   bool bOk2(true);
 
-  sListRet = sReturn.split("|");
+  sListRet = sReturn.split('|');
   for (int i = 0; i < sListRet.size(); i++) {
     sListPoint.clear();
 
-    sListPoint = sListRet[i].split(",");
+    sListPoint = sListRet[i].split(',');
     if (2 == sListPoint.size() && (0 == i || 1 == i)) {
       point.setX(sListPoint[0].trimmed().toInt(&bOk1, 10));
       point.setY(sListPoint[1].trimmed().toInt(&bOk2, 10));

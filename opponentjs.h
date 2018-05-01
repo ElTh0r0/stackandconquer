@@ -40,18 +40,19 @@ class OpponentJS : public QObject {
     bool loadAndEvalCpuScript(const QString &sFilepath);
 
   public slots:
-    void makeMoveCpu(const QList<QList<QList<quint8> > > board,
+    void makeMoveCpu(const QList<QList<QList<quint8> > > &board,
                      const quint8 nPossibleMove);
     void log(const QString &sMsg) const;
 
   signals:
     void setStone(QPoint field);
-    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones = 0);
+    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
     void scriptError();
 
   private:
-    QJsonDocument convertBoardToJSON(const QList<QList<QList<quint8> > > board);
-    QList<QPoint> evalMoveReturn(QString sReturn);
+    QJsonDocument convertBoardToJSON(
+        const QList<QList<QList<quint8> > > &board);
+    QList<QPoint> evalMoveReturn(const QString &sReturn);
 
     const quint8 m_nID;
     const quint8 m_nNumOfFields;

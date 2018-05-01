@@ -63,7 +63,7 @@ class StackAndConquer : public QMainWindow {
     void closeEvent(QCloseEvent *pEvent);
 
   private slots:
-    void startNewGame(const QStringList sListArgs = QStringList());
+    void startNewGame(const QStringList &sListArgs = QStringList());
     void loadGame();
     void saveGame();
     void setViewInteractive(const bool bEnabled);
@@ -79,7 +79,7 @@ class StackAndConquer : public QMainWindow {
     void checkCmdArgs();
     bool switchTranslator(QTranslator *translator,
                           const QString &sFile,
-                          const QString &sPath = "");
+                          const QString &sPath = QStringLiteral(""));
     void setupMenu();
     void setupGraphView();
 

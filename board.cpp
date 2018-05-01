@@ -47,14 +47,18 @@ Board::Board(quint8 nNumOfFields, quint16 nGridSize,
   // Generate field matrix
   QList<quint8> tower;
   QList<QList<quint8> > line;
+  line.reserve(m_nNumOfFields);
   QList<QGraphicsSvgItem *> tower2;
   QList<QList<QGraphicsSvgItem *> > line2;
+  line2.reserve(m_nNumOfFields);
   for (int i = 0; i < m_nNumOfFields; i++) {
     line.append(tower);
     line2.append(tower2);
   }
   m_Fields.clear();
+  m_Fields.reserve(m_nNumOfFields);
   m_FieldStones.clear();
+  m_FieldStones.reserve(m_nNumOfFields);
   for (int i = 0; i < m_nNumOfFields; i++) {
     m_Fields.append(line);
     m_FieldStones.append(line2);
@@ -84,10 +88,10 @@ void Board::drawBoard() {
       this->addLine(lineGrid, linePen);
     }
 
-    if (qApp->arguments().contains("--debug")) {
+    if (qApp->arguments().contains(QStringLiteral("--debug"))) {
       m_Captions << this->addSimpleText(QString(static_cast<char>(i + 65)));
       m_Captions.last()->setPos(i*m_nGridSize, -m_nGridSize/2);
-      m_Captions.last()->setFont(QFont("Arial", m_nGridSize/5));
+      m_Captions.last()->setFont(QFont(QStringLiteral("Arial"), m_nGridSize/5));
       m_Captions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     }
   }
@@ -99,10 +103,10 @@ void Board::drawBoard() {
       this->addLine(lineGrid, linePen);
     }
 
-    if (qApp->arguments().contains("--debug")) {
+    if (qApp->arguments().contains(QStringLiteral("--debug"))) {
       m_Captions << this->addSimpleText(QString::number(i+1));
       m_Captions.last()->setPos(-m_nGridSize/1.75, i*m_nGridSize+m_nGridSize/8);
-      m_Captions.last()->setFont(QFont("Arial", m_nGridSize/5));
+      m_Captions.last()->setFont(QFont(QStringLiteral("Arial"), m_nGridSize/5));
       m_Captions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     }
   }
@@ -147,7 +151,7 @@ void Board::createHighlighters() {
 
 void Board::createStones() {
   QSvgRenderer *m_pSvgRenderer = new QSvgRenderer(
-                                   QLatin1String(":/images/stones.svg"));
+                                   QStringLiteral(":/images/stones.svg"));
   // Create a few more than maximum of stones because of wrong
   // order during move tower add/remove
   for (int i = 0; i < m_nMaxStones + 4; i++) {
@@ -155,7 +159,7 @@ void Board::createStones() {
     // Don't transform graphics to isometric view!
     m_listStonesP1.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     m_listStonesP1.last()->setSharedRenderer(m_pSvgRenderer);
-    m_listStonesP1.last()->setElementId(QLatin1String("Stone1"));
+    m_listStonesP1.last()->setElementId(QStringLiteral("Stone1"));
     this->addItem(m_listStonesP1.last());
     m_listStonesP1.last()->setPos(0, 0);
     m_listStonesP1.last()->setZValue(5);
@@ -165,7 +169,7 @@ void Board::createStones() {
     // Don't transform graphics to isometric view!
     m_listStonesP2.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     m_listStonesP2.last()->setSharedRenderer(m_pSvgRenderer);
-    m_listStonesP2.last()->setElementId(QLatin1String("Stone2"));
+    m_listStonesP2.last()->setElementId(QStringLiteral("Stone2"));
     this->addItem(m_listStonesP2.last());
     m_listStonesP2.last()->setPos(0, 0);
     m_listStonesP2.last()->setZValue(5);
@@ -176,7 +180,7 @@ void Board::createStones() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Board::setupSavegame(const QList<QList<QList<quint8> > > board) {
+void Board::setupSavegame(const QList<QList<QList<quint8> > > &board) {
   for (int nRow = 0; nRow < m_nNumOfFields; nRow++) {
     for (int nCol = 0; nCol < m_nNumOfFields; nCol++) {
       foreach (quint8 stone, board[nRow][nCol]) {
@@ -311,7 +315,7 @@ void Board::startAnimation(const QPoint field) {
   m_pAnimateField->setPos(this->snapToGrid(field*m_nGridSize));
   m_pAnimateField->setVisible(true);
   m_pHighlightRect->setVisible(false);
-  QTimer::singleShot(500, this, SLOT(resetAnimation()));
+  QTimer::singleShot(500, this, &Board::resetAnimation);
 }
 
 void Board::resetAnimation() {
@@ -325,7 +329,7 @@ void Board::startAnimation2(const QPoint field) {
   m_pAnimateField2->setPos(this->snapToGrid(field*m_nGridSize));
   m_pAnimateField2->setVisible(true);
   m_pHighlightRect->setVisible(false);
-  QTimer::singleShot(500, this, SLOT(resetAnimation2()));
+  QTimer::singleShot(500, this, &Board::resetAnimation2);
 }
 
 void Board::resetAnimation2() {
@@ -418,7 +422,7 @@ void Board::selectField(const QPointF point) {
       this->highlightNeighbourhood(neighbours);
       m_pSelectedField->setVisible(false);
       this->startAnimation2(field);
-      emit moveTower(field, currentField);
+      emit moveTower(field, currentField, 0);
       currentField = QPoint(-1, -1);
     } else {  // Select
       currentField = field;
@@ -494,7 +498,7 @@ QList<QPoint> Board::checkNeighbourhood(const QPoint field) const {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Board::highlightNeighbourhood(const QList<QPoint> neighbours) {
+void Board::highlightNeighbourhood(const QList<QPoint> &neighbours) {
   static QList<QGraphicsRectItem *> listPossibleMoves;
 
   foreach (QGraphicsRectItem *rect, listPossibleMoves) {

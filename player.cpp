@@ -29,7 +29,7 @@
 #include <QDebug>
 #include <QMessageBox>
 
-Player::Player(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones)
+Player::Player(bool bActive, bool bIsHuman, QString &sName, quint8 nMaxStones)
   : m_bIsActive(bActive),
     m_bIsHuman(bIsHuman),
     m_sName(sName),
@@ -38,7 +38,7 @@ Player::Player(bool bActive, bool bIsHuman, QString sName, quint8 nMaxStones)
     m_nWonTowers(0),
     m_nCanMove(0) {
   if (!m_bIsHuman) {
-    m_sName = "Computer";
+    m_sName = QStringLiteral("Computer");
   }
   qDebug() << "Generate player" << m_sName;
 }
@@ -87,7 +87,8 @@ void Player::setStonesLeft(const quint8 nStones) {
   } else {
     m_nStonesLeft = m_nMaxStones;
     qWarning() << "Stones > MaxStones!" << nStones << ">" << m_nMaxStones;
-    QMessageBox::warning(NULL, "Warning", "Something went wrong!");
+    QMessageBox::warning(NULL, QStringLiteral("Warning"),
+                         QStringLiteral("Something went wrong!"));
   }
 }
 

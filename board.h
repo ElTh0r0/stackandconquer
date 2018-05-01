@@ -48,7 +48,7 @@ class Board : public QGraphicsScene {
     Board(quint8 nNumOfFields, quint16 nGridSize, quint8 nMaxStones,
           Settings *pSettings);
 
-    void setupSavegame(const QList<QList<QList<quint8> > > board);
+    void setupSavegame(const QList<QList<QList<quint8> > > &board);
     void addStone(const QPoint field, const quint8 stone,
                   const bool bAnim = true);
     void removeStone(const QPoint field, const bool bAll = false);
@@ -61,7 +61,7 @@ class Board : public QGraphicsScene {
 
   signals:
     void setStone(QPoint);
-    void moveTower(QPoint tower, QPoint moveTo);
+    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
 
   protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *p_Event);
@@ -79,7 +79,7 @@ class Board : public QGraphicsScene {
     void startAnimation2(const QPoint field);
     QPointF snapToGrid(const QPointF point) const;
     QPoint getGridField(const QPointF point) const;
-    void highlightNeighbourhood(const QList<QPoint> neighbours);
+    void highlightNeighbourhood(const QList<QPoint> &neighbours);
 
     const quint16 m_nGridSize;
     const quint8 m_nMaxStones;

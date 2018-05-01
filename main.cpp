@@ -48,11 +48,11 @@ void LoggingHandler(QtMsgType type,
 
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
-  app.setApplicationName(APP_NAME);
-  app.setApplicationVersion(APP_VERSION);
+  app.setApplicationName(QStringLiteral(APP_NAME));
+  app.setApplicationVersion(QStringLiteral(APP_VERSION));
 
-  if (app.arguments().contains("-v") ||
-      app.arguments().contains("--version")) {
+  if (app.arguments().contains(QStringLiteral("-v")) ||
+      app.arguments().contains(QStringLiteral("--version"))) {
     qDebug() << app.arguments()[0] << "\t"
                                    << app.applicationVersion() << "\n";
     exit(0);
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
   // Standard installation path (Linux)
   QDir tmpDir(app.applicationDirPath() + "/../share/"
               + app.applicationName().toLower());
-  if (!app.arguments().contains("--debug") && tmpDir.exists()) {
+  if (!app.arguments().contains(QStringLiteral("--debug")) && tmpDir.exists()) {
     sSharePath = app.applicationDirPath() + "/../share/"
                  + app.applicationName().toLower();
   }
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
     userDataDir.mkpath(userDataDir.absolutePath());
   }
 
-  const QString sDebugFile("debug.log");
+  const QString sDebugFile(QStringLiteral("debug.log"));
   setupLogger(userDataDir.absolutePath() + "/" + sDebugFile,
               app.applicationName(), app.applicationVersion());
 

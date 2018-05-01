@@ -41,18 +41,18 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
     m_pUi(new Ui::StackAndConquer),
     m_userDataDir(userDataPath),
     m_sSharePath(sharePath.absolutePath()),
-    m_sCurrLang(""),
+    m_sCurrLang(QStringLiteral("")),
     m_pGame(NULL) {
   m_pUi->setupUi(this);
   this->setWindowTitle(qApp->applicationName());
 
   m_pSettings = new Settings(m_sSharePath, m_userDataDir.absolutePath(), this);
-  connect(m_pSettings, SIGNAL(newGame()),
-          this, SLOT(startNewGame()));
-  connect(m_pSettings, SIGNAL(changeLang(QString)),
-          this, SLOT(loadLanguage(QString)));
-  connect(this, SIGNAL(updateUiLang()),
-          m_pSettings, SLOT(updateUiLang()));
+  connect(m_pSettings, &Settings::newGame,
+          this, &StackAndConquer::startNewGame);
+  connect(m_pSettings, &Settings::changeLang,
+          this, &StackAndConquer::loadLanguage);
+  connect(this, &StackAndConquer::updateUiLang,
+          m_pSettings, &Settings::updateUiLang);
   this->loadLanguage(m_pSettings->getLanguage());
 
   this->setupMenu();
@@ -77,7 +77,8 @@ void StackAndConquer::checkCmdArgs() {
   if (qApp->arguments().size() > 1) {
     for (int i = 1; i < qApp->arguments().size(); i++) {
       // Load save game
-      if (qApp->arguments()[i].endsWith(".stacksav", Qt::CaseInsensitive)) {
+      if (qApp->arguments()[i].endsWith(QStringLiteral(".stacksav"),
+                                        Qt::CaseInsensitive)) {
         if (QFile::exists(qApp->arguments()[i])) {
           sListArgs.clear();
           sListArgs << qApp->arguments()[i];
@@ -90,7 +91,8 @@ void StackAndConquer::checkCmdArgs() {
           sListArgs.clear();
           break;
         }
-      } else if (qApp->arguments()[i].endsWith(".js", Qt::CaseInsensitive)) {
+      } else if (qApp->arguments()[i].endsWith(QStringLiteral(".js"),
+                                               Qt::CaseInsensitive)) {
         // Load CPU script(s)
         if (QFile::exists(qApp->arguments()[i])) {
           if (2 == sListArgs.size()) {
@@ -123,34 +125,34 @@ void StackAndConquer::setupMenu() {
 
   // Load game
   m_pUi->action_LoadGame->setShortcut(QKeySequence::Open);
-  connect(m_pUi->action_LoadGame, SIGNAL(triggered()),
-          this, SLOT(loadGame()));
+  connect(m_pUi->action_LoadGame, &QAction::triggered,
+          this, &StackAndConquer::loadGame);
 
   // Save game
   m_pUi->action_SaveGame->setShortcut(QKeySequence::Save);
-  connect(m_pUi->action_SaveGame, SIGNAL(triggered()),
-          this, SLOT(saveGame()));
+  connect(m_pUi->action_SaveGame, &QAction::triggered,
+          this, &StackAndConquer::saveGame);
 
   // Settings
-  connect(m_pUi->action_Preferences, SIGNAL(triggered()),
-          m_pSettings, SLOT(show()));
+  connect(m_pUi->action_Preferences, &QAction::triggered,
+          m_pSettings, &Settings::show);
 
   // Exit game
   m_pUi->action_Quit->setShortcut(QKeySequence::Quit);
-  connect(m_pUi->action_Quit, SIGNAL(triggered()),
-          this, SLOT(close()));
+  connect(m_pUi->action_Quit,&QAction::triggered,
+          this, &StackAndConquer::close);
 
   // Show rules
-  connect(m_pUi->action_Rules, SIGNAL(triggered()),
-          this, SLOT(showRules()));
+  connect(m_pUi->action_Rules, &QAction::triggered,
+          this, &StackAndConquer::showRules);
 
   // Report bug
-  connect(m_pUi->action_ReportBug, SIGNAL(triggered()),
-          this, SLOT(reportBug()));
+  connect(m_pUi->action_ReportBug, &QAction::triggered,
+          this, &StackAndConquer::reportBug);
 
   // About
-  connect(m_pUi->action_Info, SIGNAL(triggered()),
-          this, SLOT(showInfoBox()));
+  connect(m_pUi->action_Info, &QAction::triggered,
+          this, &StackAndConquer::showInfoBox);
 }
 
 // ---------------------------------------------------------------------------
@@ -174,24 +176,24 @@ void StackAndConquer::setupGraphView() {
   m_pLayout = new QGridLayout;
   m_pLayout->setVerticalSpacing(0);
   m_plblPlayer1 = new QLabel(m_pSettings->getNameP1());
-  m_plblP1StonesLeft = new QLabel("99");
-  m_plblP1Won = new QLabel("0");
+  m_plblP1StonesLeft = new QLabel(QStringLiteral("99"));
+  m_plblP1Won = new QLabel(QStringLiteral("0"));
   m_plblPlayer2 = new QLabel(m_pSettings->getNameP2());
   m_plblPlayer2->setAlignment(Qt::AlignRight);
-  m_plblP2StonesLeft = new QLabel("99");
+  m_plblP2StonesLeft = new QLabel(QStringLiteral("99"));
   m_plblP2StonesLeft->setAlignment(Qt::AlignRight);
-  m_plblP2Won = new QLabel("0");
+  m_plblP2Won = new QLabel(QStringLiteral("0"));
   m_plblP2Won->setAlignment(Qt::AlignRight);
 
-  QPixmap iconStone1(":/images/stone1.png");
+  QPixmap iconStone1(QStringLiteral(":/images/stone1.png"));
   m_plblIconStones1 = new QLabel();
   m_plblIconStones1->setPixmap(iconStone1);
   m_plblIconStones1->setAlignment(Qt::AlignCenter);
-  QPixmap iconStone2(":/images/stone2.png");
+  QPixmap iconStone2(QStringLiteral(":/images/stone2.png"));
   m_plblIconStones2 = new QLabel();
   m_plblIconStones2->setPixmap(iconStone2);
   m_plblIconStones2->setAlignment(Qt::AlignCenter);
-  QPixmap iconWin(":/images/win.png");
+  QPixmap iconWin(QStringLiteral(":/images/win.png"));
   m_plblIconWin1 = new QLabel();
   m_plblIconWin1->setPixmap(iconWin);
   m_plblIconWin1->setAlignment(Qt::AlignCenter);
@@ -221,31 +223,25 @@ void StackAndConquer::setupGraphView() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void StackAndConquer::startNewGame(const QStringList sListArgs) {
+void StackAndConquer::startNewGame(const QStringList &sListArgs) {
   if (NULL != m_pGame) {
     delete m_pGame;
   }
   m_pGame = new Game(m_pSettings, sListArgs);
 
-  connect(m_pGame, SIGNAL(updateNameP1(QString)),
-          m_plblPlayer1, SLOT(setText(QString)));
-  connect(m_pGame, SIGNAL(updateNameP2(QString)),
-          m_plblPlayer2, SLOT(setText(QString)));
+  connect(m_pGame, &Game::updateNameP1, m_plblPlayer1, &QLabel::setText);
+  connect(m_pGame, &Game::updateNameP2, m_plblPlayer2, &QLabel::setText);
 
-  connect(m_pGame, SIGNAL(updateStonesP1(QString)),
-          m_plblP1StonesLeft, SLOT(setText(QString)));
-  connect(m_pGame, SIGNAL(updateStonesP2(QString)),
-          m_plblP2StonesLeft, SLOT(setText(QString)));
+  connect(m_pGame, &Game::updateStonesP1, m_plblP1StonesLeft, &QLabel::setText);
+  connect(m_pGame, &Game::updateStonesP2, m_plblP2StonesLeft, &QLabel::setText);
 
-  connect(m_pGame, SIGNAL(updateWonP1(QString)),
-          m_plblP1Won, SLOT(setText(QString)));
-  connect(m_pGame, SIGNAL(updateWonP2(QString)),
-          m_plblP2Won, SLOT(setText(QString)));
+  connect(m_pGame, &Game::updateWonP1, m_plblP1Won, &QLabel::setText);
+  connect(m_pGame, &Game::updateWonP2, m_plblP2Won, &QLabel::setText);
 
-  connect(m_pGame, SIGNAL(setInteractive(bool)),
-          this, SLOT(setViewInteractive(bool)));
-  connect(m_pGame, SIGNAL(highlightActivePlayer(bool, bool, bool)),
-          this, SLOT(highlightActivePlayer(bool, bool, bool)));
+  connect(m_pGame, &Game::setInteractive,
+          this, &StackAndConquer::setViewInteractive);
+  connect(m_pGame, &Game::highlightActivePlayer,
+          this, &StackAndConquer::highlightActivePlayer);
 
   m_pGraphView->setScene(m_pGame->getScene());
   m_pGraphView->updateSceneRect(m_pGame->getSceneRect());
@@ -268,7 +264,7 @@ void StackAndConquer::loadGame() {
                     this, tr("Load game"), m_userDataDir.absolutePath(),
                     tr("Save games") + "(*.stacksav)");
   if (!sFile.isEmpty()) {
-    if (!sFile.endsWith(".stacksav", Qt::CaseInsensitive)) {
+    if (!sFile.endsWith(QStringLiteral(".stacksav"), Qt::CaseInsensitive)) {
       QMessageBox::warning(this, tr("Warning"), tr("Invalid save game file."));
     } else {
       this->startNewGame(QStringList() << sFile);
@@ -284,8 +280,8 @@ void StackAndConquer::saveGame() {
                     this, tr("Save game"), m_userDataDir.absolutePath(),
                     tr("Save games") + "(*.stacksav)");
   if (!sFile.isEmpty()) {
-    if (!sFile.endsWith(".stacksav", Qt::CaseInsensitive)) {
-      sFile += ".stacksav";
+    if (!sFile.endsWith(QStringLiteral(".stacksav"), Qt::CaseInsensitive)) {
+      sFile += QStringLiteral(".stacksav");
     }
     if (!m_pGame->saveGame(sFile)) {
       QMessageBox::warning(this, tr("Warning"), tr("Game could not be saved."));
@@ -318,13 +314,13 @@ void StackAndConquer::highlightActivePlayer(const bool bPlayer1,
   }
 
   if (bPlayer1) {
-    m_plblPlayer1->setStyleSheet("color: #FF0000");
-    m_plblPlayer2->setStyleSheet("color: #000000");
+    m_plblPlayer1->setStyleSheet(QStringLiteral("color: #FF0000"));
+    m_plblPlayer2->setStyleSheet(QStringLiteral("color: #000000"));
     m_pUi->statusBar->showMessage(
           tr("%1's turn").arg(m_plblPlayer1->text()));
   } else {
-    m_plblPlayer1->setStyleSheet("color: #000000");
-    m_plblPlayer2->setStyleSheet("color: #FF0000");
+    m_plblPlayer1->setStyleSheet(QStringLiteral("color: #000000"));
+    m_plblPlayer2->setStyleSheet(QStringLiteral("color: #FF0000"));
     m_pUi->statusBar->showMessage(
           tr("%1's turn").arg(m_plblPlayer2->text()));
   }
@@ -362,7 +358,8 @@ bool StackAndConquer::switchTranslator(QTranslator *translator,
   if (translator->load(sFile, sPath)) {
     qApp->installTranslator(translator);
   } else {
-    if (!sFile.endsWith("_en") && !sFile.endsWith("_en.qm")) {
+    if (!sFile.endsWith(QStringLiteral("_en")) &&
+        !sFile.endsWith(QStringLiteral("_en.qm"))) {
       // EN is build in translation -> no file
       qWarning() << "Could not find translation" << sFile << "in" << sPath;
     }
@@ -396,7 +393,7 @@ void StackAndConquer::showRules() {
   QFile rules(":/rules_" + sLang + ".html");
   if (!rules.exists()) {
     qWarning() << rules.fileName() << "does not exist. Loading EN fallback.";
-    rules.setFileName(":/rules_en.html");
+    rules.setFileName(QStringLiteral(":/rules_en.html"));
   }
 
   if (!rules.open(QFile::ReadOnly | QFile::Text)) {
@@ -424,7 +421,8 @@ void StackAndConquer::showRules() {
 
 void StackAndConquer::reportBug() const {
   QDesktopServices::openUrl(
-        QUrl("https://github.com/ElTh0r0/stackandconquer/issues"));
+        QUrl(
+          QStringLiteral("https://github.com/ElTh0r0/stackandconquer/issues")));
 }
 
 // ----------------------------------------------------------------------------
@@ -442,19 +440,19 @@ void StackAndConquer::showInfoBox() {
                 "<small>%7</small>"
                 "</center><br/>"
                 "%8")
-        .arg(qApp->applicationName())
-        .arg(qApp->applicationVersion())
-        .arg(APP_DESC)
-        .arg(APP_COPY)
-        .arg("URL: <a href=\"https://github.com/ElTh0r0/stackandconquer\">"
-             "https://github.com/ElTh0r0/stackandconquer</a>")
-        .arg(tr("License") +
+        .arg(qApp->applicationName(),
+             qApp->applicationVersion(),
+             QStringLiteral(APP_DESC),
+             QStringLiteral(APP_COPY),
+             "URL: <a href=\"https://github.com/ElTh0r0/stackandconquer\">"
+             "https://github.com/ElTh0r0/stackandconquer</a>",
+             tr("License") +
              ": <a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">"
-             "GNU General Public License Version 3</a>")
-        .arg(tr("This application uses icons from "
+             "GNU General Public License Version 3</a>",
+             tr("This application uses icons from "
                 "<a href=\"http://tango.freedesktop.org\">"
-                "Tango project</a>."))
-        .arg("<i>" + tr("Translations") +
+                "Tango project</a>."),
+             "<i>" + tr("Translations") +
              "</i><br />"
              "&nbsp;&nbsp;- Dutch: Vistaus<br />"
              "&nbsp;&nbsp;- German: ElThoro"));

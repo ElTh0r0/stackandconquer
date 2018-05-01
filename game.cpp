@@ -43,8 +43,8 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
     m_jsCpuP2(NULL),
     m_pPlayer1(NULL),
     m_pPlayer2(NULL),
-    m_sJsFileP1(""),
-    m_sJsFileP2(""),
+    m_sJsFileP1(QStringLiteral("")),
+    m_sJsFileP2(QStringLiteral("")),
     m_nMaxTowerHeight(5),
     m_nMaxStones(20),
     m_nGridSize(70),
@@ -53,15 +53,13 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   qDebug() << "Starting new game" << sListFiles;
 
   m_pBoard = new Board(m_nNumOfFields, m_nGridSize, m_nMaxStones, m_pSettings);
-  connect(m_pBoard, SIGNAL(setStone(QPoint)),
-          this, SLOT(setStone(QPoint)));
-  connect(m_pBoard, SIGNAL(moveTower(QPoint, QPoint)),
-          this, SLOT(moveTower(QPoint, QPoint)));
+  connect(m_pBoard, &Board::setStone, this, &Game::setStone);
+  connect(m_pBoard, &Board::moveTower, this, &Game::moveTower);
 
-  QString sP1HumanCpu("");
-  QString sName1("P1");
-  QString sP2HumanCpu("");
-  QString sName2("P2");
+  QString sP1HumanCpu(QStringLiteral(""));
+  QString sName1(QStringLiteral("P1"));
+  QString sP2HumanCpu(QStringLiteral(""));
+  QString sName2(QStringLiteral("P2"));
   quint8 nStartPlayer(0);
   quint8 nStonesLeftP1(m_nMaxStones);
   quint8 nStonesLeftP2(m_nMaxStones);
@@ -69,7 +67,8 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   quint8 nWonP2(0);
 
   if (1 == sListFiles.size()) {
-    if (sListFiles[0].endsWith(".stacksav", Qt::CaseInsensitive)) {  // Load
+    if (sListFiles[0].endsWith(QStringLiteral(".stacksav"),
+                               Qt::CaseInsensitive)) {  // Load
       QJsonObject jsonObj(this->loadGame(sListFiles[0]));
       if (jsonObj.isEmpty()) {
         qWarning() << "Save file is empty!";
@@ -78,13 +77,13 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
         exit(-1);
       }
 
-      sP1HumanCpu = jsonObj["HumanCpu1"].toString().trimmed();
-      sName1 = jsonObj["Name1"].toString().trimmed();
-      nWonP1 = jsonObj["Won1"].toInt();
-      sP2HumanCpu = jsonObj["HumanCpu2"].toString().trimmed();
-      sName2 = jsonObj["Name2"].toString().trimmed();
-      nWonP2 = jsonObj["Won2"].toInt();
-      nStartPlayer = jsonObj["Current"].toInt();
+      sP1HumanCpu = jsonObj[QStringLiteral("HumanCpu1")].toString().trimmed();
+      sName1 = jsonObj[QStringLiteral("Name1")].toString().trimmed();
+      nWonP1 = jsonObj[QStringLiteral("Won1")].toInt();
+      sP2HumanCpu = jsonObj[QStringLiteral("HumanCpu2")].toString().trimmed();
+      sName2 = jsonObj[QStringLiteral("Name2")].toString().trimmed();
+      nWonP2 = jsonObj[QStringLiteral("Won2")].toInt();
+      nStartPlayer = jsonObj[QStringLiteral("Current")].toInt();
 
       if (sP1HumanCpu.isEmpty() || sP2HumanCpu.isEmpty() ||
           sName1.isEmpty() || sName2.isEmpty()) {
@@ -96,12 +95,13 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
       }
 
       // Convert json array to board
-      QJsonArray jsBoard = jsonObj["Board"].toArray();
+      QJsonArray jsBoard = jsonObj[QStringLiteral("Board")].toArray();
       QJsonArray jsTower;
       QJsonArray jsLine;
       QList<quint8> tower;
       QList<QList<quint8> > line;
       QList<QList<QList<quint8> > > board;
+      board.reserve(m_nNumOfFields);
 
       if (m_nNumOfFields != jsBoard.size()) {
         qWarning() << "Save game contains invalid data"
@@ -136,18 +136,19 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
       }
 
       m_pBoard->setupSavegame(board);
-    } else if (sListFiles[0].endsWith(".js", Qt::CaseInsensitive)) {  // 1 CPU
-      sP1HumanCpu = "Human";
+    } else if (sListFiles[0].endsWith(QStringLiteral(".js"),
+                                      Qt::CaseInsensitive)) {  // 1 CPU
+      sP1HumanCpu = QStringLiteral("Human");
       sName1 = m_pSettings->getNameP1();
       sP2HumanCpu = sListFiles[0];
-      sName2 = "Computer";
+      sName2 = QStringLiteral("Computer");
       nStartPlayer = m_pSettings->getStartPlayer();
     }
-  } else if (2 == sListFiles.size()) {  // 2 CPU
+  } else if (2 == sListFiles.size()) {  // 2 CPU players
     sP1HumanCpu = sListFiles[0];
-    sName2 = "Computer";
+    sName1 = QStringLiteral("Computer");
     sP2HumanCpu = sListFiles[1];
-    sName2 = "Computer";
+    sName2 = QStringLiteral("Computer");
     nStartPlayer = m_pSettings->getStartPlayer();
   } else {  // Start game with current settings
     sP1HumanCpu = m_pSettings->getP1HumanCpu();
@@ -202,14 +203,10 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
 
 void Game::createCPU1() {
   m_jsCpuP1 = new OpponentJS(1, m_nNumOfFields, m_nMaxTowerHeight);
-  connect(this, SIGNAL(makeMoveCpuP1(QList<QList<QList<quint8> > >, quint8)),
-          m_jsCpuP1, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, quint8)));
-  connect(m_jsCpuP1, SIGNAL(setStone(QPoint)),
-          this, SLOT(setStone(QPoint)));
-  connect(m_jsCpuP1, SIGNAL(moveTower(QPoint, QPoint, quint8)),
-          this, SLOT(moveTower(QPoint, QPoint, quint8)));
-  connect(m_jsCpuP1, SIGNAL(scriptError()),
-          this, SLOT(caughtScriptError()));
+  connect(this, &Game::makeMoveCpuP1, m_jsCpuP1, &OpponentJS::makeMoveCpu);
+  connect(m_jsCpuP1, &OpponentJS::setStone, this, &Game::setStone);
+  connect(m_jsCpuP1, &OpponentJS::moveTower, this, &Game::moveTower);
+  connect(m_jsCpuP1, &OpponentJS::scriptError, this, &Game::caughtScriptError);
 }
 
 // ---------------------------------------------------------------------------
@@ -217,14 +214,10 @@ void Game::createCPU1() {
 
 void Game::createCPU2() {
   m_jsCpuP2 = new OpponentJS(2, m_nNumOfFields, m_nMaxTowerHeight);
-  connect(this, SIGNAL(makeMoveCpuP2(QList<QList<QList<quint8> > >, quint8)),
-          m_jsCpuP2, SLOT(makeMoveCpu(QList<QList<QList<quint8> > >, quint8)));
-  connect(m_jsCpuP2, SIGNAL(setStone(QPoint)),
-          this, SLOT(setStone(QPoint)));
-  connect(m_jsCpuP2, SIGNAL(moveTower(QPoint, QPoint, quint8)),
-          this, SLOT(moveTower(QPoint, QPoint, quint8)));
-  connect(m_jsCpuP2, SIGNAL(scriptError()),
-          this, SLOT(caughtScriptError()));
+  connect(this, &Game::makeMoveCpuP2, m_jsCpuP2, &OpponentJS::makeMoveCpu);
+  connect(m_jsCpuP2, &OpponentJS::setStone, this, &Game::setStone);
+  connect(m_jsCpuP2, &OpponentJS::moveTower, this, &Game::moveTower);
+  connect(m_jsCpuP2, &OpponentJS::scriptError, this, &Game::caughtScriptError);
 }
 
 // ---------------------------------------------------------------------------
@@ -508,7 +501,7 @@ void Game::updatePlayers(bool bInitial) {
     if ((m_pPlayer1->getIsActive() && !m_pPlayer1->getIsHuman()) ||
         (m_pPlayer2->getIsActive() && !m_pPlayer2->getIsHuman())) {
       emit setInteractive(false);
-      QTimer::singleShot(800, this, SLOT(delayCpu()));
+      QTimer::singleShot(800, this, &Game::delayCpu);
     } else {
       emit setInteractive(true);
     }
@@ -570,20 +563,20 @@ void Game::checkPossibleMoves() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool Game::checkPreviousMoveReverted(const QString sMove) {
+bool Game::checkPreviousMoveReverted(const QString &sMove) {
   if (!m_sPreviousMove.isEmpty()) {
     QStringList sListPrev;
     QStringList sListCur;
-    sListPrev = m_sPreviousMove.split(":");
-    sListCur = sMove.split(":");
+    sListPrev = m_sPreviousMove.split(':');
+    sListCur = sMove.split(':');
 
     if (2 == sListPrev.size() && 2 == sListCur.size()) {
       QString tmp(sListPrev[1]);
       sListPrev.removeLast();
-      sListPrev << tmp.split("-");
+      sListPrev << tmp.split('-');
       tmp = sListCur[1];
       sListCur.removeLast();
-      sListCur << tmp.split("-");
+      sListCur << tmp.split('-');
 
       if (3 == sListPrev.size() && 3 == sListCur.size()) {
         if (sListPrev[0] == sListCur[2] &&
@@ -656,14 +649,16 @@ bool Game::saveGame(const QString &sFile) {
   }
 
   QJsonObject jsonObj;
-  jsonObj["Name1"] = m_pPlayer1->getName();
-  jsonObj["Name2"] = m_pPlayer2->getName();
-  jsonObj["Won1"] = m_pPlayer1->getWonTowers();
-  jsonObj["Won2"] = m_pPlayer2->getWonTowers();
-  jsonObj["HumanCpu1"] = m_pPlayer1->getIsHuman() ? "Human" : m_sJsFileP1;
-  jsonObj["HumanCpu2"] = m_pPlayer2->getIsHuman() ? "Human" : m_sJsFileP2;
-  jsonObj["Current"] = m_pPlayer1->getIsActive() ? 1 : 2;
-  jsonObj["Board"] = jsBoard;
+  jsonObj[QStringLiteral("Name1")] = m_pPlayer1->getName();
+  jsonObj[QStringLiteral("Name2")] = m_pPlayer2->getName();
+  jsonObj[QStringLiteral("Won1")] = m_pPlayer1->getWonTowers();
+  jsonObj[QStringLiteral("Won2")] = m_pPlayer2->getWonTowers();
+  jsonObj[QStringLiteral("HumanCpu1")] =
+      m_pPlayer1->getIsHuman() ? QStringLiteral("Human") : m_sJsFileP1;
+  jsonObj[QStringLiteral("HumanCpu2")] =
+      m_pPlayer2->getIsHuman() ? QStringLiteral("Human") : m_sJsFileP2;
+  jsonObj[QStringLiteral("Current")] = m_pPlayer1->getIsActive() ? 1 : 2;
+  jsonObj[QStringLiteral("Board")] = jsBoard;
 
   QJsonDocument jsDoc(jsonObj);
   // if (-1 == saveFile.write(jsDoc.toJson())) {
