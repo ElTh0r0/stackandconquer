@@ -36,7 +36,7 @@
 #include <QMessageBox>
 #include <QTimer>
 
-Game::Game(Settings *pSettings, const QStringList &sListFiles)
+Game::Game(Settings *pSettings, const QStringList &sListFiles, QObject *pParent)
   : m_pSettings(pSettings),
     m_pBoard(NULL),
     m_jsCpuP1(NULL),
@@ -50,6 +50,7 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
     m_nGridSize(70),
     m_nNumOfFields(5),
     m_bScriptError(false) {
+  Q_UNUSED(pParent);
   qDebug() << "Starting new game" << sListFiles;
 
   m_pBoard = new Board(m_nNumOfFields, m_nGridSize, m_nMaxStones, m_pSettings);
