@@ -43,6 +43,7 @@ RCC_DIR       = ./.rcc
 
 QT           += core gui svg qml widgets
 
+CONFIG       += warn_on c++11
 DEFINES      += QT_DEPRECATED_WARNINGS
 DEFINES      += QT_DISABLE_DEPRECATED_BEFORE=0x050900
 

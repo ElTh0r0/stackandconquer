@@ -120,8 +120,8 @@ void StackAndConquer::checkCmdArgs() {
 void StackAndConquer::setupMenu() {
   // New game
   m_pUi->action_NewGame->setShortcut(QKeySequence::New);
-  connect(m_pUi->action_NewGame, SIGNAL(triggered()),
-          this, SLOT(startNewGame()));
+  connect(m_pUi->action_NewGame, &QAction::triggered,
+          this, [this]() { this->startNewGame(QStringList()); });
 
   // Load game
   m_pUi->action_LoadGame->setShortcut(QKeySequence::Open);
