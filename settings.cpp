@@ -152,9 +152,11 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
     foreach (QFileInfo file, cpuDir.entryInfoList(QDir::Files)) {
       if ("js" == file.suffix().toLower()) {
         sListAvailableCpu << file.baseName();
-        m_pUi->cbP1HumanCpu->addItem(QIcon(":/images/user.png"),
+        m_pUi->cbP1HumanCpu->addItem(QIcon(
+                                       QStringLiteral(":/images/user.png")),
                                      sListAvailableCpu.last());
-        m_pUi->cbP2HumanCpu->addItem(QIcon(":/images/user.png"),
+        m_pUi->cbP2HumanCpu->addItem(QIcon(
+                                       QStringLiteral(":/images/user.png")),
                                      sListAvailableCpu.last());
         m_sListCPUs << file.absoluteFilePath();
       }
