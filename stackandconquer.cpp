@@ -77,9 +77,9 @@ void StackAndConquer::checkCmdArgs() {
   if (qApp->arguments().size() > 1) {
     for (int i = 1; i < qApp->arguments().size(); i++) {
       // Load save game
-      if (qApp->arguments()[i].endsWith(QStringLiteral(".stacksav"),
-                                        Qt::CaseInsensitive)) {
-        if (QFile::exists(qApp->arguments()[i])) {
+      if (qApp->arguments().at(i).endsWith(QStringLiteral(".stacksav"),
+                                           Qt::CaseInsensitive)) {
+        if (QFile::exists(qApp->arguments().at(i))) {
           sListArgs.clear();
           sListArgs << qApp->arguments()[i];
           break;
@@ -91,10 +91,10 @@ void StackAndConquer::checkCmdArgs() {
           sListArgs.clear();
           break;
         }
-      } else if (qApp->arguments()[i].endsWith(QStringLiteral(".js"),
-                                               Qt::CaseInsensitive)) {
+      } else if (qApp->arguments().at(i).endsWith(QStringLiteral(".js"),
+                                                  Qt::CaseInsensitive)) {
         // Load CPU script(s)
-        if (QFile::exists(qApp->arguments()[i])) {
+        if (QFile::exists(qApp->arguments().at(i))) {
           if (2 == sListArgs.size()) {
             break;
           }

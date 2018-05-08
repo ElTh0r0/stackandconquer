@@ -43,19 +43,19 @@ class Game : public QObject {
     bool initCpu();
 
   signals:
-    void updateNameP1(QString sName);
-    void updateNameP2(QString sName);
-    void updateStonesP1(QString sStones);
-    void updateStonesP2(QString sStones);
-    void updateWonP1(QString sWon);
-    void updateWonP2(QString sWon);
+    void updateNameP1(const QString &sName);
+    void updateNameP2(const QString &sName);
+    void updateStonesP1(const QString &sStones);
+    void updateStonesP2(const QString &sStones);
+    void updateWonP1(const QString &sWon);
+    void updateWonP2(const QString &sWon);
     void setInteractive(bool bEnabled);
     void highlightActivePlayer(bool bPlayer1,
                                bool bP1Won = false, bool bP2Won = false);
-    void makeMoveCpuP1(QList<QList<QList<quint8> > > board,
-                       quint8 nPossibleMove);
-    void makeMoveCpuP2(QList<QList<QList<quint8> > > board,
-                       quint8 nPossibleMove);
+    void makeMoveCpuP1(const QList<QList<QList<quint8> > > &board,
+                       const quint8 nPossibleMove);
+    void makeMoveCpuP2(const QList<QList<QList<quint8> > > &board,
+                       const quint8 nPossibleMove);
 
   private slots:
     void setStone(QPoint field);
