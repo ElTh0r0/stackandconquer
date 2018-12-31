@@ -49,20 +49,20 @@ class StackAndConquer;
 class StackAndConquer : public QMainWindow {
   Q_OBJECT
 
-  public:
+ public:
     explicit StackAndConquer(const QDir &sharePath,
                              const QDir &userDataPath,
                              QWidget *pParent = 0);
     ~StackAndConquer();
 
-  signals:
+ signals:
     void updateUiLang();
 
-  protected:
+ protected:
     void changeEvent(QEvent *pEvent);
     void closeEvent(QCloseEvent *pEvent);
 
-  private slots:
+ private slots:
     void startNewGame(const QStringList &sListArgs = QStringList());
     void loadGame();
     void saveGame();
@@ -75,11 +75,11 @@ class StackAndConquer : public QMainWindow {
     void reportBug() const;
     void showInfoBox();
 
-  private:
+ private:
     void checkCmdArgs();
     bool switchTranslator(QTranslator *translator,
                           const QString &sFile,
-                          const QString &sPath = QStringLiteral(""));
+                          const QString &sPath = QString());
     void setupMenu();
     void setupGraphView();
 

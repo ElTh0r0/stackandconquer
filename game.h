@@ -34,7 +34,7 @@
 class Game : public QObject {
   Q_OBJECT
 
-  public:
+ public:
     explicit Game(Settings *pSettings, const QStringList &sListFiles);
     QGraphicsScene* getScene() const;
     QRectF getSceneRect() const;
@@ -42,7 +42,7 @@ class Game : public QObject {
     void updatePlayers(bool bInitial = false);
     bool initCpu();
 
-  signals:
+ signals:
     void updateNameP1(const QString &sName);
     void updateNameP2(const QString &sName);
     void updateStonesP1(const QString &sStones);
@@ -57,13 +57,13 @@ class Game : public QObject {
     void makeMoveCpuP2(const QList<QList<QList<quint8> > > &board,
                        const quint8 nPossibleMove);
 
-  private slots:
+ private slots:
     void setStone(QPoint field);
     void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
     void delayCpu();
     void caughtScriptError();
 
-  private:
+ private:
     void createCPU1();
     void createCPU2();
     QJsonObject loadGame(const QString &sFile);

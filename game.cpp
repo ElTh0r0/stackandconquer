@@ -43,8 +43,8 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
     m_jsCpuP2(NULL),
     m_pPlayer1(NULL),
     m_pPlayer2(NULL),
-    m_sJsFileP1(QStringLiteral("")),
-    m_sJsFileP2(QStringLiteral("")),
+    m_sJsFileP1(QString("")),
+    m_sJsFileP2(QString("")),
     m_nMaxTowerHeight(5),
     m_nMaxStones(20),
     m_nGridSize(70),
@@ -56,9 +56,9 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   connect(m_pBoard, &Board::setStone, this, &Game::setStone);
   connect(m_pBoard, &Board::moveTower, this, &Game::moveTower);
 
-  QString sP1HumanCpu(QStringLiteral(""));
+  QString sP1HumanCpu(QString(""));
   QString sName1(QStringLiteral("P1"));
-  QString sP2HumanCpu(QStringLiteral(""));
+  QString sP2HumanCpu(QString(""));
   QString sName2(QStringLiteral("P2"));
   quint8 nStartPlayer(0);
   quint8 nStonesLeftP1(m_nMaxStones);
@@ -501,7 +501,7 @@ void Game::updatePlayers(bool bInitial) {
     if ((m_pPlayer1->getIsActive() && !m_pPlayer1->getIsHuman()) ||
         (m_pPlayer2->getIsActive() && !m_pPlayer2->getIsHuman())) {
       emit setInteractive(false);
-      QTimer::singleShot(800, this, SLOT(delayCpu()));
+      QTimer::singleShot(800, this, &Game::delayCpu);
     } else {
       emit setInteractive(true);
     }

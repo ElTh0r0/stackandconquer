@@ -34,22 +34,22 @@
 class OpponentJS : public QObject {
   Q_OBJECT
 
-  public:
+ public:
     explicit OpponentJS(const quint8 nID, const quint8 nNumOfFields,
                         const quint8 nHeightTowerWin, QObject *parent = 0);
     bool loadAndEvalCpuScript(const QString &sFilepath);
 
-  public slots:
+ public slots:
     void makeMoveCpu(const QList<QList<QList<quint8> > > &board,
                      const quint8 nPossibleMove);
     void log(const QString &sMsg) const;
 
-  signals:
+ signals:
     void setStone(QPoint field);
     void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
     void scriptError();
 
-  private:
+ private:
     QJsonDocument convertBoardToJSON(
         const QList<QList<QList<quint8> > > &board);
     QList<QPoint> evalMoveReturn(const QString &sReturn);

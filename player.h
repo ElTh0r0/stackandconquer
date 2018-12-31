@@ -34,7 +34,7 @@
  * \brief Player class.
  */
 class Player {
-  public:
+ public:
     Player(bool bActive, bool bIsHuman, QString &sName, quint8 nMaxStones);
     ~Player();
 
@@ -49,7 +49,7 @@ class Player {
     void setCanMove(const quint8 nCanMove);
     quint8 getCanMove() const;
 
-  private:
+ private:
     bool m_bIsActive;
     const bool m_bIsHuman;
     QString m_sName;

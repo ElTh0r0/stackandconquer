@@ -40,7 +40,7 @@ function makeMove(nPossible) {
   nPossibleMove = Number(nPossible);
   //cpu.log("[0][0][0]: " + board[0][0][0]);
   //cpu.log("[1][0].length: " + board[1][0].length);
-  
+
   var MoveToWin = canWin(nID);
   if (0 !== MoveToWin.length) {  // CPU can win
     return MoveToWin[0];
@@ -81,7 +81,7 @@ function makeMove(nPossible) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function checkNeighbourhood(nFieldX, nFieldY)  {
+function checkNeighbourhood(nFieldX, nFieldY) {
   var neighbours = [];
   var nMoves = board[nFieldX][nFieldY].length;
 
@@ -139,7 +139,7 @@ function checkNeighbourhood(nFieldX, nFieldY)  {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function canWin(nPlayerID)  {
+function canWin(nPlayerID) {
   var ret = [];
   for (var nRow = 0; nRow < nNumOfFields; nRow++) {
     for (var nCol = 0; nCol < nNumOfFields; nCol++) {

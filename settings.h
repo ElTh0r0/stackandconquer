@@ -41,7 +41,7 @@ class SettingsDialog;
 class Settings : public QDialog {
   Q_OBJECT
 
-  public:
+ public:
     explicit Settings(const QString &sSharePath, const QString &userDataDir,
                       QWidget *pParent = 0);
     virtual ~Settings();
@@ -68,16 +68,16 @@ class Settings : public QDialog {
     QColor GetNeighboursColor() const;
     QColor GetNeighboursBorderColor() const;
 
-  public slots:
+ public slots:
     void accept();
     void reject();
     void updateUiLang();
 
-  signals:
+ signals:
     void newGame(const QStringList &sListArgs);
     void changeLang(const QString &sLang);
 
-  private:
+ private:
     void readSettings();
     QColor readColor(const QString &sKey, const QString &sFallback) const;
     QStringList searchTranslations() const;

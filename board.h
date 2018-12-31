@@ -44,7 +44,7 @@
 class Board : public QGraphicsScene {
   Q_OBJECT
 
-  public:
+ public:
     Board(quint8 nNumOfFields, quint16 nGridSize, quint8 nMaxStones,
           Settings *pSettings);
 
@@ -59,19 +59,19 @@ class Board : public QGraphicsScene {
     QList<QPoint> checkNeighbourhood(const QPoint field) const;
     void printDebugFields() const;
 
-  signals:
+ signals:
     void setStone(QPoint);
     void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
 
-  protected:
+ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *p_Event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event);
 
-  private slots:
+ private slots:
     void resetAnimation();
     void resetAnimation2();
 
-  private:
+ private:
     void drawBoard();
     void createHighlighters();
     void createStones();

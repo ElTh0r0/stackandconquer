@@ -41,7 +41,7 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
     m_pUi(new Ui::StackAndConquer),
     m_userDataDir(userDataPath),
     m_sSharePath(sharePath.absolutePath()),
-    m_sCurrLang(QStringLiteral("")),
+    m_sCurrLang(QString()),
     m_pGame(NULL) {
   m_pUi->setupUi(this);
   this->setWindowTitle(qApp->applicationName());
@@ -139,7 +139,7 @@ void StackAndConquer::setupMenu() {
 
   // Exit game
   m_pUi->action_Quit->setShortcut(QKeySequence::Quit);
-  connect(m_pUi->action_Quit,&QAction::triggered,
+  connect(m_pUi->action_Quit, &QAction::triggered,
           this, &StackAndConquer::close);
 
   // Show rules
