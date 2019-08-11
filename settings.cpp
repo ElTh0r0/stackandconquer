@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -73,7 +73,7 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
 Settings::~Settings() {
   if (m_pUi) {
     delete m_pUi;
-    m_pUi = NULL;
+    m_pUi = nullptr;
   }
 }
 
@@ -147,7 +147,7 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
   m_pUi->cbP2HumanCpu->addItems(sListAvailableCpu);
 
   // Cpu scripts in user folder
-  cpuDir = userDataDir;
+  cpuDir.setPath(userDataDir);
   if (cpuDir.cd(QStringLiteral("cpu"))) {
     foreach (QFileInfo file, cpuDir.entryInfoList(QDir::Files)) {
       if ("js" == file.suffix().toLower()) {
@@ -230,7 +230,7 @@ void Settings::accept() {
       sNewP2HumanCpu != m_sP2HumanCpu ||
       nNewWinTowers != m_nWinTowers) {
     int nRet = QMessageBox::question(
-                 0, this->windowTitle(),
+                 nullptr, this->windowTitle(),
                  tr("Main game settings had been changed.<br>"
                     "Do you want to start a new game?"));
     if (nRet == QMessageBox::Yes) {
@@ -304,7 +304,7 @@ void Settings::readSettings() {
   m_sP2HumanCpu = m_pUi->cbP2HumanCpu->currentText();
 
   m_nStartPlayer = m_pSettings->value(QStringLiteral("StartPlayer"),
-                                      1).toUInt();
+                                      1).toInt();
   if (m_nStartPlayer < m_pUi->cbStartPlayer->count()) {
     m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);
   } else {
@@ -312,7 +312,7 @@ void Settings::readSettings() {
   }
   m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
 
-  m_nWinTowers = m_pSettings->value(QStringLiteral("NumWinTowers"), 1).toUInt();
+  m_nWinTowers = m_pSettings->value(QStringLiteral("NumWinTowers"), 1).toInt();
   m_pUi->spinNumToWin->setValue(m_nWinTowers);
 
   m_bShowPossibleMoveTowers = m_pSettings->value(
@@ -413,10 +413,10 @@ QString Settings::getNameP2() const {
   return m_sNameP2;
 }
 quint8 Settings::getStartPlayer() const {
-  return m_nStartPlayer;
+  return static_cast<quint8>(m_nStartPlayer);
 }
 quint8 Settings::getWinTowers() const {
-  return m_nWinTowers;
+  return static_cast<quint8>(m_nWinTowers);
 }
 bool Settings::getShowPossibleMoveTowers() const {
   return m_bShowPossibleMoveTowers;

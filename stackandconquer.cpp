@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -42,7 +42,7 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
     m_userDataDir(userDataPath),
     m_sSharePath(sharePath.absolutePath()),
     m_sCurrLang(QString()),
-    m_pGame(NULL) {
+    m_pGame(nullptr) {
   m_pUi->setupUi(this);
   this->setWindowTitle(qApp->applicationName());
 
@@ -60,7 +60,7 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
 
   // Seed random number generator
   QTime time = QTime::currentTime();
-  qsrand((uint)time.msec());
+  qsrand(static_cast<uint>(time.msec()));
 
   this->checkCmdArgs();
 }
@@ -224,7 +224,7 @@ void StackAndConquer::setupGraphView() {
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::startNewGame(const QStringList &sListArgs) {
-  if (NULL != m_pGame) {
+  if (nullptr != m_pGame) {
     delete m_pGame;
   }
   m_pGame = new Game(m_pSettings, sListArgs);
@@ -462,7 +462,7 @@ void StackAndConquer::showInfoBox() {
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::changeEvent(QEvent *pEvent) {
-  if (0 != pEvent) {
+  if (nullptr != pEvent) {
     if (QEvent::LanguageChange == pEvent->type()) {
       m_pUi->retranslateUi(this);
       emit updateUiLang();

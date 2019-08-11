@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -100,7 +100,7 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
                    "- Error calling \"makeMove\" function at line:" <<
                    result.property(QStringLiteral("lineNumber")).toInt() <<
                    "\n" << result.toString();
-    QMessageBox::warning(NULL, tr("Warning"),
+    QMessageBox::warning(nullptr, tr("Warning"),
                          tr("CPU script execution error! "
                             "Please check the debug log."));
     emit scriptError();
@@ -130,7 +130,7 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
 
   qCritical() << "CPU" << m_nID << "script invalid return from makeMove():" <<
                  result.toString();
-  QMessageBox::warning(NULL, tr("Warning"),
+  QMessageBox::warning(nullptr, tr("Warning"),
                        tr("CPU script execution error! "
                           "Please check the debug log."));
   emit scriptError();

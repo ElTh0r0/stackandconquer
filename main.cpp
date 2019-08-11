@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -35,8 +35,8 @@
 
 #include "./stackandconquer.h"
 
-QFile logfile;
-QTextStream out(&logfile);
+static QFile logfile;
+static QTextStream out(&logfile);
 
 void setupLogger(const QString &sDebugFilePath,
                  const QString &sAppName,
@@ -151,7 +151,6 @@ void LoggingHandler(QtMsgType type,
       out.flush();
       logfile.close();
       abort();
-      break;
     default:
       out << sTime << " OTHER INFO: " << sContext << "\n";
       out.flush();

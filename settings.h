@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -43,7 +43,7 @@ class Settings : public QDialog {
 
  public:
     explicit Settings(const QString &sSharePath, const QString &userDataDir,
-                      QWidget *pParent = 0);
+                      QWidget *pParent = nullptr);
     virtual ~Settings();
 
     QString getNameP1() const;

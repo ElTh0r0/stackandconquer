@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -37,7 +37,7 @@ Board::Board(quint8 nNumOfFields, quint16 nGridSize,
     m_nMaxStones(nMaxStones),
     m_pSettings(pSettings),
     m_nNumOfFields(nNumOfFields),
-    m_pSvgRenderer(NULL) {
+    m_pSvgRenderer(nullptr) {
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
 
   this->drawBoard();
@@ -252,15 +252,15 @@ QPointF Board::snapToGrid(const QPointF point) const {
 // ---------------------------------------------------------------------------
 
 QPoint Board::getGridField(const QPointF point) const {
-  qint8 x(point.toPoint().x() / m_nGridSize);
-  qint8 y(point.toPoint().y() / m_nGridSize);
+  qint8 x(static_cast<qint8>(point.toPoint().x() / m_nGridSize));
+  qint8 y(static_cast<qint8>(point.toPoint().y() / m_nGridSize));
 
   if (x < 0 || y < 0 || x >= m_nNumOfFields || y >= m_nNumOfFields) {
     qWarning() << "Point out of grid! (" << x << "," << y << ")";
     if (x < 0) { x = 0; }
     if (y < 0) { y = 0; }
-    if (x >= m_nNumOfFields) { x = m_nNumOfFields - 1; }
-    if (y >= m_nNumOfFields) { y = m_nNumOfFields - 1; }
+    if (x >= m_nNumOfFields) { x = static_cast<qint8>(m_nNumOfFields - 1); }
+    if (y >= m_nNumOfFields) { y = static_cast<qint8>(m_nNumOfFields - 1); }
     qWarning() << "Changed point to (" << x << "," << y << ")";
   }
 
@@ -271,7 +271,7 @@ QPoint Board::getGridField(const QPointF point) const {
 // ---------------------------------------------------------------------------
 
 void Board::addStone(const QPoint field, const quint8 stone, const bool bAnim) {
-  quint8 nExisting(m_Fields[field.x()][field.y()].size());
+  quint8 nExisting(static_cast<quint8>(m_Fields[field.x()][field.y()].size()));
 
   if (1 == stone) {
     m_Fields[field.x()][field.y()].append(stone);
@@ -283,7 +283,7 @@ void Board::addStone(const QPoint field, const quint8 stone, const bool bAnim) {
     m_listStonesP2.removeLast();
   } else {
     qWarning() << "Trying to set stone type" << stone;
-    QMessageBox::warning(NULL, tr("Warning"), tr("Something went wrong!"));
+    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
     return;
   }
 
@@ -342,7 +342,7 @@ void Board::resetAnimation2() {
 void Board::removeStone(const QPoint field, const bool bAll) {
   if (0 == m_Fields[field.x()][field.y()].size()) {
     qWarning() << "Trying to remove stone from empty field" << field;
-    QMessageBox::warning(NULL, tr("Warning"), tr("Something went wrong!"));
+    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
     return;
   } else if (bAll) {  // Remove all (tower conquered)
     foreach (quint8 i, m_Fields[field.x()][field.y()]) {
@@ -445,7 +445,7 @@ QList<QPoint> Board::checkNeighbourhood(const QPoint field) const {
     return neighbours;
   }
 
-  quint8 nMoves = m_Fields[field.x()][field.y()].size();
+  quint8 nMoves = static_cast<quint8>(m_Fields[field.x()][field.y()].size());
   // qDebug() << "Selected:" << field << "- Moves:" << nMoves;
 
   for (int y = field.y() - nMoves; y <= field.y() + nMoves; y += nMoves) {

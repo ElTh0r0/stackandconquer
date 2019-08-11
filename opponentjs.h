@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -35,8 +35,10 @@ class OpponentJS : public QObject {
   Q_OBJECT
 
  public:
-    explicit OpponentJS(const quint8 nID, const quint8 nNumOfFields,
-                        const quint8 nHeightTowerWin, QObject *parent = 0);
+    explicit OpponentJS(const quint8 nID,
+                        const quint8 nNumOfFields,
+                        const quint8 nHeightTowerWin,
+                        QObject *parent = nullptr);
     bool loadAndEvalCpuScript(const QString &sFilepath);
 
  public slots:

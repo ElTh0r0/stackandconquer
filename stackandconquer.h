@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -52,7 +52,7 @@ class StackAndConquer : public QMainWindow {
  public:
     explicit StackAndConquer(const QDir &sharePath,
                              const QDir &userDataPath,
-                             QWidget *pParent = 0);
+                             QWidget *pParent = nullptr);
     ~StackAndConquer();
 
  signals:

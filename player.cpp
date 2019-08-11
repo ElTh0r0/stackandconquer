@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -87,7 +87,7 @@ void Player::setStonesLeft(const quint8 nStones) {
   } else {
     m_nStonesLeft = m_nMaxStones;
     qWarning() << "Stones > MaxStones!" << nStones << ">" << m_nMaxStones;
-    QMessageBox::warning(NULL, QStringLiteral("Warning"),
+    QMessageBox::warning(nullptr, QStringLiteral("Warning"),
                          QStringLiteral("Something went wrong!"));
   }
 }
