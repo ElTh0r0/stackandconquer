@@ -52,6 +52,7 @@ class StackAndConquer : public QMainWindow {
  public:
     explicit StackAndConquer(const QDir &sharePath,
                              const QDir &userDataPath,
+                             const QStringList &sListArgs = QStringList(),
                              QWidget *pParent = nullptr);
     ~StackAndConquer();
 
@@ -76,7 +77,7 @@ class StackAndConquer : public QMainWindow {
     void showInfoBox();
 
  private:
-    void checkCmdArgs();
+    void checkCmdArgs(const QStringList &sListArgs = QStringList());
     bool switchTranslator(QTranslator *translator,
                           const QString &sFile,
                           const QString &sPath = QString());

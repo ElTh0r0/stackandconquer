@@ -36,6 +36,7 @@
 
 StackAndConquer::StackAndConquer(const QDir &sharePath,
                                  const QDir &userDataPath,
+                                 const QStringList &sListArgs,
                                  QWidget *pParent)
   : QMainWindow(pParent),
     m_pUi(new Ui::StackAndConquer),
@@ -62,7 +63,7 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
   QTime time = QTime::currentTime();
   qsrand(static_cast<uint>(time.msec()));
 
-  this->checkCmdArgs();
+  this->checkCmdArgs(sListArgs);
 }
 
 StackAndConquer::~StackAndConquer() {
@@ -71,47 +72,47 @@ StackAndConquer::~StackAndConquer() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void StackAndConquer::checkCmdArgs() {
+void StackAndConquer::checkCmdArgs(const QStringList &sListArgs) {
   // Choose CPU script(s) or load game from command line
-  QStringList sListArgs;
-  if (qApp->arguments().size() > 1) {
-    for (int i = 1; i < qApp->arguments().size(); i++) {
+  QStringList sListTemp;
+  if (sListArgs.size() > 0) {
+    for (int i = 0; i < sListArgs.size(); i++) {
       // Load save game
-      if (qApp->arguments().at(i).endsWith(QStringLiteral(".stacksav"),
-                                           Qt::CaseInsensitive)) {
-        if (QFile::exists(qApp->arguments().at(i))) {
-          sListArgs.clear();
-          sListArgs << qApp->arguments()[i];
+      if (sListArgs.at(i).endsWith(QStringLiteral(".stacksav"),
+                                   Qt::CaseInsensitive)) {
+        if (QFile::exists(sListArgs.at(i))) {
+          sListTemp.clear();
+          sListTemp << sListArgs[i];
           break;
         } else {
-          qWarning() << "Specified JS file not found:" << qApp->arguments()[i];
+          qWarning() << "Specified JS file not found:" << sListArgs[i];
           QMessageBox::warning(this, tr("Warning"),
                                tr("Specified file not found:") + "\n" +
-                               qApp->arguments()[i]);
-          sListArgs.clear();
+                               sListArgs[i]);
+          sListTemp.clear();
           break;
         }
-      } else if (qApp->arguments().at(i).endsWith(QStringLiteral(".js"),
-                                                  Qt::CaseInsensitive)) {
+      } else if (sListArgs.at(i).endsWith(QStringLiteral(".js"),
+                                          Qt::CaseInsensitive)) {
         // Load CPU script(s)
-        if (QFile::exists(qApp->arguments().at(i))) {
-          if (2 == sListArgs.size()) {
+        if (QFile::exists(sListArgs.at(i))) {
+          if (2 == sListTemp.size()) {
             break;
           }
-          sListArgs << qApp->arguments()[i];
+          sListTemp << sListArgs[i];
         } else {
-          qWarning() << "Specified JS file not found:" << qApp->arguments()[i];
+          qWarning() << "Specified JS file not found:" << sListArgs[i];
           QMessageBox::warning(this, tr("Warning"),
                                tr("Specified file not found:") + "\n" +
-                               qApp->arguments()[i]);
-          sListArgs.clear();
+                               sListArgs[i]);
+          sListTemp.clear();
           break;
         }
       }
     }
   }
 
-  this->startNewGame(sListArgs);
+  this->startNewGame(sListTemp);
 }
 
 // ---------------------------------------------------------------------------
