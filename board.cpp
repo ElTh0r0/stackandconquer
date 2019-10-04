@@ -31,12 +31,12 @@
 #include <QMessageBox>
 #include <QTimer>
 
-Board::Board(quint8 nNumOfFields, quint16 nGridSize,
+Board::Board(QPoint NumOfFields, quint16 nGridSize,
              quint8 nMaxStones, Settings *pSettings)
   : m_nGridSize(nGridSize),
     m_nMaxStones(nMaxStones),
     m_pSettings(pSettings),
-    m_nNumOfFields(nNumOfFields),
+    m_NumOfFields(NumOfFields),
     m_pSvgRenderer(nullptr) {
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
 
@@ -45,23 +45,28 @@ Board::Board(quint8 nNumOfFields, quint16 nGridSize,
   this->createStones();
 
   // Generate field matrix
+  /*
+   * Attention: For genrating a matrix m_Fields[nCol][nRow] the below logic
+   * for generating the board is "column by column" and NOT "row by row":
+   * m_Fields[nCol] "contains" nRow x elements
+   */
   QList<quint8> tower;
-  QList<QList<quint8> > line;
-  line.reserve(m_nNumOfFields);
+  QList<QList<quint8> > column;
+  column.reserve(m_NumOfFields.y());
   QList<QGraphicsSvgItem *> tower2;
-  QList<QList<QGraphicsSvgItem *> > line2;
-  line2.reserve(m_nNumOfFields);
-  for (int i = 0; i < m_nNumOfFields; i++) {
-    line.append(tower);
-    line2.append(tower2);
+  QList<QList<QGraphicsSvgItem *> > column2;
+  column2.reserve(m_NumOfFields.y());
+  for (int i = 0; i < m_NumOfFields.y(); i++) {  // Column "height"
+    column.append(tower);
+    column2.append(tower2);
   }
   m_Fields.clear();
-  m_Fields.reserve(m_nNumOfFields);
+  m_Fields.reserve(m_NumOfFields.x());
   m_FieldStones.clear();
-  m_FieldStones.reserve(m_nNumOfFields);
-  for (int i = 0; i < m_nNumOfFields; i++) {
-    m_Fields.append(line);
-    m_FieldStones.append(line2);
+  m_FieldStones.reserve(m_NumOfFields.x());
+  for (int i = 0; i < m_NumOfFields.x(); i++) {  // Number of columns
+    m_Fields.append(column);
+    m_FieldStones.append(column2);
   }
 }
 
@@ -70,8 +75,8 @@ Board::Board(quint8 nNumOfFields, quint16 nGridSize,
 
 void Board::drawBoard() {
   m_BoardRect.setTopLeft(QPoint(0, 0));
-  m_BoardRect.setBottomRight(QPoint(m_nNumOfFields * m_nGridSize -1,
-                                    m_nNumOfFields * m_nGridSize -1));
+  m_BoardRect.setBottomRight(QPoint(m_NumOfFields.x() * m_nGridSize -1,
+                                    m_NumOfFields.y() * m_nGridSize -1));
 
   // Draw board
   QPen linePen(m_pSettings->getOutlineBoardColor());
@@ -81,31 +86,34 @@ void Board::drawBoard() {
   QLineF lineGrid;
   linePen.setColor(m_pSettings->getGridBoardColor());
   // Horizontal
-  for (int i = 0; i < m_nNumOfFields; i++) {
-    if (i > 0) {
-      lineGrid.setPoints(QPointF(1, i*m_nGridSize),
-                         QPointF(m_BoardRect.width()-1, i*m_nGridSize));
+  for (int nRow = 0; nRow < m_NumOfFields.y(); nRow++) {
+    if (nRow > 0) {
+      lineGrid.setPoints(QPointF(1, nRow*m_nGridSize),
+                         QPointF(m_BoardRect.width()-1, nRow*m_nGridSize));
       this->addLine(lineGrid, linePen);
     }
 
+    // Captions y-axis (vertical)
     if (qApp->arguments().contains(QStringLiteral("--debug"))) {
-      m_Captions << this->addSimpleText(QString(static_cast<char>(i + 65)));
-      m_Captions.last()->setPos(i*m_nGridSize, -m_nGridSize/2);
+      m_Captions << this->addSimpleText(QString::number(nRow+1));
+      m_Captions.last()->setPos(-m_nGridSize/1.75,
+                                nRow*m_nGridSize+m_nGridSize/8);
       m_Captions.last()->setFont(QFont(QStringLiteral("Arial"), m_nGridSize/5));
       m_Captions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     }
   }
   // Vertical
-  for (int i = 0; i < m_nNumOfFields; i++) {
-    if (i > 0) {
-      lineGrid.setPoints(QPointF(i*m_nGridSize, 1),
-                         QPointF(i*m_nGridSize, m_BoardRect.height()-1));
+  for (int nCol = 0; nCol < m_NumOfFields.x(); nCol++) {
+    if (nCol > 0) {
+      lineGrid.setPoints(QPointF(nCol*m_nGridSize, 1),
+                         QPointF(nCol*m_nGridSize, m_BoardRect.height()-1));
       this->addLine(lineGrid, linePen);
     }
 
+    // Captions x-axis (horizontal)
     if (qApp->arguments().contains(QStringLiteral("--debug"))) {
-      m_Captions << this->addSimpleText(QString::number(i+1));
-      m_Captions.last()->setPos(-m_nGridSize/1.75, i*m_nGridSize+m_nGridSize/8);
+      m_Captions << this->addSimpleText(QString(static_cast<char>(nCol + 65)));
+      m_Captions.last()->setPos(nCol*m_nGridSize, -m_nGridSize/2);
       m_Captions.last()->setFont(QFont(QStringLiteral("Arial"), m_nGridSize/5));
       m_Captions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     }
@@ -181,17 +189,17 @@ void Board::createStones() {
 // ---------------------------------------------------------------------------
 
 void Board::setupSavegame(const QList<QList<QList<quint8> > > &board) {
-  for (int nRow = 0; nRow < m_nNumOfFields; nRow++) {
-    for (int nCol = 0; nCol < m_nNumOfFields; nCol++) {
-      foreach (quint8 stone, board[nRow][nCol]) {
-        this->addStone(QPoint(nRow, nCol), stone);
+  for (int nRow = 0; nRow < m_NumOfFields.y(); nRow++) {
+    for (int nCol = 0; nCol < m_NumOfFields.x(); nCol++) {
+      foreach (quint8 stone, board[nCol][nRow]) {
+        this->addStone(QPoint(nCol, nRow), stone);
       }
     }
   }
 
   // Redraw board
-  this->update(QRectF(0, 0, m_nNumOfFields * m_nGridSize-1,
-                      m_nNumOfFields * m_nGridSize-1));
+  this->update(QRectF(0, 0, m_NumOfFields.x() * m_nGridSize-1,
+                      m_NumOfFields.y() * m_nGridSize-1));
 }
 
 // ---------------------------------------------------------------------------
@@ -255,12 +263,16 @@ QPoint Board::getGridField(const QPointF point) const {
   qint8 x(static_cast<qint8>(point.toPoint().x() / m_nGridSize));
   qint8 y(static_cast<qint8>(point.toPoint().y() / m_nGridSize));
 
-  if (x < 0 || y < 0 || x >= m_nNumOfFields || y >= m_nNumOfFields) {
+  if (x < 0 || y < 0 || x >= m_NumOfFields.x() || y >= m_NumOfFields.y()) {
     qWarning() << "Point out of grid! (" << x << "," << y << ")";
     if (x < 0) { x = 0; }
     if (y < 0) { y = 0; }
-    if (x >= m_nNumOfFields) { x = static_cast<qint8>(m_nNumOfFields - 1); }
-    if (y >= m_nNumOfFields) { y = static_cast<qint8>(m_nNumOfFields - 1); }
+    if (x >= m_NumOfFields.x()) {
+      x = static_cast<qint8>(m_NumOfFields.x() - 1);
+    }
+    if (y >= m_NumOfFields.y()) {
+      y = static_cast<qint8>(m_NumOfFields.y() - 1);
+    }
     qWarning() << "Changed point to (" << x << "," << y << ")";
   }
 
@@ -303,8 +315,8 @@ void Board::addStone(const QPoint field, const quint8 stone, const bool bAnim) {
 
   if (bAnim) {
     // Redraw board
-    this->update(QRectF(0, 0, m_nNumOfFields * m_nGridSize-1,
-                        m_nNumOfFields * m_nGridSize-1));
+    this->update(QRectF(0, 0, m_NumOfFields.x() * m_nGridSize-1,
+                        m_NumOfFields.y() * m_nGridSize-1));
   }
 }
 
@@ -371,8 +383,8 @@ void Board::removeStone(const QPoint field, const bool bAll) {
     m_Fields[field.x()][field.y()].removeLast();
   }
   // Redraw board
-  this->update(QRectF(0, 0, m_nNumOfFields * m_nGridSize-1,
-                      m_nNumOfFields * m_nGridSize-1));
+  this->update(QRectF(0, 0, m_NumOfFields.x() * m_nGridSize-1,
+                      m_NumOfFields.y() * m_nGridSize-1));
 }
 
 // ---------------------------------------------------------------------------
@@ -450,7 +462,7 @@ QList<QPoint> Board::checkNeighbourhood(const QPoint field) const {
 
   for (int y = field.y() - nMoves; y <= field.y() + nMoves; y += nMoves) {
     for (int x = field.x() - nMoves; x <= field.x() + nMoves; x += nMoves) {
-      if (x < 0 || y < 0 || x >= m_nNumOfFields || y >= m_nNumOfFields ||
+      if (x < 0 || y < 0 || x >= m_NumOfFields.x() || y >= m_NumOfFields.y() ||
           field == QPoint(x, y)) {
         continue;
       } else if (m_Fields[x][y].size() > 0) {
@@ -530,8 +542,8 @@ quint8 Board::findPossibleMoves(const bool bStonesLeft) {
   // 3 = stone can be set and tower can be moved
   quint8 nRet(0);
 
-  for (int y = 0; y < m_nNumOfFields; y++) {
-    for (int x = 0; x < m_nNumOfFields; x++) {
+  for (int y = 0; y < m_NumOfFields.y(); y++) {
+    for (int x = 0; x < m_NumOfFields.x(); x++) {
       if (0 == m_Fields[x][y].size() && bStonesLeft && 1 != nRet) {
         nRet++;
       }
@@ -553,8 +565,22 @@ quint8 Board::findPossibleMoves(const bool bStonesLeft) {
 
 void Board::printDebugFields() const {
   qDebug() << "BOARD:";
-  for (int i = 0; i < m_nNumOfFields; i++) {
-    qDebug() << m_Fields[0][i] << m_Fields[1][i] << m_Fields[2][i]
-        << m_Fields[3][i] << m_Fields[4][i];
+  QString sLine;
+  for (int nRow = 0; nRow < m_NumOfFields.y(); nRow++) {
+    sLine.clear();
+    for (int nCol = 0; nCol < m_NumOfFields.x(); nCol++) {
+      sLine += "(";
+      for (int tower = 0; tower < m_Fields[nCol][nRow].size(); tower++) {
+        sLine += QString::number(m_Fields[nCol][nRow].at(tower));
+        if (tower < m_Fields[nCol][nRow].size()-1) {
+          sLine += ", ";
+        }
+      }
+      sLine += ")";
+      if (nCol < m_NumOfFields.x()-1) {
+        sLine += " ";
+      }
+    }
+    qDebug() << sLine;
   }
 }

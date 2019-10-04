@@ -33,11 +33,11 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-OpponentJS::OpponentJS(const quint8 nID, const quint8 nNumOfFields,
+OpponentJS::OpponentJS(const quint8 nID, const QPoint NumOfFields,
                        const quint8 nHeightTowerWin, QObject *parent)
   : QObject(parent),
     m_nID(nID),
-    m_nNumOfFields(nNumOfFields),
+    m_NumOfFields(NumOfFields),
     m_nHeightTowerWin(nHeightTowerWin),
     m_jsEngine(new QJSEngine(parent)) {
   m_obj = m_jsEngine->globalObject();
@@ -78,7 +78,8 @@ bool OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
   }
 
   m_obj.setProperty(QStringLiteral("nID"), m_nID);
-  m_obj.setProperty(QStringLiteral("nNumOfFields"), m_nNumOfFields);
+  m_obj.setProperty(QStringLiteral("nNumOfFieldsX"), m_NumOfFields.x());
+  m_obj.setProperty(QStringLiteral("nNumOfFieldsY"), m_NumOfFields.y());
   m_obj.setProperty(QStringLiteral("nHeightTowerWin"), m_nHeightTowerWin);
   return true;
 }
@@ -113,15 +114,18 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
 
   if (1 == listRet.size()) {
     if (listRet[0].x() >= 0 && listRet[0].y() >= 0 &&
-        listRet[0].x() < m_nNumOfFields && listRet[0].y() < m_nNumOfFields) {
+        listRet[0].x() < m_NumOfFields.x() &&
+        listRet[0].y() < m_NumOfFields.y()) {
       emit setStone(listRet[0]);
       return;
     }
   } else if (3 == listRet.size()) {
     if (listRet[0].x() >= 0 && listRet[0].y() >= 0 &&
-        listRet[0].x() < m_nNumOfFields && listRet[0].y() < m_nNumOfFields &&
+        listRet[0].x() < m_NumOfFields.x() &&
+        listRet[0].y() < m_NumOfFields.y() &&
         listRet[1].x() >= 0 && listRet[1].y() >= 0 &&
-        listRet[1].x() < m_nNumOfFields && listRet[1].y() < m_nNumOfFields &&
+        listRet[1].x() < m_NumOfFields.x() &&
+        listRet[1].y() < m_NumOfFields.y() &&
         listRet[2].x() > 0 && listRet[2].x() < m_nHeightTowerWin) {
       emit moveTower(listRet[0], listRet[1], quint8(listRet[2].x()));
       return;
@@ -145,17 +149,17 @@ QJsonDocument OpponentJS::convertBoardToJSON(
   QVariantList vartower;
   QJsonArray jsBoard;
 
-  for (int nRow = 0; nRow < m_nNumOfFields; nRow++) {
-    QJsonArray line;
-    for (int nCol = 0; nCol < m_nNumOfFields; nCol++) {
+  for (int nCol = 0; nCol < m_NumOfFields.x(); nCol++) {
+    QJsonArray column;
+    for (int nRow = 0; nRow < m_NumOfFields.y(); nRow++) {
       vartower.clear();
-      foreach (quint8 n, board[nRow][nCol]) {
+      foreach (quint8 n, board[nCol][nRow]) {
         vartower << n;
       }
       tower = QJsonArray::fromVariantList(vartower);
-      line.append(tower);
+      column.append(tower);
     }
-    jsBoard.append(line);
+    jsBoard.append(column);
   }
 
   QJsonDocument jsDoc(jsBoard);

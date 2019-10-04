@@ -35,7 +35,8 @@
  */
 class Player {
  public:
-    Player(bool bActive, bool bIsHuman, QString &sName, quint8 nMaxStones);
+    Player(bool bActive, bool bIsHuman,
+           const QString &sName, quint8 nMaxStones);
     ~Player();
 
     void setActive(const bool bActive);

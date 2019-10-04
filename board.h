@@ -45,7 +45,7 @@ class Board : public QGraphicsScene {
   Q_OBJECT
 
  public:
-    Board(quint8 nNumOfFields, quint16 nGridSize, quint8 nMaxStones,
+    Board(QPoint NumOfFields, quint16 nGridSize, quint8 nMaxStones,
           Settings *pSettings);
 
     void setupSavegame(const QList<QList<QList<quint8> > > &board);
@@ -84,7 +84,7 @@ class Board : public QGraphicsScene {
     const quint16 m_nGridSize;
     const quint8 m_nMaxStones;
     Settings *m_pSettings;
-    const quint8 m_nNumOfFields;
+    const QPoint m_NumOfFields;
     QRect m_BoardRect;
     QGraphicsRectItem *m_pHighlightRect;
     QGraphicsRectItem *m_pSelectedField;

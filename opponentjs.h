@@ -36,7 +36,7 @@ class OpponentJS : public QObject {
 
  public:
     explicit OpponentJS(const quint8 nID,
-                        const quint8 nNumOfFields,
+                        const QPoint NumOfFields,
                         const quint8 nHeightTowerWin,
                         QObject *parent = nullptr);
     bool loadAndEvalCpuScript(const QString &sFilepath);
@@ -57,7 +57,7 @@ class OpponentJS : public QObject {
     QList<QPoint> evalMoveReturn(const QString &sReturn);
 
     const quint8 m_nID;
-    const quint8 m_nNumOfFields;
+    const QPoint m_NumOfFields;
     const quint8 m_nHeightTowerWin;
     QJSEngine *m_jsEngine;
     QJSValue m_obj;

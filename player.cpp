@@ -29,7 +29,8 @@
 #include <QDebug>
 #include <QMessageBox>
 
-Player::Player(bool bActive, bool bIsHuman, QString &sName, quint8 nMaxStones)
+Player::Player(bool bActive, bool bIsHuman,
+               const QString &sName, quint8 nMaxStones)
   : m_bIsActive(bActive),
     m_bIsHuman(bIsHuman),
     m_sName(sName),

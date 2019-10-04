@@ -26,7 +26,8 @@
  * Variables provided externally from game:
  * jsboard
  * nID (1 or 2 = player 1 / player 2)
- * nNumOfFields
+ * nNumOfFieldsX
+ * nNumOfFieldsY
  * nHeightTowerWin
  */
 
@@ -39,7 +40,7 @@ function makeMove(nPossible) {
   board = JSON.parse(jsboard);  // Global
   nPossibleMove = Number(nPossible);
   //cpu.log("[0][0][0]: " + board[0][0][0]);
-  //cpu.log("[1][0].length: " + board[1][0].length);
+  //cpu.log("[0][0].length: " + board[0][0].length);
 
   var MoveToWin = canWin(nID);
   if (0 !== MoveToWin.length) {  // CPU can win
@@ -91,7 +92,7 @@ function checkNeighbourhood(nFieldX, nFieldY) {
 
   for (var y = nFieldY - nMoves; y <= nFieldY + nMoves; y += nMoves) {
     for (var x = nFieldX - nMoves; x <= nFieldX + nMoves; x += nMoves) {
-      if (x < 0 || y < 0 || x >= nNumOfFields || y >= nNumOfFields ||
+      if (x < 0 || y < 0 || x >= nNumOfFieldsX || y >= nNumOfFieldsY ||
           (nFieldX === x && nFieldY === y)) {
         continue;
       } else if (board[x][y].length > 0) {
@@ -141,18 +142,18 @@ function checkNeighbourhood(nFieldX, nFieldY) {
 
 function canWin(nPlayerID) {
   var ret = [];
-  for (var nRow = 0; nRow < nNumOfFields; nRow++) {
-    for (var nCol = 0; nCol < nNumOfFields; nCol++) {
-      var neighbours = checkNeighbourhood(nRow, nCol);
-      // cpu.log("Check: " + (nRow+1) + "," + (nCol+1));
+  for (var nRow = 0; nRow < nNumOfFieldsY; nRow++) {
+    for (var nCol = 0; nCol < nNumOfFieldsX; nCol++) {
+      var neighbours = checkNeighbourhood(nCol, nRow);
+      // cpu.log("Check: " + (nCol+1) + "," + (nRow+1));
       // cpu.log("Neighbours: " + neighbours);
 
       for (var point = 0; point < neighbours.length; point++) {
         var tower = board[(neighbours[point])[0]][(neighbours[point])[1]];
-        if ((board[nRow][nCol].length + tower.length >= nHeightTowerWin) &&
+        if ((board[nCol][nRow].length + tower.length >= nHeightTowerWin) &&
             nPlayerID === tower[tower.length - 1]) {  // Top stone = own color
           var sMove = (neighbours[point])[0] + "," + (neighbours[point])[1] + "|" +
-              nRow + "," + nCol + "|" + tower.length;
+              nCol + "," + nRow + "|" + tower.length;
           ret.push(sMove);  // Generate list of all opponent winning moves
 
           if (nPlayerID === nID) {  // Return first found move for CPU to win
@@ -220,8 +221,8 @@ function preventWin(sMoveToWin, nPossibleMove) {
 function setRandom() {
   // Seed random?
   do {
-    var nRandX = Math.floor(Math.random() * nNumOfFields);
-    var nRandY = Math.floor(Math.random() * nNumOfFields);
+    var nRandX = Math.floor(Math.random() * nNumOfFieldsX);
+    var nRandY = Math.floor(Math.random() * nNumOfFieldsY);
   } while (0 !== board[nRandX][nRandY].length);
   
   return nRandX + "," + nRandY;
@@ -233,8 +234,8 @@ function setRandom() {
 function moveRandom(oppWinning) {
   var nCnt = 0;
   do {
-    var nRandX = Math.floor(Math.random() * nNumOfFields);
-    var nRandY = Math.floor(Math.random() * nNumOfFields);
+    var nRandX = Math.floor(Math.random() * nNumOfFieldsX);
+    var nRandY = Math.floor(Math.random() * nNumOfFieldsY);
     var neighbours = checkNeighbourhood(nRandX, nRandY);
 
     if (neighbours.length > 0) {
@@ -263,9 +264,9 @@ function moveRandom(oppWinning) {
 // ---------------------------------------------------------------------------
 
 function findFreeFields() {
-  for (var nRow = 0; nRow < nNumOfFields; nRow++) {
-    for (var nCol = 0; nCol < nNumOfFields; nCol++) {
-      if (0 === board[nRow][nCol].length) {
+  for (var nRow = 0; nRow < nNumOfFieldsY; nRow++) {
+    for (var nCol = 0; nCol < nNumOfFieldsX; nCol++) {
+      if (0 === board[nCol][nRow].length) {
         return true;
       }
     }
