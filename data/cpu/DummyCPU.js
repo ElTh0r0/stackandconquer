@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2018 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
  *
  * This file is part of StackAndConquer.
  *
@@ -126,7 +126,7 @@ function checkNeighbourhood(nFieldX, nFieldY) {
           }
         }
 
-        if (false == bBreak) {
+        if (false === bBreak) {
           var point = [x, y];
           neighbours.push(point);
         }

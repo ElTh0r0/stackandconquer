@@ -452,7 +452,10 @@ void StackAndConquer::showInfoBox() {
              "GNU General Public License Version 3</a>",
              tr("This application uses icons from "
                 "<a href=\"http://tango.freedesktop.org\">"
-                "Tango project</a>."),
+                "Tango project</a>.") + "<br/>" +
+             tr("The game is based on "
+                "<a href=\"https://spielstein.com/games/mixtour\">"
+                "Mixtour</a> by Dieter Stein."),
              "<i>" + tr("Translations") +
              "</i><br />"
              "&nbsp;&nbsp;- Dutch: Vistaus<br />"
