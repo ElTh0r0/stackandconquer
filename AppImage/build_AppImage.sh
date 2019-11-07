@@ -19,8 +19,11 @@ cp ./res/images/stackandconquer_64x64.png ./appdir/stackandconquer.png
 ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -appimage -bundle-non-qt-libs
 find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
 
-echo "Uploading to:"
-curl --upload-file StackAndConquer-$VERSION-x86_64.AppImage https://transfer.sh/StackAndConquer-$VERSION-x86_64.AppImage
+echo "Uploading..."
+ffsend upload StackAndConquer-$VERSION-x86_64.AppImage
+ffsend upload StackAndConquer-$VERSION-x86_64.AppImage
+ffsend upload StackAndConquer-$VERSION-x86_64.AppImage
+##curl --upload-file StackAndConquer-$VERSION-x86_64.AppImage https://transfer.sh/StackAndConquer-$VERSION-x86_64.AppImage
 echo ""
 
 echo "Done!"
