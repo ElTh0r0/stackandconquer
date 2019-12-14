@@ -73,7 +73,8 @@ RESOURCES    += res/stackandconquer_resources.qrc \
 win32:RC_FILE = res/stackandconquer_win.rc
 
 TRANSLATIONS += lang/stackandconquer_de.ts \
-                lang/stackandconquer_nl.ts
+                lang/stackandconquer_nl.ts \
+                lang/stackandconquer_it.ts
 
 macx {
   ICON               = res/images/icon.icns
