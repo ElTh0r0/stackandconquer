@@ -156,7 +156,6 @@ void Board::drawBoard() {
   quint16 y(0);
   quint8 col(65);
   quint8 row(0);
-  m_boardPath.clear();
 
   for (int i = 0; i < m_Board.size(); i++) {
     if (0 == i % m_BoardDimension.x()) {  // Start of new col
