@@ -31,6 +31,7 @@
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QMessageBox>
 #include <QTimer>
 
@@ -103,10 +104,11 @@ bool Board::loadBoard(const QString &sBoard) {
 
   QByteArray boardData = fBoard.readAll();
   QJsonDocument loadDoc(QJsonDocument::fromJson(boardData));
+  QJsonObject jso = loadDoc.object();
   if (loadDoc.isEmpty() ||
-      loadDoc["Board"].isUndefined() || !loadDoc["Board"].isArray() ||
-      loadDoc["Columns"].isUndefined() || !loadDoc["Columns"].isDouble() ||
-      loadDoc["Rows"].isUndefined() || !loadDoc["Rows"].isDouble()) {
+      jso.value("Board").isUndefined() || !jso.value("Board").isArray() ||
+      jso.value("Columns").isUndefined() || !jso.value("Columns").isDouble() ||
+      jso.value("Rows").isUndefined() || !jso.value("Rows").isDouble()) {
     //TODO(): Extent check for all neeeded sections
     qWarning() << "Board file doesn't contain all required sections!" << sBoard;
     QMessageBox::critical(nullptr, tr("Warning"),
@@ -115,7 +117,7 @@ bool Board::loadBoard(const QString &sBoard) {
   }
 
   QString s;
-  foreach (QJsonValue js, loadDoc["Board"].toArray()) {
+  foreach (QJsonValue js, jso.value("Board").toArray()) {
     s = js.toString().trimmed();
     if (js.isNull() || s.isEmpty() || (sOUT != s && sIN != s)) {
       qWarning() << "Board array contains invalid data:" << s;
@@ -127,8 +129,8 @@ bool Board::loadBoard(const QString &sBoard) {
     m_Board << s;
   }
 
-  m_BoardDimension.setX(loadDoc["Columns"].toInt());
-  m_BoardDimension.setY(loadDoc["Rows"].toInt());
+  m_BoardDimension.setX(jso.value("Columns").toInt());
+  m_BoardDimension.setY(jso.value("Rows").toInt());
 
   if (0 == m_BoardDimension.x() || 0 == m_BoardDimension.y()) {
     qWarning() << "Board file contains invalid dimension:" << m_BoardDimension;
