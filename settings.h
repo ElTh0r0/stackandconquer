@@ -63,7 +63,6 @@ class Settings : public QDialog {
     QColor getAnimateColor() const;
     QColor getAnimateBorderColor() const;
     QColor getBgBoardColor() const;
-    QColor getOutlineBoardColor() const;
     QColor getGridBoardColor() const;
     QColor GetNeighboursColor() const;
     QColor GetNeighboursBorderColor() const;
@@ -106,7 +105,6 @@ class Settings : public QDialog {
     QColor m_animateColor;
     QColor m_animateBorderColor;
     QColor m_bgBoardColor;
-    QColor m_outlineBoardColor;
     QColor m_gridBoardColor;
     QColor m_neighboursColor;
     QColor m_neighboursBorderColor;

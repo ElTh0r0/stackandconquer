@@ -212,8 +212,6 @@ void Settings::accept() {
                         m_animateBorderColor.name());
   m_pSettings->setValue(QStringLiteral("BgBoardColor"),
                         m_bgBoardColor.name());
-  m_pSettings->setValue(QStringLiteral("OutlineBoardColor"),
-                        m_outlineBoardColor.name());
   m_pSettings->setValue(QStringLiteral("GridBoardColor"),
                         m_gridBoardColor.name());
   m_pSettings->setValue(QStringLiteral("NeighboursColor"),
@@ -246,6 +244,9 @@ void Settings::accept() {
       return;
     }
   }
+
+  // Remove deprecated settings
+  m_pSettings->remove(QStringLiteral("Colors/OutlineBoardColor"));
 
   QDialog::accept();
 }
@@ -337,8 +338,6 @@ void Settings::readSettings() {
                                          QStringLiteral("#000000"));
   m_bgBoardColor = this->readColor(QStringLiteral("BgBoardColor"),
                                    QStringLiteral("#FFFFFF"));
-  m_outlineBoardColor = this->readColor(QStringLiteral("OutlineBoardColor"),
-                                        QStringLiteral("#2E3436"));
   m_gridBoardColor = this->readColor(QStringLiteral("GridBoardColor"),
                                      QStringLiteral("#888A85"));
   m_neighboursColor = this->readColor(QStringLiteral("NeighboursColor"),
@@ -464,9 +463,6 @@ QColor Settings::getAnimateBorderColor() const {
 }
 QColor Settings::getBgBoardColor() const {
   return m_bgBoardColor;
-}
-QColor Settings::getOutlineBoardColor() const {
-  return m_outlineBoardColor;
 }
 QColor Settings::getGridBoardColor() const {
   return m_gridBoardColor;

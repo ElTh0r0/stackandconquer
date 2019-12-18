@@ -83,6 +83,7 @@ class StackAndConquer : public QMainWindow {
                           const QString &sPath = QString());
     void setupMenu();
     void setupGraphView();
+    void resizeEvent(QResizeEvent *pEvent);
 
     Ui::StackAndConquer *m_pUi;
     const QDir m_userDataDir;

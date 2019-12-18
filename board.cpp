@@ -28,17 +28,26 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
 #include <QMessageBox>
 #include <QTimer>
 
 Board::Board(QPoint NumOfFields, quint16 nGridSize,
              quint8 nMaxStones, Settings *pSettings)
-  : m_nGridSize(nGridSize),
+  : sIN("0"),
+    sOUT("#"),
+    m_nGridSize(nGridSize),
     m_nMaxStones(nMaxStones),
     m_pSettings(pSettings),
     m_NumOfFields(NumOfFields),
     m_pSvgRenderer(nullptr) {
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
+
+//  this->loadBoard("./square_2x2.stackboard");
+  this->loadBoard("./square_5x5.stackboard");
+//  this->loadBoard("./triangle.stackboard");
 
   this->drawBoard();
   this->createHighlighters();
@@ -50,6 +59,9 @@ Board::Board(QPoint NumOfFields, quint16 nGridSize,
    * for generating the board is "column by column" and NOT "row by row":
    * m_Fields[nCol] "contains" nRow x elements
    */
+
+  // TODO(): Implement new board array!
+
   QList<quint8> tower;
   QList<QList<quint8> > column;
   column.reserve(m_NumOfFields.y());
@@ -73,51 +85,111 @@ Board::Board(QPoint NumOfFields, quint16 nGridSize,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
+bool Board::loadBoard(const QString &sBoard) {
+  QFile fBoard(sBoard);
+  if (!fBoard.exists()) {
+    qWarning() << "Board cannot be loaded:" << sBoard;
+    QMessageBox::critical(nullptr, tr("Warning"),
+                         tr("Error while opening board file!"));
+    return false;
+  }
+
+  if (!fBoard.open(QIODevice::ReadOnly)) {
+    qWarning() << "Couldn't open open board file:" << sBoard;
+    QMessageBox::critical(nullptr, tr("Warning"),
+                         tr("Error while opening board file!"));
+    return false;
+  }
+
+  QByteArray boardData = fBoard.readAll();
+  QJsonDocument loadDoc(QJsonDocument::fromJson(boardData));
+  if (loadDoc.isEmpty() ||
+      loadDoc["Board"].isUndefined() || !loadDoc["Board"].isArray() ||
+      loadDoc["Columns"].isUndefined() || !loadDoc["Columns"].isDouble() ||
+      loadDoc["Rows"].isUndefined() || !loadDoc["Rows"].isDouble()) {
+    //TODO(): Extent check for all neeeded sections
+    qWarning() << "Board file doesn't contain all required sections!" << sBoard;
+    QMessageBox::critical(nullptr, tr("Warning"),
+                         tr("Error while opening board file!"));
+    return false;
+  }
+
+  QString s;
+  foreach (QJsonValue js, loadDoc["Board"].toArray()) {
+    s = js.toString().trimmed();
+    if (js.isNull() || s.isEmpty() || (sOUT != s && sIN != s)) {
+      qWarning() << "Board array contains invalid data:" << s;
+      qWarning() << "Board:" << sBoard;
+      QMessageBox::critical(nullptr, tr("Warning"),
+                           tr("Error while opening board file!"));
+      return false;
+    }
+    m_Board << s;
+  }
+
+  m_BoardDimension.setX(loadDoc["Columns"].toInt());
+  m_BoardDimension.setY(loadDoc["Rows"].toInt());
+
+  if (0 == m_BoardDimension.x() || 0 == m_BoardDimension.y()) {
+    qWarning() << "Board file contains invalid dimension:" << m_BoardDimension;
+    qWarning() << "Board:" << sBoard;
+    QMessageBox::critical(nullptr, tr("Warning"),
+                         tr("Error while opening board file!"));
+    return false;
+  }
+
+  //TODO(): Add all fields from json file
+
+  qDebug() << "Board dimensions:" << m_BoardDimension.x() << "columns x"
+           << m_BoardDimension.y() << "rows";
+
+  return true;
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 void Board::drawBoard() {
-  m_BoardRect.setTopLeft(QPoint(0, 0));
-  m_BoardRect.setBottomRight(QPoint(m_NumOfFields.x() * m_nGridSize -1,
-                                    m_NumOfFields.y() * m_nGridSize -1));
+  quint16 x(0);
+  quint16 y(0);
+  quint8 col(65);
+  quint8 row(0);
+  m_boardPath.clear();
 
-  // Draw board
-  QPen linePen(m_pSettings->getOutlineBoardColor());
-  this->addRect(m_BoardRect, linePen, QBrush(m_pSettings->getBgBoardColor()));
-
-  // Draw lines
-  QLineF lineGrid;
-  linePen.setColor(m_pSettings->getGridBoardColor());
-  // Horizontal
-  for (int nRow = 0; nRow < m_NumOfFields.y(); nRow++) {
-    if (nRow > 0) {
-      lineGrid.setPoints(QPointF(1, nRow*m_nGridSize),
-                         QPointF(m_BoardRect.width()-1, nRow*m_nGridSize));
-      this->addLine(lineGrid, linePen);
+  for (int i = 0; i < m_Board.size(); i++) {
+    if (0 == i % m_BoardDimension.x()) {  // Start of new col
+      x = 0;
+      col = 65;
+    } else {
+      x += m_nGridSize;
+      col++;
+    }
+    if (0 == i % m_BoardDimension.y()) {  // New row
+      y += m_nGridSize;
+      row++;
+    }
+    if (sOUT == m_Board[i]) {
+      continue;
     }
 
-    // Captions y-axis (vertical)
+    m_listFields << new QGraphicsRectItem(x, y, m_nGridSize, m_nGridSize);
+    m_listFields.last()->setBrush(QBrush(m_pSettings->getBgBoardColor()));
+    m_listFields.last()->setPen(QPen(m_pSettings->getGridBoardColor()));
+    m_listFields.last()->setAcceptHoverEvents(true);
+    m_boardPath.addRect(m_listFields.last()->rect());
+    this->addItem(m_listFields.last());
+
+    // Field captions for debugging
     if (qApp->arguments().contains(QStringLiteral("--debug"))) {
-      m_Captions << this->addSimpleText(QString::number(nRow+1));
-      m_Captions.last()->setPos(-m_nGridSize/1.75,
-                                nRow*m_nGridSize+m_nGridSize/8);
+      m_Captions << this->addSimpleText(
+                      QString(static_cast<char>(col)) + QString::number(row));
+      m_Captions.last()->setPos(x+2, y + m_nGridSize - m_nGridSize/3);
       m_Captions.last()->setFont(QFont(QStringLiteral("Arial"), m_nGridSize/5));
-      m_Captions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     }
   }
-  // Vertical
-  for (int nCol = 0; nCol < m_NumOfFields.x(); nCol++) {
-    if (nCol > 0) {
-      lineGrid.setPoints(QPointF(nCol*m_nGridSize, 1),
-                         QPointF(nCol*m_nGridSize, m_BoardRect.height()-1));
-      this->addLine(lineGrid, linePen);
-    }
 
-    // Captions x-axis (horizontal)
-    if (qApp->arguments().contains(QStringLiteral("--debug"))) {
-      m_Captions << this->addSimpleText(QString(static_cast<char>(nCol + 65)));
-      m_Captions.last()->setPos(nCol*m_nGridSize, -m_nGridSize/2);
-      m_Captions.last()->setFont(QFont(QStringLiteral("Arial"), m_nGridSize/5));
-      m_Captions.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    }
-  }
+  // TODO(): Might need adjustments for non rectangular shapes!
+  this->setSceneRect(this->itemsBoundingRect());
 }
 
 // ---------------------------------------------------------------------------
@@ -206,14 +278,12 @@ void Board::setupSavegame(const QList<QList<QList<quint8> > > &board) {
 // ---------------------------------------------------------------------------
 
 void Board::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
-  // Check, if mouse is inside the board rectangle (+1/-1 for border line)
-  static QRectF board(m_BoardRect.topLeft() + QPoint(1, 1),
-                      m_BoardRect.bottomRight() - QPoint(1, 1));
-
-  if (board.contains(p_Event->scenePos())) {
+  if (m_boardPath.contains(p_Event->scenePos())) {
     // qDebug() << "Mouse POS:" << p_Event->scenePos();
     // qDebug() << "SNAP:" << this->snapToGrid(p_Event->scenePos());
     // qDebug() << "GRID:" << this->getGridField(p_Event->scenePos());
+
+    // TODO(): Implement new board array!
 
     // Place tower, if field is empty
     if (this->getField(this->getGridField(p_Event->scenePos())).isEmpty()) {
@@ -232,11 +302,8 @@ void Board::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
 
 void Board::mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event) {
   static QPointF point;
-  // Check, if mouse is inside the board rectangle (+1/-1 for border line)
-  static QRectF board(m_BoardRect.topLeft() + QPoint(1, 1),
-                      m_BoardRect.bottomRight() - QPoint(1, 1));
 
-  if (board.contains(p_Event->scenePos())) {
+  if (m_boardPath.contains(p_Event->scenePos())) {
     m_pHighlightRect->setVisible(true);
     point = p_Event->scenePos();
     point = QPointF(point.x() - m_nGridSize/2, point.y() - m_nGridSize/2);

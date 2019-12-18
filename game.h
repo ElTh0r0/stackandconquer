@@ -37,7 +37,6 @@ class Game : public QObject {
  public:
     explicit Game(Settings *pSettings, const QStringList &sListFiles);
     QGraphicsScene* getScene() const;
-    QRectF getSceneRect() const;
     bool saveGame(const QString &sFile);
     void updatePlayers(bool bInitial = false);
     bool initCpu();

@@ -215,10 +215,17 @@ void StackAndConquer::setupGraphView() {
   m_pLayout->addWidget(m_plblP2Won, 2, 2, 1, 1);
   m_pLayout->addWidget(m_plblIconWin2, 2, 3, 1, 1);
 
-  m_pFrame->setMinimumWidth(this->width());
+  m_pFrame->setFixedWidth(this->width());
   m_pFrame->setLayout(m_pLayout);
   m_pLayout->setColumnStretch(1, 1);
   m_pLayout->setColumnStretch(2, 1);
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
+  m_pFrame->setFixedWidth(pEvent->size().width());
 }
 
 // ---------------------------------------------------------------------------
@@ -245,7 +252,7 @@ void StackAndConquer::startNewGame(const QStringList &sListArgs) {
           this, &StackAndConquer::highlightActivePlayer);
 
   m_pGraphView->setScene(m_pGame->getScene());
-  m_pGraphView->updateSceneRect(m_pGame->getSceneRect());
+  m_pGraphView->updateSceneRect(m_pGame->getScene()->sceneRect());
   m_pGraphView->setInteractive(true);
 
   if (!m_pGame->initCpu()) {

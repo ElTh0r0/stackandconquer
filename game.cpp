@@ -148,8 +148,6 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
         board.append(column);
       }
 
-      qDebug() << "Board size:" << m_NumOfFields.x() << "columns x"
-               << m_NumOfFields.y() << "rows";
       m_pBoard = new Board(m_NumOfFields, m_nGridSize,
                            m_nMaxStones, m_pSettings);
       m_pBoard->setupSavegame(board);
@@ -273,12 +271,6 @@ void Game::caughtScriptError() {
 
 QGraphicsScene* Game::getScene() const {
   return m_pBoard;
-}
-
-QRectF Game::getSceneRect() const {
-  return QRectF(0, 0,
-                m_NumOfFields.x() * m_nGridSize-1,
-                m_NumOfFields.y() * m_nGridSize-1);
 }
 
 // ---------------------------------------------------------------------------

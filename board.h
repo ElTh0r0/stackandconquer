@@ -72,6 +72,7 @@ class Board : public QGraphicsScene {
     void resetAnimation2();
 
  private:
+    bool loadBoard(const QString &sBoard);
     void drawBoard();
     void createHighlighters();
     void createStones();
@@ -81,11 +82,18 @@ class Board : public QGraphicsScene {
     QPoint getGridField(const QPointF point) const;
     void highlightNeighbourhood(const QList<QPoint> &neighbours);
 
+    QList<QString> m_Board;
+    const QString sIN;
+    const QString sOUT;
+    QPoint m_BoardDimension;
+
+    QList<QGraphicsRectItem *> m_listFields;
+    QPainterPath m_boardPath;
+
     const quint16 m_nGridSize;
     const quint8 m_nMaxStones;
     Settings *m_pSettings;
     const QPoint m_NumOfFields;
-    QRect m_BoardRect;
     QGraphicsRectItem *m_pHighlightRect;
     QGraphicsRectItem *m_pSelectedField;
     QGraphicsRectItem *m_pAnimateField;
