@@ -16,7 +16,7 @@ BEGIN
             VALUE "FileDescription",    "Challenging tower conquest board game\0"
             VALUE "FileVersion",        "0.9.0\0"
             VALUE "InternalName",       "StackAndConquer\0"
-            VALUE "LegalCopyright",     "Copyright (c) 2015-2019 Thorsten Roth\0"
+            VALUE "LegalCopyright",     "Copyright (c) 2015-2020 Thorsten Roth\0"
             VALUE "OriginalFilename",   "StackAndConquer.exe\0"
             VALUE "ProductName",        "StackAndConquer\0"
             VALUE "ProductVersion",     "0.9.0\0"
