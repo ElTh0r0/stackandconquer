@@ -36,10 +36,10 @@ class Game : public QObject {
 
  public:
     explicit Game(Settings *pSettings, const QStringList &sListFiles);
-    QGraphicsScene* getScene() const;
-    bool saveGame(const QString &sFile);
+    auto getScene() const -> QGraphicsScene*;
+    auto saveGame(const QString &sFile) -> bool;
     void updatePlayers(bool bInitial = false);
-    bool initCpu();
+    auto initCpu() -> bool;
 
  signals:
     void updateNameP1(const QString &sName);
@@ -65,9 +65,9 @@ class Game : public QObject {
  private:
     void createCPU1();
     void createCPU2();
-    QJsonObject loadGame(const QString &sFile);
+    static auto loadGame(const QString &sFile) -> QJsonObject;
     void checkPossibleMoves();
-    bool checkPreviousMoveReverted(const QString &sMove);
+    auto checkPreviousMoveReverted(const QString &sMove) -> bool;
     void checkTowerWin(QPoint field);
     void returnStones(QPoint field);
 

@@ -66,8 +66,7 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
   this->checkCmdArgs(sListArgs);
 }
 
-StackAndConquer::~StackAndConquer() {
-}
+StackAndConquer::~StackAndConquer() = default;
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -75,7 +74,7 @@ StackAndConquer::~StackAndConquer() {
 void StackAndConquer::checkCmdArgs(const QStringList &sListArgs) {
   // Choose CPU script(s) or load game from command line
   QStringList sListTemp;
-  if (sListArgs.size() > 0) {
+  if (!sListArgs.isEmpty()) {
     for (int i = 0; i < sListArgs.size(); i++) {
       // Load save game
       if (sListArgs.at(i).endsWith(QStringLiteral(".stacksav"),
@@ -84,16 +83,16 @@ void StackAndConquer::checkCmdArgs(const QStringList &sListArgs) {
           sListTemp.clear();
           sListTemp << sListArgs[i];
           break;
-        } else {
-          qWarning() << "Specified JS file not found:" << sListArgs[i];
-          QMessageBox::warning(this, tr("Warning"),
-                               tr("Specified file not found:") + "\n" +
-                               sListArgs[i]);
-          sListTemp.clear();
-          break;
         }
-      } else if (sListArgs.at(i).endsWith(QStringLiteral(".js"),
-                                          Qt::CaseInsensitive)) {
+        qWarning() << "Specified JS file not found:" << sListArgs[i];
+        QMessageBox::warning(this, tr("Warning"),
+                             tr("Specified file not found:") + "\n" +
+                             sListArgs[i]);
+        sListTemp.clear();
+        break;
+      }
+      if (sListArgs.at(i).endsWith(QStringLiteral(".js"),
+                                   Qt::CaseInsensitive)) {
         // Load CPU script(s)
         if (QFile::exists(sListArgs.at(i))) {
           if (2 == sListTemp.size()) {
@@ -232,9 +231,7 @@ void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::startNewGame(const QStringList &sListArgs) {
-  if (nullptr != m_pGame) {
-    delete m_pGame;
-  }
+  delete m_pGame;
   m_pGame = new Game(m_pSettings, sListArgs);
 
   connect(m_pGame, &Game::updateNameP1, m_plblPlayer1, &QLabel::setText);
@@ -315,7 +312,8 @@ void StackAndConquer::highlightActivePlayer(const bool bPlayer1,
     m_pUi->statusBar->showMessage(
           tr("%1 won the game!").arg(m_plblPlayer1->text()));
     return;
-  } else if (bP2Won) {
+  }
+  if (bP2Won) {
     m_pUi->statusBar->showMessage(
           tr("%1 won the game!").arg(m_plblPlayer2->text()));
     return;
@@ -340,16 +338,16 @@ void StackAndConquer::highlightActivePlayer(const bool bPlayer1,
 void StackAndConquer::loadLanguage(const QString &sLang) {
   if (m_sCurrLang != sLang) {
     m_sCurrLang = sLang;
-    if (!this->switchTranslator(&m_translatorQt, "qt_" + sLang,
-                                QLibraryInfo::location(
-                                  QLibraryInfo::TranslationsPath))) {
-      this->switchTranslator(&m_translatorQt, "qt_" + sLang,
-                             m_sSharePath + "/lang");
+    if (!StackAndConquer::switchTranslator(&m_translatorQt, "qt_" + sLang,
+                                           QLibraryInfo::location(
+                                             QLibraryInfo::TranslationsPath))) {
+      StackAndConquer::switchTranslator(&m_translatorQt, "qt_" + sLang,
+                                        m_sSharePath + "/lang");
     }
-    if (!this->switchTranslator(
+    if (!StackAndConquer::switchTranslator(
           &m_translator,
            ":/" + qApp->applicationName().toLower() + "_" + sLang + ".qm")) {
-      this->switchTranslator(
+      StackAndConquer::switchTranslator(
             &m_translator, qApp->applicationName().toLower() + "_" + sLang,
             m_sSharePath + "/lang");
     }
@@ -359,9 +357,9 @@ void StackAndConquer::loadLanguage(const QString &sLang) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool StackAndConquer::switchTranslator(QTranslator *translator,
+auto StackAndConquer::switchTranslator(QTranslator *translator,
                                        const QString &sFile,
-                                       const QString &sPath) {
+                                       const QString &sPath) -> bool {
   qApp->removeTranslator(translator);
   if (translator->load(sFile, sPath)) {
     qApp->installTranslator(translator);
@@ -380,15 +378,15 @@ bool StackAndConquer::switchTranslator(QTranslator *translator,
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::showRules() {
-  QDialog* dialog = new QDialog(this, this->windowFlags()
-                                & ~Qt::WindowContextHelpButtonHint);
-  QGridLayout* layout = new QGridLayout(dialog);
+  auto *dialog = new QDialog(this, this->windowFlags()
+                             & ~Qt::WindowContextHelpButtonHint);
+  auto *layout = new QGridLayout(dialog);
   dialog->setWindowTitle(tr("Rules"));
   dialog->setMinimumSize(700, 450);
 
-  QTextEdit* textEdit = new QTextEdit;
+  auto *textEdit = new QTextEdit;
   textEdit->setReadOnly(true);
-  QLabel* credits = new QLabel;
+  auto *credits = new QLabel;
   credits->setOpenExternalLinks(true);
 
   layout->setContentsMargins(2, 2, 2, 2);
@@ -427,7 +425,7 @@ void StackAndConquer::showRules() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void StackAndConquer::reportBug() const {
+void StackAndConquer::reportBug() {
   QDesktopServices::openUrl(
         QUrl(
           QStringLiteral("https://github.com/ElTh0r0/stackandconquer/issues")));

@@ -39,12 +39,12 @@ class OpponentJS : public QObject {
                         const QPoint NumOfFields,
                         const quint8 nHeightTowerWin,
                         QObject *parent = nullptr);
-    bool loadAndEvalCpuScript(const QString &sFilepath);
+    auto loadAndEvalCpuScript(const QString &sFilepath) -> bool;
 
  public slots:
     void makeMoveCpu(const QList<QList<QList<quint8> > > &board,
                      const quint8 nPossibleMove);
-    void log(const QString &sMsg) const;
+    static void log(const QString &sMsg);
 
  signals:
     void setStone(QPoint field);
@@ -52,9 +52,9 @@ class OpponentJS : public QObject {
     void scriptError();
 
  private:
-    QJsonDocument convertBoardToJSON(
-        const QList<QList<QList<quint8> > > &board);
-    QList<QPoint> evalMoveReturn(const QString &sReturn);
+    auto convertBoardToJSON(
+        const QList<QList<QList<quint8> > > &board) -> QJsonDocument;
+    static auto evalMoveReturn(const QString &sReturn) -> QList<QPoint>;
 
     const quint8 m_nID;
     const QPoint m_NumOfFields;

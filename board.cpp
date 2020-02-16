@@ -86,7 +86,7 @@ Board::Board(QPoint NumOfFields, quint16 nGridSize,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool Board::loadBoard(const QString &sBoard) {
+auto Board::loadBoard(const QString &sBoard) -> bool {
   QFile fBoard(sBoard);
   if (!fBoard.exists()) {
     qWarning() << "Board cannot be loaded:" << sBoard;
@@ -231,8 +231,8 @@ void Board::createHighlighters() {
 // ---------------------------------------------------------------------------
 
 void Board::createStones() {
-  QSvgRenderer *m_pSvgRenderer = new QSvgRenderer(
-                                   QStringLiteral(":/images/stones.svg"));
+  auto *m_pSvgRenderer = new QSvgRenderer(
+                           QStringLiteral(":/images/stones.svg"));
   // Create a few more than maximum of stones because of wrong
   // order during move tower add/remove
   for (int i = 0; i < m_nMaxStones + 4; i++) {
@@ -319,7 +319,7 @@ void Board::mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QPointF Board::snapToGrid(const QPointF point) const {
+auto Board::snapToGrid(const QPointF point) const -> QPointF {
   return QPointF(qRound(point.x() / m_nGridSize) * m_nGridSize,
                  qRound(point.y() / m_nGridSize) * m_nGridSize);
 }
@@ -327,7 +327,7 @@ QPointF Board::snapToGrid(const QPointF point) const {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QPoint Board::getGridField(const QPointF point) const {
+auto Board::getGridField(const QPointF point) const -> QPoint {
   qint8 x(static_cast<qint8>(point.toPoint().x() / m_nGridSize));
   qint8 y(static_cast<qint8>(point.toPoint().y() / m_nGridSize));
 
@@ -351,7 +351,7 @@ QPoint Board::getGridField(const QPointF point) const {
 // ---------------------------------------------------------------------------
 
 void Board::addStone(const QPoint field, const quint8 stone, const bool bAnim) {
-  quint8 nExisting(static_cast<quint8>(m_Fields[field.x()][field.y()].size()));
+  auto nExisting(static_cast<quint8>(m_Fields[field.x()][field.y()].size()));
 
   if (1 == stone) {
     m_Fields[field.x()][field.y()].append(stone);
@@ -420,11 +420,13 @@ void Board::resetAnimation2() {
 // ---------------------------------------------------------------------------
 
 void Board::removeStone(const QPoint field, const bool bAll) {
-  if (0 == m_Fields[field.x()][field.y()].size()) {
+  if (m_Fields[field.x()][field.y()].isEmpty()) {
     qWarning() << "Trying to remove stone from empty field" << field;
     QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
     return;
-  } else if (bAll) {  // Remove all (tower conquered)
+  }
+
+  if (bAll) {  // Remove all (tower conquered)
     foreach (quint8 i, m_Fields[field.x()][field.y()]) {
       // Foreach starts at the beginning of the list
       if (1 == i) {  // Player 1
@@ -458,14 +460,14 @@ void Board::removeStone(const QPoint field, const bool bAll) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QList<QList<QList<quint8> > > Board::getBoard() const {
+auto Board::getBoard() const -> QList<QList<QList<quint8> > > {
   return m_Fields;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QList<quint8> Board::getField(const QPoint field) const {
+auto Board::getField(const QPoint field) const -> QList<quint8> {
   return m_Fields[field.x()][field.y()];
 }
 
@@ -486,32 +488,32 @@ void Board::selectField(const QPointF point) {
     this->highlightNeighbourhood(neighbours);
     // qDebug() << "Deselected";
     return;
-  } else {
-    QPoint field = this->getGridField(point);
-    if (currentField == field ||
-        0 == m_Fields[field.x()][field.y()].size()) {
-      currentField = QPoint(-1, -1);
-      m_pSelectedField->setVisible(false);
-      this->highlightNeighbourhood(neighbours);
-      // qDebug() << "Deselected";
-      return;
-    }
-    neighbours = this->checkNeighbourhood(currentField);
-    if (neighbours.contains(field) && m_pSelectedField->isVisible()) {  // Move
-      neighbours.clear();
-      this->highlightNeighbourhood(neighbours);
-      m_pSelectedField->setVisible(false);
-      this->startAnimation2(field);
-      emit moveTower(field, currentField, 0);
-      currentField = QPoint(-1, -1);
-    } else {  // Select
-      currentField = field;
-      m_pSelectedField->setVisible(true);
-      m_pSelectedField->setPos(pointSnap);
-      if (m_pSettings->getShowPossibleMoveTowers()) {
-        this->highlightNeighbourhood(
-              this->checkNeighbourhood(currentField));
-      }
+  }
+
+  QPoint field = this->getGridField(point);
+  if (currentField == field || m_Fields[field.x()][field.y()].isEmpty()) {
+    currentField = QPoint(-1, -1);
+    m_pSelectedField->setVisible(false);
+    this->highlightNeighbourhood(neighbours);
+    // qDebug() << "Deselected";
+    return;
+  }
+
+  neighbours = this->checkNeighbourhood(currentField);
+  if (neighbours.contains(field) && m_pSelectedField->isVisible()) {  // Move
+    neighbours.clear();
+    this->highlightNeighbourhood(neighbours);
+    m_pSelectedField->setVisible(false);
+    this->startAnimation2(field);
+    emit moveTower(field, currentField, 0);
+    currentField = QPoint(-1, -1);
+  } else {  // Select
+    currentField = field;
+    m_pSelectedField->setVisible(true);
+    m_pSelectedField->setPos(pointSnap);
+    if (m_pSettings->getShowPossibleMoveTowers()) {
+      this->highlightNeighbourhood(
+            this->checkNeighbourhood(currentField));
     }
   }
 }
@@ -519,13 +521,13 @@ void Board::selectField(const QPointF point) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QList<QPoint> Board::checkNeighbourhood(const QPoint field) const {
+auto Board::checkNeighbourhood(const QPoint field) const -> QList<QPoint> {
   QList<QPoint> neighbours;
   if (QPoint(-1, -1) == field) {
     return neighbours;
   }
 
-  quint8 nMoves = static_cast<quint8>(m_Fields[field.x()][field.y()].size());
+  auto nMoves = static_cast<quint8>(m_Fields[field.x()][field.y()].size());
   // qDebug() << "Selected:" << field << "- Moves:" << nMoves;
 
   for (int y = field.y() - nMoves; y <= field.y() + nMoves; y += nMoves) {
@@ -533,7 +535,8 @@ QList<QPoint> Board::checkNeighbourhood(const QPoint field) const {
       if (x < 0 || y < 0 || x >= m_NumOfFields.x() || y >= m_NumOfFields.y() ||
           field == QPoint(x, y)) {
         continue;
-      } else if (m_Fields[x][y].size() > 0) {
+      }
+      if (!m_Fields[x][y].isEmpty()) {
         // Check for blocking towers in between
         QPoint check(x, y);
         // qDebug() << "POSSIBLE:" << check;
@@ -558,14 +561,14 @@ QList<QPoint> Board::checkNeighbourhood(const QPoint field) const {
           }
 
           // qDebug() << "Check route:" << check;
-          if (m_Fields[check.x()][check.y()].size() > 0) {
+          if (!m_Fields[check.x()][check.y()].isEmpty()) {
             // qDebug() << "Route blocked";
             bBreak = true;
             break;
           }
         }
 
-        if (false == bBreak) {
+        if (!bBreak) {
           neighbours.append(QPoint(x, y));
         }
       }
@@ -603,7 +606,7 @@ void Board::highlightNeighbourhood(const QList<QPoint> &neighbours) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-quint8 Board::findPossibleMoves(const bool bStonesLeft) {
+auto Board::findPossibleMoves(const bool bStonesLeft) -> quint8 {
   // Return: 0 = no moves
   // 1 = stone can be set
   // 2 = tower can be moved
@@ -612,11 +615,11 @@ quint8 Board::findPossibleMoves(const bool bStonesLeft) {
 
   for (int y = 0; y < m_NumOfFields.y(); y++) {
     for (int x = 0; x < m_NumOfFields.x(); x++) {
-      if (0 == m_Fields[x][y].size() && bStonesLeft && 1 != nRet) {
+      if (m_Fields[x][y].isEmpty() && bStonesLeft && 1 != nRet) {
         nRet++;
       }
-      if (m_Fields[x][y].size() > 0 && 2 != nRet) {
-        if (this->checkNeighbourhood(QPoint(x, y)).size() > 0) {
+      if (!m_Fields[x][y].isEmpty() && 2 != nRet) {
+        if (!this->checkNeighbourhood(QPoint(x, y)).isEmpty()) {
           nRet += 2;
         }
       }

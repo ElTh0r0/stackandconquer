@@ -44,8 +44,7 @@ Player::Player(bool bActive, bool bIsHuman,
   qDebug() << "Generate player" << m_sName;
 }
 
-Player::~Player() {
-}
+Player::~Player() = default;
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -54,18 +53,18 @@ void Player::setActive(const bool bActive) {
   m_bIsActive = bActive;
 }
 
-bool Player::getIsActive() const {
+auto Player::getIsActive() const -> bool {
   return m_bIsActive;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool Player::getIsHuman() const {
+auto Player::getIsHuman() const -> bool {
   return m_bIsHuman;
 }
 
-QString Player::getName() const {
+auto Player::getName() const -> QString {
   return m_sName;
 }
 // ---------------------------------------------------------------------------
@@ -75,7 +74,7 @@ void Player::setCanMove(const quint8 nCanMove) {
   m_nCanMove = nCanMove;
 }
 
-quint8 Player::getCanMove() const {
+auto Player::getCanMove() const -> quint8 {
   return m_nCanMove;
 }
 
@@ -93,7 +92,7 @@ void Player::setStonesLeft(const quint8 nStones) {
   }
 }
 
-quint8 Player::getStonesLeft() const {
+auto Player::getStonesLeft() const -> quint8 {
   return m_nStonesLeft;
 }
 
@@ -104,6 +103,6 @@ void Player::setWonTowers(const quint8 nWonTowers) {
   m_nWonTowers = nWonTowers;
 }
 
-quint8 Player::getWonTowers() const {
+auto Player::getWonTowers() const -> quint8{
   return m_nWonTowers;
 }

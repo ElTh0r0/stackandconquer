@@ -49,7 +49,7 @@ OpponentJS::OpponentJS(const quint8 nID, const QPoint NumOfFields,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
+auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
   QFile f(sFilepath);
   if (!f.open(QFile::ReadOnly)) {
     qWarning() << "Couldn't open JS file:" << sFilepath;
@@ -109,7 +109,7 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
 
   // qDebug() << "Result of makeMove():" << result.toString();
   QList<QPoint> listRet;
-  listRet = this->evalMoveReturn(result.toString());
+  listRet = OpponentJS::evalMoveReturn(result.toString());
   // qDebug() << "RET" << listRet;
 
   if (1 == listRet.size()) {
@@ -143,8 +143,8 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QJsonDocument OpponentJS::convertBoardToJSON(
-    const QList<QList<QList<quint8> > > &board) {
+auto OpponentJS::convertBoardToJSON(
+    const QList<QList<QList<quint8> > > &board) -> QJsonDocument {
   QJsonArray tower;
   QVariantList vartower;
   QJsonArray jsBoard;
@@ -169,7 +169,7 @@ QJsonDocument OpponentJS::convertBoardToJSON(
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QList<QPoint> OpponentJS::evalMoveReturn(const QString &sReturn) {
+auto OpponentJS::evalMoveReturn(const QString &sReturn) -> QList<QPoint> {
   QList<QPoint> listReturn;
   QStringList sListRet;
   QStringList sListPoint;
@@ -190,9 +190,8 @@ QList<QPoint> OpponentJS::evalMoveReturn(const QString &sReturn) {
         // In case of error, return empty list
         listReturn.clear();
         break;
-      } else {
-        listReturn.append(point);
       }
+      listReturn.append(point);
     } else if (2 == i) {  // Third value in list is only one int
       point.setX(sListRet[i].trimmed().toInt(&bOk1, 10));
       point.setY(-1);
@@ -200,9 +199,8 @@ QList<QPoint> OpponentJS::evalMoveReturn(const QString &sReturn) {
       if (!bOk1) {
         listReturn.clear();
         break;
-      } else {
-        listReturn.append(point);
       }
+      listReturn.append(point);
     } else {
       listReturn.clear();
       break;
@@ -215,6 +213,6 @@ QList<QPoint> OpponentJS::evalMoveReturn(const QString &sReturn) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void OpponentJS::log(const QString &sMsg) const {
+void OpponentJS::log(const QString &sMsg) {
   qDebug() << sMsg;
 }

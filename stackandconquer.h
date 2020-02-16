@@ -73,14 +73,14 @@ class StackAndConquer : public QMainWindow {
                                const bool bP2Won = false);
     void loadLanguage(const QString &sLang);
     void showRules();
-    void reportBug() const;
+    static void reportBug();
     void showInfoBox();
 
  private:
     void checkCmdArgs(const QStringList &sListArgs = QStringList());
-    bool switchTranslator(QTranslator *translator,
-                          const QString &sFile,
-                          const QString &sPath = QString());
+    static auto switchTranslator(QTranslator *translator,
+                                 const QString &sFile,
+                                 const QString &sPath = QString()) -> bool;
     void setupMenu();
     void setupGraphView();
     void resizeEvent(QResizeEvent *pEvent);
@@ -92,21 +92,21 @@ class StackAndConquer : public QMainWindow {
     QTranslator m_translatorQt;  // Qt translations
     QString m_sCurrLang;
     Settings *m_pSettings;
-    QGraphicsView *m_pGraphView;
+    QGraphicsView *m_pGraphView{};
     Game *m_pGame;
 
-    QFrame *m_pFrame;
-    QGridLayout *m_pLayout;
-    QLabel *m_plblPlayer1;
-    QLabel *m_plblPlayer2;
-    QLabel *m_plblIconStones1;
-    QLabel *m_plblIconWin1;
-    QLabel *m_plblIconStones2;
-    QLabel *m_plblIconWin2;
-    QLabel *m_plblP1StonesLeft;
-    QLabel *m_plblP2StonesLeft;
-    QLabel *m_plblP1Won;
-    QLabel *m_plblP2Won;
+    QFrame *m_pFrame{};
+    QGridLayout *m_pLayout{};
+    QLabel *m_plblPlayer1{};
+    QLabel *m_plblPlayer2{};
+    QLabel *m_plblIconStones1{};
+    QLabel *m_plblIconWin1{};
+    QLabel *m_plblIconStones2{};
+    QLabel *m_plblIconWin2{};
+    QLabel *m_plblP1StonesLeft{};
+    QLabel *m_plblP2StonesLeft{};
+    QLabel *m_plblP1Won{};
+    QLabel *m_plblP2Won{};
 };
 
 #endif  // STACKANDCONQUER_H_

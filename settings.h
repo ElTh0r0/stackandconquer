@@ -46,26 +46,26 @@ class Settings : public QDialog {
                       QWidget *pParent = nullptr);
     virtual ~Settings();
 
-    QString getNameP1() const;
-    QString getNameP2() const;
-    QString getP1HumanCpu() const;
-    QString getP2HumanCpu() const;
-    quint8 getStartPlayer() const;
-    quint8 getWinTowers() const;
-    bool getShowPossibleMoveTowers() const;
-    QString getLanguage();
+    auto getNameP1() const -> QString;
+    auto getNameP2() const -> QString;
+    auto getP1HumanCpu() const -> QString;
+    auto getP2HumanCpu() const -> QString;
+    auto getStartPlayer() const -> quint8;
+    auto getWinTowers() const -> quint8;
+    auto getShowPossibleMoveTowers() const -> bool;
+    auto getLanguage() -> QString;
 
-    QColor getBgColor() const;
-    QColor getHighlightColor() const;
-    QColor getHighlightBorderColor() const;
-    QColor getSelectedColor() const;
-    QColor getSelectedBorderColor() const;
-    QColor getAnimateColor() const;
-    QColor getAnimateBorderColor() const;
-    QColor getBgBoardColor() const;
-    QColor getGridBoardColor() const;
-    QColor GetNeighboursColor() const;
-    QColor GetNeighboursBorderColor() const;
+    auto getBgColor() const -> QColor;
+    auto getHighlightColor() const -> QColor;
+    auto getHighlightBorderColor() const -> QColor;
+    auto getSelectedColor() const -> QColor;
+    auto getSelectedBorderColor() const -> QColor;
+    auto getAnimateColor() const -> QColor;
+    auto getAnimateBorderColor() const -> QColor;
+    auto getBgBoardColor() const -> QColor;
+    auto getGridBoardColor() const -> QColor;
+    auto GetNeighboursColor() const -> QColor;
+    auto GetNeighboursBorderColor() const -> QColor;
 
  public slots:
     void accept();
@@ -78,11 +78,12 @@ class Settings : public QDialog {
 
  private:
     void readSettings();
-    QColor readColor(const QString &sKey, const QString &sFallback) const;
-    QStringList searchTranslations() const;
+    auto readColor(const QString &sKey,
+                   const QString &sFallback) const -> QColor;
+    auto searchTranslations() const -> QStringList;
     void searchCpuScripts(const QString &userDataDir);
 
-    QWidget *m_pParent;
+    QWidget *m_pParent{};
     Ui::SettingsDialog *m_pUi;
     QSettings *m_pSettings;
 
@@ -93,9 +94,9 @@ class Settings : public QDialog {
     QString m_sP1HumanCpu;
     QString m_sP2HumanCpu;
     QStringList m_sListCPUs;
-    int m_nStartPlayer;
-    int m_nWinTowers;
-    bool m_bShowPossibleMoveTowers;
+    int m_nStartPlayer{};
+    int m_nWinTowers{};
+    bool m_bShowPossibleMoveTowers{};
 
     QColor m_bgColor;
     QColor m_highlightColor;

@@ -53,10 +53,10 @@ class Board : public QGraphicsScene {
                   const bool bAnim = true);
     void removeStone(const QPoint field, const bool bAll = false);
     void selectField(const QPointF point);
-    QList<QList<QList<quint8> > > getBoard() const;
-    QList<quint8> getField(const QPoint field) const;
-    quint8 findPossibleMoves(const bool bStonesLeft);
-    QList<QPoint> checkNeighbourhood(const QPoint field) const;
+    auto getBoard() const -> QList<QList<QList<quint8> > >;
+    auto getField(const QPoint field) const -> QList<quint8>;
+    auto findPossibleMoves(const bool bStonesLeft) -> quint8;
+    auto checkNeighbourhood(const QPoint field) const -> QList<QPoint>;
     void printDebugFields() const;
 
  signals:
@@ -72,14 +72,14 @@ class Board : public QGraphicsScene {
     void resetAnimation2();
 
  private:
-    bool loadBoard(const QString &sBoard);
+    auto loadBoard(const QString &sBoard) -> bool;
     void drawBoard();
     void createHighlighters();
     void createStones();
     void startAnimation(const QPoint field);
     void startAnimation2(const QPoint field);
-    QPointF snapToGrid(const QPointF point) const;
-    QPoint getGridField(const QPointF point) const;
+    auto snapToGrid(const QPointF point) const -> QPointF;
+    auto getGridField(const QPointF point) const -> QPoint;
     void highlightNeighbourhood(const QList<QPoint> &neighbours);
 
     QList<QString> m_Board;
@@ -94,10 +94,10 @@ class Board : public QGraphicsScene {
     const quint8 m_nMaxStones;
     Settings *m_pSettings;
     const QPoint m_NumOfFields;
-    QGraphicsRectItem *m_pHighlightRect;
-    QGraphicsRectItem *m_pSelectedField;
-    QGraphicsRectItem *m_pAnimateField;
-    QGraphicsRectItem *m_pAnimateField2;
+    QGraphicsRectItem *m_pHighlightRect{};
+    QGraphicsRectItem *m_pSelectedField{};
+    QGraphicsRectItem *m_pAnimateField{};
+    QGraphicsRectItem *m_pAnimateField2{};
     QSvgRenderer *m_pSvgRenderer;
     QList<QGraphicsSvgItem *> m_listStonesP1;
     QList<QGraphicsSvgItem *> m_listStonesP2;

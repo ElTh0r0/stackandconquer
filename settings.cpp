@@ -80,7 +80,7 @@ Settings::~Settings() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QStringList Settings::searchTranslations() const {
+auto Settings::searchTranslations() const -> QStringList {
   QStringList sList;
 
   // Translations build in resources
@@ -350,8 +350,8 @@ void Settings::readSettings() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QColor Settings::readColor(const QString &sKey,
-                           const QString &sFallback) const {
+auto Settings::readColor(const QString &sKey,
+                         const QString &sFallback) const -> QColor {
   QString sValue = m_pSettings->value("Colors/" + sKey, sFallback).toString();
   QColor color(sFallback);
 
@@ -381,7 +381,7 @@ void Settings::updateUiLang() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QString Settings::getLanguage() {
+auto Settings::getLanguage() -> QString {
   if ("auto" == m_sGuiLanguage) {
 #ifdef Q_OS_UNIX
     QByteArray lang = qgetenv("LANG");
@@ -390,11 +390,12 @@ QString Settings::getLanguage() {
     }
 #endif
     return QLocale::system().name();
-  } else if (!QFile(":/" + qApp->applicationName().toLower() +
-                    "_" + m_sGuiLanguage + ".qm").exists() &&
-             !QFile(m_sSharePath + "/lang/" +
-                    qApp->applicationName().toLower() +
-                    "_" + m_sGuiLanguage + ".qm").exists()) {
+  }
+  if (!QFile(":/" + qApp->applicationName().toLower() +
+             "_" + m_sGuiLanguage + ".qm").exists() &&
+      !QFile(m_sSharePath + "/lang/" +
+             qApp->applicationName().toLower() +
+             "_" + m_sGuiLanguage + ".qm").exists()) {
     m_sGuiLanguage = QStringLiteral("en");
     m_pSettings->setValue(QStringLiteral("GuiLanguage"), m_sGuiLanguage);
     return m_sGuiLanguage;
@@ -405,71 +406,69 @@ QString Settings::getLanguage() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QString Settings::getNameP1() const {
+auto Settings::getNameP1() const -> QString {
   return m_sNameP1;
 }
-QString Settings::getNameP2() const {
+auto Settings::getNameP2() const -> QString {
   return m_sNameP2;
 }
-quint8 Settings::getStartPlayer() const {
+auto Settings::getStartPlayer() const -> quint8 {
   return static_cast<quint8>(m_nStartPlayer);
 }
-quint8 Settings::getWinTowers() const {
+auto Settings::getWinTowers() const -> quint8 {
   return static_cast<quint8>(m_nWinTowers);
 }
-bool Settings::getShowPossibleMoveTowers() const {
+auto Settings::getShowPossibleMoveTowers() const -> bool {
   return m_bShowPossibleMoveTowers;
 }
 
-QString Settings::getP1HumanCpu() const {
+auto Settings::getP1HumanCpu() const -> QString {
   if (-1 != m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)) {
     return m_sListCPUs[m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)];
-  } else {
-    return QStringLiteral("Human");
   }
+  return QStringLiteral("Human");
 }
 
-QString Settings::getP2HumanCpu() const {
+auto Settings::getP2HumanCpu() const -> QString {
   if (-1 != m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)) {
     return m_sListCPUs[m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)];
-  } else {
-    return QStringLiteral("Human");
   }
+  return QStringLiteral("Human");
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QColor Settings::getBgColor() const {
+auto Settings::getBgColor() const -> QColor {
   return m_bgColor;
 }
-QColor Settings::getHighlightColor() const {
+auto Settings::getHighlightColor() const -> QColor {
   return m_highlightColor;
 }
-QColor Settings::getHighlightBorderColor() const {
+auto Settings::getHighlightBorderColor() const -> QColor {
   return m_highlightBorderColor;
 }
-QColor Settings::getSelectedColor() const {
+auto Settings::getSelectedColor() const -> QColor {
   return m_selectedColor;
 }
-QColor Settings::getSelectedBorderColor() const {
+auto Settings::getSelectedBorderColor() const -> QColor {
   return m_selectedBorderColor;
 }
-QColor Settings::getAnimateColor() const {
+auto Settings::getAnimateColor() const -> QColor {
   return m_animateColor;
 }
-QColor Settings::getAnimateBorderColor() const {
+auto Settings::getAnimateBorderColor() const -> QColor {
   return m_animateBorderColor;
 }
-QColor Settings::getBgBoardColor() const {
+auto Settings::getBgBoardColor() const -> QColor {
   return m_bgBoardColor;
 }
-QColor Settings::getGridBoardColor() const {
+auto Settings::getGridBoardColor() const -> QColor {
   return m_gridBoardColor;
 }
-QColor Settings::GetNeighboursColor() const {
+auto Settings::GetNeighboursColor() const -> QColor {
   return m_neighboursColor;
 }
-QColor Settings::GetNeighboursBorderColor() const {
+auto Settings::GetNeighboursBorderColor() const -> QColor {
   return m_neighboursBorderColor;
 }

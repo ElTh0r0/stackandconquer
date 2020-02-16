@@ -66,7 +66,7 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   if (1 == sListFiles.size()) {
     if (sListFiles[0].endsWith(QStringLiteral(".stacksav"),
                                Qt::CaseInsensitive)) {  // Load
-      QJsonObject jsonObj(this->loadGame(sListFiles[0]));
+      QJsonObject jsonObj(Game::loadGame(sListFiles[0]));
       if (jsonObj.isEmpty()) {
         qWarning() << "Save file is empty!";
         QMessageBox::critical(nullptr, tr("Warning"),
@@ -203,14 +203,12 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   }
 
   // Select start player
-  bool bStartPlayer(true);
+  bool bStartPlayer(true);  // Player 1
   if (0 == nStartPlayer) {  // Random
     nStartPlayer = qrand() % 2 + 1;
   }
   if (2 == nStartPlayer) {  // Player 2
     bStartPlayer = false;
-  } else {  // Player 1
-    bStartPlayer = true;
   }
 
   m_pPlayer1 = new Player(bStartPlayer, bP1IsHuman, sName1, m_nMaxStones);
@@ -248,7 +246,7 @@ void Game::createCPU2() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool Game::initCpu() {
+auto Game::initCpu() -> bool {
   if (!m_pPlayer1->getIsHuman()) {
     if (!m_jsCpuP1->loadAndEvalCpuScript(m_sJsFileP1)) {
       return false;
@@ -269,7 +267,7 @@ void Game::caughtScriptError() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QGraphicsScene* Game::getScene() const {
+auto Game::getScene() const -> QGraphicsScene* {
   return m_pBoard;
 }
 
@@ -280,7 +278,7 @@ void Game::setStone(QPoint field) {
   QString sMove(static_cast<char>(field.x() + 65)
                 + QString::number(field.y() + 1));
 
-  if (0 == m_pBoard->getField(field).size()) {
+  if (m_pBoard->getField(field).isEmpty()) {
     if (m_pPlayer1->getIsActive() && m_pPlayer1->getStonesLeft() > 0) {
       m_pPlayer1->setStonesLeft(m_pPlayer1->getStonesLeft() - 1);
       m_pBoard->addStone(field, 1);
@@ -328,7 +326,7 @@ void Game::setStone(QPoint field) {
 
 void Game::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
   QList<quint8> listStones(m_pBoard->getField(tower));
-  if (0 == listStones.size()) {
+  if (listStones.isEmpty()) {
     qWarning() << "Move tower size == 0! Tower:" << tower;
     if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
         (m_pPlayer2->getIsActive() && m_pPlayer2->getIsHuman())) {
@@ -368,9 +366,8 @@ void Game::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
                                 "Please check the debug log."));
       }
       return;
-    } else {
-      nStonesToMove = nStones;
     }
+    nStonesToMove = nStones;
   }
 
   // Debug print: E.g. "C4:3-D3" = move 3 stones from C4 to D3 (ASCII 65 = A)
@@ -583,7 +580,7 @@ void Game::checkPossibleMoves() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool Game::checkPreviousMoveReverted(const QString &sMove) {
+auto Game::checkPreviousMoveReverted(const QString &sMove) -> bool {
   if (!m_sPreviousMove.isEmpty()) {
     QStringList sListPrev;
     QStringList sListCur;
@@ -626,7 +623,7 @@ bool Game::checkPreviousMoveReverted(const QString &sMove) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QJsonObject Game::loadGame(const QString &sFile) {
+auto Game::loadGame(const QString &sFile) -> QJsonObject {
   QFile loadFile(sFile);
 
   if (!loadFile.open(QIODevice::ReadOnly)) {
@@ -643,7 +640,7 @@ QJsonObject Game::loadGame(const QString &sFile) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool Game::saveGame(const QString &sFile) {
+auto Game::saveGame(const QString &sFile) -> bool {
   QFile saveFile(sFile);
   QFile saveDebugFile(sFile + "_debug");
   QJsonArray tower;
@@ -694,8 +691,5 @@ bool Game::saveGame(const QString &sFile) {
     }
   }
 
-  if (-1 == saveFile.write(jsDoc.toBinaryData())) {
-    return false;
-  }
-  return true;
+  return (-1 != saveFile.write(jsDoc.toBinaryData()));
 }
