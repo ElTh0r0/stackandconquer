@@ -109,7 +109,7 @@ auto Board::loadBoard(const QString &sBoard) -> bool {
       jso.value("Board").isUndefined() || !jso.value("Board").isArray() ||
       jso.value("Columns").isUndefined() || !jso.value("Columns").isDouble() ||
       jso.value("Rows").isUndefined() || !jso.value("Rows").isDouble()) {
-    //TODO(): Extent check for all neeeded sections
+    // TODO(): Extent check for all neeeded sections
     qWarning() << "Board file doesn't contain all required sections!" << sBoard;
     QMessageBox::critical(nullptr, tr("Warning"),
                          tr("Error while opening board file!"));
@@ -140,7 +140,7 @@ auto Board::loadBoard(const QString &sBoard) -> bool {
     return false;
   }
 
-  //TODO(): Add all fields from json file
+  // TODO(): Add all fields from json file
 
   qDebug() << "Board dimensions:" << m_BoardDimension.x() << "columns x"
            << m_BoardDimension.y() << "rows";

@@ -103,6 +103,6 @@ void Player::setWonTowers(const quint8 nWonTowers) {
   m_nWonTowers = nWonTowers;
 }
 
-auto Player::getWonTowers() const -> quint8{
+auto Player::getWonTowers() const -> quint8 {
   return m_nWonTowers;
 }
