@@ -2,22 +2,21 @@
 pkgname=stackandconquer
 pkgver=0.8.2
 pkgrel=1
-pkgdesc='StackAndConquer is a challenging tower conquest board game.'
+pkgdesc='A challenging tower conquest board game.'
 arch=('x86_64')
 url='https://github.com/ElTh0r0/stackandconquer/'
 license=('GPL3')
-depends=('qt5-base' 'qt5-declarative' 'qt5-svg' 'hicolor-icon-theme')
-source=("$pkgname-$pkgver.tar.gz")
-#source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ElTh0r0/$pkgname/archive/v$pkgver.tar.gz")
-#sha256sums=('52687aa8c7bfd9d297c13f34ba07b6222252132a48c21ca97627f0aec656a2ab')
+depends=('qt5-declarative' 'qt5-svg')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ElTh0r0/$pkgname/archive/v$pkgver.tar.gz")
+sha256sums=('f597ce4279f45450cb1d2a4d6e067c59cfada20f11edbd9f22b04e978b91654d')
 
 build() {
-    cd "$srcdir/$pkgname-$pkgver"
-    qmake-qt5
+    cd "$pkgname-$pkgver"
+    qmake-qt5 PREFIX=/usr
     make
 }
 
 package() {
-    cd "$srcdir/$pkgname-$pkgver"
-    INSTALL_ROOT=$pkgdir make install
+    cd "$pkgname-$pkgver"
+    make INSTALL_ROOT="$pkgdir/" install
 }
