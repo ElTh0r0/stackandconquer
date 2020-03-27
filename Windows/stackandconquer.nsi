@@ -2,7 +2,7 @@
 
   !define APPNAME "StackAndConquer"
   !define DESCRIPTION "Challenging tower conquest board game"
-  !define VERSION "0.9.0.0" ;use always 4 digits w.x.y.z
+  !define VERSION "0.8.2.0" ;use always 4 digits w.x.y.z
   
   !include "LogicLib.nsh"
   !include "MUI2.nsh"

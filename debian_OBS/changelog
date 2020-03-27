@@ -1,3 +1,11 @@
+stackandconquer (0.8.2-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Added Italian translation - thanks to davi92
+  * Some internal code improvements.
+
+ -- Thorsten Roth <elthoro@gmx.de>  Fri, 27 Mar 2020 15:29:00 +0200
+
 stackandconquer (0.8.1-0) unstable; urgency=low
 
   [ Thorsten Roth ]

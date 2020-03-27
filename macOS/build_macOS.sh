@@ -3,7 +3,7 @@
 set -o errexit -o nounset
 
 APP='StackAndConquer'
-FFSEND_VERSION='v0.2.55'
+FFSEND_VERSION='v0.2.58'
 
 # Hold on to current directory
 project_dir=$(pwd)

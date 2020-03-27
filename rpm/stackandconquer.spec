@@ -18,7 +18,7 @@
 
 Name:           stackandconquer
 Summary:        Challenging tower conquest board game
-Version:        0.8.1
+Version:        0.8.2
 Release:        1
 License:        GPL-3.0+
 URL:            https://github.com/ElTh0r0/stackandconquer
