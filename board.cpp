@@ -47,8 +47,10 @@ Board::Board(QPoint NumOfFields, quint16 nGridSize,
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
 
 //  this->loadBoard("./square_2x2.stackboard");
+  //this->loadBoard("./new_square_5x5.stackboard");
   this->loadBoard("./square_5x5.stackboard");
-//  this->loadBoard("./triangle.stackboard");
+ // this->loadBoard("./new_triangle.stackboard");
+  //this->loadBoard("./triangle.stackboard");
 
   this->drawBoard();
   this->createHighlighters();
@@ -152,22 +154,21 @@ auto Board::loadBoard(const QString &sBoard) -> bool {
 // ---------------------------------------------------------------------------
 
 void Board::drawBoard() {
-  quint16 x(0);
-  quint16 y(0);
+  int x(0);
+  int y(-m_nGridSize);
   quint8 col(65);
   quint8 row(0);
 
   for (int i = 0; i < m_Board.size(); i++) {
-    if (0 == i % m_BoardDimension.x()) {  // Start of new col
+    // m_BoardDimension.x() = columns, m_BoardDimension.y() = rows
+    if (0 == i % m_BoardDimension.x()) {  // First item in row
       x = 0;
       col = 65;
+      y += m_nGridSize;
+      row++;
     } else {
       x += m_nGridSize;
       col++;
-    }
-    if (0 == i % m_BoardDimension.y()) {  // New row
-      y += m_nGridSize;
-      row++;
     }
     if (sOUT == m_Board[i]) {
       continue;
