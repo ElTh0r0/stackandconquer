@@ -33,6 +33,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QSvgRenderer>
 #include <QGraphicsSvgItem>
+#include <QJsonArray>
 #include <QPolygonF>
 
 #include <./settings.h>
@@ -46,7 +47,7 @@ class Board : public QGraphicsScene {
 
  public:
     Board(QPoint NumOfFields, quint16 nGridSize, quint8 nMaxStones,
-          Settings *pSettings);
+          quint8 nMaxTower, Settings *pSettings);
 
     void setupSavegame(const QList<QList<QList<quint8> > > &board);
     void addStone(const QPoint field, const quint8 stone,
@@ -86,6 +87,7 @@ class Board : public QGraphicsScene {
     const QString sIN;
     const QString sOUT;
     QPoint m_BoardDimension;
+    QJsonArray m_jsBoard;
 
     QList<QGraphicsRectItem *> m_listFields;
     QPainterPath m_boardPath;

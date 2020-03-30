@@ -35,8 +35,8 @@
 #include <QMessageBox>
 #include <QTimer>
 
-Board::Board(QPoint NumOfFields, quint16 nGridSize,
-             quint8 nMaxStones, Settings *pSettings)
+Board::Board(QPoint NumOfFields, quint16 nGridSize, quint8 nMaxStones,
+             quint8 nMaxTower, Settings *pSettings)
   : sIN("0"),
     sOUT("#"),
     m_nGridSize(nGridSize),
@@ -46,15 +46,54 @@ Board::Board(QPoint NumOfFields, quint16 nGridSize,
     m_pSvgRenderer(nullptr) {
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
 
-//  this->loadBoard("./square_2x2.stackboard");
-  //this->loadBoard("./new_square_5x5.stackboard");
-  this->loadBoard("./square_5x5.stackboard");
- // this->loadBoard("./new_triangle.stackboard");
-  //this->loadBoard("./triangle.stackboard");
+  this->loadBoard("./new_square_5x5.stackboard");
+  //this->loadBoard("./new_triangle.stackboard");
+  //this->loadBoard("./new_square_4x2.stackboard");
 
   this->drawBoard();
   this->createHighlighters();
   this->createStones();
+
+  // Generate field array
+  // Top padding
+  for (int i = 0; i < nMaxTower; i++) {
+    for (int j = 0; j < (nMaxTower*2 + m_BoardDimension.x()); j++) {
+      m_jsBoard << sOUT;
+    }
+  }
+
+  // Padding left and right per line
+  for (int i = 0; i < m_Board.size(); i++) {
+    if (0 == i) {  // First item of first line, padding right
+      for (int j = 0; j < nMaxTower; j++) {
+        m_jsBoard << sOUT;
+      }
+    } else if (0 == i % m_BoardDimension.x()) {  // First item in row:
+      for (int j = 0; j < (nMaxTower*2); j++) {  // Add padding end of previous
+        m_jsBoard << sOUT;      // & beginning of current line
+      }
+    }
+
+    if (sIN == m_Board[i]) {
+      m_jsBoard << QString();
+    } else {
+      m_jsBoard << m_Board[i];
+    }
+
+    if (m_Board.size()-1 == i) {  // Last item of last line, padding right
+      for (int j = 0; j < nMaxTower; j++) {
+        m_jsBoard << sOUT;
+      }
+    }
+  }
+
+  // Bottom padding
+  for (int i = 0; i < nMaxTower; i++) {
+    for (int j = 0; j < (nMaxTower*2 + m_BoardDimension.x()); j++) {
+      m_jsBoard << sOUT;
+    }
+  }
+
 
   // Generate field matrix
   /*
@@ -62,9 +101,6 @@ Board::Board(QPoint NumOfFields, quint16 nGridSize,
    * for generating the board is "column by column" and NOT "row by row":
    * m_Fields[nCol] "contains" nRow x elements
    */
-
-  // TODO(): Implement new board array!
-
   QList<quint8> tower;
   QList<QList<quint8> > column;
   column.reserve(m_NumOfFields.y());
@@ -118,19 +154,6 @@ auto Board::loadBoard(const QString &sBoard) -> bool {
     return false;
   }
 
-  QString s;
-  foreach (QJsonValue js, jso.value("Board").toArray()) {
-    s = js.toString().trimmed();
-    if (js.isNull() || s.isEmpty() || (sOUT != s && sIN != s)) {
-      qWarning() << "Board array contains invalid data:" << s;
-      qWarning() << "Board:" << sBoard;
-      QMessageBox::critical(nullptr, tr("Warning"),
-                           tr("Error while opening board file!"));
-      return false;
-    }
-    m_Board << s;
-  }
-
   m_BoardDimension.setX(jso.value("Columns").toInt());
   m_BoardDimension.setY(jso.value("Rows").toInt());
 
@@ -141,6 +164,21 @@ auto Board::loadBoard(const QString &sBoard) -> bool {
                          tr("Error while opening board file!"));
     return false;
   }
+
+
+  foreach (QJsonValue js, jso.value("Board").toArray()) {
+    QString s = js.toString();
+    if (js.isNull() || s.isEmpty() || (sOUT != s && sIN != s)) {
+      qWarning() << "Board array contains invalid data:" << s;
+      qWarning() << "Board:" << sBoard;
+      QMessageBox::critical(nullptr, tr("Warning"),
+                           tr("Error while opening board file!"));
+      return false;
+    }
+    m_Board << s;
+  }
+
+
 
   // TODO(): Add all fields from json file
 

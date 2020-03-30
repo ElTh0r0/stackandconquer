@@ -148,8 +148,8 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
         board.append(column);
       }
 
-      m_pBoard = new Board(m_NumOfFields, m_nGridSize,
-                           m_nMaxStones, m_pSettings);
+      m_pBoard = new Board(m_NumOfFields, m_nGridSize, m_nMaxStones,
+                           m_nMaxTowerHeight, m_pSettings);
       m_pBoard->setupSavegame(board);
     } else if (sListFiles[0].endsWith(QStringLiteral(".js"),
                                       Qt::CaseInsensitive)) {  // 1 CPU
@@ -177,7 +177,8 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   if (nullptr == m_pBoard) {
     qDebug() << "Board size:" << m_NumOfFields.x() << "columns x"
              << m_NumOfFields.y() << "rows";
-    m_pBoard = new Board(m_NumOfFields, m_nGridSize, m_nMaxStones, m_pSettings);
+    m_pBoard = new Board(m_NumOfFields, m_nGridSize, m_nMaxStones,
+                         m_nMaxTowerHeight, m_pSettings);
   }
 
   connect(m_pBoard, &Board::setStone, this, &Game::setStone);
