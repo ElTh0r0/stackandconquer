@@ -31,6 +31,7 @@
 #include <QDirIterator>
 #include <QIcon>
 #include <QMessageBox>
+#include <QSpinBox>
 
 #include "ui_settings.h"
 
@@ -38,7 +39,8 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
                    QWidget *pParent)
   : QDialog(pParent),
     m_pUi(new Ui::SettingsDialog()),
-    m_sSharePath(sSharePath) {
+    m_sSharePath(sSharePath),
+    m_maxPlayers(2) {
   m_pUi->setupUi(this);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
   this->setModal(true);
@@ -54,19 +56,47 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
 #endif
 
   m_pUi->cbGuiLanguage->addItems(this->searchTranslations());
-  this->searchCpuScripts(userDataDir);
 
-  QStringList sListStartPlayer;
-  sListStartPlayer << tr("Random")
-                   << tr("Player 1")
-                   << tr("Player 2");
-  m_pUi->cbStartPlayer->addItems(sListStartPlayer);
+  m_pUi->spinNumOfPlayers->setMaximum(m_maxPlayers);
+  connect(m_pUi->spinNumOfPlayers,
+          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+          this, &Settings::changeNumOfPlayers);
+  connect(m_pUi->spinNumOfPlayers,
+          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+          this, &Settings::changedSettings);
+  // TODO(): Remove after implenmentation of > 2 players
+  m_pUi->spinNumOfPlayers->setVisible(false);
+  m_pUi->lblNumOfPlayers->setVisible(false);
+
+  connect(m_pUi->spinNumToWin,
+          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+          this, &Settings::changedSettings);
+  connect(m_pUi->cbStartPlayer, &QComboBox::currentTextChanged,
+          this, &Settings::changedSettings);
 
   connect(m_pUi->buttonBox, &QDialogButtonBox::accepted,
           this, &Settings::accept);
   connect(m_pUi->buttonBox, &QDialogButtonBox::rejected,
           this, &Settings::reject);
 
+  for (int i = m_maxPlayers-1; i >= 0; i--) {
+    m_listHumCpuLbls.push_front(
+          new QLabel(tr("Player %1 Human/CPU").arg(QString::number(i+1))));
+    m_listPlayerCombo.push_front(new QComboBox(this));
+    m_pUi->formLayout->insertRow(2, m_listHumCpuLbls.first(),
+                                 m_listPlayerCombo.first());
+    connect(m_listPlayerCombo.first(), &QComboBox::currentTextChanged,
+            this, &Settings::changedSettings);
+    m_listNameLbls.push_front(
+          new QLabel(tr("Name player %1").arg(QString::number(i+1))));
+    m_listNameEdit.push_front(new QLineEdit(this));
+    m_pUi->formLayout->insertRow(2, m_listNameLbls.first(),
+                                 m_listNameEdit.first());
+    connect(m_listNameEdit.first(), &QLineEdit::textChanged,
+            this, &Settings::changedSettings);
+  }
+
+  this->searchCpuScripts(userDataDir);
   this->readSettings();
 }
 
@@ -75,6 +105,15 @@ Settings::~Settings() {
     delete m_pUi;
     m_pUi = nullptr;
   }
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void Settings::showEvent(QShowEvent *pEvent) {
+  this->readSettings();
+  m_bSettingChanged = false;
+  QDialog::showEvent(pEvent);
 }
 
 // ----------------------------------------------------------------------------
@@ -143,8 +182,9 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
       }
     }
   }
-  m_pUi->cbP1HumanCpu->addItems(sListAvailableCpu);
-  m_pUi->cbP2HumanCpu->addItems(sListAvailableCpu);
+  for (auto combo : m_listPlayerCombo) {
+    combo->addItems(sListAvailableCpu);
+  }
 
   // Cpu scripts in user folder
   cpuDir.setPath(userDataDir);
@@ -152,12 +192,11 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
     foreach (QFileInfo file, cpuDir.entryInfoList(QDir::Files)) {
       if ("js" == file.suffix().toLower()) {
         sListAvailableCpu << file.baseName();
-        m_pUi->cbP1HumanCpu->addItem(QIcon(
-                                       QStringLiteral(":/images/user.png")),
-                                     sListAvailableCpu.last());
-        m_pUi->cbP2HumanCpu->addItem(QIcon(
-                                       QStringLiteral(":/images/user.png")),
-                                     sListAvailableCpu.last());
+        for (auto combo : m_listPlayerCombo) {
+          combo->addItem(QIcon(
+                           QStringLiteral(":/images/user.png")),
+                         sListAvailableCpu.last());
+        }
         m_sListCPUs << file.absoluteFilePath();
       }
     }
@@ -176,26 +215,35 @@ void Settings::accept() {
     emit changeLang(this->getLanguage());
   }
 
-  m_sNameP1 = m_pUi->leNameP1->text();
-  if (m_sNameP1.trimmed().isEmpty()) {
-    m_sNameP1 = tr("Player 1");
-    m_pUi->leNameP1->setText(m_sNameP1);
-  }
-  m_pSettings->setValue(QStringLiteral("NameP1"), m_sNameP1);
-  m_sNameP2 = m_pUi->leNameP2->text();
-  if (m_sNameP2.trimmed().isEmpty()) {
-    m_sNameP2 = tr("Player 2");
-    m_pUi->leNameP2->setText(m_sNameP2);
-  }
-  m_pSettings->setValue(QStringLiteral("NameP2"), m_sNameP2);
-
-  m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
-  m_pSettings->setValue(QStringLiteral("StartPlayer"), m_nStartPlayer);
-
   m_bShowPossibleMoveTowers = m_pUi->checkShowPossibleMoves->isChecked();
   m_pSettings->setValue(QStringLiteral("ShowPossibleMoveTowers"),
                         m_bShowPossibleMoveTowers);
 
+  int nRet = QMessageBox::No;
+  if (m_bSettingChanged) {
+    nRet = QMessageBox::question(
+             nullptr, this->windowTitle(),
+             tr("Main game settings had been changed.<br>"
+                "Do you want to start a new game?"));
+    if (nRet != QMessageBox::Yes) {
+      this->readSettings();
+      QDialog::accept();
+      return;
+    }
+  }
+
+  // General
+  m_nNumOfPlayers = m_pUi->spinNumOfPlayers->value();
+  // TODO(): Enable after implenmentation of > 2 players
+  // m_pSettings->setValue(QStringLiteral("NumOfPlayers"), m_nNumOfPlayers);
+
+  m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
+  m_pSettings->setValue(QStringLiteral("StartPlayer"), m_nStartPlayer);
+
+  m_nWinTowers = m_pUi->spinNumToWin->value();
+  m_pSettings->setValue(QStringLiteral("NumWinTowers"), m_nWinTowers);
+
+  // Colors
   m_pSettings->beginGroup(QStringLiteral("Colors"));
   m_pSettings->setValue(QStringLiteral("BgColor"), m_bgColor.name());
   m_pSettings->setValue(QStringLiteral("HighlightColor"),
@@ -220,37 +268,39 @@ void Settings::accept() {
                         m_neighboursBorderColor.name());
   m_pSettings->endGroup();
 
-  QString sNewP1HumanCpu(m_pUi->cbP1HumanCpu->currentText());
-  QString sNewP2HumanCpu(m_pUi->cbP2HumanCpu->currentText());
-  int nNewWinTowers(m_pUi->spinNumToWin->value());
-
-  if (sNewP1HumanCpu != m_sP1HumanCpu ||
-      sNewP2HumanCpu != m_sP2HumanCpu ||
-      nNewWinTowers != m_nWinTowers) {
-    int nRet = QMessageBox::question(
-                 nullptr, this->windowTitle(),
-                 tr("Main game settings had been changed.<br>"
-                    "Do you want to start a new game?"));
-    if (nRet == QMessageBox::Yes) {
-      m_sP1HumanCpu = sNewP1HumanCpu;
-      m_sP2HumanCpu = sNewP2HumanCpu;
-      m_nWinTowers = nNewWinTowers;
-      m_pSettings->setValue(QStringLiteral("P1HumanCpu"), m_sP1HumanCpu);
-      m_pSettings->setValue(QStringLiteral("P2HumanCpu"), m_sP2HumanCpu);
-      m_pSettings->setValue(QStringLiteral("NumWinTowers"), m_nWinTowers);
-      emit this->newGame(QStringList());
-    } else {
-      this->readSettings();
-      return;
+  // Players
+  for (auto player : m_Players) {
+    player.clear();
+  }
+  m_Players.clear();
+  for (quint8 i = 0; i < m_maxPlayers; i++) {
+    QMap<QString, QString> tmpMap;
+    tmpMap["Name"] = m_listNameEdit[i]->text().trimmed();
+    if (tmpMap["Name"].isEmpty()) {
+      tmpMap["Name"] = tr("Player") + " " + QString::number(i+1);
+      m_listNameEdit[i]->setText(tmpMap["Name"]);
     }
+    tmpMap["HumanCpu"] = m_listPlayerCombo[i]->currentText();
+    m_Players << tmpMap;
+    m_pSettings->beginGroup("Player" + QString::number(i+1));
+    m_pSettings->setValue(QStringLiteral("Name"), tmpMap["Name"]);
+    m_pSettings->setValue(QStringLiteral("HumanCpu"), tmpMap["HumanCpu"]);
+    m_pSettings->endGroup();
   }
 
   // Remove deprecated settings
   m_pSettings->remove(QStringLiteral("Colors/OutlineBoardColor"));
+  m_pSettings->remove(QStringLiteral("NameP1"));
+  m_pSettings->remove(QStringLiteral("NameP2"));
+  m_pSettings->remove(QStringLiteral("P1HumanCpu"));
+  m_pSettings->remove(QStringLiteral("P2HumanCpu"));
+
+  if (nRet == QMessageBox::Yes) {
+    emit this->newGame(QStringList());
+  }
 
   QDialog::accept();
 }
-
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -275,42 +325,46 @@ void Settings::readSettings() {
   }
   m_sGuiLanguage = m_pUi->cbGuiLanguage->currentText();
 
-  m_sNameP1 = m_pSettings->value(QStringLiteral("NameP1"),
-                                 tr("Player 1")).toString();
-  m_pUi->leNameP1->setText(m_sNameP1);
-  m_sNameP2 = m_pSettings->value(QStringLiteral("NameP2"),
-                                 tr("Player 2")).toString();
-  m_pUi->leNameP2->setText(m_sNameP2);
-
-  m_sP1HumanCpu = m_pSettings->value(QStringLiteral("P1HumanCpu"),
-                                     QStringLiteral("Human")).toString();
-  if (-1 != m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)) {
-    m_pUi->cbP1HumanCpu->setCurrentIndex(
-          m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu));
-  } else {
-    m_pUi->cbP1HumanCpu->setCurrentIndex(
-          m_pUi->cbP1HumanCpu->findText(QStringLiteral("Human")));
+  m_nNumOfPlayers = m_pSettings->value(
+                      QStringLiteral("NumOfPlayers"), 2).toInt();
+  if (m_nNumOfPlayers > m_maxPlayers) {
+    m_nNumOfPlayers = m_maxPlayers;
   }
-  m_sP1HumanCpu = m_pUi->cbP1HumanCpu->currentText();
+  m_pUi->spinNumToWin->setValue(m_nNumOfPlayers);
+  this->changeNumOfPlayers();
 
-  m_sP2HumanCpu = m_pSettings->value(QStringLiteral("P2HumanCpu"),
-                                     QStringLiteral("Human")).toString();
-  if (-1 != m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)) {
-    m_pUi->cbP2HumanCpu->setCurrentIndex(
-          m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu));
-  } else {
-    m_pUi->cbP2HumanCpu->setCurrentIndex(
-          m_pUi->cbP2HumanCpu->findText(QStringLiteral("Human")));
+  for (auto player : m_Players) {
+    player.clear();
   }
-  m_sP2HumanCpu = m_pUi->cbP2HumanCpu->currentText();
+  m_Players.clear();
+
+  for (quint8 i = 0; i < m_maxPlayers; i++) {
+    m_pSettings->beginGroup("Player" + QString::number(i+1));
+    QMap<QString, QString> map;
+    map["Name"] = m_pSettings->value(QStringLiteral("Name"),
+                                     tr("Player") + " " +
+                                     QString::number(i+1)).toString();
+    m_listNameEdit[i]->setText(map["Name"]);
+
+    map["HumanCpu"] = m_pSettings->value(QStringLiteral("HumanCpu"),
+                                         QStringLiteral("Human")).toString();
+
+    if (-1 != m_listPlayerCombo[i]->findText(map["HumanCpu"])) {
+      m_listPlayerCombo[i]->setCurrentIndex(
+            m_listPlayerCombo[i]->findText(map["HumanCpu"]));
+    } else {
+      m_listPlayerCombo[i]->setCurrentIndex(
+            m_listPlayerCombo[i]->findText(QStringLiteral("Human")));
+    }
+    map["HumanCpu"] = m_listPlayerCombo[i]->currentText();
+
+    m_Players << map;
+    m_pSettings->endGroup();
+  }
 
   m_nStartPlayer = m_pSettings->value(QStringLiteral("StartPlayer"),
                                       1).toInt();
-  if (m_nStartPlayer < m_pUi->cbStartPlayer->count()) {
-    m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);
-  } else {
-    m_pUi->cbStartPlayer->setCurrentIndex(1);
-  }
+  this->updateStartCombo();
   m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
 
   m_nWinTowers = m_pSettings->value(QStringLiteral("NumWinTowers"), 1).toInt();
@@ -369,13 +423,13 @@ auto Settings::readColor(const QString &sKey,
 void Settings::updateUiLang() {
   m_pUi->retranslateUi(this);
 
-  QStringList sListStartPlayer;
-  sListStartPlayer << tr("Random")
-                   << tr("Player 1")
-                   << tr("Player 2");
-  m_pUi->cbStartPlayer->clear();
-  m_pUi->cbStartPlayer->addItems(sListStartPlayer);
-  m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);
+  // Widgets, which had not been created through UI have to be handled manually
+  for (int i = 0; i < m_maxPlayers; i++) {
+    m_listNameLbls[i]->setText(tr("Name player %1").arg(QString::number(i+1)));
+    m_listHumCpuLbls[i]->setText(tr("Player %1 Human/CPU").arg(QString::number(i+1)));
+  }
+
+  this->updateStartCombo();
 }
 
 // ----------------------------------------------------------------------------
@@ -406,12 +460,76 @@ auto Settings::getLanguage() -> QString {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto Settings::getNameP1() const -> QString {
-  return m_sNameP1;
+void Settings::changeNumOfPlayers() {
+  m_nNumOfPlayers = m_pUi->spinNumOfPlayers->value();
+  for (int i = 0; i < m_maxPlayers; i++) {
+    m_listNameLbls[i]->setVisible(false);
+    m_listNameEdit[i]->setVisible(false);
+    m_listHumCpuLbls[i]->setVisible(false);
+    m_listPlayerCombo[i]->setVisible(false);
+  }
+  for (int i = 0; i < m_nNumOfPlayers; i++) {
+    m_listNameLbls[i]->setVisible(true);
+    m_listNameEdit[i]->setVisible(true);
+    m_listHumCpuLbls[i]->setVisible(true);
+    m_listPlayerCombo[i]->setVisible(true);
+  }
+  this->updateStartCombo();
+  this->adjustSize();
 }
-auto Settings::getNameP2() const -> QString {
-  return m_sNameP2;
+
+void Settings::updateStartCombo() {
+  QStringList sListStartPlayer;
+  sListStartPlayer << tr("Random");
+  for (quint8 i = 1; i <= m_pUi->spinNumOfPlayers->value(); i++) {
+    sListStartPlayer << tr("Player") + " " + QString::number(i);
+  }
+  m_pUi->cbStartPlayer->clear();
+  m_pUi->cbStartPlayer->addItems(sListStartPlayer);
+
+  if (m_nStartPlayer < m_pUi->cbStartPlayer->count()) {
+    m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);
+  } else {
+    m_nStartPlayer = 1;
+    m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);
+  }
 }
+
+void Settings::changedSettings() {
+  m_bSettingChanged = true;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+auto Settings::getPlayerName(const quint8 nPlayer) const -> QString {
+  if ((nPlayer - 1) < m_Players.size()) {
+    return m_Players[nPlayer-1]["Name"];
+  }
+  qWarning() << "Player array length exceeded! Size:" <<
+                m_Players.size() << "- requested:" << nPlayer;
+  return QStringLiteral("Anonymos");
+}
+
+auto Settings::getPlayerHumanCpu(const quint8 nPlayer) const -> QString {
+  if ((nPlayer - 1) < m_Players.size() &&
+      (nPlayer - 1) < m_listPlayerCombo.size()) {
+    if (-1 != m_listPlayerCombo[nPlayer-1]->findText(
+          m_Players[nPlayer-1]["HumanCpu"])) {
+      return m_sListCPUs[m_listPlayerCombo[nPlayer-1]->findText(
+          m_Players[nPlayer-1]["HumanCpu"])];
+    }
+    return QStringLiteral("Human");
+  }
+  qWarning() << "Array length exceeded! m_Player:" << m_Players.size() <<
+                "- m_listPlayerCombo:" << m_listPlayerCombo.size() <<
+                "- requested:" << nPlayer;
+  return QStringLiteral("Human");
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 auto Settings::getStartPlayer() const -> quint8 {
   return static_cast<quint8>(m_nStartPlayer);
 }
@@ -420,20 +538,6 @@ auto Settings::getWinTowers() const -> quint8 {
 }
 auto Settings::getShowPossibleMoveTowers() const -> bool {
   return m_bShowPossibleMoveTowers;
-}
-
-auto Settings::getP1HumanCpu() const -> QString {
-  if (-1 != m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)) {
-    return m_sListCPUs[m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)];
-  }
-  return QStringLiteral("Human");
-}
-
-auto Settings::getP2HumanCpu() const -> QString {
-  if (-1 != m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)) {
-    return m_sListCPUs[m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)];
-  }
-  return QStringLiteral("Human");
 }
 
 // ----------------------------------------------------------------------------

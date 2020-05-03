@@ -61,7 +61,6 @@ class StackAndConquer : public QMainWindow {
 
  protected:
     void changeEvent(QEvent *pEvent);
-    void closeEvent(QCloseEvent *pEvent);
 
  private slots:
     void startNewGame(const QStringList &sListArgs = QStringList());

@@ -27,7 +27,11 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
+#include <QComboBox>
 #include <QDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMap>
 #include <QSettings>
 
 namespace Ui {
@@ -46,10 +50,8 @@ class Settings : public QDialog {
                       QWidget *pParent = nullptr);
     virtual ~Settings();
 
-    auto getNameP1() const -> QString;
-    auto getNameP2() const -> QString;
-    auto getP1HumanCpu() const -> QString;
-    auto getP2HumanCpu() const -> QString;
+    auto getPlayerName(const quint8 nPlayer) const -> QString;
+    auto getPlayerHumanCpu(const quint8 nPlayer) const -> QString;
     auto getStartPlayer() const -> quint8;
     auto getWinTowers() const -> quint8;
     auto getShowPossibleMoveTowers() const -> bool;
@@ -76,27 +78,39 @@ class Settings : public QDialog {
     void newGame(const QStringList &sListArgs);
     void changeLang(const QString &sLang);
 
+ protected:
+    void showEvent(QShowEvent *pEvent);
+
+ private slots:
+    void changeNumOfPlayers();
+    void changedSettings();
+
  private:
     void readSettings();
     auto readColor(const QString &sKey,
                    const QString &sFallback) const -> QColor;
     auto searchTranslations() const -> QStringList;
     void searchCpuScripts(const QString &userDataDir);
+    void updateStartCombo();
 
     QWidget *m_pParent{};
     Ui::SettingsDialog *m_pUi;
     QSettings *m_pSettings;
-
+    QList<QMap<QString, QString>> m_Players;
     QString m_sSharePath;
     QString m_sGuiLanguage;
-    QString m_sNameP1;
-    QString m_sNameP2;
-    QString m_sP1HumanCpu;
-    QString m_sP2HumanCpu;
+
+    QList<QLabel*> m_listNameLbls;
+    QList<QLabel*> m_listHumCpuLbls;
+    QList<QLineEdit*> m_listNameEdit;
+    QList<QComboBox*> m_listPlayerCombo;
+
     QStringList m_sListCPUs;
+    int m_nNumOfPlayers{};
     int m_nStartPlayer{};
     int m_nWinTowers{};
     bool m_bShowPossibleMoveTowers{};
+    bool m_bSettingChanged{};
 
     QColor m_bgColor;
     QColor m_highlightColor;
@@ -109,6 +123,8 @@ class Settings : public QDialog {
     QColor m_gridBoardColor;
     QColor m_neighboursColor;
     QColor m_neighboursBorderColor;
+
+    const quint8 m_maxPlayers;
 };
 
 #endif  // SETTINGS_H_

@@ -175,10 +175,10 @@ void StackAndConquer::setupGraphView() {
   m_pFrame = new QFrame(m_pGraphView);
   m_pLayout = new QGridLayout;
   m_pLayout->setVerticalSpacing(0);
-  m_plblPlayer1 = new QLabel(m_pSettings->getNameP1());
+  m_plblPlayer1 = new QLabel(m_pSettings->getPlayerName(1));
   m_plblP1StonesLeft = new QLabel(QStringLiteral("99"));
   m_plblP1Won = new QLabel(QStringLiteral("0"));
-  m_plblPlayer2 = new QLabel(m_pSettings->getNameP2());
+  m_plblPlayer2 = new QLabel(m_pSettings->getPlayerName(2));
   m_plblPlayer2->setAlignment(Qt::AlignRight);
   m_plblP2StonesLeft = new QLabel(QStringLiteral("99"));
   m_plblP2StonesLeft->setAlignment(Qt::AlignRight);
@@ -479,24 +479,4 @@ void StackAndConquer::changeEvent(QEvent *pEvent) {
     }
   }
   QMainWindow::changeEvent(pEvent);
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-// Close event (File -> Close or X)
-void StackAndConquer::closeEvent(QCloseEvent *pEvent) {
-  pEvent->accept();
-  /*
-  int nRet = QMessageBox::question(this, tr("Quit") + " - " +
-                                   qApp->applicationName(),
-                                   tr("Do you really want to quit?"),
-                                   QMessageBox::Yes | QMessageBox::No);
-
-  if (QMessageBox::Yes == nRet) {
-    pEvent->accept();
-  } else {
-    pEvent->ignore();
-  }
-  */
 }

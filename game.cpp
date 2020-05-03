@@ -154,7 +154,7 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
     } else if (sListFiles[0].endsWith(QStringLiteral(".js"),
                                       Qt::CaseInsensitive)) {  // 1 CPU
       sP1HumanCpu = QStringLiteral("Human");
-      sName1 = m_pSettings->getNameP1();
+      sName1 = m_pSettings->getPlayerName(1);
       sP2HumanCpu = sListFiles[0];
       sName2 = QStringLiteral("Computer");
       nStartPlayer = m_pSettings->getStartPlayer();
@@ -166,10 +166,10 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
     sName2 = QStringLiteral("Computer");
     nStartPlayer = m_pSettings->getStartPlayer();
   } else {  // Start game with current settings
-    sP1HumanCpu = m_pSettings->getP1HumanCpu();
-    sName1 = m_pSettings->getNameP1();
-    sP2HumanCpu = m_pSettings->getP2HumanCpu();
-    sName2 = m_pSettings->getNameP2();
+    sP1HumanCpu = m_pSettings->getPlayerHumanCpu(1);
+    sName1 = m_pSettings->getPlayerName(1);
+    sP2HumanCpu = m_pSettings->getPlayerHumanCpu(2);
+    sName2 = m_pSettings->getPlayerName(2);
     nStartPlayer = m_pSettings->getStartPlayer();
   }
 
