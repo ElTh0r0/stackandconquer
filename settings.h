@@ -52,6 +52,7 @@ class Settings : public QDialog {
 
     auto getPlayerName(const quint8 nPlayer) const -> QString;
     auto getPlayerHumanCpu(const quint8 nPlayer) const -> QString;
+    auto getPlayerColor(const quint8 nPlayer) const -> QString;
     auto getStartPlayer() const -> quint8;
     auto getWinTowers() const -> quint8;
     auto getShowPossibleMoveTowers() const -> bool;
@@ -66,8 +67,8 @@ class Settings : public QDialog {
     auto getAnimateBorderColor() const -> QColor;
     auto getBgBoardColor() const -> QColor;
     auto getGridBoardColor() const -> QColor;
-    auto GetNeighboursColor() const -> QColor;
-    auto GetNeighboursBorderColor() const -> QColor;
+    auto getNeighboursColor() const -> QColor;
+    auto getNeighboursBorderColor() const -> QColor;
 
  public slots:
     void accept();
@@ -125,6 +126,7 @@ class Settings : public QDialog {
     QColor m_neighboursBorderColor;
 
     const quint8 m_maxPlayers;
+    const QStringList m_DefaultPlayerColors;
 };
 
 #endif  // SETTINGS_H_

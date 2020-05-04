@@ -43,7 +43,8 @@ Board::Board(QPoint NumOfFields, quint16 nGridSize, quint8 nMaxStones,
     m_nMaxStones(nMaxStones),
     m_pSettings(pSettings),
     m_NumOfFields(NumOfFields),
-    m_pSvgRenderer(nullptr) {
+    m_pSvgRendererP1(nullptr),
+    m_pSvgRendererP2(nullptr) {
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
 
   this->loadBoard("./new_square_5x5.stackboard");
@@ -270,16 +271,39 @@ void Board::createHighlighters() {
 // ---------------------------------------------------------------------------
 
 void Board::createStones() {
-  auto *m_pSvgRenderer = new QSvgRenderer(
-                           QStringLiteral(":/images/stones.svg"));
+  // Load svg as txt for below color exchange.
+  QFile fStone(QStringLiteral(":/images/stone.svg"));
+  if (!fStone.open(QFile::ReadOnly | QFile::Text)) {
+    qDebug() << "Could not open stone.svg";
+    QMessageBox::critical(nullptr, tr("Warning"),
+                          tr("Could not open %1!").arg("stone.svg"));
+    return;
+  }
+  QTextStream in(&fStone);
+  QString sSvg = in.readAll();
+  fStone.close();
+
+  // stone.svg HAS to be filled with #ff0000, so that below replace can work.
+  QString sTmpSvg = sSvg;
+  QByteArray aSvg1(sTmpSvg.replace(
+                     "#ff0000", m_pSettings->getPlayerColor(1)).toUtf8());
+  sTmpSvg = sSvg;
+  QByteArray aSvg2(sTmpSvg.replace("#ff0000",
+                                   m_pSettings->getPlayerColor(2)).toUtf8());
+
+  // TODO(): Create dynamic list to support >2 players.
+  auto *m_pSvgRendererP1 = new QSvgRenderer(aSvg1);
+  auto *m_pSvgRendererP2 = new QSvgRenderer(aSvg2);
+
+  // TODO(): Create stones dynamically? E.g. to be more flexible >2 players.
+
   // Create a few more than maximum of stones because of wrong
   // order during move tower add/remove
   for (int i = 0; i < m_nMaxStones + 4; i++) {
     m_listStonesP1.append(new QGraphicsSvgItem());
     // Don't transform graphics to isometric view!
     m_listStonesP1.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    m_listStonesP1.last()->setSharedRenderer(m_pSvgRenderer);
-    m_listStonesP1.last()->setElementId(QStringLiteral("Stone1"));
+    m_listStonesP1.last()->setSharedRenderer(m_pSvgRendererP1);
     this->addItem(m_listStonesP1.last());
     m_listStonesP1.last()->setPos(0, 0);
     m_listStonesP1.last()->setZValue(5);
@@ -288,8 +312,7 @@ void Board::createStones() {
     m_listStonesP2.append(new QGraphicsSvgItem());
     // Don't transform graphics to isometric view!
     m_listStonesP2.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    m_listStonesP2.last()->setSharedRenderer(m_pSvgRenderer);
-    m_listStonesP2.last()->setElementId(QStringLiteral("Stone2"));
+    m_listStonesP2.last()->setSharedRenderer(m_pSvgRendererP2);
     this->addItem(m_listStonesP2.last());
     m_listStonesP2.last()->setPos(0, 0);
     m_listStonesP2.last()->setZValue(5);
@@ -634,9 +657,9 @@ void Board::highlightNeighbourhood(const QList<QPoint> &neighbours) {
                                                m_nGridSize,
                                                m_nGridSize);
     listPossibleMoves.last()->setBrush(
-          QBrush(m_pSettings->GetNeighboursColor()));
+          QBrush(m_pSettings->getNeighboursColor()));
     listPossibleMoves.last()->setPen(
-          QPen(m_pSettings->GetNeighboursBorderColor()));
+          QPen(m_pSettings->getNeighboursBorderColor()));
     listPossibleMoves.last()->setVisible(true);
     this->addItem(listPossibleMoves.last());
   }

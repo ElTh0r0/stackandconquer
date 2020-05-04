@@ -100,7 +100,8 @@ class Board : public QGraphicsScene {
     QGraphicsRectItem *m_pSelectedField{};
     QGraphicsRectItem *m_pAnimateField{};
     QGraphicsRectItem *m_pAnimateField2{};
-    QSvgRenderer *m_pSvgRenderer;
+    QSvgRenderer *m_pSvgRendererP1;
+    QSvgRenderer *m_pSvgRendererP2;
     QList<QGraphicsSvgItem *> m_listStonesP1;
     QList<QGraphicsSvgItem *> m_listStonesP2;
 

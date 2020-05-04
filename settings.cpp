@@ -40,10 +40,16 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
   : QDialog(pParent),
     m_pUi(new Ui::SettingsDialog()),
     m_sSharePath(sSharePath),
-    m_maxPlayers(2) {
+    m_maxPlayers(2),
+    m_DefaultPlayerColors{"#EF2929", "#FCAF3E"} {
   m_pUi->setupUi(this);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
   this->setModal(true);
+
+  // TODO(): Add further default colors after implementation of > 2 players
+  if (m_DefaultPlayerColors.size() < m_nNumOfPlayers) {
+    qWarning() << "Fallback player color missing!";
+  }
 
 #if defined _WIN32
   m_pSettings = new QSettings(QSettings::IniFormat, QSettings::UserScope,
@@ -269,7 +275,10 @@ void Settings::accept() {
   m_pSettings->endGroup();
 
   // Players
+  QStringList slistTmpColors;
   for (auto player : m_Players) {
+    // TODO(): Temp store colors as long as not avail. through settings dialog
+    slistTmpColors << player["Color"];
     player.clear();
   }
   m_Players.clear();
@@ -281,10 +290,14 @@ void Settings::accept() {
       m_listNameEdit[i]->setText(tmpMap["Name"]);
     }
     tmpMap["HumanCpu"] = m_listPlayerCombo[i]->currentText();
+    // TODO(): Temp store colors as long as not avail. through settings dialog
+    tmpMap["Color"] = slistTmpColors[i];
+
     m_Players << tmpMap;
     m_pSettings->beginGroup("Player" + QString::number(i+1));
     m_pSettings->setValue(QStringLiteral("Name"), tmpMap["Name"]);
     m_pSettings->setValue(QStringLiteral("HumanCpu"), tmpMap["HumanCpu"]);
+    m_pSettings->setValue(QStringLiteral("Color"), tmpMap["Color"]);
     m_pSettings->endGroup();
   }
 
@@ -358,6 +371,9 @@ void Settings::readSettings() {
     }
     map["HumanCpu"] = m_listPlayerCombo[i]->currentText();
 
+    map["Color"] = this->readColor(QStringLiteral("Color"),
+                                   m_DefaultPlayerColors[i]).name();
+
     m_Players << map;
     m_pSettings->endGroup();
   }
@@ -375,6 +391,7 @@ void Settings::readSettings() {
                                 true).toBool();
   m_pUi->checkShowPossibleMoves->setChecked(m_bShowPossibleMoveTowers);
 
+  m_pSettings->beginGroup(QStringLiteral("Colors"));
   m_bgColor = this->readColor(QStringLiteral("BgColor"),
                               QStringLiteral("#EEEEEC"));
   m_highlightColor = this->readColor(QStringLiteral("HighlightColor"),
@@ -399,6 +416,7 @@ void Settings::readSettings() {
   m_neighboursBorderColor = this->readColor(
                               QStringLiteral("NeighboursBorderColor"),
                               QStringLiteral("#000000"));
+  m_pSettings->endGroup();
 }
 
 // ---------------------------------------------------------------------------
@@ -406,7 +424,7 @@ void Settings::readSettings() {
 
 auto Settings::readColor(const QString &sKey,
                          const QString &sFallback) const -> QColor {
-  QString sValue = m_pSettings->value("Colors/" + sKey, sFallback).toString();
+  QString sValue = m_pSettings->value(sKey, sFallback).toString();
   QColor color(sFallback);
 
   color.setNamedColor(sValue);
@@ -507,7 +525,7 @@ auto Settings::getPlayerName(const quint8 nPlayer) const -> QString {
     return m_Players[nPlayer-1]["Name"];
   }
   qWarning() << "Player array length exceeded! Size:" <<
-                m_Players.size() << "- requested:" << nPlayer;
+                m_Players.size() << "- requested (nPlayer - 1):" << nPlayer-1;
   return QStringLiteral("Anonymos");
 }
 
@@ -523,8 +541,17 @@ auto Settings::getPlayerHumanCpu(const quint8 nPlayer) const -> QString {
   }
   qWarning() << "Array length exceeded! m_Player:" << m_Players.size() <<
                 "- m_listPlayerCombo:" << m_listPlayerCombo.size() <<
-                "- requested:" << nPlayer;
+                "- requested (nPlayer - 1):" << nPlayer-1;
   return QStringLiteral("Human");
+}
+
+auto Settings::getPlayerColor(const quint8 nPlayer) const -> QString {
+  if ((nPlayer - 1) < m_Players.size()) {
+    return m_Players[nPlayer-1]["Color"];
+  }
+  qWarning() << "Player array length exceeded! Size:" <<
+                m_Players.size() << "- requested (nPlayer - 1):" << nPlayer-1;
+  return m_DefaultPlayerColors[0];
 }
 
 // ----------------------------------------------------------------------------
@@ -570,9 +597,9 @@ auto Settings::getBgBoardColor() const -> QColor {
 auto Settings::getGridBoardColor() const -> QColor {
   return m_gridBoardColor;
 }
-auto Settings::GetNeighboursColor() const -> QColor {
+auto Settings::getNeighboursColor() const -> QColor {
   return m_neighboursColor;
 }
-auto Settings::GetNeighboursBorderColor() const -> QColor {
+auto Settings::getNeighboursBorderColor() const -> QColor {
   return m_neighboursBorderColor;
 }

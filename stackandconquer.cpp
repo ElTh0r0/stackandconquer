@@ -185,10 +185,12 @@ void StackAndConquer::setupGraphView() {
   m_plblP2Won = new QLabel(QStringLiteral("0"));
   m_plblP2Won->setAlignment(Qt::AlignRight);
 
+  // TODO(): Replace with dynamically re-colored stone.svg image
   QPixmap iconStone1(QStringLiteral(":/images/stone1.png"));
   m_plblIconStones1 = new QLabel();
   m_plblIconStones1->setPixmap(iconStone1);
   m_plblIconStones1->setAlignment(Qt::AlignCenter);
+  // TODO(): Replace with dynamically re-colored stone.svg image
   QPixmap iconStone2(QStringLiteral(":/images/stone2.png"));
   m_plblIconStones2 = new QLabel();
   m_plblIconStones2->setPixmap(iconStone2);
