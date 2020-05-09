@@ -185,16 +185,23 @@ void StackAndConquer::setupGraphView() {
   m_plblP2Won = new QLabel(QStringLiteral("0"));
   m_plblP2Won->setAlignment(Qt::AlignRight);
 
-  // TODO(): Replace with dynamically re-colored stone.svg image
-  QPixmap iconStone1(QStringLiteral(":/images/stone1.png"));
+  QPixmap iconStone(16, 16);
+  iconStone.fill(m_pSettings->getBgColor());
+  QPainter *paint = new QPainter(&iconStone);
+  paint->setPen(QPen(Qt::black));
+  paint->setBrush(QBrush(QColor(m_pSettings->getPlayerColor(1))));
+  paint->drawEllipse(0, 0, 15, 15);
   m_plblIconStones1 = new QLabel();
-  m_plblIconStones1->setPixmap(iconStone1);
+  m_plblIconStones1->setPixmap(iconStone);
   m_plblIconStones1->setAlignment(Qt::AlignCenter);
-  // TODO(): Replace with dynamically re-colored stone.svg image
-  QPixmap iconStone2(QStringLiteral(":/images/stone2.png"));
+  paint->setPen(QPen(Qt::black));
+  paint->setBrush(QBrush(QColor(m_pSettings->getPlayerColor(2))));
+  paint->drawEllipse(0, 0, 15, 15);
   m_plblIconStones2 = new QLabel();
-  m_plblIconStones2->setPixmap(iconStone2);
+  m_plblIconStones2->setPixmap(iconStone);
   m_plblIconStones2->setAlignment(Qt::AlignCenter);
+  delete paint;
+
   QPixmap iconWin(QStringLiteral(":/images/win.png"));
   m_plblIconWin1 = new QLabel();
   m_plblIconWin1->setPixmap(iconWin);

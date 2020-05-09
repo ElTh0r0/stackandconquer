@@ -11,8 +11,6 @@
         <file>images/menu/system-log-out.png</file>
         <file>images/example1.png</file>
         <file>images/example2.png</file>
-        <file>images/stone1.png</file>
-        <file>images/stone2.png</file>
         <file>images/stone.svg</file>
     </qresource>
 </RCC>
