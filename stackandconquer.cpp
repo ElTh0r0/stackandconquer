@@ -58,11 +58,6 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
 
   this->setupMenu();
   this->setupGraphView();
-
-  // Seed random number generator
-  QTime time = QTime::currentTime();
-  qsrand(static_cast<uint>(time.msec()));
-
   this->checkCmdArgs(sListArgs);
 }
 

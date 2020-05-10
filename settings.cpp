@@ -41,15 +41,10 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
     m_pUi(new Ui::SettingsDialog()),
     m_sSharePath(sSharePath),
     m_maxPlayers(2),
-    m_DefaultPlayerColors{"#EF2929", "#FCAF3E"} {
+    m_DefaultPlayerColors{"#EF2929", "#FCAF3E", "#729FCF", "#8F5902"} {
   m_pUi->setupUi(this);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
   this->setModal(true);
-
-  // TODO(): Add further default colors after implementation of > 2 players
-  if (m_DefaultPlayerColors.size() < m_nNumOfPlayers) {
-    qWarning() << "Fallback player color missing!";
-  }
 
 #if defined _WIN32
   m_pSettings = new QSettings(QSettings::IniFormat, QSettings::UserScope,
@@ -371,8 +366,14 @@ void Settings::readSettings() {
     }
     map["HumanCpu"] = m_listPlayerCombo[i]->currentText();
 
-    map["Color"] = this->readColor(QStringLiteral("Color"),
-                                   m_DefaultPlayerColors[i]).name();
+    if (m_DefaultPlayerColors.size() < m_maxPlayers) {
+      qWarning() << "Fallback player color missing!";
+      map["Color"] = this->readColor(QStringLiteral("Color"),
+                                     m_DefaultPlayerColors[0]).name();
+    } else {
+      map["Color"] = this->readColor(QStringLiteral("Color"),
+                                     m_DefaultPlayerColors[i]).name();
+    }
 
     m_Players << map;
     m_pSettings->endGroup();
@@ -552,6 +553,10 @@ auto Settings::getPlayerColor(const quint8 nPlayer) const -> QString {
   qWarning() << "Player array length exceeded! Size:" <<
                 m_Players.size() << "- requested (nPlayer - 1):" << nPlayer-1;
   return m_DefaultPlayerColors[0];
+}
+
+auto Settings::getNumOfPlayers() const -> quint8 {
+  return m_nNumOfPlayers;
 }
 
 // ----------------------------------------------------------------------------

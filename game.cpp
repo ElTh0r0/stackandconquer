@@ -37,6 +37,12 @@
 #include <QMessageBox>
 #include <QTimer>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+#include <QRandomGenerator>
+#else
+#include <QTime>  // Seed qsrand
+#endif
+
 Game::Game(Settings *pSettings, const QStringList &sListFiles)
   : m_pSettings(pSettings),
     m_pBoard(nullptr),
@@ -204,16 +210,20 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   }
 
   // Select start player
-  bool bStartPlayer(true);  // Player 1
   if (0 == nStartPlayer) {  // Random
-    nStartPlayer = qrand() % 2 + 1;
-  }
-  if (2 == nStartPlayer) {  // Player 2
-    bStartPlayer = false;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    nStartPlayer = QRandomGenerator::global()->bounded(
+                     1, m_pSettings->getNumOfPlayers() + 1);
+#else
+    qsrand(static_cast<uint>(QTime::currentTime().msec()));  // Seed
+    nStartPlayer = qrand() % m_pSettings->getNumOfPlayers() + 1;
+#endif
   }
 
-  m_pPlayer1 = new Player(bStartPlayer, bP1IsHuman, sName1, m_nMaxStones);
-  m_pPlayer2 = new Player(!bStartPlayer, bP2IsHuman, sName2, m_nMaxStones);
+  m_pPlayer1 = new Player((1 == nStartPlayer), bP1IsHuman,
+                          sName1, m_nMaxStones);
+  m_pPlayer2 = new Player((2 == nStartPlayer), bP2IsHuman,
+                          sName2, m_nMaxStones);
   m_pPlayer1->setStonesLeft(nStonesLeftP1);
   m_pPlayer1->setWonTowers(nWonP1);
   m_pPlayer2->setStonesLeft(nStonesLeftP2);
