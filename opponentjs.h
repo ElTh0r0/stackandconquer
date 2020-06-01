@@ -47,8 +47,8 @@ class OpponentJS : public QObject {
     static void log(const QString &sMsg);
 
  signals:
-    void setStone(int index);
-    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
+    void setStone(int nIndex, bool bDebug);
+    void moveTower(int nFrom, int nTo, quint8 nStones);
     void scriptError();
 
  private:

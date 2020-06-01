@@ -58,7 +58,7 @@ class Board : public QGraphicsScene {
     auto getBoard() const -> QList<QList<QList<quint8> > >;
     auto getField(const int index) const -> QString;
     auto findPossibleMoves(const bool bStonesLeft) -> quint8;
-    auto checkNeighbourhood(const int field) const -> QList<int>;
+    auto checkNeighbourhood(const int nIndex) const -> QList<int>;
     void printDebugFields() const;
     // TODO(): Check if all variants are needed:
     auto getCoordinateFromField(const int nField) const -> QPoint;
@@ -67,8 +67,8 @@ class Board : public QGraphicsScene {
     auto getStringCoordFromIndex(const int nIndex) const -> QString;
 
  signals:
-    void setStone(int);
-    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
+    void setStone(int nIndex, bool bDebug);
+    void moveTower(int nFrom, int nTo, quint8 nStones);
 
  protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *p_Event);
@@ -107,6 +107,7 @@ class Board : public QGraphicsScene {
     const QPoint m_NumOfFields;  // TODO(): To be removed
     const quint8 m_nMaxTower;
     quint8 m_NumOfPlayers;
+    QList<int> m_DIRS;
     QGraphicsRectItem *m_pHighlightRect{};
     QGraphicsRectItem *m_pSelectedField{};
     QGraphicsRectItem *m_pAnimateField{};

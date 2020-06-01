@@ -60,6 +60,20 @@ Board::Board(QPoint NumOfFields, quint16 nGridSize, quint8 nMaxStones,
   this->createHighlighters();
   this->createStones();
 
+  /*
+   * Moving directions factor
+   * E.g. 5x5 board, max tower height 5 (padding):
+   * -16 -15 -14
+   * -1   X    1
+   * 14  15   16
+   */
+  m_DIRS << -(2 * nMaxTower + m_BoardDimension.x() + 1);  // -16
+  m_DIRS << -(2 * nMaxTower + m_BoardDimension.x());      // -15
+  m_DIRS << -(2 * nMaxTower + m_BoardDimension.x() - 1);  // -14
+  m_DIRS << -1 << 1;          // -1, 1
+  m_DIRS << -(m_DIRS.at(2));  // 14
+  m_DIRS << -(m_DIRS.at(1));  // 15
+  m_DIRS << -(m_DIRS.at(0));  // 16
 
   // Generate field matrix
   /*
@@ -361,18 +375,28 @@ void Board::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
       int field = m_listFields.indexOf(
                     qgraphicsitem_cast<QGraphicsRectItem *>(item));
       if (field > -1) {
+        /*
         qDebug() << "Clicked field:" << field;
         qDebug() << "Board index:  " << getIndexFromField(field);
         qDebug() << "Coordinate:   " << getCoordinateFromField(field);
         qDebug() << "String coord.:" << getStringCoordFromField(field);
+        */
+
+        // If debug enabled, use Ctrl + right mouse button to set stone anywhere
+        if (Qt::RightButton == p_Event->button() &&
+            Qt::ControlModifier == p_Event->modifiers() &&
+            qApp->arguments().contains("--debug")) {
+          this->selectIndexField(-1);
+          qDebug() << "Following stone set in DEBUG mode:";
+          emit setStone(getIndexFromField(field), true);
+          break;
+        }
 
         // Place tower, if field is empty
         if (m_jsBoard.at(getIndexFromField(field)).toString().isEmpty()) {
-          qDebug() << "FIELD EMPTY";
           this->selectIndexField(-1);
-          emit setStone(getIndexFromField(field));
+          emit setStone(getIndexFromField(field), false);
         } else {  // Otherwise select / move tower
-          qDebug() << "FIELD not EMPTY --> SELECT";
           this->selectIndexField(getIndexFromField(field));
         }
         break;
@@ -598,8 +622,7 @@ void Board::selectIndexField(const int nIndex) {
     return;
   }
 
-  if (currentIndex == nIndex ||
-      m_jsBoard.at(nIndex).toString().isEmpty()) {
+  if (currentIndex == nIndex || m_jsBoard.at(nIndex).toString().isEmpty()) {
     currentIndex = -1;
     m_pSelectedField->setVisible(false);
     this->highlightNeighbourhood(neighbours);
@@ -613,7 +636,7 @@ void Board::selectIndexField(const int nIndex) {
     this->highlightNeighbourhood(neighbours);
     m_pSelectedField->setVisible(false);
     this->startAnimation2(this->getCoordinateFromIndex(nIndex));
-//    emit moveTower(nIndex, currentIndex, 0);
+    emit moveTower(nIndex, currentIndex, 0);
     currentIndex = -1;
   } else {  // Select
     currentIndex = nIndex;
@@ -630,71 +653,37 @@ void Board::selectIndexField(const int nIndex) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-auto Board::checkNeighbourhood(const int field) const -> QList<int> {
-  return QList<int>();
-  /*
-  QList<QPoint> neighbours;
-  if (QPoint(-1, -1) == field) {
+auto Board::checkNeighbourhood(const int nIndex) const -> QList<int> {
+  QList<int> neighbours;
+  if (-1 == nIndex) {
     return neighbours;
   }
 
-  auto nMoves = static_cast<quint8>(m_Fields[field.x()][field.y()].size());
-  // qDebug() << "Selected:" << field << "- Moves:" << nMoves;
+  auto nMoves = static_cast<quint8>(m_jsBoard[nIndex].toString().size());
+  // qDebug() << "Sel:" << getStringCoordFromIndex(nIndex) << " Mov:" << nMoves;
 
-  for (int y = field.y() - nMoves; y <= field.y() + nMoves; y += nMoves) {
-    for (int x = field.x() - nMoves; x <= field.x() + nMoves; x += nMoves) {
-      if (x < 0 || y < 0 || x >= m_BoardDimension.x() || y >= m_BoardDimension.y() ||
-          field == QPoint(x, y)) {
-        continue;
+  QString sField;
+  for (int dir = 0; dir < m_DIRS.size(); dir++) {
+    for (int range = 1; range <= nMoves; range++) {
+      sField = m_jsBoard.at(nIndex + m_DIRS.at(dir)*range).toString();
+      if (!sField.isEmpty() && range < nMoves) {
+        // qDebug() << "Route blocked";
+        break;
       }
-      if (!m_Fields[x][y].isEmpty()) {
-        // Check for blocking towers in between
-        QPoint check(x, y);
-        // qDebug() << "POSSIBLE:" << check;
-        QPoint route(field - check);
-        bool bBreak = false;
-
-        for (int i = 1; i < nMoves; i++) {
-          if (route.y() < 0) {
-            check.setY(check.y() - 1);
-          } else if (route.y() > 0) {
-            check.setY(check.y() + 1);
-          } else {
-            check.setY(y);
-          }
-
-          if (route.x() < 0) {
-            check.setX(check.x() - 1);
-          } else if (route.x() > 0) {
-            check.setX(check.x() + 1);
-          } else {
-            check.setX(x);
-          }
-
-          // qDebug() << "Check route:" << check;
-          if (!m_Fields[check.x()][check.y()].isEmpty()) {
-            // qDebug() << "Route blocked";
-            bBreak = true;
-            break;
-          }
-        }
-
-        if (!bBreak) {
-          neighbours.append(QPoint(x, y));
-        }
+      if (0 != sField.toInt() && range == nMoves) {
+        neighbours.append(nIndex + m_DIRS.at(dir)*range);
       }
     }
   }
+
   // qDebug() << "Neighbours which can be moved:" << neighbours;
   return neighbours;
-  */
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
 void Board::highlightNeighbourhood(const QList<int> &neighbours) {
-/*
   static QList<QGraphicsRectItem *> listPossibleMoves;
 
   foreach (QGraphicsRectItem *rect, listPossibleMoves) {
@@ -702,9 +691,10 @@ void Board::highlightNeighbourhood(const QList<int> &neighbours) {
   }
   listPossibleMoves.clear();
 
-  foreach (QPoint posField, neighbours) {
-    listPossibleMoves << new QGraphicsRectItem(posField.x()*m_nGridSize,
-                                               posField.y()*m_nGridSize,
+  foreach (int nIndex, neighbours) {
+    QPoint point(this->getCoordinateFromIndex(nIndex));
+    listPossibleMoves << new QGraphicsRectItem(point.x()*m_nGridSize,
+                                               point.y()*m_nGridSize,
                                                m_nGridSize,
                                                m_nGridSize);
     listPossibleMoves.last()->setBrush(
@@ -714,7 +704,6 @@ void Board::highlightNeighbourhood(const QList<int> &neighbours) {
     listPossibleMoves.last()->setVisible(true);
     this->addItem(listPossibleMoves.last());
   }
-*/
 }
 
 // ---------------------------------------------------------------------------
@@ -725,7 +714,7 @@ auto Board::findPossibleMoves(const bool bStonesLeft) -> quint8 {
   // 1 = stone can be set
   // 2 = tower can be moved
   // 3 = stone can be set and tower can be moved
-return 3;
+return 3;  // TODO(): Implement new board array
   /*
   quint8 nRet(0);
   for (int y = 0; y < m_BoardDimension.y(); y++) {

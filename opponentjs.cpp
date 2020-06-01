@@ -116,8 +116,8 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
     if (listRet[0].x() >= 0 && listRet[0].y() >= 0 &&
         listRet[0].x() < m_NumOfFields.x() &&
         listRet[0].y() < m_NumOfFields.y()) {
-//    emit setStone(listRet[0]);
-      emit setStone(0);  //TODO(): Implement new board array
+//    emit setStone(listRet[0], false);
+      emit setStone(0, false);  // TODO(): Implement new board array
       return;
     }
   } else if (3 == listRet.size()) {
@@ -128,7 +128,8 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
         listRet[1].x() < m_NumOfFields.x() &&
         listRet[1].y() < m_NumOfFields.y() &&
         listRet[2].x() > 0 && listRet[2].x() < m_nHeightTowerWin) {
-      emit moveTower(listRet[0], listRet[1], quint8(listRet[2].x()));
+//    emit moveTower(listRet[0], listRet[1], quint8(listRet[2].x()));
+      emit moveTower(0, 0, 0);  // TODO(): Implement new board array
       return;
     }
   }

@@ -57,8 +57,8 @@ class Game : public QObject {
                        const quint8 nPossibleMove);
 
  private slots:
-    void setStone(int nIndex);
-    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
+    void setStone(int nIndex, bool bDebug);
+    void moveTower(int nFrom, int nTo, quint8 nStones);
     void delayCpu();
     void caughtScriptError();
 

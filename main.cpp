@@ -92,6 +92,10 @@ auto main(int argc, char *argv[]) -> int {
   setupLogger(userDataDir.absolutePath() + "/" + sDebugFile,
               app.applicationName(), app.applicationVersion());
 
+  if (cmdparser.isSet(enableDebug)) {
+    qWarning() << "DEBUG mode enabled!";
+  }
+
   StackAndConquer myStackAndConquer(sSharePath, userDataDir,
                                     cmdparser.positionalArguments());
   myStackAndConquer.show();

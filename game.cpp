@@ -285,9 +285,9 @@ auto Game::getScene() const -> QGraphicsScene* {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::setStone(int nIndex) {
+void Game::setStone(int nIndex, bool bDebug) {
   // TODO(): Rewrite for dynamic number of players
-  if (m_pBoard->getField(nIndex).isEmpty()) {
+  if (m_pBoard->getField(nIndex).isEmpty() || bDebug) {
     if (m_pPlayer1->getIsActive() && m_pPlayer1->getStonesLeft() > 0) {
       m_pPlayer1->setStonesLeft(m_pPlayer1->getStonesLeft() - 1);
       m_pBoard->addStone(nIndex, 1);
@@ -312,6 +312,7 @@ void Game::setStone(int nIndex) {
     }
     m_sPreviousMove.clear();
 
+    // TODO(): Rewrite for new board array:
 //    this->checkTowerWin(index);
     this->updatePlayers();
   } else {
@@ -333,11 +334,11 @@ void Game::setStone(int nIndex) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
-  /*
-  QList<quint8> listStones(m_pBoard->getField(tower));
+void Game::moveTower(int nFrom, int nTo, quint8 nStones) {
+/*
+  QList<quint8> listStones(m_pBoard->getField(nFrom));
   if (listStones.isEmpty()) {
-    qWarning() << "Move tower size == 0! Tower:" << tower;
+    qWarning() << "Move tower size == 0! Tower:" << nFrom;
     if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
         (m_pPlayer2->getIsActive() && m_pPlayer2->getIsHuman())) {
       QMessageBox::warning(nullptr, tr("Warning"),
@@ -363,8 +364,8 @@ void Game::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
     }
   } else if (0 != nStones) {  // Call from CPU
     if (nStones > listStones.size()) {
-      qWarning() << "Trying to move more stones than available! From:" << tower
-                 << "Stones:" << nStones << "To:" << moveTo;
+      qWarning() << "Trying to move more stones than available! From:" << nFrom
+                 << "Stones:" << nStones << "To:" << nTo;
       if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
           (m_pPlayer2->getIsActive() && m_pPlayer2->getIsHuman())) {
         QMessageBox::warning(nullptr, tr("Warning"),
@@ -381,22 +382,22 @@ void Game::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
   }
 
   // Debug print: E.g. "C4:3-D3" = move 3 stones from C4 to D3 (ASCII 65 = A)
-  QString sMove(static_cast<char>(tower.x() + 65) +
-                QString::number(tower.y() + 1) + ":" +
+  QString sMove(static_cast<char>(nFrom.x() + 65) +
+                QString::number(nFrom.y() + 1) + ":" +
                 QString::number(nStonesToMove) + "-" +
-                static_cast<char>(moveTo.x() + 65) +
-                QString::number(moveTo.y() + 1));
+                static_cast<char>(nTo.x() + 65) +
+                QString::number(nTo.y() + 1));
 
   if (m_pPlayer1->getIsActive()) {
     qDebug() << "P1 >>" << sMove;
     if (!m_pPlayer1->getIsHuman()) {
-      m_pBoard->selectField(moveTo);
+      m_pBoard->selectField(nTo);
       m_pBoard->selectField(QPoint(-1, -1));
     }
   } else {
     qDebug() << "P2 >>" << sMove;
     if (!m_pPlayer2->getIsHuman()) {
-      m_pBoard->selectField(moveTo);
+      m_pBoard->selectField(nTo);
       m_pBoard->selectField(QPoint(-1, -1));
     }
   }
@@ -417,7 +418,7 @@ void Game::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
   }
 
   // Check, if CPU made a valid move
-  if (!m_pBoard->checkNeighbourhood(moveTo).contains(tower)) {
+  if (!m_pBoard->checkNeighbourhood(nTo).contains(nFrom)) {
     qWarning() << "CPU tried to move a tower, which is not in the "
                   "neighbourhood of the selected tower.";
     m_bScriptError = true;
@@ -428,14 +429,14 @@ void Game::moveTower(QPoint tower, QPoint moveTo, quint8 nStones) {
   }
 
   for (int i = 0; i < nStonesToMove; i++) {
-    m_pBoard->removeStone(tower);  // Remove is in the wrong order, nevermind!
-    m_pBoard->addStone(moveTo,
+    m_pBoard->removeStone(nFrom);  // Remove is in the wrong order, nevermind!
+    m_pBoard->addStone(nTo,
                        listStones[listStones.size() - nStonesToMove + i]);
   }
 
-  this->checkTowerWin(moveTo);
+  this->checkTowerWin(nTo);
   this->updatePlayers();
-  */
+*/
 }
 
 // ---------------------------------------------------------------------------
