@@ -42,8 +42,6 @@ OpponentJS::OpponentJS(const quint8 nID, const QPoint NumOfFields,
     m_jsEngine(new QJSEngine(parent)) {
   m_obj = m_jsEngine->globalObject();
   m_obj.setProperty(QStringLiteral("cpu"), m_jsEngine->newQObject(this));
-
-  // TODO(volunteer): C++ call via CPU script for check previous move reverted?
 }
 
 // ---------------------------------------------------------------------------
@@ -89,6 +87,8 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
 
 void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
                              const quint8 nPossibleMove) {
+  // TODO(volunteer): Provide list with all possible moves
+  // (without previous move reverted)
   QJsonDocument jsdoc(this->convertBoardToJSON(board));
 
   QString sJsBoard(jsdoc.toJson(QJsonDocument::Compact));
@@ -116,7 +116,8 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
     if (listRet[0].x() >= 0 && listRet[0].y() >= 0 &&
         listRet[0].x() < m_NumOfFields.x() &&
         listRet[0].y() < m_NumOfFields.y()) {
-      emit setStone(listRet[0]);
+//    emit setStone(listRet[0]);
+      emit setStone(0);  //TODO(): Implement new board array
       return;
     }
   } else if (3 == listRet.size()) {

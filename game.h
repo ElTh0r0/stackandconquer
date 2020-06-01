@@ -57,7 +57,7 @@ class Game : public QObject {
                        const quint8 nPossibleMove);
 
  private slots:
-    void setStone(QPoint field);
+    void setStone(int nIndex);
     void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
     void delayCpu();
     void caughtScriptError();
@@ -79,7 +79,7 @@ class Game : public QObject {
     Player *m_pPlayer2;
     QString m_sJsFileP1;
     QString m_sJsFileP2;
-    QPoint m_NumOfFields;
+    QPoint m_BoardDimension;
 
     const quint8 m_nMaxTowerHeight;
     const quint8 m_nMaxStones;

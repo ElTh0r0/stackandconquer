@@ -34,6 +34,7 @@
 #include <QSvgRenderer>
 #include <QGraphicsSvgItem>
 #include <QJsonArray>
+#include <QList>
 #include <QPolygonF>
 
 #include <./settings.h>
@@ -47,21 +48,26 @@ class Board : public QGraphicsScene {
 
  public:
     Board(QPoint NumOfFields, quint16 nGridSize, quint8 nMaxStones,
-          quint8 nMaxTower, Settings *pSettings);
+          const quint8 nMaxTower, quint8 NumOfPlayers, Settings *pSettings);
 
     void setupSavegame(const QList<QList<QList<quint8> > > &board);
-    void addStone(const QPoint field, const quint8 stone,
+    void addStone(const int nIndex, const quint8 nStone,
                   const bool bAnim = true);
     void removeStone(const QPoint field, const bool bAll = false);
-    void selectField(const QPointF point);
+    void selectIndexField(const int nIndex);
     auto getBoard() const -> QList<QList<QList<quint8> > >;
-    auto getField(const QPoint field) const -> QList<quint8>;
+    auto getField(const int index) const -> QString;
     auto findPossibleMoves(const bool bStonesLeft) -> quint8;
-    auto checkNeighbourhood(const QPoint field) const -> QList<QPoint>;
+    auto checkNeighbourhood(const int field) const -> QList<int>;
     void printDebugFields() const;
+    // TODO(): Check if all variants are needed:
+    auto getCoordinateFromField(const int nField) const -> QPoint;
+    auto getStringCoordFromField(const int nField) const -> QString;
+    auto getCoordinateFromIndex(const int nIndex) const -> QPoint;
+    auto getStringCoordFromIndex(const int nIndex) const -> QString;
 
  signals:
-    void setStone(QPoint);
+    void setStone(int);
     void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
 
  protected:
@@ -73,19 +79,22 @@ class Board : public QGraphicsScene {
     void resetAnimation2();
 
  private:
-    auto loadBoard(const QString &sBoard) -> bool;
-    void drawBoard();
+    void loadBoard(const QString &sBoard, QList<QString> &tmpBoard);
+    void addBoardPadding(const QList<QString> &tmpBoard,
+                         const quint8 nMaxTower);
+    void drawBoard(const QList<QString> &tmpBoard);
     void createHighlighters();
     void createStones();
     void startAnimation(const QPoint field);
     void startAnimation2(const QPoint field);
     auto snapToGrid(const QPointF point) const -> QPointF;
-    auto getGridField(const QPointF point) const -> QPoint;
-    void highlightNeighbourhood(const QList<QPoint> &neighbours);
+    void highlightNeighbourhood(const QList<int> &neighbours);
+    auto getIndexFromField(const int nField) const -> int;
+    auto getFieldFromIndex(const int nIndex) const -> int;
 
-    QList<QString> m_Board;
     const QString sIN;
     const QString sOUT;
+    const QString sPAD;
     QPoint m_BoardDimension;
     QJsonArray m_jsBoard;
 
@@ -95,7 +104,9 @@ class Board : public QGraphicsScene {
     const quint16 m_nGridSize;
     const quint8 m_nMaxStones;
     Settings *m_pSettings;
-    const QPoint m_NumOfFields;
+    const QPoint m_NumOfFields;  // TODO(): To be removed
+    const quint8 m_nMaxTower;
+    quint8 m_NumOfPlayers;
     QGraphicsRectItem *m_pHighlightRect{};
     QGraphicsRectItem *m_pSelectedField{};
     QGraphicsRectItem *m_pAnimateField{};
@@ -105,8 +116,9 @@ class Board : public QGraphicsScene {
     QList<QGraphicsSvgItem *> m_listStonesP1;
     QList<QGraphicsSvgItem *> m_listStonesP2;
 
-    QList<QList<QList<quint8> > > m_Fields;
-    QList<QList<QList<QGraphicsSvgItem *> > > m_FieldStones;
+    QList<QList<QList<quint8> > > m_Fields;  // TODO(): To be removed
+    QList<QList<QList<QGraphicsSvgItem *> > > m_FieldStones;  // TODO(): To be removed
+    QList<QList<QGraphicsSvgItem *> > m_FieldStones2;  // TODO(): To be renamed
 
     QList<QGraphicsSimpleTextItem *> m_Captions;
 };
