@@ -171,13 +171,25 @@ void StackAndConquer::setupGraphView() {
   m_pLayout = new QGridLayout;
   m_pLayout->setVerticalSpacing(0);
   m_plblPlayer1 = new QLabel(m_pSettings->getPlayerName(1));
+  m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
+                               m_pSettings->getTextColor().name());
   m_plblP1StonesLeft = new QLabel(QStringLiteral("99"));
+  m_plblP1StonesLeft->setStyleSheet(QStringLiteral("color: ") +
+                                    m_pSettings->getTextColor().name());
   m_plblP1Won = new QLabel(QStringLiteral("0"));
+  m_plblP1Won->setStyleSheet(QStringLiteral("color: ") +
+                             m_pSettings->getTextColor().name());
   m_plblPlayer2 = new QLabel(m_pSettings->getPlayerName(2));
+  m_plblPlayer2->setStyleSheet(QStringLiteral("color: ") +
+                               m_pSettings->getTextColor().name());
   m_plblPlayer2->setAlignment(Qt::AlignRight);
   m_plblP2StonesLeft = new QLabel(QStringLiteral("99"));
+  m_plblP2StonesLeft->setStyleSheet(QStringLiteral("color: ") +
+                                    m_pSettings->getTextColor().name());
   m_plblP2StonesLeft->setAlignment(Qt::AlignRight);
   m_plblP2Won = new QLabel(QStringLiteral("0"));
+  m_plblP2Won->setStyleSheet(QStringLiteral("color: ") +
+                             m_pSettings->getTextColor().name());
   m_plblP2Won->setAlignment(Qt::AlignRight);
 
   QPixmap iconStone(16, 16);
@@ -324,13 +336,17 @@ void StackAndConquer::highlightActivePlayer(const bool bPlayer1,
   }
 
   if (bPlayer1) {
-    m_plblPlayer1->setStyleSheet(QStringLiteral("color: #FF0000"));
-    m_plblPlayer2->setStyleSheet(QStringLiteral("color: #000000"));
+    m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
+                                 m_pSettings->getTextHighlightColor().name());
+    m_plblPlayer2->setStyleSheet(QStringLiteral("color: ") +
+                                 m_pSettings->getTextColor().name());
     m_pUi->statusBar->showMessage(
           tr("%1's turn").arg(m_plblPlayer1->text()));
   } else {
-    m_plblPlayer1->setStyleSheet(QStringLiteral("color: #000000"));
-    m_plblPlayer2->setStyleSheet(QStringLiteral("color: #FF0000"));
+    m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
+                                 m_pSettings->getTextColor().name());
+    m_plblPlayer2->setStyleSheet(QStringLiteral("color: ") +
+                                 m_pSettings->getTextHighlightColor().name());
     m_pUi->statusBar->showMessage(
           tr("%1's turn").arg(m_plblPlayer2->text()));
   }

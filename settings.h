@@ -60,6 +60,8 @@ class Settings : public QDialog {
     auto getLanguage() -> QString;
 
     auto getBgColor() const -> QColor;
+    auto getTextColor() const -> QColor;
+    auto getTextHighlightColor() const -> QColor;
     auto getHighlightColor() const -> QColor;
     auto getHighlightBorderColor() const -> QColor;
     auto getSelectedColor() const -> QColor;
@@ -115,6 +117,8 @@ class Settings : public QDialog {
     bool m_bSettingChanged{};
 
     QColor m_bgColor;
+    QColor m_txtColor;
+    QColor m_txtHighColor;
     QColor m_highlightColor;
     QColor m_highlightBorderColor;
     QColor m_selectedColor;

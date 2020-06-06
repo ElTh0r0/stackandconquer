@@ -247,6 +247,9 @@ void Settings::accept() {
   // Colors
   m_pSettings->beginGroup(QStringLiteral("Colors"));
   m_pSettings->setValue(QStringLiteral("BgColor"), m_bgColor.name());
+  m_pSettings->setValue(QStringLiteral("TextColor"), m_txtColor.name());
+  m_pSettings->setValue(QStringLiteral("TextHighlightColor"),
+                        m_txtHighColor.name());
   m_pSettings->setValue(QStringLiteral("HighlightColor"),
                         m_highlightColor.name());
   m_pSettings->setValue(QStringLiteral("HighlightBorderColor"),
@@ -395,6 +398,10 @@ void Settings::readSettings() {
   m_pSettings->beginGroup(QStringLiteral("Colors"));
   m_bgColor = this->readColor(QStringLiteral("BgColor"),
                               QStringLiteral("#EEEEEC"));
+  m_txtColor = this->readColor(QStringLiteral("TextColor"),
+                               QStringLiteral("#000000"));
+  m_txtHighColor = this->readColor(QStringLiteral("TextHighlightColor"),
+                                   QStringLiteral("#FF0000"));
   m_highlightColor = this->readColor(QStringLiteral("HighlightColor"),
                                      QStringLiteral("#8ae234"));
   m_highlightBorderColor = this->readColor(
@@ -577,6 +584,12 @@ auto Settings::getShowPossibleMoveTowers() const -> bool {
 
 auto Settings::getBgColor() const -> QColor {
   return m_bgColor;
+}
+auto Settings::getTextColor() const -> QColor {
+  return m_txtColor;
+}
+auto Settings::getTextHighlightColor() const -> QColor {
+  return m_txtHighColor;
 }
 auto Settings::getHighlightColor() const -> QColor {
   return m_highlightColor;
