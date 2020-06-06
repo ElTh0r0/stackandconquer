@@ -53,9 +53,8 @@ class Board : public QGraphicsScene {
     void setupSavegame(const QList<QList<QList<quint8> > > &board);
     void addStone(const int nIndex, const quint8 nStone,
                   const bool bAnim = true);
-    void removeStone(const QPoint field, const bool bAll = false);
+    void removeStone(const int nIndex, const bool bAll = false);
     void selectIndexField(const int nIndex);
-    auto getBoard() const -> QList<QList<QList<quint8> > >;
     auto getField(const int index) const -> QString;
     auto findPossibleMoves(const bool bStonesLeft) -> quint8;
     auto checkNeighbourhood(const int nIndex) const -> QList<int>;
@@ -116,11 +115,7 @@ class Board : public QGraphicsScene {
     QSvgRenderer *m_pSvgRendererP2;
     QList<QGraphicsSvgItem *> m_listStonesP1;
     QList<QGraphicsSvgItem *> m_listStonesP2;
-
-    QList<QList<QList<quint8> > > m_Fields;  // TODO(): To be removed
-    QList<QList<QList<QGraphicsSvgItem *> > > m_FieldStones;  // TODO(): To be removed
-    QList<QList<QGraphicsSvgItem *> > m_FieldStones2;  // TODO(): To be renamed
-
+    QList<QList<QGraphicsSvgItem *> > m_FieldStones;
     QList<QGraphicsSimpleTextItem *> m_Captions;
 };
 

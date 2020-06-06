@@ -68,8 +68,8 @@ class Game : public QObject {
     static auto loadGame(const QString &sFile) -> QJsonObject;
     void checkPossibleMoves();
     auto checkPreviousMoveReverted(const QString &sMove) -> bool;
-    void checkTowerWin(QPoint field);
-    void returnStones(QPoint field);
+    void checkTowerWin(const int nIndex);
+    void returnStones(const int nIndex);
 
     Settings *m_pSettings;
     Board *m_pBoard;

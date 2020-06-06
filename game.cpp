@@ -323,7 +323,8 @@ void Game::setStone(int nIndex, bool bDebug) {
                                   "stone on a free field."));
     } else {
       m_bScriptError = true;
-//      qWarning() << "CPU tried to set stone >>" << sMove;
+      qWarning() << "CPU tried to set stone >>" <<
+                    m_pBoard->getStringCoordFromIndex(nIndex);
       QMessageBox::warning(nullptr, tr("Warning"),
                            tr("CPU script made an invalid move! "
                               "Please check the debug log."));
@@ -335,8 +336,17 @@ void Game::setStone(int nIndex, bool bDebug) {
 // ---------------------------------------------------------------------------
 
 void Game::moveTower(int nFrom, int nTo, quint8 nStones) {
-/*
-  QList<quint8> listStones(m_pBoard->getField(nFrom));
+  QList<int> listStones;
+  for (auto ch : m_pBoard->getField(nFrom)) {
+    listStones.append(ch.digitValue());
+  }
+  if (listStones.contains(-1)) {
+    qWarning() << "Tower contains invalid stone!" << listStones;
+    QMessageBox::warning(nullptr, tr("Warning"),
+                         tr("Something went wrong!"));
+    return;
+  }
+
   if (listStones.isEmpty()) {
     qWarning() << "Move tower size == 0! Tower:" << nFrom;
     if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
@@ -382,23 +392,21 @@ void Game::moveTower(int nFrom, int nTo, quint8 nStones) {
   }
 
   // Debug print: E.g. "C4:3-D3" = move 3 stones from C4 to D3 (ASCII 65 = A)
-  QString sMove(static_cast<char>(nFrom.x() + 65) +
-                QString::number(nFrom.y() + 1) + ":" +
+  QString sMove(m_pBoard->getStringCoordFromIndex(nFrom) + ":" +
                 QString::number(nStonesToMove) + "-" +
-                static_cast<char>(nTo.x() + 65) +
-                QString::number(nTo.y() + 1));
+                m_pBoard->getStringCoordFromIndex(nTo));
 
   if (m_pPlayer1->getIsActive()) {
     qDebug() << "P1 >>" << sMove;
     if (!m_pPlayer1->getIsHuman()) {
-      m_pBoard->selectField(nTo);
-      m_pBoard->selectField(QPoint(-1, -1));
+      m_pBoard->selectIndexField(nTo);
+      m_pBoard->selectIndexField(-1);
     }
   } else {
     qDebug() << "P2 >>" << sMove;
     if (!m_pPlayer2->getIsHuman()) {
-      m_pBoard->selectField(nTo);
-      m_pBoard->selectField(QPoint(-1, -1));
+      m_pBoard->selectIndexField(nTo);
+      m_pBoard->selectIndexField(-1);
     }
   }
 
@@ -436,30 +444,27 @@ void Game::moveTower(int nFrom, int nTo, quint8 nStones) {
 
   this->checkTowerWin(nTo);
   this->updatePlayers();
-*/
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::checkTowerWin(QPoint field) {
-  /*
-  if (m_pBoard->getField(field).size() >= m_nMaxTowerHeight) {
-    if (1 == m_pBoard->getField(field).last()) {
+void Game::checkTowerWin(const int nIndex) {
+  // TODO(): Rewrite for > 2 players
+  if (m_pBoard->getField(nIndex).size() >= m_nMaxTowerHeight) {
+    if (1 == m_pBoard->getField(nIndex).right(1).toInt()) {
       m_pPlayer1->setWonTowers(m_pPlayer1->getWonTowers() + 1);
       qDebug() << "Player 1 conquered tower" <<
-                  static_cast<char>(field.x() + 65) +
-                  QString::number(field.y() + 1);
+                  m_pBoard->getStringCoordFromIndex(nIndex);
       if (m_pSettings->getWinTowers() != m_pPlayer1->getWonTowers()) {
         QMessageBox::information(nullptr, tr("Information"),
                                  tr("%1 conquered a tower!")
                                  .arg(m_pPlayer1->getName()));
       }
-    } else if (2 == m_pBoard->getField(field).last()) {
+    } else if (2 == m_pBoard->getField(nIndex).right(1).toInt()) {
       m_pPlayer2->setWonTowers(m_pPlayer2->getWonTowers() + 1);
       qDebug() << "Player 2 conquered tower" <<
-                  static_cast<char>(field.x() + 65) +
-                  QString::number(field.y() + 1);
+                  m_pBoard->getStringCoordFromIndex(nIndex);
       if (m_pSettings->getWinTowers() != m_pPlayer2->getWonTowers()) {
         QMessageBox::information(nullptr, tr("Information"),
                                  tr("%1 conquered a tower!")
@@ -468,31 +473,29 @@ void Game::checkTowerWin(QPoint field) {
     } else {
       qDebug() << Q_FUNC_INFO;
       qWarning() << "Last stone neither 1 nor 2!";
-      qWarning() << "Field:" << field
-                 << " -  Tower" << m_pBoard->getField(field);
+      qWarning() << "Field:" << nIndex
+                 << " -  Tower" << m_pBoard->getField(nIndex);
       QMessageBox::warning(nullptr, tr("Warning"),
                            tr("Something went wrong!"));
       return;
     }
-    this->returnStones(field);
+    this->returnStones(nIndex);
   }
-  */
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::returnStones(QPoint field) {
-  /*
-  QList<quint8> tower(m_pBoard->getField(field));
-  quint8 stones(static_cast<quint8>(tower.count(1)));
+void Game::returnStones(const int nIndex) {
+  // TODO(): Rewrite for > 2 players
+  QString tower(m_pBoard->getField(nIndex));
+  quint8 stones(static_cast<quint8>(tower.count('1')));
   m_pPlayer1->setStonesLeft(m_pPlayer1->getStonesLeft() + stones);
-  stones = static_cast<quint8>(tower.count(2));
+  stones = static_cast<quint8>(tower.count('2'));
   m_pPlayer2->setStonesLeft(m_pPlayer2->getStonesLeft() + stones);
 
   // Clear field
-  m_pBoard->removeStone(field, true);
-  */
+  m_pBoard->removeStone(nIndex, true);
 }
 
 // ---------------------------------------------------------------------------
@@ -548,9 +551,11 @@ void Game::updatePlayers(bool bInitial) {
 
 void Game::delayCpu() {
   if (m_pPlayer1->getIsActive()) {
-    emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getCanMove());
+    //TODO(): Implement new board array
+    //emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getCanMove());
   } else {
-    emit makeMoveCpuP2(m_pBoard->getBoard(), m_pPlayer2->getCanMove());
+    //TODO(): Implement new board array
+    //emit makeMoveCpuP2(m_pBoard->getBoard(), m_pPlayer2->getCanMove());
   }
 }
 
@@ -662,7 +667,8 @@ auto Game::saveGame(const QString &sFile) -> bool {
   QJsonArray tower;
   QVariantList vartower;
   QJsonArray jsBoard;
-  QList<QList<QList<quint8> > > board(m_pBoard->getBoard());
+  // TODO():Implement new board array
+  //QList<QList<QList<quint8> > > board(m_pBoard->getBoard());
 
   if (!saveFile.open(QIODevice::WriteOnly)) {
     qWarning() << "Couldn't open save file:" << sFile;
@@ -674,9 +680,11 @@ auto Game::saveGame(const QString &sFile) -> bool {
     QJsonArray column;
     for (int nRow = 0; nRow < m_BoardDimension.y(); nRow++) {
       vartower.clear();
-      foreach (quint8 n, board[nCol][nRow]) {
-        vartower << n;
-      }
+
+      // TODO():Implement new board array
+      //foreach (quint8 n, board[nCol][nRow]) {
+      //  vartower << n;
+      //}
       tower = QJsonArray::fromVariantList(vartower);
       column.append(tower);
     }
