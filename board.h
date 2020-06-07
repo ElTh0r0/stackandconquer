@@ -55,6 +55,7 @@ class Board : public QGraphicsScene {
                   const bool bAnim = true);
     void removeStone(const int nIndex, const bool bAll = false);
     void selectIndexField(const int nIndex);
+    auto getBoard() const -> QJsonArray;
     auto getField(const int index) const -> QString;
     auto findPossibleMoves(const bool bStonesLeft) -> quint8;
     auto checkNeighbourhood(const int nIndex) const -> QList<int>;
@@ -67,7 +68,7 @@ class Board : public QGraphicsScene {
 
  signals:
     void setStone(int nIndex, bool bDebug);
-    void moveTower(int nFrom, int nTo, quint8 nStones);
+    void moveTower(int nFrom, quint8 nStones, int nTo);
 
  protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *p_Event);

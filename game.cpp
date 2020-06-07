@@ -334,7 +334,7 @@ void Game::setStone(int nIndex, bool bDebug) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::moveTower(int nFrom, int nTo, quint8 nStones) {
+void Game::moveTower(int nFrom, quint8 nStones, int nTo) {
   QList<int> listStones;
   for (auto ch : m_pBoard->getField(nFrom)) {
     listStones.append(ch.digitValue());
@@ -451,7 +451,7 @@ void Game::moveTower(int nFrom, int nTo, quint8 nStones) {
 void Game::checkTowerWin(const int nIndex) {
   // TODO(): Rewrite for > 2 players
   if (m_pBoard->getField(nIndex).size() >= m_nMaxTowerHeight) {
-    if (1 == m_pBoard->getField(nIndex).right(1).toInt()) {
+    if (1 == m_pBoard->getField(nIndex).rightRef(1).toInt()) {
       m_pPlayer1->setWonTowers(m_pPlayer1->getWonTowers() + 1);
       qDebug() << "Player 1 conquered tower" <<
                   m_pBoard->getStringCoordFromIndex(nIndex);
@@ -460,7 +460,7 @@ void Game::checkTowerWin(const int nIndex) {
                                  tr("%1 conquered a tower!")
                                  .arg(m_pPlayer1->getName()));
       }
-    } else if (2 == m_pBoard->getField(nIndex).right(1).toInt()) {
+    } else if (2 == m_pBoard->getField(nIndex).rightRef(1).toInt()) {
       m_pPlayer2->setWonTowers(m_pPlayer2->getWonTowers() + 1);
       qDebug() << "Player 2 conquered tower" <<
                   m_pBoard->getStringCoordFromIndex(nIndex);
@@ -552,12 +552,11 @@ void Game::updatePlayers(bool bInitial) {
 // ---------------------------------------------------------------------------
 
 void Game::delayCpu() {
+  // TODO(): Rewrite for > 2 players
   if (m_pPlayer1->getIsActive()) {
-    //TODO(): Implement new board array
-    //emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getCanMove());
+    emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getCanMove());
   } else {
-    //TODO(): Implement new board array
-    //emit makeMoveCpuP2(m_pBoard->getBoard(), m_pPlayer2->getCanMove());
+    emit makeMoveCpuP2(m_pBoard->getBoard(), m_pPlayer2->getCanMove());
   }
 }
 

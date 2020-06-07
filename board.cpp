@@ -554,7 +554,7 @@ void Board::removeStone(const int nIndex, const bool bAll) {
     m_jsBoard[nIndex] = QString();
   } else {  // Remove only one
     // TODO(): Rewrite for > 2 players
-    if (1 == QString(m_jsBoard.at(nIndex).toString().right(1)).toInt()) {  // Player 1
+    if (1 == m_jsBoard.at(nIndex).toString().rightRef(1).toInt()) {  // Player 1
       m_listStonesP1.append(m_FieldStones[nIndex].last());
       m_FieldStones[nIndex].last()->setVisible(false);
       m_FieldStones[nIndex].removeLast();
@@ -577,6 +577,13 @@ void Board::removeStone(const int nIndex, const bool bAll) {
 
 auto Board::getField(const int index) const -> QString {
   return m_jsBoard.at(index).toString();
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+auto Board::getBoard() const -> QJsonArray {
+  return m_jsBoard;
 }
 
 // ---------------------------------------------------------------------------
@@ -608,7 +615,7 @@ void Board::selectIndexField(const int nIndex) {
     this->highlightNeighbourhood(neighbours);
     m_pSelectedField->setVisible(false);
     this->startAnimation2(this->getCoordinateFromIndex(nIndex));
-    emit moveTower(nIndex, currentIndex, 0);
+    emit moveTower(nIndex, 0, currentIndex);
     currentIndex = -1;
   } else {  // Select
     currentIndex = nIndex;

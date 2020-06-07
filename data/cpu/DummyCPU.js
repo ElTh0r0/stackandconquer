@@ -39,9 +39,15 @@ cpu.log("Loading CPU script DummyCPU...");
 function makeMove(nPossible) {
   board = JSON.parse(jsboard);  // Global
   nPossibleMove = Number(nPossible);
-  //cpu.log("[0][0][0]: " + board[0][0][0]);
-  //cpu.log("[0][0].length: " + board[0][0].length);
+  //cpu.log("[80].length: " + board[80].length);
+  //cpu.log("[81].length: " + board[81].length);
+  //cpu.log("[81][0]: " + board[81][0]);
 
+  if ((1 === nPossibleMove || 3 === nPossibleMove) && findFreeFields()) {
+    return setRandom();
+  }
+
+  /*
   var MoveToWin = canWin(nID);
   if (0 !== MoveToWin.length) {  // CPU can win
     return MoveToWin[0];
@@ -73,6 +79,7 @@ function makeMove(nPossible) {
       return moveRandom(MoveToWin);
     }
   }
+*/
 
   // This line never should be reached!
   cpu.log("ERROR: Script couldn't call setRandom() / moveRandom()!");
@@ -221,11 +228,10 @@ function preventWin(sMoveToWin, nPossibleMove) {
 function setRandom() {
   // Seed random?
   do {
-    var nRandX = Math.floor(Math.random() * nNumOfFieldsX);
-    var nRandY = Math.floor(Math.random() * nNumOfFieldsY);
-  } while (0 !== board[nRandX][nRandY].length);
-  
-  return nRandX + "," + nRandY;
+    var nRand = Math.floor(Math.random() * board.length);
+  } while (0 !== board[nRand].length);
+
+  return [nRand];
 }
 
 // ---------------------------------------------------------------------------
@@ -264,11 +270,9 @@ function moveRandom(oppWinning) {
 // ---------------------------------------------------------------------------
 
 function findFreeFields() {
-  for (var nRow = 0; nRow < nNumOfFieldsY; nRow++) {
-    for (var nCol = 0; nCol < nNumOfFieldsX; nCol++) {
-      if (0 === board[nCol][nRow].length) {
-        return true;
-      }
+  for (var nIndex = 0; nIndex < board.length; nIndex++) {
+    if (0 === board[nIndex].length) {
+      return true;
     }
   }
   return false;

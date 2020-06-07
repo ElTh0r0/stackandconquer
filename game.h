@@ -51,14 +51,12 @@ class Game : public QObject {
     void setInteractive(bool bEnabled);
     void highlightActivePlayer(bool bPlayer1,
                                bool bP1Won = false, bool bP2Won = false);
-    void makeMoveCpuP1(const QList<QList<QList<quint8> > > &board,
-                       const quint8 nPossibleMove);
-    void makeMoveCpuP2(const QList<QList<QList<quint8> > > &board,
-                       const quint8 nPossibleMove);
+    void makeMoveCpuP1(const QJsonArray &board, const quint8 nPossibleMove);
+    void makeMoveCpuP2(const QJsonArray &board, const quint8 nPossibleMove);
 
  private slots:
     void setStone(int nIndex, bool bDebug);
-    void moveTower(int nFrom, int nTo, quint8 nStones);
+    void moveTower(int nFrom, quint8 nStones, int nTo);
     void delayCpu();
     void caughtScriptError();
 
