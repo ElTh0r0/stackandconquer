@@ -682,20 +682,28 @@ void Board::highlightNeighbourhood(const QList<int> &neighbours) {
 // ---------------------------------------------------------------------------
 
 auto Board::findPossibleMoves(const bool bStonesLeft) -> quint8 {
-  // Return: 0 = no moves
-  // 1 = stone can be set
-  // 2 = tower can be moved
-  // 3 = stone can be set and tower can be moved
-return 3;  // TODO(): Implement new board array
+  // TODO(): Rewrite - Generate list of all possible moves.
+
   /*
+   * Return: 0 = no moves
+   * 1 = stone can be set
+   * 2 = tower can be moved
+   * 3 = stone can be set and tower can be moved
+   */
+
   quint8 nRet(0);
-  for (int y = 0; y < m_BoardDimension.y(); y++) {
-    for (int x = 0; x < m_BoardDimension.x(); x++) {
-      if (m_Fields[x][y].isEmpty() && bStonesLeft && 1 != nRet) {
+  int nField = -1;
+  QString s;
+  for (int nRow = 0; nRow < m_BoardDimension.y(); nRow++) {
+    for (int nCol = 0; nCol < m_BoardDimension.x(); nCol++) {
+      nField++;
+      s = m_jsBoard.at(this->getIndexFromField(nField)).toString();
+      if (s.isEmpty() && bStonesLeft && 1 != nRet) {
         nRet++;
       }
-      if (!m_Fields[x][y].isEmpty() && 2 != nRet) {
-        if (!this->checkNeighbourhood(QPoint(x, y)).isEmpty()) {
+      if (!s.isEmpty() && 2 != nRet) {
+        if (!this->checkNeighbourhood(
+              this->getIndexFromField(nField)).isEmpty()) {
           nRet += 2;
         }
       }
@@ -705,7 +713,6 @@ return 3;  // TODO(): Implement new board array
     }
   }
   return nRet;
-*/
 }
 
 // ---------------------------------------------------------------------------

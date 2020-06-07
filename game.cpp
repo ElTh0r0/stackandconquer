@@ -312,8 +312,7 @@ void Game::setStone(int nIndex, bool bDebug) {
     }
     m_sPreviousMove.clear();
 
-    // TODO(): Rewrite for new board array:
-//    this->checkTowerWin(index);
+    this->checkTowerWin(nIndex);
     this->updatePlayers();
   } else {
     if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
@@ -532,7 +531,10 @@ void Game::updatePlayers(bool bInitial) {
       m_pPlayer2->setActive(!m_pPlayer2->getIsActive());
     }
     emit highlightActivePlayer(m_pPlayer1->getIsActive());
-    this->checkPossibleMoves();
+    if (!this->checkPossibleMoves()) {
+      m_pBoard->printDebugFields();
+      return;
+    }
 
     if ((m_pPlayer1->getIsActive() && !m_pPlayer1->getIsHuman()) ||
         (m_pPlayer2->getIsActive() && !m_pPlayer2->getIsHuman())) {
@@ -562,19 +564,17 @@ void Game::delayCpu() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::checkPossibleMoves() {
-  if (m_pPlayer1->getIsActive()) {
-    m_pPlayer1->setCanMove(
-          m_pBoard->findPossibleMoves(m_pPlayer1->getStonesLeft() > 0));
-    if (0 != m_pPlayer1->getCanMove()) {
-      return;
-    }
-  } else {
-    m_pPlayer2->setCanMove(
-          m_pBoard->findPossibleMoves(m_pPlayer2->getStonesLeft() > 0));
-    if (0 != m_pPlayer2->getCanMove()) {
-      return;
-    }
+auto Game::checkPossibleMoves() -> bool {
+  m_pPlayer1->setCanMove(
+        m_pBoard->findPossibleMoves(m_pPlayer1->getStonesLeft() > 0));
+  m_pPlayer2->setCanMove(
+        m_pBoard->findPossibleMoves(m_pPlayer2->getStonesLeft() > 0));
+  // TODO(): Rewrite for > 2 players
+  if (m_pPlayer1->getIsActive() && 0 != m_pPlayer1->getCanMove()) {
+    return true;
+  }
+  if (m_pPlayer2->getIsActive() && 0 != m_pPlayer2->getCanMove()) {
+    return true;
   }
 
   if (0 == m_pPlayer1->getCanMove() && 0 == m_pPlayer2->getCanMove()) {
@@ -583,6 +583,7 @@ void Game::checkPossibleMoves() {
     QMessageBox::information(nullptr, tr("Information"),
                              tr("No moves possible anymore.\n"
                                 "Game ends in a tie!"));
+    return false;
   } else if (0 == m_pPlayer1->getCanMove()) {
     qDebug() << "PLAYER 1 HAS TO PASS!";
     QMessageBox::information(nullptr, tr("Information"),
@@ -596,6 +597,7 @@ void Game::checkPossibleMoves() {
                              .arg(m_pPlayer2->getName()));
     this->updatePlayers();
   }
+  return true;
 }
 
 // ---------------------------------------------------------------------------

@@ -66,7 +66,7 @@ class Game : public QObject {
     void createCPU1();
     void createCPU2();
     static auto loadGame(const QString &sFile) -> QJsonObject;
-    void checkPossibleMoves();
+    auto checkPossibleMoves() -> bool;
     auto checkPreviousMoveReverted(const QString &sMove) -> bool;
     void checkTowerWin(const int nIndex);
     void returnStones(const int nIndex);
