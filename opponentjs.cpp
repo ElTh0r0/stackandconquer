@@ -34,11 +34,14 @@
 #include <QJsonObject>
 
 OpponentJS::OpponentJS(const quint8 nID, const QPoint NumOfFields,
-                       const quint8 nHeightTowerWin, QObject *parent)
+                       const quint8 nHeightTowerWin, const QString &sOut,
+                       const QString &sPad, QObject *parent)
   : QObject(parent),
     m_nID(nID),
     m_NumOfFields(NumOfFields),
     m_nHeightTowerWin(nHeightTowerWin),
+    m_sOut(sOut),
+    m_sPad(sPad),
     m_jsEngine(new QJSEngine(parent)) {
   m_obj = m_jsEngine->globalObject();
   m_obj.setProperty(QStringLiteral("cpu"), m_jsEngine->newQObject(this));
@@ -79,6 +82,8 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
   m_obj.setProperty(QStringLiteral("nNumOfFieldsX"), m_NumOfFields.x());
   m_obj.setProperty(QStringLiteral("nNumOfFieldsY"), m_NumOfFields.y());
   m_obj.setProperty(QStringLiteral("nHeightTowerWin"), m_nHeightTowerWin);
+  m_obj.setProperty(QStringLiteral("sOut"), m_sOut);
+  m_obj.setProperty(QStringLiteral("sPad"), m_sPad);
   return true;
 }
 

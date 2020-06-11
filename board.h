@@ -65,6 +65,8 @@ class Board : public QGraphicsScene {
     auto getStringCoordFromField(const int nField) const -> QString;
     auto getCoordinateFromIndex(const int nIndex) const -> QPoint;
     auto getStringCoordFromIndex(const int nIndex) const -> QString;
+    auto getOut() const -> QString;
+    auto getPad() const -> QString;
 
  signals:
     void setStone(int nIndex, bool bDebug);

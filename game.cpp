@@ -236,7 +236,8 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
 // ---------------------------------------------------------------------------
 
 void Game::createCPU1() {
-  m_jsCpuP1 = new OpponentJS(1, m_BoardDimension, m_nMaxTowerHeight);
+  m_jsCpuP1 = new OpponentJS(1, m_BoardDimension, m_nMaxTowerHeight,
+                             m_pBoard->getOut(), m_pBoard->getPad());
   connect(this, &Game::makeMoveCpuP1, m_jsCpuP1, &OpponentJS::makeMoveCpu);
   connect(m_jsCpuP1, &OpponentJS::setStone, this, &Game::setStone);
   connect(m_jsCpuP1, &OpponentJS::moveTower, this, &Game::moveTower);
@@ -247,7 +248,8 @@ void Game::createCPU1() {
 // ---------------------------------------------------------------------------
 
 void Game::createCPU2() {
-  m_jsCpuP2 = new OpponentJS(2, m_BoardDimension, m_nMaxTowerHeight);
+  m_jsCpuP2 = new OpponentJS(2, m_BoardDimension, m_nMaxTowerHeight,
+                             m_pBoard->getOut(), m_pBoard->getPad());
   connect(this, &Game::makeMoveCpuP2, m_jsCpuP2, &OpponentJS::makeMoveCpu);
   connect(m_jsCpuP2, &OpponentJS::setStone, this, &Game::setStone);
   connect(m_jsCpuP2, &OpponentJS::moveTower, this, &Game::moveTower);

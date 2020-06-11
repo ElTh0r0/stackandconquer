@@ -579,11 +579,16 @@ auto Board::getField(const int index) const -> QString {
   return m_jsBoard.at(index).toString();
 }
 
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
 auto Board::getBoard() const -> QJsonArray {
   return m_jsBoard;
+}
+
+auto Board::getOut() const -> QString {
+  return sOUT;
+}
+
+auto Board::getPad() const -> QString {
+  return sPAD;
 }
 
 // ---------------------------------------------------------------------------
