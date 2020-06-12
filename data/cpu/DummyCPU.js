@@ -61,7 +61,6 @@ function makeMove(nPossible) {
   //cpu.log("[81].length: " + board[81].length);
   //cpu.log("[81][0]: " + board[81][0]);
 
-  /*
   var MoveToWin = canWin(nID);
   if (0 !== MoveToWin.length) {  // CPU can win
     return MoveToWin[0];
@@ -75,14 +74,11 @@ function makeMove(nPossible) {
   }
   if (0 !== MoveToWin.length) {
     // TODO: preventWin() currently handles only first winning move!
-    var sPreventWin = preventWin(MoveToWin[0], nPossibleMove);
-    if (sPreventWin.length > 0) {
-      return sPreventWin;
+    var PreventWin = preventWin(MoveToWin[0], nPossibleMove);
+    if (1 === PreventWin.length || 3 === PreventWin.length) {
+      return PreventWin;
     }
   }
-  */
-
-var MoveToWin = [];
 
   if (1 === nPossibleMove && findFreeFields()) {
     return setRandom();
@@ -134,19 +130,20 @@ function checkNeighbourhood(nIndex) {
 
 function canWin(nPlayerID) {
   var ret = [];
-  for (var nRow = 0; nRow < nNumOfFieldsY; nRow++) {
-    for (var nCol = 0; nCol < nNumOfFieldsX; nCol++) {
-      var neighbours = checkNeighbourhood(nCol, nRow);
-      // cpu.log("Check: " + (nCol+1) + "," + (nRow+1));
-      // cpu.log("Neighbours: " + neighbours);
-
+  for (var nIndex = 0; nIndex < board.length; nIndex++) {
+    if (0 !== board[nIndex].length &&
+        sOut !== board[nIndex] &&
+        sPad !== board[nIndex]) {
+      var neighbours = checkNeighbourhood(nIndex);
       for (var point = 0; point < neighbours.length; point++) {
-        var tower = board[(neighbours[point])[0]][(neighbours[point])[1]];
-        if ((board[nCol][nRow].length + tower.length >= nHeightTowerWin) &&
-            nPlayerID === tower[tower.length - 1]) {  // Top stone = own color
-          var sMove = (neighbours[point])[0] + "," + (neighbours[point])[1] + "|" +
-              nCol + "," + nRow + "|" + tower.length;
-          ret.push(sMove);  // Generate list of all opponent winning moves
+        var tower = board[(neighbours[point])];
+        if ((board[nIndex].length + tower.length >= nHeightTowerWin) &&
+            nPlayerID === parseInt(tower[tower.length - 1], 10)) {  // Top = own
+          var move = [];  // From, num of stones, to
+          move.push(neighbours[point]);
+          move.push(tower.length);
+          move.push(nIndex);
+          ret.push(move);  // Generate list of all opponent winning moves
 
           if (nPlayerID === nID) {  // Return first found move for CPU to win
             return ret;
@@ -161,50 +158,40 @@ function canWin(nPlayerID) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function preventWin(sMoveToWin, nPossibleMove) {
-  var sMove = sMoveToWin.split("|");
-  var pointFrom = sMove[0].split(",");
-  var pointTo = sMove[1].split(",");
-  var nNumber = sMove[2];
+function preventWin(moveToWin, nPossibleMove) {
+  var ret = [];
+  var pointFrom = moveToWin[0];
+  var nNumber = moveToWin[1];
+  var pointTo = moveToWin[2];
 
   // Check if a blocking towers in between can be placed
-  var route = [Number(pointTo[0]) - Number(pointFrom[0]),
-               Number(pointTo[1]) - Number(pointFrom[1])];
-  var nMoves = board[pointTo[0]][pointTo[1]].length;
-  var check = [Number(pointFrom[0]), Number(pointFrom[1])];
-
-  // cpu.log("Win? " + sMoveToWin);
-  // cpu.log("Route: " + route[0] + "," + route[1]);
-  // cpu.log("Moves: " + nMoves);
-  // cpu.log("Check 0: " + check[0] + "," + check[1]);
-  // cpu.log("Possible: " + nPossibleMove);
-
-  if (nMoves > 1 && (1 === nPossibleMove || 3 === nPossibleMove)) {
-    for (var i = 1; i < nMoves; i++) {
-
-      if (route[1] < 0) {
-        check[1] = Number(check[1] - 1);
-      } else if (route[1] > 0) {
-        check[1] = Number(check[1] + 1);
+  var route = pointTo - pointFrom;
+  for (var dir = 0; dir < DIRS.length; dir++) {
+    if (1 === Math.abs(DIRS[dir])) {  // +1 / -1
+      if (Math.abs(route) < (nNumOfFieldsX-2) &&
+          (route > 0 && DIRS[dir] < 0 ||
+           route < 0 && DIRS[dir] > 0)) {
+        ret.push(pointTo + DIRS[dir]);
+        return ret;
       }
-
-      if (route[0] < 0) {
-        check[0] = Number(check[0] - 1);
-      } else if (route[0] > 0) {
-        check[0] = Number(check[0] + 1);
-      }
-
-      // cpu.log("Check " + i + ": " + check[0] + "," + check[1]);
-      if (0 === board[check[0]][check[1]].length) {
-        return check[0] + "," + check[1];
+    } else {
+      if (0 === route % DIRS[dir] &&       // There is a route between points
+          (route > 0 && DIRS[dir] < 0 ||   // If route pos., dir has to be neg.
+           route < 0 && DIRS[dir] > 0)) {  // If route neg., dir has to be pos.
+        var moves = route / DIRS[dir];
+        // There is more than one filed in between
+        if (Math.abs(moves) > 1 && (1 === nPossibleMove || 3 === nPossibleMove)) {
+          ret.push(pointTo + DIRS[dir]);
+          return ret;
+        }
+        // if (nPossibleMove >= 2) {
+        // TODO: Try to move tower to prevent win
+        // }
       }
     }
   }
-  // if (nPossibleMove >= 2) {
-  // TODO: Try to move tower to prevent win
-  // }
 
-  return "";
+  return ret;
 }
 
 // ---------------------------------------------------------------------------
@@ -225,6 +212,7 @@ function setRandom() {
 function moveRandom(oppWinning) {
   var nCnt = 0;
   do {
+    var bBreak = false;
     var nRandTo = Math.floor(Math.random() * board.length);
     if (sOut !== board[nRandTo] && sPad !== board[nRandTo]) {
       var neighbours = checkNeighbourhood(nRandTo);
@@ -238,19 +226,24 @@ function moveRandom(oppWinning) {
         move.push(Math.floor(Math.random() * nMaxStones) + 1);
         move.push(nRandTo);
 
-        /*
-        if (0 !== oppWinning.length) {
-          if (oppWinning.indexOf(sMove) > -1) {
-            // Dumb workaround for trying to find another
-            // move which doesn't let opponent win.
-            nCnt += 1;
-            if (nCnt < 10) {
-              // cpu.log("Trying to find another move...");
-              continue;
+        // Dumb workaround for trying to find another
+        // move which doesn't let opponent win.
+        nCnt += 1;
+        if (nCnt < 10) {
+          for (var i = 0; i < oppWinning.length; i++) {
+            if (oppWinning[i][0] === move[0] &&
+                oppWinning[i][1] === move[1] &&
+                oppWinning[i][2] === move[2]) {
+              bBreak = true;
+              break;
             }
           }
+          if (true === bBreak) {
+            // cpu.log("Trying to find another move...");
+            continue;
+          }
         }
-        */
+
         return move;
       }
     }
