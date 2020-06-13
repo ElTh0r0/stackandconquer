@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2020 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Main game engine (object creation etc.).
@@ -656,8 +656,9 @@ auto Game::loadGame(const QString &sFile) -> QJsonObject {
   }
 
   QByteArray saveData = loadFile.readAll();
-  // QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-  QJsonDocument loadDoc(QJsonDocument::fromBinaryData(saveData));
+  // TODO(): fromBinaryData is obsolete
+  QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+  // QJsonDocument loadDoc(QJsonDocument::fromBinaryData(saveData));
   return loadDoc.object();
 }
 
@@ -670,8 +671,8 @@ auto Game::saveGame(const QString &sFile) -> bool {
   QJsonArray tower;
   QVariantList vartower;
   QJsonArray jsBoard;
-  // TODO():Implement new board array
-  //QList<QList<QList<quint8> > > board(m_pBoard->getBoard());
+  // TODO(): Implement new board array
+  // QList<QList<QList<quint8> > > board(m_pBoard->getBoard());
 
   if (!saveFile.open(QIODevice::WriteOnly)) {
     qWarning() << "Couldn't open save file:" << sFile;
@@ -684,10 +685,10 @@ auto Game::saveGame(const QString &sFile) -> bool {
     for (int nRow = 0; nRow < m_BoardDimension.y(); nRow++) {
       vartower.clear();
 
-      // TODO():Implement new board array
-      //foreach (quint8 n, board[nCol][nRow]) {
+      // TODO(): Implement new board array
+      // foreach (quint8 n, board[nCol][nRow]) {
       //  vartower << n;
-      //}
+      // }
       tower = QJsonArray::fromVariantList(vartower);
       column.append(tower);
     }
@@ -718,5 +719,7 @@ auto Game::saveGame(const QString &sFile) -> bool {
     }
   }
 
-  return (-1 != saveFile.write(jsDoc.toBinaryData()));
+  // TODO(): toBinaryData is obsolete
+  return (-1 != saveFile.write(jsDoc.toJson()));
+  // return (-1 != saveFile.write(jsDoc.toBinaryData()));
 }

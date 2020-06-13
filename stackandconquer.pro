@@ -12,7 +12,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+#  along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
 
 lessThan(QT_MAJOR_VERSION, 5) {
   error("StackAndConquer requires Qt 5.0 or greater")
@@ -47,7 +47,7 @@ CONFIG       += c++11
 CONFIG(debug, debug|release) {
   CONFIG     += warn_on
   DEFINES    += QT_DEPRECATED_WARNINGS
-  DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x051400
+  DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x051500
 }
 
 SOURCES      += main.cpp\
@@ -107,7 +107,7 @@ unix: !macx {
 
     #icons.path      = $$PREFIX/share/icons
     #icons.files    += res/images/hicolor
-    
+
     man.path        = $$PREFIX/share
     man.files      += man
 

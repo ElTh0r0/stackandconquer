@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2020 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Main application generation (gui)
@@ -473,7 +473,7 @@ void StackAndConquer::showInfoBox() {
              "URL: <a href=\"https://github.com/ElTh0r0/stackandconquer\">"
              "https://github.com/ElTh0r0/stackandconquer</a>",
              tr("License") +
-             ": <a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">"
+             ": <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">"
              "GNU General Public License Version 3</a>",
              tr("This application uses icons from "
                 "<a href=\"http://tango.freedesktop.org\">"

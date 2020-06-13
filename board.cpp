@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2020 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Game board generation.
@@ -52,8 +52,8 @@ Board::Board(QPoint NumOfFields, quint16 nGridSize, quint8 nMaxStones,
 
   QList<QString> tmpBoard;
   this->loadBoard("./new_square_5x5.stackboard", tmpBoard);
-  //this->loadBoard("./new_triangle.stackboard", tmpBoard);
-  //this->loadBoard("./new_square_4x2.stackboard", tmpBoard);
+  // this->loadBoard("./new_triangle.stackboard", tmpBoard);
+  // this->loadBoard("./new_square_4x2.stackboard", tmpBoard);
 
   this->addBoardPadding(tmpBoard, m_nMaxTower);
   this->drawBoard(tmpBoard);
@@ -330,7 +330,7 @@ void Board::setupSavegame(const QList<QList<QList<quint8> > > &board) {
     for (int nCol = 0; nCol < m_NumOfFields.x(); nCol++) {
       foreach (quint8 stone, board[nCol][nRow]) {
         // TODO(): Implement new board array
-        //this->addStone(QPoint(nCol, nRow), stone);
+        // this->addStone(QPoint(nCol, nRow), stone);
       }
     }
   }
@@ -615,7 +615,7 @@ void Board::selectIndexField(const int nIndex) {
   }
 
   neighbours = this->checkNeighbourhood(currentIndex);
-  if (neighbours.contains(nIndex) && m_pSelectedField->isVisible()) { // Move
+  if (neighbours.contains(nIndex) && m_pSelectedField->isVisible()) {  // Move
     neighbours.clear();
     this->highlightNeighbourhood(neighbours);
     m_pSelectedField->setVisible(false);
