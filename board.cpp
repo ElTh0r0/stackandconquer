@@ -35,15 +35,14 @@
 #include <QMessageBox>
 #include <QTimer>
 
-Board::Board(QPoint NumOfFields, quint16 nGridSize, quint8 nMaxStones,
-             const quint8 nMaxTower, quint8 NumOfPlayers, Settings *pSettings)
+Board::Board(quint16 nGridSize, quint8 nMaxStones, const quint8 nMaxTower,
+             quint8 NumOfPlayers, Settings *pSettings)
   : sIN("0"),
     sOUT("#"),
     sPAD("-"),
     m_nGridSize(nGridSize),
     m_nMaxStones(nMaxStones),
     m_pSettings(pSettings),
-    m_NumOfFields(NumOfFields),
     m_nMaxTower(nMaxTower),
     m_NumOfPlayers(NumOfPlayers),
     m_pSvgRendererP1(nullptr),
@@ -67,9 +66,9 @@ Board::Board(QPoint NumOfFields, quint16 nGridSize, quint8 nMaxStones,
    * -1   X    1
    * 14  15   16
    */
-  m_DIRS << -(2 * nMaxTower + m_BoardDimension.x() + 1);  // -16
-  m_DIRS << -(2 * nMaxTower + m_BoardDimension.x());      // -15
-  m_DIRS << -(2 * nMaxTower + m_BoardDimension.x() - 1);  // -14
+  m_DIRS << -(2 * nMaxTower + m_BoardDimensions.x() + 1);  // -16
+  m_DIRS << -(2 * nMaxTower + m_BoardDimensions.x());      // -15
+  m_DIRS << -(2 * nMaxTower + m_BoardDimensions.x() - 1);  // -14
   m_DIRS << -1 << 1;          // -1, 1
   m_DIRS << -(m_DIRS.at(2));  // 14
   m_DIRS << -(m_DIRS.at(1));  // 15
@@ -116,11 +115,11 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
     return;
   }
 
-  m_BoardDimension.setX(jso.value("Columns").toInt());
-  m_BoardDimension.setY(jso.value("Rows").toInt());
+  m_BoardDimensions.setX(jso.value("Columns").toInt());
+  m_BoardDimensions.setY(jso.value("Rows").toInt());
 
-  if (0 == m_BoardDimension.x() || 0 == m_BoardDimension.y()) {
-    qWarning() << "Board file contains invalid dimension:" << m_BoardDimension;
+  if (0 == m_BoardDimensions.x() || 0 == m_BoardDimensions.y()) {
+    qWarning() << "Board file contains invalid dimensions:" << m_BoardDimensions;
     qWarning() << "Board:" << sBoard;
     QMessageBox::critical(nullptr, tr("Warning"),
                          tr("Error while opening board file!"));
@@ -144,8 +143,8 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
 
   // TODO(): Add all fields from json file
 
-  qDebug() << "Board dimensions:" << m_BoardDimension.x() << "columns x"
-           << m_BoardDimension.y() << "rows";
+  qDebug() << "Board dimensions:" << m_BoardDimensions.x() << "columns x"
+           << m_BoardDimensions.y() << "rows";
 }
 
 // ---------------------------------------------------------------------------
@@ -156,7 +155,7 @@ void Board::addBoardPadding(const QList<QString> &tmpBoard,
   // Generate field array
   // Top padding
   for (int i = 0; i < nMaxTower; i++) {
-    for (int j = 0; j < (nMaxTower*2 + m_BoardDimension.x()); j++) {
+    for (int j = 0; j < (nMaxTower*2 + m_BoardDimensions.x()); j++) {
       m_jsBoard << sPAD;
     }
   }
@@ -167,7 +166,7 @@ void Board::addBoardPadding(const QList<QString> &tmpBoard,
       for (int j = 0; j < nMaxTower; j++) {
         m_jsBoard << sPAD;
       }
-    } else if (0 == i % m_BoardDimension.x()) {  // First item in row:
+    } else if (0 == i % m_BoardDimensions.x()) {  // First item in row:
       for (int j = 0; j < (nMaxTower*2); j++) {  // Add padding end of previous
         m_jsBoard << sPAD;                       // & beginning of current line
       }
@@ -188,7 +187,7 @@ void Board::addBoardPadding(const QList<QString> &tmpBoard,
 
   // Bottom padding
   for (int i = 0; i < nMaxTower; i++) {
-    for (int j = 0; j < (nMaxTower*2 + m_BoardDimension.x()); j++) {
+    for (int j = 0; j < (nMaxTower*2 + m_BoardDimensions.x()); j++) {
       m_jsBoard << sPAD;
     }
   }
@@ -204,8 +203,8 @@ void Board::drawBoard(const QList<QString> &tmpBoard) {
   quint8 row(0);
 
   for (int i = 0; i < tmpBoard.size(); i++) {
-    // m_BoardDimension.x() = columns, m_BoardDimension.y() = rows
-    if (0 == i % m_BoardDimension.x()) {  // First item in row
+    // m_BoardDimensions.x() = columns, m_BoardDimensions.y() = rows
+    if (0 == i % m_BoardDimensions.x()) {  // First item in row
       x = 0;
       col = 65;
       y += m_nGridSize;
@@ -326,11 +325,12 @@ void Board::createStones() {
 // ---------------------------------------------------------------------------
 
 void Board::setupSavegame(const QList<QList<QList<quint8> > > &board) {
+  // TODO(): Implement new board array
+  /*
   for (int nRow = 0; nRow < m_NumOfFields.y(); nRow++) {
     for (int nCol = 0; nCol < m_NumOfFields.x(); nCol++) {
       foreach (quint8 stone, board[nCol][nRow]) {
-        // TODO(): Implement new board array
-        // this->addStone(QPoint(nCol, nRow), stone);
+        this->addStone(QPoint(nCol, nRow), stone);
       }
     }
   }
@@ -338,6 +338,7 @@ void Board::setupSavegame(const QList<QList<QList<quint8> > > &board) {
   // Redraw board
   this->update(QRectF(0, 0, m_NumOfFields.x() * m_nGridSize-1,
                       m_NumOfFields.y() * m_nGridSize-1));
+  */
 }
 
 // ---------------------------------------------------------------------------
@@ -412,19 +413,19 @@ auto Board::snapToGrid(const QPointF point) const -> QPointF {
 // ---------------------------------------------------------------------------
 
 auto Board::getIndexFromField(const int nField) const -> int {
-  static const int nTop = m_nMaxTower * (2*m_nMaxTower + m_BoardDimension.x());
+  static const int nTop = m_nMaxTower * (2*m_nMaxTower + m_BoardDimensions.x());
   static const int nFirst = nTop + m_nMaxTower;
-  int nLeftRight = 2*m_nMaxTower * (nField / m_BoardDimension.x());
-  int nCol = nField % m_BoardDimension.x();
-  int nRow = (nField / m_BoardDimension.x()) * m_BoardDimension.x();
+  int nLeftRight = 2*m_nMaxTower * (nField / m_BoardDimensions.x());
+  int nCol = nField % m_BoardDimensions.x();
+  int nRow = (nField / m_BoardDimensions.x()) * m_BoardDimensions.x();
   return nFirst + nLeftRight + nCol + nRow;
 }
 
 auto Board::getFieldFromIndex(const int nIndex) const -> int {
-  static const int nTop = m_nMaxTower * (2*m_nMaxTower + m_BoardDimension.x());
+  static const int nTop = m_nMaxTower * (2*m_nMaxTower + m_BoardDimensions.x());
   static const int nFirst = nTop + m_nMaxTower;
   int nLeftRight = 2*m_nMaxTower *
-                   ((nIndex/(m_BoardDimension.x()+2*m_nMaxTower))-m_nMaxTower);
+                   ((nIndex/(m_BoardDimensions.x()+2*m_nMaxTower))-m_nMaxTower);
   return nIndex - nFirst - nLeftRight;
 }
 
@@ -432,8 +433,8 @@ auto Board::getFieldFromIndex(const int nIndex) const -> int {
 // ---------------------------------------------------------------------------
 
 auto Board::getCoordinateFromField(const int nField) const -> QPoint {
-  int x = nField % m_BoardDimension.x();
-  int y = nField / m_BoardDimension.x();
+  int x = nField % m_BoardDimensions.x();
+  int y = nField / m_BoardDimensions.x();
   return QPoint(x, y);
 }
 
@@ -494,8 +495,8 @@ void Board::addStone(const int nIndex, const quint8 nStone, const bool bAnim) {
 
   if (bAnim) {
     // Redraw board
-    this->update(QRectF(0, 0, m_BoardDimension.x() * m_nGridSize-1,
-                        m_BoardDimension.y() * m_nGridSize-1));
+    this->update(QRectF(0, 0, m_BoardDimensions.x() * m_nGridSize-1,
+                        m_BoardDimensions.y() * m_nGridSize-1));
   }
 }
 
@@ -568,8 +569,8 @@ void Board::removeStone(const int nIndex, const bool bAll) {
     m_jsBoard[nIndex] = s;
   }
   // Redraw board
-  this->update(QRectF(0, 0, m_BoardDimension.x() * m_nGridSize-1,
-                      m_BoardDimension.y() * m_nGridSize-1));
+  this->update(QRectF(0, 0, m_BoardDimensions.x() * m_nGridSize-1,
+                      m_BoardDimensions.y() * m_nGridSize-1));
 }
 
 // ---------------------------------------------------------------------------
@@ -581,6 +582,10 @@ auto Board::getField(const int index) const -> QString {
 
 auto Board::getBoard() const -> QJsonArray {
   return m_jsBoard;
+}
+
+auto Board::getBoadDimensions() const -> QPoint {
+  return m_BoardDimensions;
 }
 
 auto Board::getOut() const -> QString {
@@ -706,14 +711,14 @@ auto Board::findPossibleMoves(const bool bStonesLeft) -> quint8 {
   quint8 nRet(0);
   int nField = -1;
   QString s;
-  for (int nRow = 0; nRow < m_BoardDimension.y(); nRow++) {
-    for (int nCol = 0; nCol < m_BoardDimension.x(); nCol++) {
+  for (int nRow = 0; nRow < m_BoardDimensions.y(); nRow++) {
+    for (int nCol = 0; nCol < m_BoardDimensions.x(); nCol++) {
       nField++;
       s = m_jsBoard.at(this->getIndexFromField(nField)).toString();
       if (s.isEmpty() && bStonesLeft && 1 != nRet) {
         nRet++;
       }
-      if (!s.isEmpty() && 2 != nRet) {
+      if (!s.isEmpty() && sOUT != s && sPAD != s && 2 != nRet) {
         if (!this->checkNeighbourhood(
               this->getIndexFromField(nField)).isEmpty()) {
           nRet += 2;
@@ -736,14 +741,14 @@ void Board::printDebugFields() const {
   int nField = -1;
   QString s;
 
-  for (int nRow = 0; nRow < m_BoardDimension.y(); nRow++) {
+  for (int nRow = 0; nRow < m_BoardDimensions.y(); nRow++) {
     sLine.clear();
-    for (int nCol = 0; nCol < m_BoardDimension.x(); nCol++) {
+    for (int nCol = 0; nCol < m_BoardDimensions.x(); nCol++) {
       nField++;
       s = "(" + m_jsBoard.at(this->getIndexFromField(nField)).toString() + ")";
       if (QString("(" + sOUT + ")") == s) { s = sOUT + sOUT; }
       sLine += s;
-      if (nCol < m_BoardDimension.x()-1) {
+      if (nCol < m_BoardDimensions.x()-1) {
         sLine += " ";
       }
     }

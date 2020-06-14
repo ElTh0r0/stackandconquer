@@ -26,8 +26,8 @@
  * Variables provided externally from game:
  * jsboard
  * nID (1 or 2 = player 1 / player 2)
- * nNumOfFieldsX
- * nNumOfFieldsY
+ * nBoardDimensionsX
+ * nBoardDimensionsY
  * nHeightTowerWin
  * sOut
  * sPad
@@ -48,9 +48,9 @@ function makeMove(nPossible) {
    * 14  15   16
    */
   DIRS = [];
-  DIRS.push(-(2 * nHeightTowerWin + nNumOfFieldsX + 1));  // -16
-  DIRS.push(-(2 * nHeightTowerWin + nNumOfFieldsX));      // -15
-  DIRS.push(-(2 * nHeightTowerWin + nNumOfFieldsX - 1));  // -14
+  DIRS.push(-(2 * nHeightTowerWin + nBoardDimensionsX + 1));  // -16
+  DIRS.push(-(2 * nHeightTowerWin + nBoardDimensionsX));      // -15
+  DIRS.push(-(2 * nHeightTowerWin + nBoardDimensionsX - 1));  // -14
   DIRS.push(-1);  // -1
   DIRS.push(1);   //  1
   DIRS.push(-DIRS[2]);  // 14
@@ -168,7 +168,7 @@ function preventWin(moveToWin, nPossibleMove) {
   var route = pointTo - pointFrom;
   for (var dir = 0; dir < DIRS.length; dir++) {
     if (1 === Math.abs(DIRS[dir])) {  // +1 / -1
-      if (Math.abs(route) < (nNumOfFieldsX-2) &&
+      if (Math.abs(route) < (nBoardDimensionsX-2) &&
           (route > 0 && DIRS[dir] < 0 ||
            route < 0 && DIRS[dir] > 0)) {
         ret.push(pointTo + DIRS[dir]);

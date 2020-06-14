@@ -47,8 +47,8 @@ class Board : public QGraphicsScene {
   Q_OBJECT
 
  public:
-    Board(QPoint NumOfFields, quint16 nGridSize, quint8 nMaxStones,
-          const quint8 nMaxTower, quint8 NumOfPlayers, Settings *pSettings);
+    Board(quint16 nGridSize, quint8 nMaxStones, const quint8 nMaxTower,
+          quint8 NumOfPlayers, Settings *pSettings);
 
     void setupSavegame(const QList<QList<QList<quint8> > > &board);
     void addStone(const int nIndex, const quint8 nStone,
@@ -56,6 +56,7 @@ class Board : public QGraphicsScene {
     void removeStone(const int nIndex, const bool bAll = false);
     void selectIndexField(const int nIndex);
     auto getBoard() const -> QJsonArray;
+    auto getBoadDimensions() const -> QPoint;
     auto getField(const int index) const -> QString;
     auto findPossibleMoves(const bool bStonesLeft) -> quint8;
     auto checkNeighbourhood(const int nIndex) const -> QList<int>;
@@ -97,7 +98,7 @@ class Board : public QGraphicsScene {
     const QString sIN;
     const QString sOUT;
     const QString sPAD;
-    QPoint m_BoardDimension;
+    QPoint m_BoardDimensions;
     QJsonArray m_jsBoard;
 
     QList<QGraphicsRectItem *> m_listFields;
@@ -106,7 +107,6 @@ class Board : public QGraphicsScene {
     const quint16 m_nGridSize;
     const quint8 m_nMaxStones;
     Settings *m_pSettings;
-    const QPoint m_NumOfFields;  // TODO(): To be removed
     const quint8 m_nMaxTower;
     quint8 m_NumOfPlayers;
     QList<int> m_DIRS;

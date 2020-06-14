@@ -36,7 +36,7 @@ class OpponentJS : public QObject {
 
  public:
     explicit OpponentJS(const quint8 nID,
-                        const QPoint NumOfFields,
+                        const QPoint BoardDimensions,
                         const quint8 nHeightTowerWin,
                         const QString &sOut,
                         const QString &sPad,
@@ -45,7 +45,7 @@ class OpponentJS : public QObject {
 
  public slots:
     void makeMoveCpu(const QJsonArray &board, const quint8 nPossibleMove);
-    static void log(const QString &sMsg);
+    void log(const QString &sMsg);
 
  signals:
     void setStone(int nIndex, bool bDebug);
@@ -54,7 +54,7 @@ class OpponentJS : public QObject {
 
  private:
     const quint8 m_nID;
-    const QPoint m_NumOfFields;
+    const QPoint m_BoardDimensions;
     const quint8 m_nHeightTowerWin;
     const QString m_sOut;
     const QString m_sPad;

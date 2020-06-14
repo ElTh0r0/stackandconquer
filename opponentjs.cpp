@@ -33,12 +33,12 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-OpponentJS::OpponentJS(const quint8 nID, const QPoint NumOfFields,
+OpponentJS::OpponentJS(const quint8 nID, const QPoint BoardDimensions,
                        const quint8 nHeightTowerWin, const QString &sOut,
                        const QString &sPad, QObject *parent)
   : QObject(parent),
     m_nID(nID),
-    m_NumOfFields(NumOfFields),
+    m_BoardDimensions(BoardDimensions),
     m_nHeightTowerWin(nHeightTowerWin),
     m_sOut(sOut),
     m_sPad(sPad),
@@ -58,7 +58,7 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
   }
   QString source = QString::fromUtf8(f.readAll());
   f.close();
-  qDebug() << "CPU" << m_nID << "script:" << sFilepath;
+  this->log("Script: " + sFilepath);
 
   QJSValue result(m_jsEngine->evaluate(source, sFilepath));
   if (result.isError()) {
@@ -79,8 +79,8 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
   }
 
   m_obj.setProperty(QStringLiteral("nID"), m_nID);
-  m_obj.setProperty(QStringLiteral("nNumOfFieldsX"), m_NumOfFields.x());
-  m_obj.setProperty(QStringLiteral("nNumOfFieldsY"), m_NumOfFields.y());
+  m_obj.setProperty(QStringLiteral("nBoardDimensionsX"), m_BoardDimensions.x());
+  m_obj.setProperty(QStringLiteral("nBoardDimensionsY"), m_BoardDimensions.y());
   m_obj.setProperty(QStringLiteral("nHeightTowerWin"), m_nHeightTowerWin);
   m_obj.setProperty(QStringLiteral("sOut"), m_sOut);
   m_obj.setProperty(QStringLiteral("sPad"), m_sPad);
@@ -154,5 +154,5 @@ void OpponentJS::makeMoveCpu(const QJsonArray &board,
 // ---------------------------------------------------------------------------
 
 void OpponentJS::log(const QString &sMsg) {
-  qDebug() << sMsg;
+  qDebug() << "CPU" << m_nID << "-" << sMsg;
 }

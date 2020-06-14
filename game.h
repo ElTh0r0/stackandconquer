@@ -77,7 +77,6 @@ class Game : public QObject {
     Player *m_pPlayer2;
     QString m_sJsFileP1;
     QString m_sJsFileP2;
-    QPoint m_BoardDimension;
 
     const quint8 m_nMaxTowerHeight;
     const quint8 m_nMaxStones;
