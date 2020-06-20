@@ -36,6 +36,7 @@ class Game : public QObject {
 
  public:
     explicit Game(Settings *pSettings, const QStringList &sListFiles);
+    ~Game();
     auto getScene() const -> QGraphicsScene*;
     auto saveGame(const QString &sFile) -> bool;
     void updatePlayers(bool bInitial = false);
@@ -71,6 +72,7 @@ class Game : public QObject {
 
     Settings *m_pSettings;
     Board *m_pBoard;
+    QString m_sBoardFile;
     OpponentJS *m_jsCpuP1;
     OpponentJS *m_jsCpuP2;
     Player *m_pPlayer1;
@@ -79,7 +81,6 @@ class Game : public QObject {
     QString m_sJsFileP2;
 
     const quint8 m_nMaxTowerHeight;
-    const quint8 m_nMaxStones;
     const quint16 m_nGridSize;
 
     bool m_bScriptError;

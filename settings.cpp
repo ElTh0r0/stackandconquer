@@ -451,8 +451,10 @@ void Settings::updateUiLang() {
 
   // Widgets, which had not been created through UI have to be handled manually
   for (int i = 0; i < m_maxPlayers; i++) {
-    m_listNameLbls[i]->setText(tr("Name player %1").arg(QString::number(i+1)));
-    m_listHumCpuLbls[i]->setText(tr("Player %1 Human/CPU").arg(QString::number(i+1)));
+    m_listNameLbls[i]->setText(
+          tr("Name player %1").arg(QString::number(i+1)));
+    m_listHumCpuLbls[i]->setText(
+          tr("Player %1 Human/CPU").arg(QString::number(i+1)));
   }
 
   this->updateStartCombo();
@@ -568,6 +570,19 @@ auto Settings::getNumOfPlayers() const -> quint8 {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
+
+auto Settings::getBoardFile() const -> QStringList {
+  // TODO(): Rewrite if boards can be chosen
+  QStringList sListTemp;
+  if (QFile::exists(m_sSharePath + "/boards")) {
+    sListTemp << m_sSharePath + "/boards/square_5x5.stackboard";
+    // sListTemp << m_sSharePath + "/boards/triangle.stackboard";
+    // sListTemp << m_sSharePath + "/boards/square_4x2.stackboard";
+  } else {
+    qWarning() << "Games share path does not exist:" << m_sSharePath;
+  }
+  return sListTemp;
+}
 
 auto Settings::getStartPlayer() const -> quint8 {
   return static_cast<quint8>(m_nStartPlayer);

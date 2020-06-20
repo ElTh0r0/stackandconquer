@@ -248,7 +248,11 @@ void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
 
 void StackAndConquer::startNewGame(const QStringList &sListArgs) {
   delete m_pGame;
-  m_pGame = new Game(m_pSettings, sListArgs);
+  if (sListArgs.isEmpty()) {
+    m_pGame = new Game(m_pSettings, m_pSettings->getBoardFile());
+  } else {
+    m_pGame = new Game(m_pSettings, sListArgs);
+  }
 
   connect(m_pGame, &Game::updateNameP1, m_plblPlayer1, &QLabel::setText);
   connect(m_pGame, &Game::updateNameP2, m_plblPlayer2, &QLabel::setText);

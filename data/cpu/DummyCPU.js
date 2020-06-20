@@ -199,8 +199,9 @@ function preventWin(moveToWin, nPossibleMove) {
 
 function setRandom() {
   // Seed random?
+  var nRand;
   do {
-    var nRand = Math.floor(Math.random() * board.length);
+    nRand = Math.floor(Math.random() * board.length);
   } while (0 !== board[nRand].length);
 
   return [nRand];

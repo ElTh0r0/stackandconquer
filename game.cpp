@@ -28,6 +28,7 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QDir>
 #include <QFile>
 #include <QInputDialog>
 #include <QJsonArray>
@@ -53,25 +54,33 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
     m_sJsFileP1(QString("")),
     m_sJsFileP2(QString("")),
     m_nMaxTowerHeight(5),
-    m_nMaxStones(20),
     m_nGridSize(70),
     m_bScriptError(false) {
   qDebug() << "Starting new game" << sListFiles;
 
+  quint8 nNumOfPlayers(0);  // TODO(): Rewrite for > 2 players
   QString sP1HumanCpu(QString(""));
   QString sName1(QStringLiteral("P1"));
   QString sP2HumanCpu(QString(""));
   QString sName2(QStringLiteral("P2"));
   quint8 nStartPlayer(0);
-  quint8 nStonesLeftP1(m_nMaxStones);
-  quint8 nStonesLeftP2(m_nMaxStones);
+  quint8 nStonesLeftP1(0);
+  quint8 nStonesLeftP2(0);
   quint8 nWonP1(0);
   quint8 nWonP2(0);
 
   if (1 == sListFiles.size()) {
-    if (sListFiles[0].endsWith(QStringLiteral(".stacksav"),
+    if (sListFiles[0].endsWith(QStringLiteral(".stackboard"),
+                               Qt::CaseInsensitive)) {  // Start with default
+      m_sBoardFile = sListFiles[0];
+      sP1HumanCpu = m_pSettings->getPlayerHumanCpu(1);
+      sName1 = m_pSettings->getPlayerName(1);
+      sP2HumanCpu = m_pSettings->getPlayerHumanCpu(2);
+      sName2 = m_pSettings->getPlayerName(2);
+      nStartPlayer = m_pSettings->getStartPlayer();
+      nNumOfPlayers = m_pSettings->getNumOfPlayers();
+    } else if (sListFiles[0].endsWith(QStringLiteral(".stacksav"),
                                Qt::CaseInsensitive)) {  // Load
-      /*
       QJsonObject jsonObj(Game::loadGame(sListFiles[0]));
       if (jsonObj.isEmpty()) {
         qWarning() << "Save file is empty!";
@@ -80,12 +89,19 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
         exit(-1);
       }
 
+      // TODO(): Rewrite for > 2 players
+      nNumOfPlayers = static_cast<quint8>(
+                        jsonObj[QStringLiteral("NumOfPlayers")].toInt());
       sP1HumanCpu = jsonObj[QStringLiteral("HumanCpu1")].toString().trimmed();
       sName1 = jsonObj[QStringLiteral("Name1")].toString().trimmed();
       nWonP1 = static_cast<quint8>(jsonObj[QStringLiteral("Won1")].toInt());
+      nStonesLeftP1 = static_cast<quint8>(
+                        jsonObj[QStringLiteral("StonesLeft1")].toInt());
       sP2HumanCpu = jsonObj[QStringLiteral("HumanCpu2")].toString().trimmed();
       sName2 = jsonObj[QStringLiteral("Name2")].toString().trimmed();
       nWonP2 = static_cast<quint8>(jsonObj[QStringLiteral("Won2")].toInt());
+      nStonesLeftP2 = static_cast<quint8>(
+                        jsonObj[QStringLiteral("StonesLeft2")].toInt());
       nStartPlayer = static_cast<quint8>(
                        jsonObj[QStringLiteral("Current")].toInt());
       quint16 nBoardColumns =
@@ -96,68 +112,40 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
 
       if (sP1HumanCpu.isEmpty() || sP2HumanCpu.isEmpty() ||
           sName1.isEmpty() || sName2.isEmpty() ||
-          0 == nBoardColumns || 0 == nBoardRows) {
+          0 == nBoardColumns || 0 == nBoardRows || 0 == nNumOfPlayers) {
         qWarning() << "Save game contains invalid data:"
                    << "sP1HumanCpu / sP2HumanCpu / sName1 / sName2 /"
-                   << "nBoardColumns / nBoardRows is empty.";
+                   << "nBoardColumns / nBoardRows / nNumOfPlayers is empty.";
         QMessageBox::critical(nullptr, tr("Warning"),
                               tr("Save game contains invalid data."));
         exit(-1);
       }
 
-      m_BoardDimension.setX(nBoardColumns);
-      m_BoardDimension.setY(nBoardRows);
-
-      // Convert json array to board
-      QJsonArray jsBoard = jsonObj[QStringLiteral("Board")].toArray();
-      QJsonArray jsTower;
-      QJsonArray jsColumn;
-      QList<quint8> tower;
-      QList<QList<quint8> > column;
-      QList<QList<QList<quint8> > > board;
-      board.reserve(m_BoardDimension.x());  // board[Columns][Rows]
-
-      if (m_BoardDimension.x() != jsBoard.size()) {
-        qWarning() << "Save game contains invalid data"
-                   << "(m_BoardDimension.x() != jsBoard.size()):"
-                   << m_BoardDimension.x() << "!=" << jsBoard.size();
-        QMessageBox::critical(nullptr, tr("Warning"),
-                              tr("Save game contains invalid data."));
-        exit(-1);
-      }
-
-      // Horizontal (number of columns)
-      for (int nCol = 0; nCol < m_BoardDimension.x(); nCol++) {
-        column.clear();
-        jsColumn = jsBoard.at(nCol).toArray();
-
-        if (m_BoardDimension.y() != jsColumn.size()) {
-          qWarning() << "Save game contains invalid data"
-                     << "(m_nNumOfFields.y() != jsLine.size())."
-                     << "Column" << nCol << "height:"
-                     << m_BoardDimension.y() << "!=" << jsColumn.size();
-          QMessageBox::critical(nullptr, tr("Warning"),
-                                tr("Save game contains invalid data."));
+      m_sBoardFile = jsonObj[QStringLiteral("BoardFile")].toString().trimmed();
+      QString sRelBoard =
+          jsonObj[QStringLiteral("BoardFileRelative")].toString().trimmed();
+      if (m_sBoardFile.isEmpty() || !QFile::exists(m_sBoardFile)) {
+        if (!sRelBoard.isEmpty() &&
+            QFile::exists(qApp->applicationDirPath() + "/" + sRelBoard)) {
+          m_sBoardFile = qApp->applicationDirPath() + "/" + sRelBoard;
+        } else {
+          qWarning() << "Save game contains invalid data - board not found!";
+          QMessageBox::warning(nullptr, qApp->applicationName(),
+                               tr("Save game contains invalid data."));
           exit(-1);
         }
-
-        // Vertical ("column height" = number of lines)
-        for (int nRow = 0; nRow < m_BoardDimension.y(); nRow++) {
-          tower.clear();
-          jsTower = jsColumn.at(nRow).toArray();
-          foreach (QJsonValue n, jsTower) {
-            tower << static_cast<quint8>(n.toInt());
-            (1 == tower.last()) ? nStonesLeftP1-- : nStonesLeftP2--;
-          }
-          column.append(tower);
-        }
-        board.append(column);
       }
-      */
+      qDebug() << "Loading save game board:" << m_sBoardFile;
 
-      m_pBoard = new Board(m_nGridSize, m_nMaxStones, m_nMaxTowerHeight,
-                           2, m_pSettings);  // TODO(): Adjust for > 2 players
-      // m_pBoard->setupSavegame(board);
+      QJsonArray jsBoard = jsonObj[QStringLiteral("Board")].toArray();
+      m_pBoard = new Board(m_sBoardFile, m_nGridSize, m_nMaxTowerHeight,
+                           nNumOfPlayers, m_pSettings);
+      if (!m_pBoard->setupSavegame(jsBoard)) {
+        qWarning() << "Save game contains invalid data - board not found!";
+        QMessageBox::warning(nullptr, qApp->applicationName(),
+                             tr("Save game contains invalid data."));
+        exit(-1);
+      }
     } else if (sListFiles[0].endsWith(QStringLiteral(".js"),
                                       Qt::CaseInsensitive)) {  // 1 CPU
       sP1HumanCpu = QStringLiteral("Human");
@@ -172,18 +160,17 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
     sP2HumanCpu = sListFiles[1];
     sName2 = QStringLiteral("Computer");
     nStartPlayer = m_pSettings->getStartPlayer();
-  } else {  // Start game with current settings
-    sP1HumanCpu = m_pSettings->getPlayerHumanCpu(1);
-    sName1 = m_pSettings->getPlayerName(1);
-    sP2HumanCpu = m_pSettings->getPlayerHumanCpu(2);
-    sName2 = m_pSettings->getPlayerName(2);
-    nStartPlayer = m_pSettings->getStartPlayer();
+  } else {
+    qWarning() << "Invalid start up!";
+    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
   }
 
   // No save game: Start empty board with default values
   if (nullptr == m_pBoard) {
-    m_pBoard = new Board(m_nGridSize, m_nMaxStones, m_nMaxTowerHeight,
-                         2, m_pSettings);  // TODO(): Adjust for > 2 players
+    m_pBoard = new Board(m_sBoardFile, m_nGridSize, m_nMaxTowerHeight,
+                         nNumOfPlayers, m_pSettings);
+    nStonesLeftP1 = m_pBoard->getMaxPlayerStones();
+    nStonesLeftP2 = m_pBoard->getMaxPlayerStones();
   }
 
   connect(m_pBoard, &Board::setStone, this, &Game::setStone);
@@ -220,9 +207,9 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   }
 
   m_pPlayer1 = new Player((1 == nStartPlayer), bP1IsHuman,
-                          sName1, m_nMaxStones);
+                          sName1, m_pBoard->getMaxPlayerStones());
   m_pPlayer2 = new Player((2 == nStartPlayer), bP2IsHuman,
-                          sName2, m_nMaxStones);
+                          sName2, m_pBoard->getMaxPlayerStones());
   m_pPlayer1->setStonesLeft(nStonesLeftP1);
   m_pPlayer1->setWonTowers(nWonP1);
   m_pPlayer2->setStonesLeft(nStonesLeftP2);
@@ -231,12 +218,22 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   m_sPreviousMove.clear();
 }
 
+Game::~Game() {
+  delete m_pBoard;
+  m_pBoard = nullptr;
+  delete m_pPlayer1;
+  m_pPlayer1 = nullptr;
+  delete m_pPlayer2;
+  m_pPlayer2 = nullptr;
+}
+
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
 void Game::createCPU1() {
-  m_jsCpuP1 = new OpponentJS(1, m_pBoard->getBoadDimensions(), m_nMaxTowerHeight,
-                             m_pBoard->getOut(), m_pBoard->getPad());
+  m_jsCpuP1 = new OpponentJS(1, m_pBoard->getBoadDimensions(),
+                             m_nMaxTowerHeight, m_pBoard->getOut(),
+                             m_pBoard->getPad());
   connect(this, &Game::makeMoveCpuP1, m_jsCpuP1, &OpponentJS::makeMoveCpu);
   connect(m_jsCpuP1, &OpponentJS::setStone, this, &Game::setStone);
   connect(m_jsCpuP1, &OpponentJS::moveTower, this, &Game::moveTower);
@@ -247,8 +244,9 @@ void Game::createCPU1() {
 // ---------------------------------------------------------------------------
 
 void Game::createCPU2() {
-  m_jsCpuP2 = new OpponentJS(2, m_pBoard->getBoadDimensions(), m_nMaxTowerHeight,
-                             m_pBoard->getOut(), m_pBoard->getPad());
+  m_jsCpuP2 = new OpponentJS(2, m_pBoard->getBoadDimensions(),
+                             m_nMaxTowerHeight, m_pBoard->getOut(),
+                             m_pBoard->getPad());
   connect(this, &Game::makeMoveCpuP2, m_jsCpuP2, &OpponentJS::makeMoveCpu);
   connect(m_jsCpuP2, &OpponentJS::setStone, this, &Game::setStone);
   connect(m_jsCpuP2, &OpponentJS::moveTower, this, &Game::moveTower);
@@ -287,7 +285,7 @@ auto Game::getScene() const -> QGraphicsScene* {
 // ---------------------------------------------------------------------------
 
 void Game::setStone(int nIndex, bool bDebug) {
-  // TODO(): Rewrite for dynamic number of players
+  // TODO(): Rewrite for > 2 players
   if (m_pBoard->getField(nIndex).isEmpty() || bDebug) {
     if (m_pPlayer1->getIsActive() && m_pPlayer1->getStonesLeft() > 0) {
       m_pPlayer1->setStonesLeft(m_pPlayer1->getStonesLeft() - 1);
@@ -654,10 +652,8 @@ auto Game::loadGame(const QString &sFile) -> QJsonObject {
     return QJsonObject();
   }
 
-  QByteArray saveData = loadFile.readAll();
-  // TODO(): fromBinaryData is obsolete
+  QByteArray saveData = QByteArray::fromBase64(loadFile.readAll());
   QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-  // QJsonDocument loadDoc(QJsonDocument::fromBinaryData(saveData));
   return loadDoc.object();
 }
 
@@ -665,63 +661,39 @@ auto Game::loadGame(const QString &sFile) -> QJsonObject {
 // ---------------------------------------------------------------------------
 
 auto Game::saveGame(const QString &sFile) -> bool {
-  // TODO(): Implement new board array
-  /*
   QFile saveFile(sFile);
-  QFile saveDebugFile(sFile + "_debug");
-  QJsonArray tower;
-  QVariantList vartower;
-  QJsonArray jsBoard;
-  // QList<QList<QList<quint8> > > board(m_pBoard->getBoard());
+  QJsonArray jsBoard(m_pBoard->getBoard());
 
   if (!saveFile.open(QIODevice::WriteOnly)) {
     qWarning() << "Couldn't open save file:" << sFile;
     return false;
   }
 
-  // Convert board to json array
-  for (int nCol = 0; nCol < m_BoardDimension.x(); nCol++) {
-    QJsonArray column;
-    for (int nRow = 0; nRow < m_BoardDimension.y(); nRow++) {
-      vartower.clear();
+  // Save relative board folder, needed e.g. for AppImage
+  QDir dir(qApp->applicationDirPath());
+  QString sRelativeDir;
+  sRelativeDir = dir.relativeFilePath(m_sBoardFile);
 
-      // TODO(): Implement new board array
-      // foreach (quint8 n, board[nCol][nRow]) {
-      //  vartower << n;
-      // }
-      tower = QJsonArray::fromVariantList(vartower);
-      column.append(tower);
-    }
-    jsBoard.append(column);
-  }
-
+  // TODO(): Rewrite for > 2 players
   QJsonObject jsonObj;
+  jsonObj[QStringLiteral("NumOfPlayers")] = 2;
   jsonObj[QStringLiteral("Name1")] = m_pPlayer1->getName();
   jsonObj[QStringLiteral("Name2")] = m_pPlayer2->getName();
   jsonObj[QStringLiteral("Won1")] = m_pPlayer1->getWonTowers();
   jsonObj[QStringLiteral("Won2")] = m_pPlayer2->getWonTowers();
+  jsonObj[QStringLiteral("StonesLeft1")] = m_pPlayer1->getStonesLeft();
+  jsonObj[QStringLiteral("StonesLeft2")] = m_pPlayer2->getStonesLeft();
   jsonObj[QStringLiteral("HumanCpu1")] =
       m_pPlayer1->getIsHuman() ? QStringLiteral("Human") : m_sJsFileP1;
   jsonObj[QStringLiteral("HumanCpu2")] =
       m_pPlayer2->getIsHuman() ? QStringLiteral("Human") : m_sJsFileP2;
   jsonObj[QStringLiteral("Current")] = m_pPlayer1->getIsActive() ? 1 : 2;
   jsonObj[QStringLiteral("Board")] = jsBoard;
-  jsonObj[QStringLiteral("BoardColumns")] = m_BoardDimension.x();
-  jsonObj[QStringLiteral("BoardRows")] = m_BoardDimension.y();
+  jsonObj[QStringLiteral("BoardFile")] = m_sBoardFile;
+  jsonObj[QStringLiteral("BoardFileRelative")] = sRelativeDir;
+  jsonObj[QStringLiteral("BoardColumns")] = m_pBoard->getBoadDimensions().x();
+  jsonObj[QStringLiteral("BoardRows")] = m_pBoard->getBoadDimensions().y();
   QJsonDocument jsDoc(jsonObj);
 
-  if (qApp->arguments().contains(QStringLiteral("--debug"))) {
-    if (!saveDebugFile.open(QIODevice::WriteOnly)) {
-      qWarning() << "Couldn't open DEBUG save file:" << sFile << "_debug";
-    }
-    if (-1 == saveDebugFile.write(jsDoc.toJson())) {
-      qWarning() << "Error while writing DEBUG save file:" << sFile << "_debug";
-    }
-  }
-
-  // TODO(): toBinaryData is obsolete
-  return (-1 != saveFile.write(jsDoc.toJson()));
-  // return (-1 != saveFile.write(jsDoc.toBinaryData()));
-  */
-  return true;
+  return (-1 != saveFile.write(jsDoc.toJson().toBase64()));
 }

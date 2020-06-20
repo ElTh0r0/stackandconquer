@@ -50,6 +50,7 @@ class Settings : public QDialog {
                       QWidget *pParent = nullptr);
     virtual ~Settings();
 
+    auto getBoardFile() const -> QStringList;
     auto getPlayerName(const quint8 nPlayer) const -> QString;
     auto getPlayerHumanCpu(const quint8 nPlayer) const -> QString;
     auto getPlayerColor(const quint8 nPlayer) const -> QString;

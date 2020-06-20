@@ -47,16 +47,17 @@ class Board : public QGraphicsScene {
   Q_OBJECT
 
  public:
-    Board(quint16 nGridSize, quint8 nMaxStones, const quint8 nMaxTower,
+    Board(const QString &sBoard, quint16 nGridSize, const quint8 nMaxTower,
           quint8 NumOfPlayers, Settings *pSettings);
 
-    void setupSavegame(const QList<QList<QList<quint8> > > &board);
+    auto setupSavegame(const QJsonArray &jsBoard) -> bool;
     void addStone(const int nIndex, const quint8 nStone,
                   const bool bAnim = true);
     void removeStone(const int nIndex, const bool bAll = false);
     void selectIndexField(const int nIndex);
     auto getBoard() const -> QJsonArray;
     auto getBoadDimensions() const -> QPoint;
+    auto getMaxPlayerStones() const -> quint8;
     auto getField(const int index) const -> QString;
     auto findPossibleMoves(const bool bStonesLeft) -> quint8;
     auto checkNeighbourhood(const int nIndex) const -> QList<int>;
@@ -105,7 +106,7 @@ class Board : public QGraphicsScene {
     QPainterPath m_boardPath;
 
     const quint16 m_nGridSize;
-    const quint8 m_nMaxStones;
+    quint8 m_nMaxPlayerStones;
     Settings *m_pSettings;
     const quint8 m_nMaxTower;
     quint8 m_NumOfPlayers;

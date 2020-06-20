@@ -63,7 +63,7 @@ class StackAndConquer : public QMainWindow {
     void changeEvent(QEvent *pEvent);
 
  private slots:
-    void startNewGame(const QStringList &sListArgs = QStringList());
+    void startNewGame(const QStringList &sListArgs);
     void loadGame();
     void saveGame();
     void setViewInteractive(const bool bEnabled);
