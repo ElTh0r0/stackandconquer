@@ -62,7 +62,6 @@ class Board : public QGraphicsScene {
     auto findPossibleMoves(const bool bStonesLeft) -> quint8;
     auto checkNeighbourhood(const int nIndex) const -> QList<int>;
     void printDebugFields() const;
-    // TODO(): Check if all variants are needed:
     auto getCoordinateFromField(const int nField) const -> QPoint;
     auto getStringCoordFromField(const int nField) const -> QString;
     auto getCoordinateFromIndex(const int nIndex) const -> QPoint;

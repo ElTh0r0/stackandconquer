@@ -55,6 +55,7 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
     m_sJsFileP2(QString("")),
     m_nMaxTowerHeight(5),
     m_nGridSize(70),
+    m_nWinTowers(pSettings->getWinTowers()),
     m_bScriptError(false) {
   qDebug() << "Starting new game" << sListFiles;
 
@@ -104,6 +105,8 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
                         jsonObj[QStringLiteral("StonesLeft2")].toInt());
       nStartPlayer = static_cast<quint8>(
                        jsonObj[QStringLiteral("Current")].toInt());
+      m_nWinTowers = static_cast<quint8>(
+                       jsonObj[QStringLiteral("WinTowers")].toInt());
       quint16 nBoardColumns =
           static_cast<quint16>(
             jsonObj[QStringLiteral("BoardColumns")].toInt(0));
@@ -112,10 +115,12 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
 
       if (sP1HumanCpu.isEmpty() || sP2HumanCpu.isEmpty() ||
           sName1.isEmpty() || sName2.isEmpty() ||
-          0 == nBoardColumns || 0 == nBoardRows || 0 == nNumOfPlayers) {
+          0 == nBoardColumns || 0 == nBoardRows || 0 == nNumOfPlayers ||
+          0 == nStartPlayer || 0 == m_nWinTowers) {
         qWarning() << "Save game contains invalid data:"
                    << "sP1HumanCpu / sP2HumanCpu / sName1 / sName2 /"
-                   << "nBoardColumns / nBoardRows / nNumOfPlayers is empty.";
+                   << "nBoardColumns / nBoardRows / nNumOfPlayers /"
+                      "nStartPlayer / m_nWinTowers is empty.";
         QMessageBox::critical(nullptr, tr("Warning"),
                               tr("Save game contains invalid data."));
         exit(-1);
@@ -454,7 +459,7 @@ void Game::checkTowerWin(const int nIndex) {
       m_pPlayer1->setWonTowers(m_pPlayer1->getWonTowers() + 1);
       qDebug() << "Player 1 conquered tower" <<
                   m_pBoard->getStringCoordFromIndex(nIndex);
-      if (m_pSettings->getWinTowers() != m_pPlayer1->getWonTowers()) {
+      if (m_nWinTowers != m_pPlayer1->getWonTowers()) {
         QMessageBox::information(nullptr, tr("Information"),
                                  tr("%1 conquered a tower!")
                                  .arg(m_pPlayer1->getName()));
@@ -463,7 +468,7 @@ void Game::checkTowerWin(const int nIndex) {
       m_pPlayer2->setWonTowers(m_pPlayer2->getWonTowers() + 1);
       qDebug() << "Player 2 conquered tower" <<
                   m_pBoard->getStringCoordFromIndex(nIndex);
-      if (m_pSettings->getWinTowers() != m_pPlayer2->getWonTowers()) {
+      if (m_nWinTowers != m_pPlayer2->getWonTowers()) {
         QMessageBox::information(nullptr, tr("Information"),
                                  tr("%1 conquered a tower!")
                                  .arg(m_pPlayer2->getName()));
@@ -512,13 +517,13 @@ void Game::updatePlayers(bool bInitial) {
   emit updateWonP1(QString::number(m_pPlayer1->getWonTowers()));
   emit updateWonP2(QString::number(m_pPlayer2->getWonTowers()));
 
-  if (m_pSettings->getWinTowers() == m_pPlayer1->getWonTowers()) {
+  if (m_nWinTowers == m_pPlayer1->getWonTowers()) {
     qDebug() << "PLAYER 1 WON!";
     emit setInteractive(false);
     emit highlightActivePlayer(false, true);
     QMessageBox::information(nullptr, tr("Information"), tr("%1 won the game!")
                              .arg(m_pPlayer1->getName()));
-  } else if (m_pSettings->getWinTowers() == m_pPlayer2->getWonTowers()) {
+  } else if (m_nWinTowers == m_pPlayer2->getWonTowers()) {
     qDebug() << "PLAYER 2 WON!";
     emit setInteractive(false);
     emit highlightActivePlayer(false, false, true);
@@ -681,6 +686,7 @@ auto Game::saveGame(const QString &sFile) -> bool {
   jsonObj[QStringLiteral("Name2")] = m_pPlayer2->getName();
   jsonObj[QStringLiteral("Won1")] = m_pPlayer1->getWonTowers();
   jsonObj[QStringLiteral("Won2")] = m_pPlayer2->getWonTowers();
+  jsonObj[QStringLiteral("WinTowers")] = m_nWinTowers;
   jsonObj[QStringLiteral("StonesLeft1")] = m_pPlayer1->getStonesLeft();
   jsonObj[QStringLiteral("StonesLeft2")] = m_pPlayer2->getStonesLeft();
   jsonObj[QStringLiteral("HumanCpu1")] =

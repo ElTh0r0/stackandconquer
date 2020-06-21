@@ -82,6 +82,7 @@ class Game : public QObject {
 
     const quint8 m_nMaxTowerHeight;
     const quint16 m_nGridSize;
+    quint8 m_nWinTowers;
 
     bool m_bScriptError;
     QString m_sPreviousMove;
