@@ -133,7 +133,8 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
   }
 
   tmpBoard.clear();
-  foreach (QJsonValue js, jso.value(QStringLiteral("Board")).toArray()) {
+  QJsonArray jsBoard(jso.value(QStringLiteral("Board")).toArray());
+  foreach (QJsonValue js, jsBoard) {
     QString s = js.toString();
     if (js.isNull() || s.isEmpty() || (sOUT != s && sIN != s && sPAD != s)) {
       qWarning() << "Board array contains invalid data:" << s;
