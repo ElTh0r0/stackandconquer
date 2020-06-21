@@ -115,7 +115,7 @@ void OpponentJS::makeMoveCpu(const QJsonArray &board,
 
   // CPU has to return an int array (single int = set stone, 3 int = move tower)
   if (result.isArray()) {
-    if (1 == result.property("length").toInt()) {  // Set stone
+    if (1 == result.property(QStringLiteral("length")).toInt()) {  // Set stone
       if (result.property(0).isNumber()) {
         if (result.property(0).toInt() >= 0 &&
             result.property(0).toInt() < board.size()) {
@@ -124,7 +124,7 @@ void OpponentJS::makeMoveCpu(const QJsonArray &board,
         }
       }
     }
-    if (3 == result.property("length").toInt()) {  // Move tower
+    if (3 == result.property(QStringLiteral("length")).toInt()) {  // Move tower
       if (result.property(0).isNumber() &&
           result.property(1).isNumber() &&
           result.property(2).isNumber()) {

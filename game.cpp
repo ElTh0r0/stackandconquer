@@ -51,18 +51,18 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
     m_jsCpuP2(nullptr),
     m_pPlayer1(nullptr),
     m_pPlayer2(nullptr),
-    m_sJsFileP1(QString("")),
-    m_sJsFileP2(QString("")),
+    m_sJsFileP1(QLatin1String("")),
+    m_sJsFileP2(QLatin1String("")),
     m_nMaxTowerHeight(5),
     m_nGridSize(70),
     m_nWinTowers(pSettings->getWinTowers()),
     m_bScriptError(false) {
   qDebug() << "Starting new game" << sListFiles;
 
-  quint8 nNumOfPlayers(0);  // TODO(): Rewrite for > 2 players
-  QString sP1HumanCpu(QString(""));
+  quint8 nNumOfPlayers(0);  // TODO(x): Rewrite for > 2 players
+  QString sP1HumanCpu(QLatin1String(""));
   QString sName1(QStringLiteral("P1"));
-  QString sP2HumanCpu(QString(""));
+  QString sP2HumanCpu(QLatin1String(""));
   QString sName2(QStringLiteral("P2"));
   quint8 nStartPlayer(0);
   quint8 nStonesLeftP1(0);
@@ -90,7 +90,7 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
         exit(-1);
       }
 
-      // TODO(): Rewrite for > 2 players
+      // TODO(x): Rewrite for > 2 players
       nNumOfPlayers = static_cast<quint8>(
                         jsonObj[QStringLiteral("NumOfPlayers")].toInt());
       sP1HumanCpu = jsonObj[QStringLiteral("HumanCpu1")].toString().trimmed();
@@ -290,7 +290,7 @@ auto Game::getScene() const -> QGraphicsScene* {
 // ---------------------------------------------------------------------------
 
 void Game::setStone(int nIndex, bool bDebug) {
-  // TODO(): Rewrite for > 2 players
+  // TODO(x): Rewrite for > 2 players
   if (m_pBoard->getField(nIndex).isEmpty() || bDebug) {
     if (m_pPlayer1->getIsActive() && m_pPlayer1->getStonesLeft() > 0) {
       m_pPlayer1->setStonesLeft(m_pPlayer1->getStonesLeft() - 1);
@@ -453,7 +453,7 @@ void Game::moveTower(int nFrom, quint8 nStones, int nTo) {
 // ---------------------------------------------------------------------------
 
 void Game::checkTowerWin(const int nIndex) {
-  // TODO(): Rewrite for > 2 players
+  // TODO(x): Rewrite for > 2 players
   if (m_pBoard->getField(nIndex).size() >= m_nMaxTowerHeight) {
     if (1 == m_pBoard->getField(nIndex).rightRef(1).toInt()) {
       m_pPlayer1->setWonTowers(m_pPlayer1->getWonTowers() + 1);
@@ -490,7 +490,7 @@ void Game::checkTowerWin(const int nIndex) {
 // ---------------------------------------------------------------------------
 
 void Game::returnStones(const int nIndex) {
-  // TODO(): Rewrite for > 2 players
+  // TODO(x): Rewrite for > 2 players
   QString tower(m_pBoard->getField(nIndex));
   quint8 stones(static_cast<quint8>(tower.count('1')));
   m_pPlayer1->setStonesLeft(m_pPlayer1->getStonesLeft() + stones);
@@ -556,7 +556,7 @@ void Game::updatePlayers(bool bInitial) {
 // ---------------------------------------------------------------------------
 
 void Game::delayCpu() {
-  // TODO(): Rewrite for > 2 players
+  // TODO(x): Rewrite for > 2 players
   if (m_pPlayer1->getIsActive()) {
     emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getCanMove());
   } else {
@@ -572,7 +572,7 @@ auto Game::checkPossibleMoves() -> bool {
         m_pBoard->findPossibleMoves(m_pPlayer1->getStonesLeft() > 0));
   m_pPlayer2->setCanMove(
         m_pBoard->findPossibleMoves(m_pPlayer2->getStonesLeft() > 0));
-  // TODO(): Rewrite for > 2 players
+  // TODO(x): Rewrite for > 2 players
   if (m_pPlayer1->getIsActive() && 0 != m_pPlayer1->getCanMove()) {
     return true;
   }
@@ -679,7 +679,7 @@ auto Game::saveGame(const QString &sFile) -> bool {
   QString sRelativeDir;
   sRelativeDir = dir.relativeFilePath(m_sBoardFile);
 
-  // TODO(): Rewrite for > 2 players
+  // TODO(x): Rewrite for > 2 players
   QJsonObject jsonObj;
   jsonObj[QStringLiteral("NumOfPlayers")] = 2;
   jsonObj[QStringLiteral("Name1")] = m_pPlayer1->getName();

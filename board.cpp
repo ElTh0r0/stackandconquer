@@ -37,9 +37,9 @@
 
 Board::Board(const QString &sBoard, quint16 nGridSize, const quint8 nMaxTower,
              quint8 NumOfPlayers, Settings *pSettings)
-  : sIN("0"),
-    sOUT("#"),
-    sPAD("-"),
+  : sIN(QStringLiteral("0")),
+    sOUT(QStringLiteral("#")),
+    sPAD(QStringLiteral("-")),
     m_nGridSize(nGridSize),
     m_nMaxPlayerStones(0),
     m_pSettings(pSettings),
@@ -103,25 +103,29 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
   QJsonDocument loadDoc(QJsonDocument::fromJson(boardData));
   QJsonObject jso = loadDoc.object();
   if (loadDoc.isEmpty() ||
-      jso.value("Board").isUndefined() || !jso.value("Board").isArray() ||
-      jso.value("Columns").isUndefined() || !jso.value("Columns").isDouble() ||
-      jso.value("Rows").isUndefined() || !jso.value("Rows").isDouble() ||
-      jso.value("2PlayersStones").isUndefined() ||
-      !jso.value("2PlayersStones").isDouble()) {
-    // TODO(): Extent check for all neeeded sections
+      jso.value(QStringLiteral("Board")).isUndefined() ||
+      !jso.value(QStringLiteral("Board")).isArray() ||
+      jso.value(QStringLiteral("Columns")).isUndefined() ||
+      !jso.value(QStringLiteral("Columns")).isDouble() ||
+      jso.value(QStringLiteral("Rows")).isUndefined() ||
+      !jso.value(QStringLiteral("Rows")).isDouble() ||
+      jso.value(QStringLiteral("2PlayersStones")).isUndefined() ||
+      !jso.value(QStringLiteral("2PlayersStones")).isDouble()) {
+    // TODO(x): Extent check for all neeeded sections
     qWarning() << "Board file doesn't contain all required sections!" << sBoard;
     QMessageBox::critical(nullptr, tr("Warning"),
                          tr("Error while opening board file!"));
     return;
   }
 
-  m_BoardDimensions.setX(jso.value("Columns").toInt());
-  m_BoardDimensions.setY(jso.value("Rows").toInt());
-  // TODO(): Rewrite for > 2 players
-  m_nMaxPlayerStones = jso.value("2PlayersStones").toInt();
+  m_BoardDimensions.setX(jso.value(QStringLiteral("Columns")).toInt());
+  m_BoardDimensions.setY(jso.value(QStringLiteral("Rows")).toInt());
+  // TODO(x): Rewrite for > 2 players
+  m_nMaxPlayerStones = jso.value(QStringLiteral("2PlayersStones")).toInt();
 
   if (0 == m_BoardDimensions.x() || 0 == m_BoardDimensions.y()) {
-    qWarning() << "Board file contains invalid dimensions:" << m_BoardDimensions;
+    qWarning() << "Board file contains invalid dimensions:" <<
+                  m_BoardDimensions;
     qWarning() << "Board:" << sBoard;
     QMessageBox::critical(nullptr, tr("Warning"),
                          tr("Error while opening board file!"));
@@ -129,7 +133,7 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
   }
 
   tmpBoard.clear();
-  foreach (QJsonValue js, jso.value("Board").toArray()) {
+  foreach (QJsonValue js, jso.value(QStringLiteral("Board")).toArray()) {
     QString s = js.toString();
     if (js.isNull() || s.isEmpty() || (sOUT != s && sIN != s && sPAD != s)) {
       qWarning() << "Board array contains invalid data:" << s;
@@ -230,7 +234,7 @@ void Board::drawBoard(const QList<QString> &tmpBoard) {
     }
   }
 
-  // TODO(): Might need adjustments for non rectangular shapes!
+  // TODO(x): Might need adjustments for non rectangular shapes!
   this->setSceneRect(this->itemsBoundingRect());
 }
 
@@ -277,7 +281,8 @@ void Board::createStones() {
   if (!fStone.open(QFile::ReadOnly | QFile::Text)) {
     qDebug() << "Could not open stone.svg";
     QMessageBox::critical(nullptr, tr("Warning"),
-                          tr("Could not open %1!").arg("stone.svg"));
+                          tr("Could not open %1!").arg(
+                            QStringLiteral("stone.svg")));
     return;
   }
   QTextStream in(&fStone);
@@ -287,12 +292,13 @@ void Board::createStones() {
   // stone.svg HAS to be filled with #ff0000, so that below replace can work.
   QString sTmpSvg = sSvg;
   QByteArray aSvg1(sTmpSvg.replace(
-                     "#ff0000", m_pSettings->getPlayerColor(1)).toUtf8());
+                     QLatin1String("#ff0000"),
+                     m_pSettings->getPlayerColor(1)).toUtf8());
   sTmpSvg = sSvg;
-  QByteArray aSvg2(sTmpSvg.replace("#ff0000",
+  QByteArray aSvg2(sTmpSvg.replace(QLatin1String("#ff0000"),
                                    m_pSettings->getPlayerColor(2)).toUtf8());
 
-  // TODO(): Create dynamic list to support >2 players.
+  // TODO(x): Create dynamic list to support >2 players.
   auto *m_pSvgRendererP1 = new QSvgRenderer(aSvg1);
   auto *m_pSvgRendererP2 = new QSvgRenderer(aSvg2);
 
@@ -387,7 +393,7 @@ void Board::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
         // If debug enabled, use Ctrl + right mouse button to set stone anywhere
         if (Qt::RightButton == p_Event->button() &&
             Qt::ControlModifier == p_Event->modifiers() &&
-            qApp->arguments().contains("--debug")) {
+            qApp->arguments().contains(QStringLiteral("--debug"))) {
           this->selectIndexField(-1);
           qDebug() << "Following stone set in DEBUG mode:";
           emit setStone(getIndexFromField(field), true);
@@ -494,7 +500,7 @@ void Board::addStone(const int nIndex, const quint8 nStone, const bool bAnim) {
   }
 
   m_jsBoard[nIndex] = m_jsBoard.at(nIndex).toString() + QString::number(nStone);
-  // TODO(): Rewrite for dynamic stone generation and > 2 players
+  // TODO(x): Rewrite for dynamic stone generation and > 2 players
   if (1 == nStone) {
     m_FieldStones[nIndex].append(m_listStonesP1.last());
     m_listStonesP1.removeLast();
@@ -507,7 +513,7 @@ void Board::addStone(const int nIndex, const quint8 nStone, const bool bAnim) {
     this->startAnimation(this->getCoordinateFromIndex(nIndex));
   }
 
-  // TODO(): Make position dynamic depening on stone size
+  // TODO(x): Make position dynamic depening on stone size
   m_FieldStones[nIndex].last()->setPos(
         this->getCoordinateFromIndex(nIndex)*m_nGridSize);
   m_FieldStones[nIndex].last()->setPos(
@@ -566,7 +572,7 @@ void Board::removeStone(const int nIndex, const bool bAll) {
 
   if (bAll) {  // Remove all (tower conquered)
     for (auto ch : this->getField(nIndex)) {
-      // TODO(): Rewrite for > 2 players
+      // TODO(x): Rewrite for > 2 players
       // Foreach starts at the beginning of the list
       if (1 == ch.digitValue()) {  // Player 1
         m_listStonesP1.append(m_FieldStones[nIndex].first());
@@ -580,7 +586,7 @@ void Board::removeStone(const int nIndex, const bool bAll) {
     }
     m_jsBoard[nIndex] = QString();
   } else {  // Remove only one
-    // TODO(): Rewrite for > 2 players
+    // TODO(x): Rewrite for > 2 players
     if (1 == m_jsBoard.at(nIndex).toString().rightRef(1).toInt()) {  // Player 1
       m_listStonesP1.append(m_FieldStones[nIndex].last());
       m_FieldStones[nIndex].last()->setVisible(false);
@@ -729,7 +735,7 @@ void Board::highlightNeighbourhood(const QList<int> &neighbours) {
 // ---------------------------------------------------------------------------
 
 auto Board::findPossibleMoves(const bool bStonesLeft) -> quint8 {
-  // TODO(): Rewrite - Generate list of all possible moves.
+  // TODO(x): Rewrite - Generate list of all possible moves.
 
   /*
    * Return: 0 = no moves
@@ -779,7 +785,7 @@ void Board::printDebugFields() const {
       if (QString("(" + sOUT + ")") == s) { s = sOUT + sOUT; }
       sLine += s;
       if (nCol < m_BoardDimensions.x()-1) {
-        sLine += " ";
+        sLine += QLatin1String(" ");
       }
     }
     qDebug() << sLine;

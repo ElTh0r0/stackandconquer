@@ -73,7 +73,7 @@ function makeMove(nPossible) {
     MoveToWin = canWin(2);
   }
   if (0 !== MoveToWin.length) {
-    // TODO: preventWin() currently handles only first winning move!
+    // TODO(x): preventWin() currently handles only first winning move!
     var PreventWin = preventWin(MoveToWin[0], nPossibleMove);
     if (1 === PreventWin.length || 3 === PreventWin.length) {
       return PreventWin;
@@ -185,7 +185,7 @@ function preventWin(moveToWin, nPossibleMove) {
           return ret;
         }
         // if (nPossibleMove >= 2) {
-        // TODO: Try to move tower to prevent win
+        // TODO(x): Try to move tower to prevent win
         // }
       }
     }

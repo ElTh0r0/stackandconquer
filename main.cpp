@@ -52,14 +52,16 @@ auto main(int argc, char *argv[]) -> int {
   app.setApplicationVersion(QStringLiteral(APP_VERSION));
 
   QCommandLineParser cmdparser;
-  cmdparser.setApplicationDescription(APP_DESC);
+  cmdparser.setApplicationDescription(QStringLiteral(APP_DESC));
   cmdparser.addHelpOption();
   cmdparser.addVersionOption();
-  QCommandLineOption enableDebug("debug", "Enable debug mode");
+  QCommandLineOption enableDebug(QStringLiteral("debug"),
+                                 QStringLiteral("Enable debug mode"));
   cmdparser.addOption(enableDebug);
-  cmdparser.addPositionalArgument("file(s)", "File(s) to be opened (savegame "
-                                             "*.stacksav or CPU opponent(s) "
-                                             "*.js)");
+  cmdparser.addPositionalArgument(
+        QStringLiteral("file(s)"),
+        QStringLiteral("File(s) to be opened (savegame *.stacksav "
+                       "or CPU opponent(s) *.js)"));
   cmdparser.process(app);
 
   // Default share data path (Windows and debugging)
