@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Class definition game engine.
@@ -36,11 +36,11 @@ class Game : public QObject {
 
  public:
     explicit Game(Settings *pSettings, const QStringList &sListFiles);
-    QGraphicsScene* getScene() const;
-    QRectF getSceneRect() const;
-    bool saveGame(const QString &sFile);
+    ~Game();
+    auto getScene() const -> QGraphicsScene*;
+    auto saveGame(const QString &sFile) -> bool;
     void updatePlayers(bool bInitial = false);
-    bool initCpu();
+    auto initCpu() -> bool;
 
  signals:
     void updateNameP1(const QString &sName);
@@ -52,28 +52,27 @@ class Game : public QObject {
     void setInteractive(bool bEnabled);
     void highlightActivePlayer(bool bPlayer1,
                                bool bP1Won = false, bool bP2Won = false);
-    void makeMoveCpuP1(const QList<QList<QList<quint8> > > &board,
-                       const quint8 nPossibleMove);
-    void makeMoveCpuP2(const QList<QList<QList<quint8> > > &board,
-                       const quint8 nPossibleMove);
+    void makeMoveCpuP1(const QJsonArray &board, const quint8 nPossibleMove);
+    void makeMoveCpuP2(const QJsonArray &board, const quint8 nPossibleMove);
 
  private slots:
-    void setStone(QPoint field);
-    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
+    void setStone(int nIndex, bool bDebug);
+    void moveTower(int nFrom, quint8 nStones, int nTo);
     void delayCpu();
     void caughtScriptError();
 
  private:
     void createCPU1();
     void createCPU2();
-    QJsonObject loadGame(const QString &sFile);
-    void checkPossibleMoves();
-    bool checkPreviousMoveReverted(const QString &sMove);
-    void checkTowerWin(QPoint field);
-    void returnStones(QPoint field);
+    static auto loadGame(const QString &sFile) -> QJsonObject;
+    auto checkPossibleMoves() -> bool;
+    auto checkPreviousMoveReverted(const QString &sMove) -> bool;
+    void checkTowerWin(const int nIndex);
+    void returnStones(const int nIndex);
 
     Settings *m_pSettings;
     Board *m_pBoard;
+    QString m_sBoardFile;
     OpponentJS *m_jsCpuP1;
     OpponentJS *m_jsCpuP2;
     Player *m_pPlayer1;
@@ -82,9 +81,7 @@ class Game : public QObject {
     QString m_sJsFileP2;
 
     const quint8 m_nMaxTowerHeight;
-    const quint8 m_nMaxStones;
     const quint16 m_nGridSize;
-    const quint8 m_nNumOfFields;
 
     bool m_bScriptError;
     QString m_sPreviousMove;

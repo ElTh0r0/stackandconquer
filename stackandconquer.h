@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Class definition main application.
@@ -61,10 +61,9 @@ class StackAndConquer : public QMainWindow {
 
  protected:
     void changeEvent(QEvent *pEvent);
-    void closeEvent(QCloseEvent *pEvent);
 
  private slots:
-    void startNewGame(const QStringList &sListArgs = QStringList());
+    void startNewGame(const QStringList &sListArgs);
     void loadGame();
     void saveGame();
     void setViewInteractive(const bool bEnabled);
@@ -73,16 +72,17 @@ class StackAndConquer : public QMainWindow {
                                const bool bP2Won = false);
     void loadLanguage(const QString &sLang);
     void showRules();
-    void reportBug() const;
+    static void reportBug();
     void showInfoBox();
 
  private:
     void checkCmdArgs(const QStringList &sListArgs = QStringList());
-    bool switchTranslator(QTranslator *translator,
-                          const QString &sFile,
-                          const QString &sPath = QString());
+    static auto switchTranslator(QTranslator *translator,
+                                 const QString &sFile,
+                                 const QString &sPath = QString()) -> bool;
     void setupMenu();
     void setupGraphView();
+    void resizeEvent(QResizeEvent *pEvent);
 
     Ui::StackAndConquer *m_pUi;
     const QDir m_userDataDir;
@@ -91,21 +91,21 @@ class StackAndConquer : public QMainWindow {
     QTranslator m_translatorQt;  // Qt translations
     QString m_sCurrLang;
     Settings *m_pSettings;
-    QGraphicsView *m_pGraphView;
+    QGraphicsView *m_pGraphView{};
     Game *m_pGame;
 
-    QFrame *m_pFrame;
-    QGridLayout *m_pLayout;
-    QLabel *m_plblPlayer1;
-    QLabel *m_plblPlayer2;
-    QLabel *m_plblIconStones1;
-    QLabel *m_plblIconWin1;
-    QLabel *m_plblIconStones2;
-    QLabel *m_plblIconWin2;
-    QLabel *m_plblP1StonesLeft;
-    QLabel *m_plblP2StonesLeft;
-    QLabel *m_plblP1Won;
-    QLabel *m_plblP2Won;
+    QFrame *m_pFrame{};
+    QGridLayout *m_pLayout{};
+    QLabel *m_plblPlayer1{};
+    QLabel *m_plblPlayer2{};
+    QLabel *m_plblIconStones1{};
+    QLabel *m_plblIconWin1{};
+    QLabel *m_plblIconStones2{};
+    QLabel *m_plblIconWin2{};
+    QLabel *m_plblP1StonesLeft{};
+    QLabel *m_plblP2StonesLeft{};
+    QLabel *m_plblP1Won{};
+    QLabel *m_plblP2Won{};
 };
 
 #endif  // STACKANDCONQUER_H_

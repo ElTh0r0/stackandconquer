@@ -1,5 +1,5 @@
 #  This file is part of StackAndConquer.
-#  Copyright (C) 2015-2019 Thorsten Roth
+#  Copyright (C) 2015-2020 Thorsten Roth
 #
 #  StackAndConquer is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+#  along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
 
 lessThan(QT_MAJOR_VERSION, 5) {
   error("StackAndConquer requires Qt 5.0 or greater")
@@ -26,10 +26,10 @@ unix: !macx {
        TARGET = StackAndConquer
 }
 
-VERSION       = 0.8.2
+VERSION       = 0.9.0
 QMAKE_TARGET_PRODUCT     = "StackAndConquer"
 QMAKE_TARGET_DESCRIPTION = "Challenging tower conquest board game"
-QMAKE_TARGET_COPYRIGHT   = "(C) 2015-2019 Thorsten Roth"
+QMAKE_TARGET_COPYRIGHT   = "(C) 2015-2020 Thorsten Roth"
 
 DEFINES      += APP_NAME=\"\\\"$$QMAKE_TARGET_PRODUCT\\\"\" \
                 APP_VERSION=\"\\\"$$VERSION\\\"\" \
@@ -42,10 +42,13 @@ UI_DIR        = ./.ui
 RCC_DIR       = ./.rcc
 
 QT           += core gui svg qml widgets
+CONFIG       += c++11
 
-CONFIG       += warn_on c++11
-DEFINES      += QT_DEPRECATED_WARNINGS
-DEFINES      += QT_DISABLE_DEPRECATED_BEFORE=0x050900
+CONFIG(debug, debug|release) {
+  CONFIG     += warn_on
+  DEFINES    += QT_DEPRECATED_WARNINGS
+  DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x051500
+}
 
 SOURCES      += main.cpp\
                 stackandconquer.cpp \
@@ -104,7 +107,7 @@ unix: !macx {
 
     #icons.path      = $$PREFIX/share/icons
     #icons.files    += res/images/hicolor
-    
+
     man.path        = $$PREFIX/share
     man.files      += man
 

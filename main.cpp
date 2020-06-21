@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Main function, start application, loading translation.
@@ -46,7 +46,7 @@ void LoggingHandler(QtMsgType type,
                     const QMessageLogContext &context,
                     const QString &sMsg);
 
-int main(int argc, char *argv[]) {
+auto main(int argc, char *argv[]) -> int {
   QApplication app(argc, argv);
   app.setApplicationName(QStringLiteral(APP_NAME));
   app.setApplicationVersion(QStringLiteral(APP_VERSION));
@@ -92,6 +92,10 @@ int main(int argc, char *argv[]) {
   setupLogger(userDataDir.absolutePath() + "/" + sDebugFile,
               app.applicationName(), app.applicationVersion());
 
+  if (cmdparser.isSet(enableDebug)) {
+    qWarning() << "DEBUG mode enabled!";
+  }
+
   StackAndConquer myStackAndConquer(sSharePath, userDataDir,
                                     cmdparser.positionalArguments());
   myStackAndConquer.show();
@@ -131,7 +135,6 @@ void setupLogger(const QString &sDebugFilePath,
 void LoggingHandler(QtMsgType type,
                     const QMessageLogContext &context,
                     const QString &sMsg) {
-  QString sMsg2(sMsg);
   QString sContext = sMsg + " (" +
                      QString(context.file) + ":" +
                      QString::number(context.line) + ", " +
@@ -140,7 +143,7 @@ void LoggingHandler(QtMsgType type,
 
   switch (type) {
     case QtDebugMsg:
-      out << sTime << " Debug: " << sMsg2 << "\n";
+      out << sTime << " Debug: " << sMsg << "\n";
       out.flush();
       break;
     case QtWarningMsg:

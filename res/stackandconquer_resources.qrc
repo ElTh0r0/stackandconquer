@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>images/stackandconquer_64x64.png</file>
-        <file>images/stones.svg</file>
         <file>images/win.png</file>
         <file>images/user.png</file>
         <file>images/menu/document-new.png</file>
@@ -12,7 +11,6 @@
         <file>images/menu/system-log-out.png</file>
         <file>images/example1.png</file>
         <file>images/example2.png</file>
-        <file>images/stone1.png</file>
-        <file>images/stone2.png</file>
+        <file>images/stone.svg</file>
     </qresource>
 </RCC>

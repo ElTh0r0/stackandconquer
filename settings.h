@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Class definition for settings.
@@ -27,7 +27,11 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
+#include <QComboBox>
 #include <QDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMap>
 #include <QSettings>
 
 namespace Ui {
@@ -46,27 +50,29 @@ class Settings : public QDialog {
                       QWidget *pParent = nullptr);
     virtual ~Settings();
 
-    QString getNameP1() const;
-    QString getNameP2() const;
-    QString getP1HumanCpu() const;
-    QString getP2HumanCpu() const;
-    quint8 getStartPlayer() const;
-    quint8 getWinTowers() const;
-    bool getShowPossibleMoveTowers() const;
-    QString getLanguage();
+    auto getBoardFile() const -> QStringList;
+    auto getPlayerName(const quint8 nPlayer) const -> QString;
+    auto getPlayerHumanCpu(const quint8 nPlayer) const -> QString;
+    auto getPlayerColor(const quint8 nPlayer) const -> QString;
+    auto getNumOfPlayers() const -> quint8;
+    auto getStartPlayer() const -> quint8;
+    auto getWinTowers() const -> quint8;
+    auto getShowPossibleMoveTowers() const -> bool;
+    auto getLanguage() -> QString;
 
-    QColor getBgColor() const;
-    QColor getHighlightColor() const;
-    QColor getHighlightBorderColor() const;
-    QColor getSelectedColor() const;
-    QColor getSelectedBorderColor() const;
-    QColor getAnimateColor() const;
-    QColor getAnimateBorderColor() const;
-    QColor getBgBoardColor() const;
-    QColor getOutlineBoardColor() const;
-    QColor getGridBoardColor() const;
-    QColor GetNeighboursColor() const;
-    QColor GetNeighboursBorderColor() const;
+    auto getBgColor() const -> QColor;
+    auto getTextColor() const -> QColor;
+    auto getTextHighlightColor() const -> QColor;
+    auto getHighlightColor() const -> QColor;
+    auto getHighlightBorderColor() const -> QColor;
+    auto getSelectedColor() const -> QColor;
+    auto getSelectedBorderColor() const -> QColor;
+    auto getAnimateColor() const -> QColor;
+    auto getAnimateBorderColor() const -> QColor;
+    auto getBgBoardColor() const -> QColor;
+    auto getGridBoardColor() const -> QColor;
+    auto getNeighboursColor() const -> QColor;
+    auto getNeighboursBorderColor() const -> QColor;
 
  public slots:
     void accept();
@@ -77,28 +83,43 @@ class Settings : public QDialog {
     void newGame(const QStringList &sListArgs);
     void changeLang(const QString &sLang);
 
+ protected:
+    void showEvent(QShowEvent *pEvent);
+
+ private slots:
+    void changeNumOfPlayers();
+    void changedSettings();
+
  private:
     void readSettings();
-    QColor readColor(const QString &sKey, const QString &sFallback) const;
-    QStringList searchTranslations() const;
+    auto readColor(const QString &sKey,
+                   const QString &sFallback) const -> QColor;
+    auto searchTranslations() const -> QStringList;
     void searchCpuScripts(const QString &userDataDir);
+    void updateStartCombo();
 
-    QWidget *m_pParent;
+    QWidget *m_pParent{};
     Ui::SettingsDialog *m_pUi;
     QSettings *m_pSettings;
-
+    QList<QMap<QString, QString>> m_Players;
     QString m_sSharePath;
     QString m_sGuiLanguage;
-    QString m_sNameP1;
-    QString m_sNameP2;
-    QString m_sP1HumanCpu;
-    QString m_sP2HumanCpu;
+
+    QList<QLabel*> m_listNameLbls;
+    QList<QLabel*> m_listHumCpuLbls;
+    QList<QLineEdit*> m_listNameEdit;
+    QList<QComboBox*> m_listPlayerCombo;
+
     QStringList m_sListCPUs;
-    int m_nStartPlayer;
-    int m_nWinTowers;
-    bool m_bShowPossibleMoveTowers;
+    int m_nNumOfPlayers{};
+    int m_nStartPlayer{};
+    int m_nWinTowers{};
+    bool m_bShowPossibleMoveTowers{};
+    bool m_bSettingChanged{};
 
     QColor m_bgColor;
+    QColor m_txtColor;
+    QColor m_txtHighColor;
     QColor m_highlightColor;
     QColor m_highlightBorderColor;
     QColor m_selectedColor;
@@ -106,10 +127,12 @@ class Settings : public QDialog {
     QColor m_animateColor;
     QColor m_animateBorderColor;
     QColor m_bgBoardColor;
-    QColor m_outlineBoardColor;
     QColor m_gridBoardColor;
     QColor m_neighboursColor;
     QColor m_neighboursBorderColor;
+
+    const quint8 m_maxPlayers;
+    const QStringList m_DefaultPlayerColors;
 };
 
 #endif  // SETTINGS_H_

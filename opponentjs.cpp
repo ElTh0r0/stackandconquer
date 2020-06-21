@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Interface to CPU script JS engine.
@@ -33,23 +33,24 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-OpponentJS::OpponentJS(const quint8 nID, const quint8 nNumOfFields,
-                       const quint8 nHeightTowerWin, QObject *parent)
+OpponentJS::OpponentJS(const quint8 nID, const QPoint BoardDimensions,
+                       const quint8 nHeightTowerWin, const QString &sOut,
+                       const QString &sPad, QObject *parent)
   : QObject(parent),
     m_nID(nID),
-    m_nNumOfFields(nNumOfFields),
+    m_BoardDimensions(BoardDimensions),
     m_nHeightTowerWin(nHeightTowerWin),
+    m_sOut(sOut),
+    m_sPad(sPad),
     m_jsEngine(new QJSEngine(parent)) {
   m_obj = m_jsEngine->globalObject();
   m_obj.setProperty(QStringLiteral("cpu"), m_jsEngine->newQObject(this));
-
-  // TODO(volunteer): C++ call via CPU script for check previous move reverted?
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
+auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
   QFile f(sFilepath);
   if (!f.open(QFile::ReadOnly)) {
     qWarning() << "Couldn't open JS file:" << sFilepath;
@@ -57,7 +58,7 @@ bool OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
   }
   QString source = QString::fromUtf8(f.readAll());
   f.close();
-  qDebug() << "CPU" << m_nID << "script:" << sFilepath;
+  this->log("Script: " + sFilepath);
 
   QJSValue result(m_jsEngine->evaluate(source, sFilepath));
   if (result.isError()) {
@@ -78,17 +79,22 @@ bool OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) {
   }
 
   m_obj.setProperty(QStringLiteral("nID"), m_nID);
-  m_obj.setProperty(QStringLiteral("nNumOfFields"), m_nNumOfFields);
+  m_obj.setProperty(QStringLiteral("nBoardDimensionsX"), m_BoardDimensions.x());
+  m_obj.setProperty(QStringLiteral("nBoardDimensionsY"), m_BoardDimensions.y());
   m_obj.setProperty(QStringLiteral("nHeightTowerWin"), m_nHeightTowerWin);
+  m_obj.setProperty(QStringLiteral("sOut"), m_sOut);
+  m_obj.setProperty(QStringLiteral("sPad"), m_sPad);
   return true;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
+void OpponentJS::makeMoveCpu(const QJsonArray &board,
                              const quint8 nPossibleMove) {
-  QJsonDocument jsdoc(this->convertBoardToJSON(board));
+  // TODO(volunteer): Provide list with all possible moves
+  // (without previous move reverted)
+  QJsonDocument jsdoc(board);
 
   QString sJsBoard(jsdoc.toJson(QJsonDocument::Compact));
   m_obj.setProperty(QStringLiteral("jsboard"), sJsBoard);
@@ -105,26 +111,34 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
                             "Please check the debug log."));
     emit scriptError();
   }
-
   // qDebug() << "Result of makeMove():" << result.toString();
-  QList<QPoint> listRet;
-  listRet = this->evalMoveReturn(result.toString());
-  // qDebug() << "RET" << listRet;
 
-  if (1 == listRet.size()) {
-    if (listRet[0].x() >= 0 && listRet[0].y() >= 0 &&
-        listRet[0].x() < m_nNumOfFields && listRet[0].y() < m_nNumOfFields) {
-      emit setStone(listRet[0]);
-      return;
+  // CPU has to return an int array (single int = set stone, 3 int = move tower)
+  if (result.isArray()) {
+    if (1 == result.property("length").toInt()) {  // Set stone
+      if (result.property(0).isNumber()) {
+        if (result.property(0).toInt() >= 0 &&
+            result.property(0).toInt() < board.size()) {
+          emit setStone(result.property(0).toInt(), false);
+          return;
+        }
+      }
     }
-  } else if (3 == listRet.size()) {
-    if (listRet[0].x() >= 0 && listRet[0].y() >= 0 &&
-        listRet[0].x() < m_nNumOfFields && listRet[0].y() < m_nNumOfFields &&
-        listRet[1].x() >= 0 && listRet[1].y() >= 0 &&
-        listRet[1].x() < m_nNumOfFields && listRet[1].y() < m_nNumOfFields &&
-        listRet[2].x() > 0 && listRet[2].x() < m_nHeightTowerWin) {
-      emit moveTower(listRet[0], listRet[1], quint8(listRet[2].x()));
-      return;
+    if (3 == result.property("length").toInt()) {  // Move tower
+      if (result.property(0).isNumber() &&
+          result.property(1).isNumber() &&
+          result.property(2).isNumber()) {
+        if (result.property(0).toInt() >= 0 &&
+            result.property(0).toInt() < board.size() &&
+            result.property(1).toInt() > 0 &&
+            result.property(2).toInt() >= 0 &&
+            result.property(2).toInt() < board.size()) {
+          emit moveTower(result.property(0).toInt(),   // From
+                         result.property(1).toInt(),   // Number of stones
+                         result.property(2).toInt());  // To
+          return;
+        }
+      }
     }
   }
 
@@ -139,78 +153,6 @@ void OpponentJS::makeMoveCpu(const QList<QList<QList<quint8> > > &board,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QJsonDocument OpponentJS::convertBoardToJSON(
-    const QList<QList<QList<quint8> > > &board) {
-  QJsonArray tower;
-  QVariantList vartower;
-  QJsonArray jsBoard;
-
-  for (int nRow = 0; nRow < m_nNumOfFields; nRow++) {
-    QJsonArray line;
-    for (int nCol = 0; nCol < m_nNumOfFields; nCol++) {
-      vartower.clear();
-      foreach (quint8 n, board[nRow][nCol]) {
-        vartower << n;
-      }
-      tower = QJsonArray::fromVariantList(vartower);
-      line.append(tower);
-    }
-    jsBoard.append(line);
-  }
-
-  QJsonDocument jsDoc(jsBoard);
-  return jsDoc;
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-QList<QPoint> OpponentJS::evalMoveReturn(const QString &sReturn) {
-  QList<QPoint> listReturn;
-  QStringList sListRet;
-  QStringList sListPoint;
-  QPoint point;
-  bool bOk1(true);
-  bool bOk2(true);
-
-  sListRet = sReturn.split('|');
-  for (int i = 0; i < sListRet.size(); i++) {
-    sListPoint.clear();
-
-    sListPoint = sListRet[i].split(',');
-    if (2 == sListPoint.size() && (0 == i || 1 == i)) {
-      point.setX(sListPoint[0].trimmed().toInt(&bOk1, 10));
-      point.setY(sListPoint[1].trimmed().toInt(&bOk2, 10));
-
-      if (!bOk1 || !bOk2) {
-        // In case of error, return empty list
-        listReturn.clear();
-        break;
-      } else {
-        listReturn.append(point);
-      }
-    } else if (2 == i) {  // Third value in list is only one int
-      point.setX(sListRet[i].trimmed().toInt(&bOk1, 10));
-      point.setY(-1);
-
-      if (!bOk1) {
-        listReturn.clear();
-        break;
-      } else {
-        listReturn.append(point);
-      }
-    } else {
-      listReturn.clear();
-      break;
-    }
-  }
-
-  return listReturn;
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-void OpponentJS::log(const QString &sMsg) const {
-  qDebug() << sMsg;
+void OpponentJS::log(const QString &sMsg) {
+  qDebug() << "CPU" << m_nID << "-" << sMsg;
 }

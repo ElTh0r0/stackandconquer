@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Interface to CPU script JS engine.
@@ -36,32 +36,30 @@ class OpponentJS : public QObject {
 
  public:
     explicit OpponentJS(const quint8 nID,
-                        const quint8 nNumOfFields,
+                        const QPoint BoardDimensions,
                         const quint8 nHeightTowerWin,
+                        const QString &sOut,
+                        const QString &sPad,
                         QObject *parent = nullptr);
-    bool loadAndEvalCpuScript(const QString &sFilepath);
+    auto loadAndEvalCpuScript(const QString &sFilepath) -> bool;
 
  public slots:
-    void makeMoveCpu(const QList<QList<QList<quint8> > > &board,
-                     const quint8 nPossibleMove);
-    void log(const QString &sMsg) const;
+    void makeMoveCpu(const QJsonArray &board, const quint8 nPossibleMove);
+    void log(const QString &sMsg);
 
  signals:
-    void setStone(QPoint field);
-    void moveTower(QPoint tower, QPoint moveTo, quint8 nStones);
+    void setStone(int nIndex, bool bDebug);
+    void moveTower(int nFrom, quint8 nStones, int nTo);
     void scriptError();
 
  private:
-    QJsonDocument convertBoardToJSON(
-        const QList<QList<QList<quint8> > > &board);
-    QList<QPoint> evalMoveReturn(const QString &sReturn);
-
     const quint8 m_nID;
-    const quint8 m_nNumOfFields;
+    const QPoint m_BoardDimensions;
     const quint8 m_nHeightTowerWin;
+    const QString m_sOut;
+    const QString m_sPad;
     QJSEngine *m_jsEngine;
     QJSValue m_obj;
-    QList<QList<QList<quint8> > > m_board;
 };
 
 #endif  // OPPONENTJS_H_

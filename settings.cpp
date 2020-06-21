@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Settings dialog.
@@ -31,6 +31,7 @@
 #include <QDirIterator>
 #include <QIcon>
 #include <QMessageBox>
+#include <QSpinBox>
 
 #include "ui_settings.h"
 
@@ -38,7 +39,9 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
                    QWidget *pParent)
   : QDialog(pParent),
     m_pUi(new Ui::SettingsDialog()),
-    m_sSharePath(sSharePath) {
+    m_sSharePath(sSharePath),
+    m_maxPlayers(2),
+    m_DefaultPlayerColors{"#EF2929", "#FCAF3E", "#729FCF", "#8F5902"} {
   m_pUi->setupUi(this);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
   this->setModal(true);
@@ -54,19 +57,47 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
 #endif
 
   m_pUi->cbGuiLanguage->addItems(this->searchTranslations());
-  this->searchCpuScripts(userDataDir);
 
-  QStringList sListStartPlayer;
-  sListStartPlayer << tr("Random")
-                   << tr("Player 1")
-                   << tr("Player 2");
-  m_pUi->cbStartPlayer->addItems(sListStartPlayer);
+  m_pUi->spinNumOfPlayers->setMaximum(m_maxPlayers);
+  connect(m_pUi->spinNumOfPlayers,
+          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+          this, &Settings::changeNumOfPlayers);
+  connect(m_pUi->spinNumOfPlayers,
+          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+          this, &Settings::changedSettings);
+  // TODO(): Remove after implenmentation of > 2 players
+  m_pUi->spinNumOfPlayers->setVisible(false);
+  m_pUi->lblNumOfPlayers->setVisible(false);
+
+  connect(m_pUi->spinNumToWin,
+          static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+          this, &Settings::changedSettings);
+  connect(m_pUi->cbStartPlayer, &QComboBox::currentTextChanged,
+          this, &Settings::changedSettings);
 
   connect(m_pUi->buttonBox, &QDialogButtonBox::accepted,
           this, &Settings::accept);
   connect(m_pUi->buttonBox, &QDialogButtonBox::rejected,
           this, &Settings::reject);
 
+  for (int i = m_maxPlayers-1; i >= 0; i--) {
+    m_listHumCpuLbls.push_front(
+          new QLabel(tr("Player %1 Human/CPU").arg(QString::number(i+1))));
+    m_listPlayerCombo.push_front(new QComboBox(this));
+    m_pUi->formLayout->insertRow(2, m_listHumCpuLbls.first(),
+                                 m_listPlayerCombo.first());
+    connect(m_listPlayerCombo.first(), &QComboBox::currentTextChanged,
+            this, &Settings::changedSettings);
+    m_listNameLbls.push_front(
+          new QLabel(tr("Name player %1").arg(QString::number(i+1))));
+    m_listNameEdit.push_front(new QLineEdit(this));
+    m_pUi->formLayout->insertRow(2, m_listNameLbls.first(),
+                                 m_listNameEdit.first());
+    connect(m_listNameEdit.first(), &QLineEdit::textChanged,
+            this, &Settings::changedSettings);
+  }
+
+  this->searchCpuScripts(userDataDir);
   this->readSettings();
 }
 
@@ -80,7 +111,16 @@ Settings::~Settings() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QStringList Settings::searchTranslations() const {
+void Settings::showEvent(QShowEvent *pEvent) {
+  this->readSettings();
+  m_bSettingChanged = false;
+  QDialog::showEvent(pEvent);
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+auto Settings::searchTranslations() const -> QStringList {
   QStringList sList;
 
   // Translations build in resources
@@ -143,8 +183,9 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
       }
     }
   }
-  m_pUi->cbP1HumanCpu->addItems(sListAvailableCpu);
-  m_pUi->cbP2HumanCpu->addItems(sListAvailableCpu);
+  for (auto combo : m_listPlayerCombo) {
+    combo->addItems(sListAvailableCpu);
+  }
 
   // Cpu scripts in user folder
   cpuDir.setPath(userDataDir);
@@ -152,12 +193,11 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
     foreach (QFileInfo file, cpuDir.entryInfoList(QDir::Files)) {
       if ("js" == file.suffix().toLower()) {
         sListAvailableCpu << file.baseName();
-        m_pUi->cbP1HumanCpu->addItem(QIcon(
-                                       QStringLiteral(":/images/user.png")),
-                                     sListAvailableCpu.last());
-        m_pUi->cbP2HumanCpu->addItem(QIcon(
-                                       QStringLiteral(":/images/user.png")),
-                                     sListAvailableCpu.last());
+        for (auto combo : m_listPlayerCombo) {
+          combo->addItem(QIcon(
+                           QStringLiteral(":/images/user.png")),
+                         sListAvailableCpu.last());
+        }
         m_sListCPUs << file.absoluteFilePath();
       }
     }
@@ -176,28 +216,40 @@ void Settings::accept() {
     emit changeLang(this->getLanguage());
   }
 
-  m_sNameP1 = m_pUi->leNameP1->text();
-  if (m_sNameP1.trimmed().isEmpty()) {
-    m_sNameP1 = tr("Player 1");
-    m_pUi->leNameP1->setText(m_sNameP1);
-  }
-  m_pSettings->setValue(QStringLiteral("NameP1"), m_sNameP1);
-  m_sNameP2 = m_pUi->leNameP2->text();
-  if (m_sNameP2.trimmed().isEmpty()) {
-    m_sNameP2 = tr("Player 2");
-    m_pUi->leNameP2->setText(m_sNameP2);
-  }
-  m_pSettings->setValue(QStringLiteral("NameP2"), m_sNameP2);
-
-  m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
-  m_pSettings->setValue(QStringLiteral("StartPlayer"), m_nStartPlayer);
-
   m_bShowPossibleMoveTowers = m_pUi->checkShowPossibleMoves->isChecked();
   m_pSettings->setValue(QStringLiteral("ShowPossibleMoveTowers"),
                         m_bShowPossibleMoveTowers);
 
+  int nRet = QMessageBox::No;
+  if (m_bSettingChanged) {
+    nRet = QMessageBox::question(
+             nullptr, this->windowTitle(),
+             tr("Main game settings had been changed.<br>"
+                "Do you want to start a new game?"));
+    if (nRet != QMessageBox::Yes) {
+      this->readSettings();
+      QDialog::accept();
+      return;
+    }
+  }
+
+  // General
+  m_nNumOfPlayers = m_pUi->spinNumOfPlayers->value();
+  // TODO(): Enable after implenmentation of > 2 players
+  // m_pSettings->setValue(QStringLiteral("NumOfPlayers"), m_nNumOfPlayers);
+
+  m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
+  m_pSettings->setValue(QStringLiteral("StartPlayer"), m_nStartPlayer);
+
+  m_nWinTowers = m_pUi->spinNumToWin->value();
+  m_pSettings->setValue(QStringLiteral("NumWinTowers"), m_nWinTowers);
+
+  // Colors
   m_pSettings->beginGroup(QStringLiteral("Colors"));
   m_pSettings->setValue(QStringLiteral("BgColor"), m_bgColor.name());
+  m_pSettings->setValue(QStringLiteral("TextColor"), m_txtColor.name());
+  m_pSettings->setValue(QStringLiteral("TextHighlightColor"),
+                        m_txtHighColor.name());
   m_pSettings->setValue(QStringLiteral("HighlightColor"),
                         m_highlightColor.name());
   m_pSettings->setValue(QStringLiteral("HighlightBorderColor"),
@@ -212,8 +264,6 @@ void Settings::accept() {
                         m_animateBorderColor.name());
   m_pSettings->setValue(QStringLiteral("BgBoardColor"),
                         m_bgBoardColor.name());
-  m_pSettings->setValue(QStringLiteral("OutlineBoardColor"),
-                        m_outlineBoardColor.name());
   m_pSettings->setValue(QStringLiteral("GridBoardColor"),
                         m_gridBoardColor.name());
   m_pSettings->setValue(QStringLiteral("NeighboursColor"),
@@ -222,34 +272,46 @@ void Settings::accept() {
                         m_neighboursBorderColor.name());
   m_pSettings->endGroup();
 
-  QString sNewP1HumanCpu(m_pUi->cbP1HumanCpu->currentText());
-  QString sNewP2HumanCpu(m_pUi->cbP2HumanCpu->currentText());
-  int nNewWinTowers(m_pUi->spinNumToWin->value());
-
-  if (sNewP1HumanCpu != m_sP1HumanCpu ||
-      sNewP2HumanCpu != m_sP2HumanCpu ||
-      nNewWinTowers != m_nWinTowers) {
-    int nRet = QMessageBox::question(
-                 nullptr, this->windowTitle(),
-                 tr("Main game settings had been changed.<br>"
-                    "Do you want to start a new game?"));
-    if (nRet == QMessageBox::Yes) {
-      m_sP1HumanCpu = sNewP1HumanCpu;
-      m_sP2HumanCpu = sNewP2HumanCpu;
-      m_nWinTowers = nNewWinTowers;
-      m_pSettings->setValue(QStringLiteral("P1HumanCpu"), m_sP1HumanCpu);
-      m_pSettings->setValue(QStringLiteral("P2HumanCpu"), m_sP2HumanCpu);
-      m_pSettings->setValue(QStringLiteral("NumWinTowers"), m_nWinTowers);
-      emit this->newGame(QStringList());
-    } else {
-      this->readSettings();
-      return;
+  // Players
+  QStringList slistTmpColors;
+  for (auto player : m_Players) {
+    // TODO(): Temp store colors as long as not avail. through settings dialog
+    slistTmpColors << player["Color"];
+    player.clear();
+  }
+  m_Players.clear();
+  for (quint8 i = 0; i < m_maxPlayers; i++) {
+    QMap<QString, QString> tmpMap;
+    tmpMap["Name"] = m_listNameEdit[i]->text().trimmed();
+    if (tmpMap["Name"].isEmpty()) {
+      tmpMap["Name"] = tr("Player") + " " + QString::number(i+1);
+      m_listNameEdit[i]->setText(tmpMap["Name"]);
     }
+    tmpMap["HumanCpu"] = m_listPlayerCombo[i]->currentText();
+    // TODO(): Temp store colors as long as not avail. through settings dialog
+    tmpMap["Color"] = slistTmpColors[i];
+
+    m_Players << tmpMap;
+    m_pSettings->beginGroup("Player" + QString::number(i+1));
+    m_pSettings->setValue(QStringLiteral("Name"), tmpMap["Name"]);
+    m_pSettings->setValue(QStringLiteral("HumanCpu"), tmpMap["HumanCpu"]);
+    m_pSettings->setValue(QStringLiteral("Color"), tmpMap["Color"]);
+    m_pSettings->endGroup();
+  }
+
+  // Remove deprecated settings
+  m_pSettings->remove(QStringLiteral("Colors/OutlineBoardColor"));
+  m_pSettings->remove(QStringLiteral("NameP1"));
+  m_pSettings->remove(QStringLiteral("NameP2"));
+  m_pSettings->remove(QStringLiteral("P1HumanCpu"));
+  m_pSettings->remove(QStringLiteral("P2HumanCpu"));
+
+  if (nRet == QMessageBox::Yes) {
+    emit this->newGame(QStringList());
   }
 
   QDialog::accept();
 }
-
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -274,42 +336,55 @@ void Settings::readSettings() {
   }
   m_sGuiLanguage = m_pUi->cbGuiLanguage->currentText();
 
-  m_sNameP1 = m_pSettings->value(QStringLiteral("NameP1"),
-                                 tr("Player 1")).toString();
-  m_pUi->leNameP1->setText(m_sNameP1);
-  m_sNameP2 = m_pSettings->value(QStringLiteral("NameP2"),
-                                 tr("Player 2")).toString();
-  m_pUi->leNameP2->setText(m_sNameP2);
-
-  m_sP1HumanCpu = m_pSettings->value(QStringLiteral("P1HumanCpu"),
-                                     QStringLiteral("Human")).toString();
-  if (-1 != m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)) {
-    m_pUi->cbP1HumanCpu->setCurrentIndex(
-          m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu));
-  } else {
-    m_pUi->cbP1HumanCpu->setCurrentIndex(
-          m_pUi->cbP1HumanCpu->findText(QStringLiteral("Human")));
+  m_nNumOfPlayers = m_pSettings->value(
+                      QStringLiteral("NumOfPlayers"), 2).toInt();
+  if (m_nNumOfPlayers > m_maxPlayers) {
+    m_nNumOfPlayers = m_maxPlayers;
   }
-  m_sP1HumanCpu = m_pUi->cbP1HumanCpu->currentText();
+  m_pUi->spinNumToWin->setValue(m_nNumOfPlayers);
+  this->changeNumOfPlayers();
 
-  m_sP2HumanCpu = m_pSettings->value(QStringLiteral("P2HumanCpu"),
-                                     QStringLiteral("Human")).toString();
-  if (-1 != m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)) {
-    m_pUi->cbP2HumanCpu->setCurrentIndex(
-          m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu));
-  } else {
-    m_pUi->cbP2HumanCpu->setCurrentIndex(
-          m_pUi->cbP2HumanCpu->findText(QStringLiteral("Human")));
+  for (auto player : m_Players) {
+    player.clear();
   }
-  m_sP2HumanCpu = m_pUi->cbP2HumanCpu->currentText();
+  m_Players.clear();
+
+  for (quint8 i = 0; i < m_maxPlayers; i++) {
+    m_pSettings->beginGroup("Player" + QString::number(i+1));
+    QMap<QString, QString> map;
+    map["Name"] = m_pSettings->value(QStringLiteral("Name"),
+                                     tr("Player") + " " +
+                                     QString::number(i+1)).toString();
+    m_listNameEdit[i]->setText(map["Name"]);
+
+    map["HumanCpu"] = m_pSettings->value(QStringLiteral("HumanCpu"),
+                                         QStringLiteral("Human")).toString();
+
+    if (-1 != m_listPlayerCombo[i]->findText(map["HumanCpu"])) {
+      m_listPlayerCombo[i]->setCurrentIndex(
+            m_listPlayerCombo[i]->findText(map["HumanCpu"]));
+    } else {
+      m_listPlayerCombo[i]->setCurrentIndex(
+            m_listPlayerCombo[i]->findText(QStringLiteral("Human")));
+    }
+    map["HumanCpu"] = m_listPlayerCombo[i]->currentText();
+
+    if (m_DefaultPlayerColors.size() < m_maxPlayers) {
+      qWarning() << "Fallback player color missing!";
+      map["Color"] = this->readColor(QStringLiteral("Color"),
+                                     m_DefaultPlayerColors[0]).name();
+    } else {
+      map["Color"] = this->readColor(QStringLiteral("Color"),
+                                     m_DefaultPlayerColors[i]).name();
+    }
+
+    m_Players << map;
+    m_pSettings->endGroup();
+  }
 
   m_nStartPlayer = m_pSettings->value(QStringLiteral("StartPlayer"),
                                       1).toInt();
-  if (m_nStartPlayer < m_pUi->cbStartPlayer->count()) {
-    m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);
-  } else {
-    m_pUi->cbStartPlayer->setCurrentIndex(1);
-  }
+  this->updateStartCombo();
   m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
 
   m_nWinTowers = m_pSettings->value(QStringLiteral("NumWinTowers"), 1).toInt();
@@ -320,8 +395,13 @@ void Settings::readSettings() {
                                 true).toBool();
   m_pUi->checkShowPossibleMoves->setChecked(m_bShowPossibleMoveTowers);
 
+  m_pSettings->beginGroup(QStringLiteral("Colors"));
   m_bgColor = this->readColor(QStringLiteral("BgColor"),
                               QStringLiteral("#EEEEEC"));
+  m_txtColor = this->readColor(QStringLiteral("TextColor"),
+                               QStringLiteral("#000000"));
+  m_txtHighColor = this->readColor(QStringLiteral("TextHighlightColor"),
+                                   QStringLiteral("#FF0000"));
   m_highlightColor = this->readColor(QStringLiteral("HighlightColor"),
                                      QStringLiteral("#8ae234"));
   m_highlightBorderColor = this->readColor(
@@ -337,8 +417,6 @@ void Settings::readSettings() {
                                          QStringLiteral("#000000"));
   m_bgBoardColor = this->readColor(QStringLiteral("BgBoardColor"),
                                    QStringLiteral("#FFFFFF"));
-  m_outlineBoardColor = this->readColor(QStringLiteral("OutlineBoardColor"),
-                                        QStringLiteral("#2E3436"));
   m_gridBoardColor = this->readColor(QStringLiteral("GridBoardColor"),
                                      QStringLiteral("#888A85"));
   m_neighboursColor = this->readColor(QStringLiteral("NeighboursColor"),
@@ -346,14 +424,15 @@ void Settings::readSettings() {
   m_neighboursBorderColor = this->readColor(
                               QStringLiteral("NeighboursBorderColor"),
                               QStringLiteral("#000000"));
+  m_pSettings->endGroup();
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-QColor Settings::readColor(const QString &sKey,
-                           const QString &sFallback) const {
-  QString sValue = m_pSettings->value("Colors/" + sKey, sFallback).toString();
+auto Settings::readColor(const QString &sKey,
+                         const QString &sFallback) const -> QColor {
+  QString sValue = m_pSettings->value(sKey, sFallback).toString();
   QColor color(sFallback);
 
   color.setNamedColor(sValue);
@@ -370,19 +449,21 @@ QColor Settings::readColor(const QString &sKey,
 void Settings::updateUiLang() {
   m_pUi->retranslateUi(this);
 
-  QStringList sListStartPlayer;
-  sListStartPlayer << tr("Random")
-                   << tr("Player 1")
-                   << tr("Player 2");
-  m_pUi->cbStartPlayer->clear();
-  m_pUi->cbStartPlayer->addItems(sListStartPlayer);
-  m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);
+  // Widgets, which had not been created through UI have to be handled manually
+  for (int i = 0; i < m_maxPlayers; i++) {
+    m_listNameLbls[i]->setText(
+          tr("Name player %1").arg(QString::number(i+1)));
+    m_listHumCpuLbls[i]->setText(
+          tr("Player %1 Human/CPU").arg(QString::number(i+1)));
+  }
+
+  this->updateStartCombo();
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QString Settings::getLanguage() {
+auto Settings::getLanguage() -> QString {
   if ("auto" == m_sGuiLanguage) {
 #ifdef Q_OS_UNIX
     QByteArray lang = qgetenv("LANG");
@@ -391,11 +472,12 @@ QString Settings::getLanguage() {
     }
 #endif
     return QLocale::system().name();
-  } else if (!QFile(":/" + qApp->applicationName().toLower() +
-                    "_" + m_sGuiLanguage + ".qm").exists() &&
-             !QFile(m_sSharePath + "/lang/" +
-                    qApp->applicationName().toLower() +
-                    "_" + m_sGuiLanguage + ".qm").exists()) {
+  }
+  if (!QFile(":/" + qApp->applicationName().toLower() +
+             "_" + m_sGuiLanguage + ".qm").exists() &&
+      !QFile(m_sSharePath + "/lang/" +
+             qApp->applicationName().toLower() +
+             "_" + m_sGuiLanguage + ".qm").exists()) {
     m_sGuiLanguage = QStringLiteral("en");
     m_pSettings->setValue(QStringLiteral("GuiLanguage"), m_sGuiLanguage);
     return m_sGuiLanguage;
@@ -406,74 +488,151 @@ QString Settings::getLanguage() {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QString Settings::getNameP1() const {
-  return m_sNameP1;
+void Settings::changeNumOfPlayers() {
+  m_nNumOfPlayers = m_pUi->spinNumOfPlayers->value();
+  for (int i = 0; i < m_maxPlayers; i++) {
+    m_listNameLbls[i]->setVisible(false);
+    m_listNameEdit[i]->setVisible(false);
+    m_listHumCpuLbls[i]->setVisible(false);
+    m_listPlayerCombo[i]->setVisible(false);
+  }
+  for (int i = 0; i < m_nNumOfPlayers; i++) {
+    m_listNameLbls[i]->setVisible(true);
+    m_listNameEdit[i]->setVisible(true);
+    m_listHumCpuLbls[i]->setVisible(true);
+    m_listPlayerCombo[i]->setVisible(true);
+  }
+  this->updateStartCombo();
+  this->adjustSize();
 }
-QString Settings::getNameP2() const {
-  return m_sNameP2;
+
+void Settings::updateStartCombo() {
+  QStringList sListStartPlayer;
+  sListStartPlayer << tr("Random");
+  for (quint8 i = 1; i <= m_pUi->spinNumOfPlayers->value(); i++) {
+    sListStartPlayer << tr("Player") + " " + QString::number(i);
+  }
+  m_pUi->cbStartPlayer->clear();
+  m_pUi->cbStartPlayer->addItems(sListStartPlayer);
+
+  if (m_nStartPlayer < m_pUi->cbStartPlayer->count()) {
+    m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);
+  } else {
+    m_nStartPlayer = 1;
+    m_pUi->cbStartPlayer->setCurrentIndex(m_nStartPlayer);
+  }
 }
-quint8 Settings::getStartPlayer() const {
+
+void Settings::changedSettings() {
+  m_bSettingChanged = true;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+auto Settings::getPlayerName(const quint8 nPlayer) const -> QString {
+  if ((nPlayer - 1) < m_Players.size()) {
+    return m_Players[nPlayer-1]["Name"];
+  }
+  qWarning() << "Player array length exceeded! Size:" <<
+                m_Players.size() << "- requested (nPlayer - 1):" << nPlayer-1;
+  return QStringLiteral("Anonymos");
+}
+
+auto Settings::getPlayerHumanCpu(const quint8 nPlayer) const -> QString {
+  if ((nPlayer - 1) < m_Players.size() &&
+      (nPlayer - 1) < m_listPlayerCombo.size()) {
+    if (-1 != m_listPlayerCombo[nPlayer-1]->findText(
+          m_Players[nPlayer-1]["HumanCpu"])) {
+      return m_sListCPUs[m_listPlayerCombo[nPlayer-1]->findText(
+          m_Players[nPlayer-1]["HumanCpu"])];
+    }
+    return QStringLiteral("Human");
+  }
+  qWarning() << "Array length exceeded! m_Player:" << m_Players.size() <<
+                "- m_listPlayerCombo:" << m_listPlayerCombo.size() <<
+                "- requested (nPlayer - 1):" << nPlayer-1;
+  return QStringLiteral("Human");
+}
+
+auto Settings::getPlayerColor(const quint8 nPlayer) const -> QString {
+  if ((nPlayer - 1) < m_Players.size()) {
+    return m_Players[nPlayer-1]["Color"];
+  }
+  qWarning() << "Player array length exceeded! Size:" <<
+                m_Players.size() << "- requested (nPlayer - 1):" << nPlayer-1;
+  return m_DefaultPlayerColors[0];
+}
+
+auto Settings::getNumOfPlayers() const -> quint8 {
+  return m_nNumOfPlayers;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+auto Settings::getBoardFile() const -> QStringList {
+  // TODO(): Rewrite if boards can be chosen
+  QStringList sListTemp;
+  if (QFile::exists(m_sSharePath + "/boards")) {
+    sListTemp << m_sSharePath + "/boards/square_5x5.stackboard";
+    // sListTemp << m_sSharePath + "/boards/triangle.stackboard";
+    // sListTemp << m_sSharePath + "/boards/square_4x2.stackboard";
+  } else {
+    qWarning() << "Games share path does not exist:" << m_sSharePath;
+  }
+  return sListTemp;
+}
+
+auto Settings::getStartPlayer() const -> quint8 {
   return static_cast<quint8>(m_nStartPlayer);
 }
-quint8 Settings::getWinTowers() const {
+auto Settings::getWinTowers() const -> quint8 {
   return static_cast<quint8>(m_nWinTowers);
 }
-bool Settings::getShowPossibleMoveTowers() const {
+auto Settings::getShowPossibleMoveTowers() const -> bool {
   return m_bShowPossibleMoveTowers;
 }
 
-QString Settings::getP1HumanCpu() const {
-  if (-1 != m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)) {
-    return m_sListCPUs[m_pUi->cbP1HumanCpu->findText(m_sP1HumanCpu)];
-  } else {
-    return QStringLiteral("Human");
-  }
-}
-
-QString Settings::getP2HumanCpu() const {
-  if (-1 != m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)) {
-    return m_sListCPUs[m_pUi->cbP2HumanCpu->findText(m_sP2HumanCpu)];
-  } else {
-    return QStringLiteral("Human");
-  }
-}
-
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-QColor Settings::getBgColor() const {
+auto Settings::getBgColor() const -> QColor {
   return m_bgColor;
 }
-QColor Settings::getHighlightColor() const {
+auto Settings::getTextColor() const -> QColor {
+  return m_txtColor;
+}
+auto Settings::getTextHighlightColor() const -> QColor {
+  return m_txtHighColor;
+}
+auto Settings::getHighlightColor() const -> QColor {
   return m_highlightColor;
 }
-QColor Settings::getHighlightBorderColor() const {
+auto Settings::getHighlightBorderColor() const -> QColor {
   return m_highlightBorderColor;
 }
-QColor Settings::getSelectedColor() const {
+auto Settings::getSelectedColor() const -> QColor {
   return m_selectedColor;
 }
-QColor Settings::getSelectedBorderColor() const {
+auto Settings::getSelectedBorderColor() const -> QColor {
   return m_selectedBorderColor;
 }
-QColor Settings::getAnimateColor() const {
+auto Settings::getAnimateColor() const -> QColor {
   return m_animateColor;
 }
-QColor Settings::getAnimateBorderColor() const {
+auto Settings::getAnimateBorderColor() const -> QColor {
   return m_animateBorderColor;
 }
-QColor Settings::getBgBoardColor() const {
+auto Settings::getBgBoardColor() const -> QColor {
   return m_bgBoardColor;
 }
-QColor Settings::getOutlineBoardColor() const {
-  return m_outlineBoardColor;
-}
-QColor Settings::getGridBoardColor() const {
+auto Settings::getGridBoardColor() const -> QColor {
   return m_gridBoardColor;
 }
-QColor Settings::GetNeighboursColor() const {
+auto Settings::getNeighboursColor() const -> QColor {
   return m_neighboursColor;
 }
-QColor Settings::GetNeighboursBorderColor() const {
+auto Settings::getNeighboursBorderColor() const -> QColor {
   return m_neighboursBorderColor;
 }

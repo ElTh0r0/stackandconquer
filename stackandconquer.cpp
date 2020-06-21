@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Main application generation (gui)
@@ -58,16 +58,10 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
 
   this->setupMenu();
   this->setupGraphView();
-
-  // Seed random number generator
-  QTime time = QTime::currentTime();
-  qsrand(static_cast<uint>(time.msec()));
-
   this->checkCmdArgs(sListArgs);
 }
 
-StackAndConquer::~StackAndConquer() {
-}
+StackAndConquer::~StackAndConquer() = default;
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -75,7 +69,7 @@ StackAndConquer::~StackAndConquer() {
 void StackAndConquer::checkCmdArgs(const QStringList &sListArgs) {
   // Choose CPU script(s) or load game from command line
   QStringList sListTemp;
-  if (sListArgs.size() > 0) {
+  if (!sListArgs.isEmpty()) {
     for (int i = 0; i < sListArgs.size(); i++) {
       // Load save game
       if (sListArgs.at(i).endsWith(QStringLiteral(".stacksav"),
@@ -84,16 +78,16 @@ void StackAndConquer::checkCmdArgs(const QStringList &sListArgs) {
           sListTemp.clear();
           sListTemp << sListArgs[i];
           break;
-        } else {
-          qWarning() << "Specified JS file not found:" << sListArgs[i];
-          QMessageBox::warning(this, tr("Warning"),
-                               tr("Specified file not found:") + "\n" +
-                               sListArgs[i]);
-          sListTemp.clear();
-          break;
         }
-      } else if (sListArgs.at(i).endsWith(QStringLiteral(".js"),
-                                          Qt::CaseInsensitive)) {
+        qWarning() << "Specified JS file not found:" << sListArgs[i];
+        QMessageBox::warning(this, tr("Warning"),
+                             tr("Specified file not found:") + "\n" +
+                             sListArgs[i]);
+        sListTemp.clear();
+        break;
+      }
+      if (sListArgs.at(i).endsWith(QStringLiteral(".js"),
+                                   Qt::CaseInsensitive)) {
         // Load CPU script(s)
         if (QFile::exists(sListArgs.at(i))) {
           if (2 == sListTemp.size()) {
@@ -176,24 +170,45 @@ void StackAndConquer::setupGraphView() {
   m_pFrame = new QFrame(m_pGraphView);
   m_pLayout = new QGridLayout;
   m_pLayout->setVerticalSpacing(0);
-  m_plblPlayer1 = new QLabel(m_pSettings->getNameP1());
+  m_plblPlayer1 = new QLabel(m_pSettings->getPlayerName(1));
+  m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
+                               m_pSettings->getTextColor().name());
   m_plblP1StonesLeft = new QLabel(QStringLiteral("99"));
+  m_plblP1StonesLeft->setStyleSheet(QStringLiteral("color: ") +
+                                    m_pSettings->getTextColor().name());
   m_plblP1Won = new QLabel(QStringLiteral("0"));
-  m_plblPlayer2 = new QLabel(m_pSettings->getNameP2());
+  m_plblP1Won->setStyleSheet(QStringLiteral("color: ") +
+                             m_pSettings->getTextColor().name());
+  m_plblPlayer2 = new QLabel(m_pSettings->getPlayerName(2));
+  m_plblPlayer2->setStyleSheet(QStringLiteral("color: ") +
+                               m_pSettings->getTextColor().name());
   m_plblPlayer2->setAlignment(Qt::AlignRight);
   m_plblP2StonesLeft = new QLabel(QStringLiteral("99"));
+  m_plblP2StonesLeft->setStyleSheet(QStringLiteral("color: ") +
+                                    m_pSettings->getTextColor().name());
   m_plblP2StonesLeft->setAlignment(Qt::AlignRight);
   m_plblP2Won = new QLabel(QStringLiteral("0"));
+  m_plblP2Won->setStyleSheet(QStringLiteral("color: ") +
+                             m_pSettings->getTextColor().name());
   m_plblP2Won->setAlignment(Qt::AlignRight);
 
-  QPixmap iconStone1(QStringLiteral(":/images/stone1.png"));
+  QPixmap iconStone(16, 16);
+  iconStone.fill(m_pSettings->getBgColor());
+  QPainter *paint = new QPainter(&iconStone);
+  paint->setPen(QPen(Qt::black));
+  paint->setBrush(QBrush(QColor(m_pSettings->getPlayerColor(1))));
+  paint->drawEllipse(0, 0, 15, 15);
   m_plblIconStones1 = new QLabel();
-  m_plblIconStones1->setPixmap(iconStone1);
+  m_plblIconStones1->setPixmap(iconStone);
   m_plblIconStones1->setAlignment(Qt::AlignCenter);
-  QPixmap iconStone2(QStringLiteral(":/images/stone2.png"));
+  paint->setPen(QPen(Qt::black));
+  paint->setBrush(QBrush(QColor(m_pSettings->getPlayerColor(2))));
+  paint->drawEllipse(0, 0, 15, 15);
   m_plblIconStones2 = new QLabel();
-  m_plblIconStones2->setPixmap(iconStone2);
+  m_plblIconStones2->setPixmap(iconStone);
   m_plblIconStones2->setAlignment(Qt::AlignCenter);
+  delete paint;
+
   QPixmap iconWin(QStringLiteral(":/images/win.png"));
   m_plblIconWin1 = new QLabel();
   m_plblIconWin1->setPixmap(iconWin);
@@ -215,7 +230,7 @@ void StackAndConquer::setupGraphView() {
   m_pLayout->addWidget(m_plblP2Won, 2, 2, 1, 1);
   m_pLayout->addWidget(m_plblIconWin2, 2, 3, 1, 1);
 
-  m_pFrame->setMinimumWidth(this->width());
+  m_pFrame->setFixedWidth(this->width());
   m_pFrame->setLayout(m_pLayout);
   m_pLayout->setColumnStretch(1, 1);
   m_pLayout->setColumnStretch(2, 1);
@@ -224,11 +239,20 @@ void StackAndConquer::setupGraphView() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
+void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
+  m_pFrame->setFixedWidth(pEvent->size().width());
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 void StackAndConquer::startNewGame(const QStringList &sListArgs) {
-  if (nullptr != m_pGame) {
-    delete m_pGame;
+  delete m_pGame;
+  if (sListArgs.isEmpty()) {
+    m_pGame = new Game(m_pSettings, m_pSettings->getBoardFile());
+  } else {
+    m_pGame = new Game(m_pSettings, sListArgs);
   }
-  m_pGame = new Game(m_pSettings, sListArgs);
 
   connect(m_pGame, &Game::updateNameP1, m_plblPlayer1, &QLabel::setText);
   connect(m_pGame, &Game::updateNameP2, m_plblPlayer2, &QLabel::setText);
@@ -245,7 +269,7 @@ void StackAndConquer::startNewGame(const QStringList &sListArgs) {
           this, &StackAndConquer::highlightActivePlayer);
 
   m_pGraphView->setScene(m_pGame->getScene());
-  m_pGraphView->updateSceneRect(m_pGame->getSceneRect());
+  m_pGraphView->updateSceneRect(m_pGame->getScene()->sceneRect());
   m_pGraphView->setInteractive(true);
 
   if (!m_pGame->initCpu()) {
@@ -308,20 +332,25 @@ void StackAndConquer::highlightActivePlayer(const bool bPlayer1,
     m_pUi->statusBar->showMessage(
           tr("%1 won the game!").arg(m_plblPlayer1->text()));
     return;
-  } else if (bP2Won) {
+  }
+  if (bP2Won) {
     m_pUi->statusBar->showMessage(
           tr("%1 won the game!").arg(m_plblPlayer2->text()));
     return;
   }
 
   if (bPlayer1) {
-    m_plblPlayer1->setStyleSheet(QStringLiteral("color: #FF0000"));
-    m_plblPlayer2->setStyleSheet(QStringLiteral("color: #000000"));
+    m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
+                                 m_pSettings->getTextHighlightColor().name());
+    m_plblPlayer2->setStyleSheet(QStringLiteral("color: ") +
+                                 m_pSettings->getTextColor().name());
     m_pUi->statusBar->showMessage(
           tr("%1's turn").arg(m_plblPlayer1->text()));
   } else {
-    m_plblPlayer1->setStyleSheet(QStringLiteral("color: #000000"));
-    m_plblPlayer2->setStyleSheet(QStringLiteral("color: #FF0000"));
+    m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
+                                 m_pSettings->getTextColor().name());
+    m_plblPlayer2->setStyleSheet(QStringLiteral("color: ") +
+                                 m_pSettings->getTextHighlightColor().name());
     m_pUi->statusBar->showMessage(
           tr("%1's turn").arg(m_plblPlayer2->text()));
   }
@@ -333,16 +362,16 @@ void StackAndConquer::highlightActivePlayer(const bool bPlayer1,
 void StackAndConquer::loadLanguage(const QString &sLang) {
   if (m_sCurrLang != sLang) {
     m_sCurrLang = sLang;
-    if (!this->switchTranslator(&m_translatorQt, "qt_" + sLang,
-                                QLibraryInfo::location(
-                                  QLibraryInfo::TranslationsPath))) {
-      this->switchTranslator(&m_translatorQt, "qt_" + sLang,
-                             m_sSharePath + "/lang");
+    if (!StackAndConquer::switchTranslator(&m_translatorQt, "qt_" + sLang,
+                                           QLibraryInfo::location(
+                                             QLibraryInfo::TranslationsPath))) {
+      StackAndConquer::switchTranslator(&m_translatorQt, "qt_" + sLang,
+                                        m_sSharePath + "/lang");
     }
-    if (!this->switchTranslator(
+    if (!StackAndConquer::switchTranslator(
           &m_translator,
            ":/" + qApp->applicationName().toLower() + "_" + sLang + ".qm")) {
-      this->switchTranslator(
+      StackAndConquer::switchTranslator(
             &m_translator, qApp->applicationName().toLower() + "_" + sLang,
             m_sSharePath + "/lang");
     }
@@ -352,9 +381,9 @@ void StackAndConquer::loadLanguage(const QString &sLang) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-bool StackAndConquer::switchTranslator(QTranslator *translator,
+auto StackAndConquer::switchTranslator(QTranslator *translator,
                                        const QString &sFile,
-                                       const QString &sPath) {
+                                       const QString &sPath) -> bool {
   qApp->removeTranslator(translator);
   if (translator->load(sFile, sPath)) {
     qApp->installTranslator(translator);
@@ -373,18 +402,18 @@ bool StackAndConquer::switchTranslator(QTranslator *translator,
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::showRules() {
-  QDialog* dialog = new QDialog(this, this->windowFlags()
-                                & ~Qt::WindowContextHelpButtonHint);
-  QGridLayout* layout = new QGridLayout(dialog);
+  auto *dialog = new QDialog(this, this->windowFlags()
+                             & ~Qt::WindowContextHelpButtonHint);
+  auto *layout = new QGridLayout(dialog);
   dialog->setWindowTitle(tr("Rules"));
   dialog->setMinimumSize(700, 450);
 
-  QTextEdit* textEdit = new QTextEdit;
+  auto *textEdit = new QTextEdit;
   textEdit->setReadOnly(true);
-  QLabel* credits = new QLabel;
+  auto *credits = new QLabel;
   credits->setOpenExternalLinks(true);
 
-  layout->setMargin(2);
+  layout->setContentsMargins(2, 2, 2, 2);
   layout->setSpacing(0);
   layout->addWidget(textEdit);
   layout->addWidget(credits);
@@ -420,7 +449,7 @@ void StackAndConquer::showRules() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void StackAndConquer::reportBug() const {
+void StackAndConquer::reportBug() {
   QDesktopServices::openUrl(
         QUrl(
           QStringLiteral("https://github.com/ElTh0r0/stackandconquer/issues")));
@@ -448,7 +477,7 @@ void StackAndConquer::showInfoBox() {
              "URL: <a href=\"https://github.com/ElTh0r0/stackandconquer\">"
              "https://github.com/ElTh0r0/stackandconquer</a>",
              tr("License") +
-             ": <a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">"
+             ": <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">"
              "GNU General Public License Version 3</a>",
              tr("This application uses icons from "
                 "<a href=\"http://tango.freedesktop.org\">"
@@ -474,24 +503,4 @@ void StackAndConquer::changeEvent(QEvent *pEvent) {
     }
   }
   QMainWindow::changeEvent(pEvent);
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-// Close event (File -> Close or X)
-void StackAndConquer::closeEvent(QCloseEvent *pEvent) {
-  pEvent->accept();
-  /*
-  int nRet = QMessageBox::question(this, tr("Quit") + " - " +
-                                   qApp->applicationName(),
-                                   tr("Do you really want to quit?"),
-                                   QMessageBox::Yes | QMessageBox::No);
-
-  if (QMessageBox::Yes == nRet) {
-    pEvent->accept();
-  } else {
-    pEvent->ignore();
-  }
-  */
 }

@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2019 Thorsten Roth <elthoro@gmx.de>
+ * Copyright (C) 2015-2020 Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with StackAndConquer.  If not, see <http://www.gnu.org/licenses/>.
+ * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
  * Class definition for player.
@@ -35,19 +35,20 @@
  */
 class Player {
  public:
-    Player(bool bActive, bool bIsHuman, QString &sName, quint8 nMaxStones);
+    Player(bool bActive, bool bIsHuman,
+           const QString &sName, quint8 nMaxStones);
     ~Player();
 
     void setActive(const bool bActive);
-    bool getIsActive() const;
-    bool getIsHuman() const;
-    QString getName() const;
+    auto getIsActive() const -> bool;
+    auto getIsHuman() const -> bool;
+    auto getName() const -> QString;
     void setStonesLeft(const quint8 nStones);
-    quint8 getStonesLeft() const;
+    auto getStonesLeft() const -> quint8;
     void setWonTowers(const quint8 nWonTowers);
-    quint8 getWonTowers() const;
+    auto getWonTowers() const -> quint8;
     void setCanMove(const quint8 nCanMove);
-    quint8 getCanMove() const;
+    auto getCanMove() const -> quint8;
 
  private:
     bool m_bIsActive;
