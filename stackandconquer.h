@@ -27,16 +27,17 @@
 #ifndef STACKANDCONQUER_H_
 #define STACKANDCONQUER_H_
 
-#include <QtCore>
-#include <QFormLayout>
-#include <QGraphicsTextItem>
-#include <QGraphicsView>
-#include <QtGui>
-#include <QLabel>
+#include <QDir>
 #include <QMainWindow>
+#include <QTranslator>
 
-#include "./game.h"
-#include "./settings.h"
+class QFrame;
+class QGraphicsView;
+class QGridLayout;
+class QLabel;
+
+class Game;
+class Settings;
 
 namespace Ui {
 class StackAndConquer;
@@ -87,7 +88,7 @@ class StackAndConquer : public QMainWindow {
     Ui::StackAndConquer *m_pUi;
     const QDir m_userDataDir;
     const QString m_sSharePath;
-    QTranslator m_translator;  // App translations
+    QTranslator m_translator;    // App translations
     QTranslator m_translatorQt;  // Qt translations
     QString m_sCurrLang;
     Settings *m_pSettings;

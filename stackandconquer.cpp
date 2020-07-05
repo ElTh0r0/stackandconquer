@@ -27,10 +27,19 @@
 #include "./stackandconquer.h"
 
 #include <QApplication>
+#include <QDebug>
+#include <QDesktopServices>
 #include <QFileDialog>
+#include <QGraphicsView>
 #include <QGridLayout>
+#include <QLabel>
+#include <QLibraryInfo>
 #include <QMessageBox>
+#include <QResizeEvent>
 #include <QTextEdit>
+
+#include "./game.h"
+#include "./settings.h"
 
 #include "ui_stackandconquer.h"
 

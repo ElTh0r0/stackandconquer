@@ -27,17 +27,16 @@
 #ifndef BOARD_H_
 #define BOARD_H_
 
-#include <QGraphicsEllipseItem>
 #include <QGraphicsScene>
-#include <QGraphicsView>
-#include <QGraphicsSceneMouseEvent>
-#include <QSvgRenderer>
-#include <QGraphicsSvgItem>
 #include <QJsonArray>
 #include <QList>
-#include <QPolygonF>
+#include <QPainterPath>
 
-#include <./settings.h>
+class QGraphicsSceneMouseEvent;
+class QGraphicsSvgItem;
+class QSvgRenderer;
+
+class Settings;
 
 /**
  * \class Board

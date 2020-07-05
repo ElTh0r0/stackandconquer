@@ -27,10 +27,11 @@
 #include "./settings.h"
 
 #include <QDebug>
-#include <QDir>
 #include <QDirIterator>
+#include <QLineEdit>
 #include <QIcon>
 #include <QMessageBox>
+#include <QSettings>
 #include <QSpinBox>
 
 #include "ui_settings.h"

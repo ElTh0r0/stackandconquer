@@ -28,8 +28,10 @@
 #define OPPONENTJS_H_
 
 #include <QObject>
+#include <QJSValue>
 #include <QPoint>
-#include <QJSEngine>
+
+class QJSEngine;
 
 class OpponentJS : public QObject {
   Q_OBJECT

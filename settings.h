@@ -27,12 +27,13 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-#include <QComboBox>
 #include <QDialog>
-#include <QLabel>
-#include <QLineEdit>
 #include <QMap>
-#include <QSettings>
+
+class QComboBox;
+class QLabel;
+class QLineEdit;
+class QSettings;
 
 namespace Ui {
 class SettingsDialog;

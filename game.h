@@ -27,9 +27,17 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-#include "./board.h"
-#include "./player.h"
-#include "./opponentjs.h"
+#include <QObject>
+#include <QString>
+
+class QGraphicsScene;
+class QJsonArray;
+class QJsonObject;
+
+class Board;
+class Player;
+class OpponentJS;
+class Settings;
 
 class Game : public QObject {
   Q_OBJECT

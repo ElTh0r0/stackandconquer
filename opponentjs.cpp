@@ -31,7 +31,7 @@
 #include <QMessageBox>
 #include <QJsonArray>
 #include <QJsonDocument>
-#include <QJsonObject>
+#include <QJSEngine>
 
 OpponentJS::OpponentJS(const quint8 nID, const QPoint BoardDimensions,
                        const quint8 nHeightTowerWin, const QString &sOut,

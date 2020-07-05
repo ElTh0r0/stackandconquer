@@ -44,6 +44,11 @@
 #include <QTime>  // Seed qsrand
 #endif
 
+#include "./board.h"
+#include "./player.h"
+#include "./opponentjs.h"
+#include "./settings.h"
+
 Game::Game(Settings *pSettings, const QStringList &sListFiles)
   : m_pSettings(pSettings),
     m_pBoard(nullptr),

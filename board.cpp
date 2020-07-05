@@ -29,11 +29,16 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFile>
-#include <QJsonArray>
+#include <QGraphicsRectItem>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsSvgItem>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
+#include <QSvgRenderer>
 #include <QTimer>
+
+#include "./settings.h"
 
 Board::Board(const QString &sBoard, quint16 nGridSize, const quint8 nMaxTower,
              quint8 NumOfPlayers, Settings *pSettings)

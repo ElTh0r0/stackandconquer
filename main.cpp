@@ -31,7 +31,11 @@
  */
 
 #include <QApplication>
+#include <QCommandLineParser>
+#include <QDebug>
+#include <QStandardPaths>
 #include <QTextStream>
+#include <QTime>
 
 #include "./stackandconquer.h"
 
