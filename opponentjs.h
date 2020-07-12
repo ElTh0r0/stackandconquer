@@ -50,8 +50,7 @@ class OpponentJS : public QObject {
     void log(const QString &sMsg);
 
  signals:
-    void setStone(int nIndex, bool bDebug);
-    void moveTower(int nFrom, quint8 nStones, int nTo);
+    void actionCPU(QList<int> move);
     void scriptError();
 
  private:

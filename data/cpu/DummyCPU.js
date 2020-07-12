@@ -75,7 +75,7 @@ function makeMove(nPossible) {
   if (0 !== MoveToWin.length) {
     // TODO(x): preventWin() currently handles only first winning move!
     var PreventWin = preventWin(MoveToWin[0], nPossibleMove);
-    if (1 === PreventWin.length || 3 === PreventWin.length) {
+    if (3 === PreventWin.length) {
       return PreventWin;
     }
   }
@@ -159,7 +159,7 @@ function canWin(nPlayerID) {
 // ---------------------------------------------------------------------------
 
 function preventWin(moveToWin, nPossibleMove) {
-  var ret = [];
+  var move = [];
   var pointFrom = moveToWin[0];
   var nNumber = moveToWin[1];
   var pointTo = moveToWin[2];
@@ -171,8 +171,10 @@ function preventWin(moveToWin, nPossibleMove) {
       if (Math.abs(route) < (nBoardDimensionsX-2) &&
           (route > 0 && DIRS[dir] < 0 ||
            route < 0 && DIRS[dir] > 0)) {
-        ret.push(pointTo + DIRS[dir]);
-        return ret;
+        move.push(-1);
+        move.push(1);
+        move.push(pointTo + DIRS[dir]);
+        return move;
       }
     } else {
       if (0 === route % DIRS[dir] &&       // There is a route between points
@@ -181,8 +183,10 @@ function preventWin(moveToWin, nPossibleMove) {
         var moves = route / DIRS[dir];
         // There is more than one filed in between
         if (Math.abs(moves) > 1 && (1 === nPossibleMove || 3 === nPossibleMove)) {
-          ret.push(pointTo + DIRS[dir]);
-          return ret;
+          move.push(-1);
+          move.push(1);
+          move.push(pointTo + DIRS[dir]);
+          return move
         }
         // if (nPossibleMove >= 2) {
         // TODO(x): Try to move tower to prevent win
@@ -191,7 +195,7 @@ function preventWin(moveToWin, nPossibleMove) {
     }
   }
 
-  return ret;
+  return move;
 }
 
 // ---------------------------------------------------------------------------
@@ -199,12 +203,16 @@ function preventWin(moveToWin, nPossibleMove) {
 
 function setRandom() {
   // Seed random?
+  var move = [];
   var nRand;
   do {
     nRand = Math.floor(Math.random() * board.length);
   } while (0 !== board[nRand].length);
 
-  return [nRand];
+  move.push(-1);
+  move.push(1);
+  move.push(nRand);
+  return move
 }
 
 // ---------------------------------------------------------------------------

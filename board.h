@@ -69,8 +69,7 @@ class Board : public QGraphicsScene {
     auto getPad() const -> QString;
 
  signals:
-    void setStone(int nIndex, bool bDebug);
-    void moveTower(int nFrom, quint8 nStones, int nTo);
+    void actionPlayer(QList<int> move);
 
  protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *p_Event);

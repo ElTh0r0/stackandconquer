@@ -30,7 +30,6 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
-#include <QInputDialog>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -183,8 +182,7 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
     nStonesLeftP2 = m_pBoard->getMaxPlayerStones();
   }
 
-  connect(m_pBoard, &Board::setStone, this, &Game::setStone);
-  connect(m_pBoard, &Board::moveTower, this, &Game::moveTower);
+  connect(m_pBoard, &Board::actionPlayer, this, &Game::makeMove);
 
   bool bP1IsHuman(true);
   bool bP2IsHuman(true);
@@ -245,8 +243,7 @@ void Game::createCPU1() {
                              m_nMaxTowerHeight, m_pBoard->getOut(),
                              m_pBoard->getPad());
   connect(this, &Game::makeMoveCpuP1, m_jsCpuP1, &OpponentJS::makeMoveCpu);
-  connect(m_jsCpuP1, &OpponentJS::setStone, this, &Game::setStone);
-  connect(m_jsCpuP1, &OpponentJS::moveTower, this, &Game::moveTower);
+  connect(m_jsCpuP1, &OpponentJS::actionCPU, this, &Game::makeMove);
   connect(m_jsCpuP1, &OpponentJS::scriptError, this, &Game::caughtScriptError);
 }
 
@@ -258,8 +255,7 @@ void Game::createCPU2() {
                              m_nMaxTowerHeight, m_pBoard->getOut(),
                              m_pBoard->getPad());
   connect(this, &Game::makeMoveCpuP2, m_jsCpuP2, &OpponentJS::makeMoveCpu);
-  connect(m_jsCpuP2, &OpponentJS::setStone, this, &Game::setStone);
-  connect(m_jsCpuP2, &OpponentJS::moveTower, this, &Game::moveTower);
+  connect(m_jsCpuP2, &OpponentJS::actionCPU, this, &Game::makeMove);
   connect(m_jsCpuP2, &OpponentJS::scriptError, this, &Game::caughtScriptError);
 }
 
@@ -294,7 +290,31 @@ auto Game::getScene() const -> QGraphicsScene* {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::setStone(int nIndex, bool bDebug) {
+void Game::makeMove(QList<int> move) {
+  bool bDebug(false);
+  if (-999 == move[0]) {
+    bDebug = true;
+    move[0] = -1;
+  }
+
+  // TODO(x): Compare move with list of all possible moves
+
+  if (3 == move.size()) {
+    if (-1 == move[0] && 1 == move[1]) {  // Set stone
+      this->setStone(move[2], bDebug);
+    } else {
+      this->moveTower(move[0], move[1], move[2]);  // Move tower
+    }
+  } else {
+    qWarning() << "Invalid move!" << move;
+    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+  }
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void Game::setStone(const int nIndex, const bool bDebug) {
   // TODO(x): Rewrite for > 2 players
   if (m_pBoard->getField(nIndex).isEmpty() || bDebug) {
     if (m_pPlayer1->getIsActive() && m_pPlayer1->getStonesLeft() > 0) {
@@ -343,7 +363,7 @@ void Game::setStone(int nIndex, bool bDebug) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::moveTower(int nFrom, quint8 nStones, int nTo) {
+void Game::moveTower(const int nFrom, const quint8 nStones, const int nTo) {
   QList<int> listStones;
   for (auto ch : m_pBoard->getField(nFrom)) {
     listStones.append(ch.digitValue());
@@ -355,6 +375,7 @@ void Game::moveTower(int nFrom, quint8 nStones, int nTo) {
     return;
   }
 
+  // TODO(x): Remove check after implementing legal action list
   if (listStones.isEmpty()) {
     qWarning() << "Move tower size == 0! Tower:" << nFrom;
     if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
@@ -370,38 +391,25 @@ void Game::moveTower(int nFrom, quint8 nStones, int nTo) {
     return;
   }
 
-  int nStonesToMove = 1;
-  if (listStones.size() > 1 && 0 == nStones) {
-    bool ok;
-    nStonesToMove = QInputDialog::getInt(
-                      nullptr, tr("Move tower"),
-                      tr("How many stones shall be moved:"),
-                      1, 1, listStones.size(), 1, &ok);
-    if (!ok) {
-      return;
+  if (nStones > listStones.size()) {
+    qWarning() << "Trying to move more stones than available! From:" << nFrom
+               << "Stones:" << nStones << "To:" << nTo;
+    if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
+        (m_pPlayer2->getIsActive() && m_pPlayer2->getIsHuman())) {
+      QMessageBox::warning(nullptr, tr("Warning"),
+                           tr("Something went wrong!"));
+    } else {
+      m_bScriptError = true;
+      QMessageBox::warning(nullptr, tr("Warning"),
+                           tr("CPU script made an invalid move! "
+                              "Please check the debug log."));
     }
-  } else if (0 != nStones) {  // Call from CPU
-    if (nStones > listStones.size()) {
-      qWarning() << "Trying to move more stones than available! From:" << nFrom
-                 << "Stones:" << nStones << "To:" << nTo;
-      if ((m_pPlayer1->getIsActive() && m_pPlayer1->getIsHuman()) ||
-          (m_pPlayer2->getIsActive() && m_pPlayer2->getIsHuman())) {
-        QMessageBox::warning(nullptr, tr("Warning"),
-                             tr("Something went wrong!"));
-      } else {
-        m_bScriptError = true;
-        QMessageBox::warning(nullptr, tr("Warning"),
-                             tr("CPU script made an invalid move! "
-                                "Please check the debug log."));
-      }
-      return;
-    }
-    nStonesToMove = nStones;
+    return;
   }
 
   // Debug print: E.g. "C4:3-D3" = move 3 stones from C4 to D3 (ASCII 65 = A)
   QString sMove(m_pBoard->getStringCoordFromIndex(nFrom) + ":" +
-                QString::number(nStonesToMove) + "-" +
+                QString::number(nStones) + "-" +
                 m_pBoard->getStringCoordFromIndex(nTo));
 
   if (m_pPlayer1->getIsActive()) {
@@ -418,6 +426,7 @@ void Game::moveTower(int nFrom, quint8 nStones, int nTo) {
     }
   }
 
+  // TODO(x): Remove check after implementing legal action list
   if (this->checkPreviousMoveReverted(sMove)) {
     if ((m_pPlayer1->getIsActive() && !m_pPlayer1->getIsHuman()) ||
         (m_pPlayer2->getIsActive() && !m_pPlayer2->getIsHuman())) {
@@ -444,10 +453,10 @@ void Game::moveTower(int nFrom, quint8 nStones, int nTo) {
     return;
   }
 
-  for (int i = 0; i < nStonesToMove; i++) {
+  for (int i = 0; i < nStones; i++) {
     m_pBoard->removeStone(nFrom);  // Remove is in the wrong order, nevermind!
     m_pBoard->addStone(nTo,
-                       listStones[listStones.size() - nStonesToMove + i]);
+                       listStones[listStones.size() - nStones + i]);
   }
 
   this->checkTowerWin(nTo);
@@ -510,6 +519,7 @@ void Game::returnStones(const int nIndex) {
 // ---------------------------------------------------------------------------
 
 void Game::updatePlayers(bool bInitial) {
+  // TODO(x): Rewrite for > 2 player - add "active player" variable!
   if (m_bScriptError) {
     emit setInteractive(false);
     return;

@@ -113,29 +113,20 @@ void OpponentJS::makeMoveCpu(const QJsonArray &board,
   }
   // qDebug() << "Result of makeMove():" << result.toString();
 
-  // CPU has to return an int array (single int = set stone, 3 int = move tower)
+  // CPU has to return an int array with length 3
+  QList<int> move;
   if (result.isArray()) {
-    if (1 == result.property(QStringLiteral("length")).toInt()) {  // Set stone
-      if (result.property(0).isNumber()) {
-        if (result.property(0).toInt() >= 0 &&
-            result.property(0).toInt() < board.size()) {
-          emit setStone(result.property(0).toInt(), false);
-          return;
-        }
-      }
-    }
-    if (3 == result.property(QStringLiteral("length")).toInt()) {  // Move tower
-      if (result.property(0).isNumber() &&
-          result.property(1).isNumber() &&
-          result.property(2).isNumber()) {
-        if (result.property(0).toInt() >= 0 &&
-            result.property(0).toInt() < board.size() &&
-            result.property(1).toInt() > 0 &&
-            result.property(2).toInt() >= 0 &&
-            result.property(2).toInt() < board.size()) {
-          emit moveTower(result.property(0).toInt(),   // From
-                         result.property(1).toInt(),   // Number of stones
-                         result.property(2).toInt());  // To
+    if (3 == result.property(QStringLiteral("length")).toInt()) {
+      if (result.property(0).isNumber() &&  // From (-1 --> set stone at "To")
+          result.property(1).isNumber() &&  // Number of stones
+          result.property(2).isNumber()) {  // To
+        move << result.property(0).toInt() <<
+                result.property(1).toInt() <<
+                result.property(2).toInt();
+        if (move[0] >= -1 && move[0] < board.size() &&
+            move[1] > 0 &&
+            move[2] >= 0 && move[2] < board.size()) {
+          emit actionCPU(move);
           return;
         }
       }

@@ -32,6 +32,7 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSvgItem>
+#include <QInputDialog>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
@@ -385,6 +386,7 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
 void Board::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
   if (m_boardPath.contains(p_Event->scenePos())) {
     QList<QGraphicsItem *> items = this->items(p_Event->scenePos());
+    QList<int> move;
     foreach (auto item, items) {
       int field = m_listFields.indexOf(
                     qgraphicsitem_cast<QGraphicsRectItem *>(item));
@@ -402,14 +404,16 @@ void Board::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
             qApp->arguments().contains(QStringLiteral("--debug"))) {
           this->selectIndexField(-1);
           qDebug() << "Following stone set in DEBUG mode:";
-          emit setStone(getIndexFromField(field), true);
+          move << -999 << 1 << getIndexFromField(field);
+          emit actionPlayer(move);
           break;
         }
 
         // Place tower, if field is empty
         if (m_jsBoard.at(getIndexFromField(field)).toString().isEmpty()) {
           this->selectIndexField(-1);
-          emit setStone(getIndexFromField(field), false);
+          move << -1 << 1 << getIndexFromField(field);
+          emit actionPlayer(move);
         } else {  // Otherwise select / move tower
           this->selectIndexField(getIndexFromField(field));
         }
@@ -661,13 +665,28 @@ void Board::selectIndexField(const int nIndex) {
     return;
   }
 
+  QList<int> move;
   neighbours = this->checkNeighbourhood(currentIndex);
   if (neighbours.contains(nIndex) && m_pSelectedField->isVisible()) {  // Move
     neighbours.clear();
     this->highlightNeighbourhood(neighbours);
     m_pSelectedField->setVisible(false);
     this->startAnimation2(this->getCoordinateFromIndex(nIndex));
-    emit moveTower(nIndex, 0, currentIndex);
+
+    int nStonesToMove = 1;
+    if (m_jsBoard.at(nIndex).toString().length() > 1) {
+      bool ok;
+      nStonesToMove = QInputDialog::getInt(
+                        nullptr, tr("Move tower"),
+                        tr("How many stones shall be moved:"),
+                        1, 1, m_jsBoard.at(nIndex).toString().length(), 1, &ok);
+      if (!ok) {
+        return;
+      }
+    }
+
+    move << nIndex << nStonesToMove << currentIndex;
+    emit actionPlayer(move);
     currentIndex = -1;
   } else {  // Select
     currentIndex = nIndex;

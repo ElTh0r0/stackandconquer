@@ -64,12 +64,13 @@ class Game : public QObject {
     void makeMoveCpuP2(const QJsonArray &board, const quint8 nPossibleMove);
 
  private slots:
-    void setStone(int nIndex, bool bDebug);
-    void moveTower(int nFrom, quint8 nStones, int nTo);
+    void makeMove(QList<int> move);
     void delayCpu();
     void caughtScriptError();
 
  private:
+    void setStone(const int nIndex, const bool bDebug);
+    void moveTower(const int nFrom, const quint8 nStones, const int nTo);
     void createCPU1();
     void createCPU2();
     static auto loadGame(const QString &sFile) -> QJsonObject;
