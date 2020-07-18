@@ -59,7 +59,6 @@ class Board : public QGraphicsScene {
     auto getBoadDimensions() const -> QPoint;
     auto getMaxPlayerStones() const -> quint8;
     auto getField(const int index) const -> QString;
-    auto findPossibleMoves(const bool bStonesLeft) -> quint8;
     auto getLegalMoves(const bool bStonesLeft,
                        const QList<int> &lastMove) const -> QJsonDocument;
     auto checkNeighbourhood(const int nIndex) const -> QList<int>;
@@ -72,7 +71,7 @@ class Board : public QGraphicsScene {
     auto getPad() const -> QString;
 
  signals:
-    void actionPlayer(QList<int> move);
+    void actionPlayer(QJsonArray move);
 
  protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *p_Event);

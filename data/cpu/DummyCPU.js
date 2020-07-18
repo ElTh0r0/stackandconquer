@@ -40,8 +40,9 @@ cpu.log("Loading CPU script DummyCPU...");
 // ---------------------------------------------------------------------------
 
 function callCPU() {
-  board = JSON.parse(jsboard);  // Global
-  legalMoves = JSON.parse(jsmoves);  // Global
+  // Global variables:
+  board = JSON.parse(jsboard);
+  legalMoves = JSON.parse(jsmoves);
   /*
    * Moving directions factor
    * E.g. 5x5 board, max tower height 5 (padding):

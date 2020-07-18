@@ -28,6 +28,7 @@
 #define OPPONENTJS_H_
 
 #include <QObject>
+#include <QJsonArray>
 #include <QJSValue>
 #include <QPoint>
 
@@ -50,7 +51,7 @@ class OpponentJS : public QObject {
     void log(const QString &sMsg);
 
  signals:
-    void actionCPU(QList<int> move);
+    void actionCPU(QJsonArray move);
     void scriptError();
 
  private:

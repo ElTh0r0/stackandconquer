@@ -48,7 +48,7 @@ class Player {
     auto getStonesLeft() const -> quint8;
     void setWonTowers(const quint8 nWonTowers);
     auto getWonTowers() const -> quint8;
-    void setLegalMoves(const QJsonDocument legalMoves);
+    void setLegalMoves(const QJsonDocument &legalMoves);
     auto getLegalMoves() const -> QJsonDocument;
     auto canMove() const -> bool;
 

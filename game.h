@@ -27,11 +27,11 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+#include <QJsonArray>
 #include <QObject>
 #include <QString>
 
 class QGraphicsScene;
-class QJsonArray;
 class QJsonObject;
 
 class Board;
@@ -66,7 +66,7 @@ class Game : public QObject {
                        const QJsonDocument &legalMoves);
 
  private slots:
-    void makeMove(QList<int> move);
+    void makeMove(QJsonArray move);
     void delayCpu();
     void caughtScriptError();
 
@@ -77,6 +77,8 @@ class Game : public QObject {
     void createCPU2();
     static auto loadGame(const QString &sFile) -> QJsonObject;
     auto checkPossibleMoves() -> bool;
+    auto checkMovesIsValid(const QJsonDocument &legalMoves,
+                           const QJsonArray &move) -> bool;
     void checkTowerWin(const int nIndex);
     void returnStones(const int nIndex);
 

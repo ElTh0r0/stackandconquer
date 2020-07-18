@@ -70,7 +70,7 @@ auto Player::getName() const -> QString {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Player::setLegalMoves(const QJsonDocument legalMoves) {
+void Player::setLegalMoves(const QJsonDocument &legalMoves) {
   m_LegalMoves = legalMoves;
 }
 

@@ -112,7 +112,7 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
   // qDebug() << "Result of callCPU():" << result.toString();
 
   // CPU has to return an int array with length 3
-  QList<int> move;
+  QJsonArray move;
   if (result.isArray()) {
     if (3 == result.property(QStringLiteral("length")).toInt()) {
       if (result.property(0).isNumber() &&  // From (-1 --> set stone at "To")
@@ -121,9 +121,9 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
         move << result.property(0).toInt() <<
                 result.property(1).toInt() <<
                 result.property(2).toInt();
-        if (move[0] >= -1 && move[0] < board.size() &&
-            move[1] > 0 &&
-            move[2] >= 0 && move[2] < board.size()) {
+        if (move.at(0).toInt() >= -1 && move.at(0).toInt() < board.size() &&
+            move.at(1).toInt() > 0 &&
+            move.at(2).toInt() >= 0 && move.at(2).toInt() < board.size()) {
           emit actionCPU(move);
           return;
         }

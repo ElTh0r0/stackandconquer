@@ -386,7 +386,7 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
 void Board::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
   if (m_boardPath.contains(p_Event->scenePos())) {
     QList<QGraphicsItem *> items = this->items(p_Event->scenePos());
-    QList<int> move;
+    QJsonArray move;
     foreach (auto item, items) {
       int field = m_listFields.indexOf(
                     qgraphicsitem_cast<QGraphicsRectItem *>(item));
@@ -665,7 +665,7 @@ void Board::selectIndexField(const int nIndex) {
     return;
   }
 
-  QList<int> move;
+  QJsonArray move;
   neighbours = this->checkNeighbourhood(currentIndex);
   if (neighbours.contains(nIndex) && m_pSelectedField->isVisible()) {  // Move
     neighbours.clear();
@@ -754,43 +754,6 @@ void Board::highlightNeighbourhood(const QList<int> &neighbours) {
     listPossibleMoves.last()->setVisible(true);
     this->addItem(listPossibleMoves.last());
   }
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-auto Board::findPossibleMoves(const bool bStonesLeft) -> quint8 {
-  // TODO(x): Rewrite - Generate list of all possible moves.
-
-  /*
-   * Return: 0 = no moves
-   * 1 = stone can be set
-   * 2 = tower can be moved
-   * 3 = stone can be set and tower can be moved
-   */
-
-  quint8 nRet(0);
-  int nField = -1;
-  QString s;
-  for (int nRow = 0; nRow < m_BoardDimensions.y(); nRow++) {
-    for (int nCol = 0; nCol < m_BoardDimensions.x(); nCol++) {
-      nField++;
-      s = m_jsBoard.at(this->getIndexFromField(nField)).toString();
-      if (s.isEmpty() && bStonesLeft && 1 != nRet) {
-        nRet++;
-      }
-      if (!s.isEmpty() && sOUT != s && sPAD != s && 2 != nRet) {
-        if (!this->checkNeighbourhood(
-              this->getIndexFromField(nField)).isEmpty()) {
-          nRet += 2;
-        }
-      }
-      if (3 == nRet) {
-        return nRet;
-      }
-    }
-  }
-  return nRet;
 }
 
 // ---------------------------------------------------------------------------
