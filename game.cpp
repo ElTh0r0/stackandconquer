@@ -223,7 +223,7 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   m_pPlayer2->setStonesLeft(nStonesLeftP2);
   m_pPlayer2->setWonTowers(nWonP2);
 
-  m_sPreviousMove.clear();
+  m_previousMove.clear();
 }
 
 Game::~Game() {
@@ -242,7 +242,7 @@ void Game::createCPU1() {
   m_jsCpuP1 = new OpponentJS(1, m_pBoard->getBoadDimensions(),
                              m_nMaxTowerHeight, m_pBoard->getOut(),
                              m_pBoard->getPad());
-  connect(this, &Game::makeMoveCpuP1, m_jsCpuP1, &OpponentJS::makeMoveCpu);
+  connect(this, &Game::makeMoveCpuP1, m_jsCpuP1, &OpponentJS::callJsCpu);
   connect(m_jsCpuP1, &OpponentJS::actionCPU, this, &Game::makeMove);
   connect(m_jsCpuP1, &OpponentJS::scriptError, this, &Game::caughtScriptError);
 }
@@ -254,7 +254,7 @@ void Game::createCPU2() {
   m_jsCpuP2 = new OpponentJS(2, m_pBoard->getBoadDimensions(),
                              m_nMaxTowerHeight, m_pBoard->getOut(),
                              m_pBoard->getPad());
-  connect(this, &Game::makeMoveCpuP2, m_jsCpuP2, &OpponentJS::makeMoveCpu);
+  connect(this, &Game::makeMoveCpuP2, m_jsCpuP2, &OpponentJS::callJsCpu);
   connect(m_jsCpuP2, &OpponentJS::actionCPU, this, &Game::makeMove);
   connect(m_jsCpuP2, &OpponentJS::scriptError, this, &Game::caughtScriptError);
 }
@@ -339,7 +339,7 @@ void Game::setStone(const int nIndex, const bool bDebug) {
       }
       return;
     }
-    m_sPreviousMove.clear();
+    m_previousMove.clear();
 
     this->checkTowerWin(nIndex);
     this->updatePlayers();
@@ -426,22 +426,6 @@ void Game::moveTower(const int nFrom, const quint8 nStones, const int nTo) {
     }
   }
 
-  // TODO(x): Remove check after implementing legal action list
-  if (this->checkPreviousMoveReverted(sMove)) {
-    if ((m_pPlayer1->getIsActive() && !m_pPlayer1->getIsHuman()) ||
-        (m_pPlayer2->getIsActive() && !m_pPlayer2->getIsHuman())) {
-      m_bScriptError = true;
-      qWarning() << "CPU tried to revert previous move.";
-      QMessageBox::warning(nullptr, tr("Warning"),
-                           tr("CPU script made an invalid move! "
-                              "Please check the debug log."));
-    }
-    QMessageBox::information(nullptr, tr("Information"),
-                             tr("It is not allowed to revert the "
-                                "previous oppenents move directly!"));
-    return;
-  }
-
   // Check, if CPU made a valid move
   if (!m_pBoard->checkNeighbourhood(nTo).contains(nFrom)) {
     qWarning() << "CPU tried to move a tower, which is not in the "
@@ -458,6 +442,9 @@ void Game::moveTower(const int nFrom, const quint8 nStones, const int nTo) {
     m_pBoard->addStone(nTo,
                        listStones[listStones.size() - nStones + i]);
   }
+
+  m_previousMove.clear();
+  m_previousMove << nFrom << nStones << nTo;
 
   this->checkTowerWin(nTo);
   this->updatePlayers();
@@ -573,9 +560,9 @@ void Game::updatePlayers(bool bInitial) {
 void Game::delayCpu() {
   // TODO(x): Rewrite for > 2 players
   if (m_pPlayer1->getIsActive()) {
-    emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getCanMove());
+    emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getLegalMoves());
   } else {
-    emit makeMoveCpuP2(m_pBoard->getBoard(), m_pPlayer2->getCanMove());
+    emit makeMoveCpuP2(m_pBoard->getBoard(), m_pPlayer2->getLegalMoves());
   }
 }
 
@@ -583,32 +570,34 @@ void Game::delayCpu() {
 // ---------------------------------------------------------------------------
 
 auto Game::checkPossibleMoves() -> bool {
-  m_pPlayer1->setCanMove(
-        m_pBoard->findPossibleMoves(m_pPlayer1->getStonesLeft() > 0));
-  m_pPlayer2->setCanMove(
-        m_pBoard->findPossibleMoves(m_pPlayer2->getStonesLeft() > 0));
+  m_pPlayer1->setLegalMoves(m_pBoard->getLegalMoves(
+                              m_pPlayer1->getStonesLeft() > 0,
+                              m_previousMove));
+  m_pPlayer2->setLegalMoves(m_pBoard->getLegalMoves(
+                              m_pPlayer2->getStonesLeft() > 0,
+                              m_previousMove));
   // TODO(x): Rewrite for > 2 players
-  if (m_pPlayer1->getIsActive() && 0 != m_pPlayer1->getCanMove()) {
+  if (m_pPlayer1->getIsActive() && m_pPlayer1->canMove()) {
     return true;
   }
-  if (m_pPlayer2->getIsActive() && 0 != m_pPlayer2->getCanMove()) {
+  if (m_pPlayer2->getIsActive() && m_pPlayer2->canMove()) {
     return true;
   }
 
-  if (0 == m_pPlayer1->getCanMove() && 0 == m_pPlayer2->getCanMove()) {
+  if (!m_pPlayer1->canMove() && !m_pPlayer2->canMove()) {
     emit setInteractive(false);
     qDebug() << "NO MOVES POSSIBLE ANYMORE!";
     QMessageBox::information(nullptr, tr("Information"),
                              tr("No moves possible anymore.\n"
                                 "Game ends in a tie!"));
     return false;
-  } else if (0 == m_pPlayer1->getCanMove()) {
+  } else if (!m_pPlayer1->canMove()) {
     qDebug() << "PLAYER 1 HAS TO PASS!";
     QMessageBox::information(nullptr, tr("Information"),
                              tr("No move possible!\n%1 has to pass.")
                              .arg(m_pPlayer1->getName()));
     this->updatePlayers();
-  } else if (0 == m_pPlayer2->getCanMove()) {
+  } else if (!m_pPlayer2->canMove()) {
     qDebug() << "PLAYER 2 HAS TO PASS!";
     QMessageBox::information(nullptr, tr("Information"),
                              tr("No move possible!\n%1 has to pass.")
@@ -616,49 +605,6 @@ auto Game::checkPossibleMoves() -> bool {
     this->updatePlayers();
   }
   return true;
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-auto Game::checkPreviousMoveReverted(const QString &sMove) -> bool {
-  if (!m_sPreviousMove.isEmpty()) {
-    QStringList sListPrev;
-    QStringList sListCur;
-    sListPrev = m_sPreviousMove.split(':');
-    sListCur = sMove.split(':');
-
-    if (2 == sListPrev.size() && 2 == sListCur.size()) {
-      QString tmp(sListPrev[1]);
-      sListPrev.removeLast();
-      sListPrev << tmp.split('-');
-      tmp = sListCur[1];
-      sListCur.removeLast();
-      sListCur << tmp.split('-');
-
-      if (3 == sListPrev.size() && 3 == sListCur.size()) {
-        if (sListPrev[0] == sListCur[2] &&
-            sListPrev[1] == sListCur[1] &&
-            sListPrev[2] == sListCur[0]) {
-          return true;
-        }
-      } else {
-        qDebug() << Q_FUNC_INFO;
-        qWarning() << "Splitting 2 failed:" << m_sPreviousMove << sMove;
-        QMessageBox::warning(nullptr, tr("Warning"),
-                             tr("Something went wrong!"));
-        return false;
-      }
-    } else {
-      qDebug() << Q_FUNC_INFO;
-      qWarning() << "Splitting 1 failed:" << m_sPreviousMove << sMove;
-      QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
-      return false;
-    }
-  }
-
-  m_sPreviousMove = sMove;
-  return false;
 }
 
 // ---------------------------------------------------------------------------

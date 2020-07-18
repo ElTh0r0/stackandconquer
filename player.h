@@ -27,6 +27,7 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
+#include <QJsonDocument>
 #include <QString>
 
 /**
@@ -47,8 +48,9 @@ class Player {
     auto getStonesLeft() const -> quint8;
     void setWonTowers(const quint8 nWonTowers);
     auto getWonTowers() const -> quint8;
-    void setCanMove(const quint8 nCanMove);
-    auto getCanMove() const -> quint8;
+    void setLegalMoves(const QJsonDocument legalMoves);
+    auto getLegalMoves() const -> QJsonDocument;
+    auto canMove() const -> bool;
 
  private:
     bool m_bIsActive;
@@ -57,7 +59,7 @@ class Player {
     const quint8 m_nMaxStones;
     quint8 m_nStonesLeft;
     quint8 m_nWonTowers;
-    quint8 m_nCanMove;
+    QJsonDocument m_LegalMoves;
 };
 
 #endif  // PLAYER_H_

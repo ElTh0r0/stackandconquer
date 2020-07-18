@@ -46,7 +46,7 @@ class OpponentJS : public QObject {
     auto loadAndEvalCpuScript(const QString &sFilepath) -> bool;
 
  public slots:
-    void makeMoveCpu(const QJsonArray &board, const quint8 nPossibleMove);
+    void callJsCpu(const QJsonArray &board, const QJsonDocument &legalMoves);
     void log(const QString &sMsg);
 
  signals:

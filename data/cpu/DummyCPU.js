@@ -25,6 +25,7 @@
  *
  * Variables provided externally from game:
  * jsboard
+ * jsmoves
  * nID (1 or 2 = player 1 / player 2)
  * nBoardDimensionsX
  * nBoardDimensionsY
@@ -38,8 +39,9 @@ cpu.log("Loading CPU script DummyCPU...");
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function makeMove(nPossible) {
+function callCPU() {
   board = JSON.parse(jsboard);  // Global
+  legalMoves = JSON.parse(jsmoves);  // Global
   /*
    * Moving directions factor
    * E.g. 5x5 board, max tower height 5 (padding):
@@ -56,10 +58,10 @@ function makeMove(nPossible) {
   DIRS.push(-DIRS[2]);  // 14
   DIRS.push(-DIRS[1]);  // 15
   DIRS.push(-DIRS[0]);  // 16
-  nPossibleMove = Number(nPossible);
-  //cpu.log("[80].length: " + board[80].length);
-  //cpu.log("[81].length: " + board[81].length);
-  //cpu.log("[81][0]: " + board[81][0]);
+
+  //cpu.log("board[80].length: " + board[80].length);
+  //cpu.log("board[81].length: " + board[81].length);
+  //cpu.log("board[81][0]: " + board[81][0]);
 
   var MoveToWin = canWin(nID);
   if (0 !== MoveToWin.length) {  // CPU can win
@@ -73,28 +75,27 @@ function makeMove(nPossible) {
     MoveToWin = canWin(2);
   }
   if (0 !== MoveToWin.length) {
-    // TODO(x): preventWin() currently handles only first winning move!
-    var PreventWin = preventWin(MoveToWin[0], nPossibleMove);
-    if (3 === PreventWin.length) {
-      return PreventWin;
-    }
+    // TODO(x): Rewrite preventWin() with new legal moves list
+    // var PreventWin = preventWin(MoveToWin[0], nPossibleMove);
+    // if (3 === PreventWin.length) {
+    //  return PreventWin;
+    // }
   }
 
-  if (1 === nPossibleMove && findFreeFields()) {
-    return setRandom();
-  } else if (2 === nPossibleMove) {
-    return moveRandom(MoveToWin);
-  } else if (3 === nPossibleMove) {
-    var nRand = Math.floor(Math.random() * 2);
-    if (0 === nRand) {
-      return setRandom();
-    } else {
-      return moveRandom(MoveToWin);
-    }
+  cpu.log("Possible moves: " + legalMoves.length);
+  if (0 !== legalMoves.length) {
+    //cpu.log("Possible moves #1: " + legalMoves[0]);
+    //cpu.log("Possible moves #1.1: " + legalMoves[0][0]);
+    //cpu.log("Possible moves #1.2: " + legalMoves[0][1]);
+    //cpu.log("Possible moves #1.3: " + legalMoves[0][2]);
+
+    // Make random move
+    var nRand = Math.floor(Math.random() * legalMoves.length);
+    return legalMoves[nRand];
   }
 
   // This line never should be reached!
-  cpu.log("ERROR: Script couldn't call setRandom() / moveRandom()!");
+  cpu.log("ERROR: No legal moves passed to script?!");
   return "";
 }
 

@@ -60,8 +60,10 @@ class Game : public QObject {
     void setInteractive(bool bEnabled);
     void highlightActivePlayer(bool bPlayer1,
                                bool bP1Won = false, bool bP2Won = false);
-    void makeMoveCpuP1(const QJsonArray &board, const quint8 nPossibleMove);
-    void makeMoveCpuP2(const QJsonArray &board, const quint8 nPossibleMove);
+    void makeMoveCpuP1(const QJsonArray &board,
+                       const QJsonDocument &legalMoves);
+    void makeMoveCpuP2(const QJsonArray &board,
+                       const QJsonDocument &legalMoves);
 
  private slots:
     void makeMove(QList<int> move);
@@ -75,7 +77,6 @@ class Game : public QObject {
     void createCPU2();
     static auto loadGame(const QString &sFile) -> QJsonObject;
     auto checkPossibleMoves() -> bool;
-    auto checkPreviousMoveReverted(const QString &sMove) -> bool;
     void checkTowerWin(const int nIndex);
     void returnStones(const int nIndex);
 
@@ -94,7 +95,7 @@ class Game : public QObject {
     quint8 m_nWinTowers;
 
     bool m_bScriptError;
-    QString m_sPreviousMove;
+    QList<int> m_previousMove;
 };
 
 #endif  // GAME_H_

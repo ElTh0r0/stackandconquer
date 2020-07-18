@@ -29,6 +29,7 @@
 
 #include <QGraphicsScene>
 #include <QJsonArray>
+#include <QJsonDocument>
 #include <QList>
 #include <QPainterPath>
 
@@ -59,6 +60,8 @@ class Board : public QGraphicsScene {
     auto getMaxPlayerStones() const -> quint8;
     auto getField(const int index) const -> QString;
     auto findPossibleMoves(const bool bStonesLeft) -> quint8;
+    auto getLegalMoves(const bool bStonesLeft,
+                       const QList<int> &lastMove) const -> QJsonDocument;
     auto checkNeighbourhood(const int nIndex) const -> QList<int>;
     void printDebugFields() const;
     auto getCoordinateFromField(const int nField) const -> QPoint;

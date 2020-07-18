@@ -36,8 +36,7 @@ Player::Player(bool bActive, bool bIsHuman,
     m_sName(sName),
     m_nMaxStones(nMaxStones),
     m_nStonesLeft(nMaxStones),
-    m_nWonTowers(0),
-    m_nCanMove(0) {
+    m_nWonTowers(0) {
   if (!m_bIsHuman) {
     m_sName = QStringLiteral("Computer");
   }
@@ -71,12 +70,16 @@ auto Player::getName() const -> QString {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Player::setCanMove(const quint8 nCanMove) {
-  m_nCanMove = nCanMove;
+void Player::setLegalMoves(const QJsonDocument legalMoves) {
+  m_LegalMoves = legalMoves;
 }
 
-auto Player::getCanMove() const -> quint8 {
-  return m_nCanMove;
+auto Player::getLegalMoves() const -> QJsonDocument {
+  return m_LegalMoves;
+}
+
+auto Player::canMove() const -> bool {
+  return !m_LegalMoves.isEmpty();
 }
 
 // ---------------------------------------------------------------------------

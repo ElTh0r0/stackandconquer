@@ -796,6 +796,64 @@ auto Board::findPossibleMoves(const bool bStonesLeft) -> quint8 {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
+auto Board::getLegalMoves(const bool bStonesLeft,
+                          const QList<int> &lastMove) const -> QJsonDocument {
+  QVariantList varMove;
+  QJsonArray move;
+  QJsonArray jsMoves;
+  QList<int> neighbours;
+  int nField = -1;
+  int nTo;
+  QString s;
+
+  for (int nRow = 0; nRow < m_BoardDimensions.y(); nRow++) {
+    for (int nCol = 0; nCol < m_BoardDimensions.x(); nCol++) {
+      nField++;
+      nTo = this->getIndexFromField(nField);
+      s = m_jsBoard.at(nTo).toString();
+      if (sOUT != s && sPAD != s) {
+        if (s.isEmpty() && bStonesLeft) {  // Set stone on empty field
+          varMove.clear();
+          varMove << -1 << 1 << nTo;
+          move = QJsonArray::fromVariantList(varMove);
+          jsMoves.append(move);
+          continue;
+        }
+
+        neighbours = this->checkNeighbourhood(nTo);
+        if (!neighbours.isEmpty()) {  // Possible tower moves
+          for (auto nFrom : neighbours) {
+            for (int nStones = 1;
+                 nStones <= m_jsBoard.at(nFrom).toString().size();
+                 nStones++) {
+              varMove.clear();
+              varMove << nFrom << nStones << nTo;
+              move = QJsonArray::fromVariantList(varMove);
+
+              // Previous move reverted?
+              if (lastMove.size() == 3) {
+                if (!(nFrom == lastMove[2] &&    // From = previous to
+                      nStones == lastMove[1] &&  // Same number of stones moved
+                      nTo == lastMove[0])) {     // To = previous from
+                  jsMoves.append(move);
+                }
+              } else {
+                jsMoves.append(move);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  QJsonDocument legalMoves(jsMoves);
+  return legalMoves;
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 void Board::printDebugFields() const {
   qDebug() << "BOARD:";
   QString sLine;

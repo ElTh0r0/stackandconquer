@@ -69,10 +69,10 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
     return false;
   }
 
-  // Check if makeMove() is available for calling the script
-  if (!m_obj.hasProperty(QStringLiteral("makeMove")) ||
-      !m_obj.property(QStringLiteral("makeMove")).isCallable()) {
-    qCritical() << "Error in CPU" << m_nID << "script - function makeMove() " <<
+  // Check if callCPU() is available for calling the script
+  if (!m_obj.hasProperty(QStringLiteral("callCPU")) ||
+      !m_obj.property(QStringLiteral("callCPU")).isCallable()) {
+    qCritical() << "Error in CPU" << m_nID << "script - function callCPU() " <<
                    "not found or not callable!";
     emit scriptError();
     return false;
@@ -90,20 +90,18 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void OpponentJS::makeMoveCpu(const QJsonArray &board,
-                             const quint8 nPossibleMove) {
-  // TODO(volunteer): Provide list with all possible moves
-  // (without previous move reverted)
+void OpponentJS::callJsCpu(const QJsonArray &board,
+                           const QJsonDocument &legalMoves) {
   QJsonDocument jsdoc(board);
-
   QString sJsBoard(jsdoc.toJson(QJsonDocument::Compact));
+  QString sJsMoves(legalMoves.toJson(QJsonDocument::Compact));
   m_obj.setProperty(QStringLiteral("jsboard"), sJsBoard);
+  m_obj.setProperty(QStringLiteral("jsmoves"), sJsMoves);
 
-  QJSValue result = m_obj.property(QStringLiteral("makeMove"))
-                    .call(QJSValueList() << nPossibleMove);
+  QJSValue result = m_obj.property(QStringLiteral("callCPU")).call();
   if (result.isError()) {
     qCritical() << "CPU" << m_nID <<
-                   "- Error calling \"makeMove\" function at line:" <<
+                   "- Error calling \"callCPU\" function at line:" <<
                    result.property(QStringLiteral("lineNumber")).toInt() <<
                    "\n" << result.toString();
     QMessageBox::warning(nullptr, tr("Warning"),
@@ -111,7 +109,7 @@ void OpponentJS::makeMoveCpu(const QJsonArray &board,
                             "Please check the debug log."));
     emit scriptError();
   }
-  // qDebug() << "Result of makeMove():" << result.toString();
+  // qDebug() << "Result of callCPU():" << result.toString();
 
   // CPU has to return an int array with length 3
   QList<int> move;
@@ -133,7 +131,7 @@ void OpponentJS::makeMoveCpu(const QJsonArray &board,
     }
   }
 
-  qCritical() << "CPU" << m_nID << "script invalid return from makeMove():" <<
+  qCritical() << "CPU" << m_nID << "script invalid return from callCPU():" <<
                  result.toString();
   QMessageBox::warning(nullptr, tr("Warning"),
                        tr("CPU script execution error! "
