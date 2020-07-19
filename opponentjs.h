@@ -27,9 +27,9 @@
 #ifndef OPPONENTJS_H_
 #define OPPONENTJS_H_
 
-#include <QObject>
 #include <QJsonArray>
 #include <QJSValue>
+#include <QObject>
 #include <QPoint>
 
 class QJSEngine;

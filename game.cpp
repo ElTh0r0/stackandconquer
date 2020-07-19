@@ -180,20 +180,11 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
 
   connect(m_pBoard, &Board::actionPlayer, this, &Game::makeMove);
 
-  bool bP1IsHuman(true);
-  bool bP2IsHuman(true);
-
-  if ("Human" == sP1HumanCpu) {
-    bP1IsHuman = true;
-  } else {
-    bP1IsHuman = false;
+  if ("Human" != sP1HumanCpu) {
     m_sJsFileP1 = sP1HumanCpu;
   }
 
-  if ("Human" == sP2HumanCpu) {
-    bP2IsHuman = true;
-  } else {
-    bP2IsHuman = false;
+  if ("Human" != sP2HumanCpu) {
     m_sJsFileP2 = sP2HumanCpu;
   }
 

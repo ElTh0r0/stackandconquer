@@ -36,6 +36,7 @@ Player::Player(bool bActive, const quint8 nID, const QString &sName,
                QObject *parent)
   : QObject(parent),
     m_nID(nID),
+    m_pJsCpu(nullptr),
     m_bIsActive(bActive),
     m_sName(sName),
     m_sCpuScript(sCpuScript),
@@ -65,6 +66,11 @@ auto Player::initCPU(const QPoint BoadDimensions, const quint8 nMaxTowerHeight,
 // ---------------------------------------------------------------------------
 
 void Player::callCpu(const QJsonArray &board, const QJsonDocument &legalMoves) {
+  if (nullptr == m_pJsCpu) {
+    qWarning() << "callCPU called for Human player P" + this->getID();
+    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+    return;
+  }
   m_pJsCpu->callJsCpu(board, legalMoves);
 }
 

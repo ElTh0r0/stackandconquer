@@ -29,6 +29,7 @@
 
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QObject>
 #include <QString>
 
 class OpponentJS;
@@ -42,7 +43,8 @@ class Player : public QObject {
 
  public:
     Player(bool bActive, const quint8 nID, const QString &sName,
-           const quint8 nMaxStones, const QString &sCpuScript = "",
+           const quint8 nMaxStones,
+           const QString &sCpuScript = QLatin1String(""),
            QObject *parent = nullptr);
     ~Player();
 
