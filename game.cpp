@@ -44,14 +44,11 @@
 
 #include "./board.h"
 #include "./player.h"
-#include "./opponentjs.h"
 #include "./settings.h"
 
 Game::Game(Settings *pSettings, const QStringList &sListFiles)
   : m_pSettings(pSettings),
     m_pBoard(nullptr),
-    m_jsCpuP1(nullptr),
-    m_jsCpuP2(nullptr),
     m_pPlayer1(nullptr),
     m_pPlayer2(nullptr),
     m_sJsFileP1(QLatin1String("")),
@@ -191,7 +188,6 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   } else {
     bP1IsHuman = false;
     m_sJsFileP1 = sP1HumanCpu;
-    this->createCPU1();
   }
 
   if ("Human" == sP2HumanCpu) {
@@ -199,7 +195,6 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   } else {
     bP2IsHuman = false;
     m_sJsFileP2 = sP2HumanCpu;
-    this->createCPU2();
   }
 
   // Select start player
@@ -213,10 +208,18 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
 #endif
   }
 
-  m_pPlayer1 = new Player((1 == nStartPlayer), bP1IsHuman,
-                          sName1, m_pBoard->getMaxPlayerStones());
-  m_pPlayer2 = new Player((2 == nStartPlayer), bP2IsHuman,
-                          sName2, m_pBoard->getMaxPlayerStones());
+  m_pPlayer1 = new Player((1 == nStartPlayer), 1, sName1,
+                          m_pBoard->getMaxPlayerStones(), m_sJsFileP1);
+  if (!m_pPlayer1->isHuman()) {
+    connect(m_pPlayer1, &Player::actionCPU, this, &Game::makeMove);
+    connect(m_pPlayer1, &Player::scriptError, this, &Game::caughtScriptError);
+  }
+  m_pPlayer2 = new Player((2 == nStartPlayer), 2, sName2,
+                          m_pBoard->getMaxPlayerStones(), m_sJsFileP2);
+  if (!m_pPlayer2->isHuman()) {
+    connect(m_pPlayer2, &Player::actionCPU, this, &Game::makeMove);
+    connect(m_pPlayer2, &Player::scriptError, this, &Game::caughtScriptError);
+  }
   m_pPlayer1->setStonesLeft(nStonesLeftP1);
   m_pPlayer1->setWonTowers(nWonP1);
   m_pPlayer2->setStonesLeft(nStonesLeftP2);
@@ -237,38 +240,17 @@ Game::~Game() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::createCPU1() {
-  m_jsCpuP1 = new OpponentJS(1, m_pBoard->getBoadDimensions(),
-                             m_nMaxTowerHeight, m_pBoard->getOut(),
-                             m_pBoard->getPad());
-  connect(this, &Game::makeMoveCpuP1, m_jsCpuP1, &OpponentJS::callJsCpu);
-  connect(m_jsCpuP1, &OpponentJS::actionCPU, this, &Game::makeMove);
-  connect(m_jsCpuP1, &OpponentJS::scriptError, this, &Game::caughtScriptError);
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-void Game::createCPU2() {
-  m_jsCpuP2 = new OpponentJS(2, m_pBoard->getBoadDimensions(),
-                             m_nMaxTowerHeight, m_pBoard->getOut(),
-                             m_pBoard->getPad());
-  connect(this, &Game::makeMoveCpuP2, m_jsCpuP2, &OpponentJS::callJsCpu);
-  connect(m_jsCpuP2, &OpponentJS::actionCPU, this, &Game::makeMove);
-  connect(m_jsCpuP2, &OpponentJS::scriptError, this, &Game::caughtScriptError);
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
 auto Game::initCpu() -> bool {
-  if (!m_pPlayer1->getIsHuman()) {
-    if (!m_jsCpuP1->loadAndEvalCpuScript(m_sJsFileP1)) {
+  // TODO(x): Rewrite for > 2 players
+  if (!m_pPlayer1->isHuman()) {
+    if (!m_pPlayer1->initCPU(m_pBoard->getBoadDimensions(), m_nMaxTowerHeight,
+                             m_pBoard->getOut(), m_pBoard->getPad())) {
       return false;
     }
   }
-  if (!m_pPlayer2->getIsHuman()) {
-    if (!m_jsCpuP2->loadAndEvalCpuScript(m_sJsFileP2)) {
+  if (!m_pPlayer2->isHuman()) {
+    if (!m_pPlayer2->initCPU(m_pBoard->getBoadDimensions(), m_nMaxTowerHeight,
+                             m_pBoard->getOut(), m_pBoard->getPad())) {
       return false;
     }
   }
@@ -302,13 +284,13 @@ void Game::makeMove(QJsonArray move) {
     // TODO(x): Rewrite for > 2 players
     bool bValidMove(false);
     bool bIsHuman(false);
-    if (m_pPlayer1->getIsActive()) {
-      bValidMove = this->checkMovesIsValid(m_pPlayer1->getLegalMoves(), move);
-      bIsHuman = m_pPlayer1->getIsHuman();
+    if (m_pPlayer1->isActive()) {
+      bValidMove = this->checkMoveIsValid(m_pPlayer1->getLegalMoves(), move);
+      bIsHuman = m_pPlayer1->isHuman();
     }
-    if (m_pPlayer2->getIsActive()) {
-      bValidMove = this->checkMovesIsValid(m_pPlayer2->getLegalMoves(), move);
-      bIsHuman = m_pPlayer2->getIsHuman();
+    if (m_pPlayer2->isActive()) {
+      bValidMove = this->checkMoveIsValid(m_pPlayer2->getLegalMoves(), move);
+      bIsHuman = m_pPlayer2->isHuman();
     }
     if (bDebug) {
       bValidMove = true;
@@ -349,8 +331,8 @@ void Game::makeMove(QJsonArray move) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-auto Game::checkMovesIsValid(const QJsonDocument &legalMoves,
-                             const QJsonArray &move) -> bool {
+auto Game::checkMoveIsValid(const QJsonDocument &legalMoves,
+                            const QJsonArray &move) -> bool {
   QJsonArray allMoves(legalMoves.array());
   if (allMoves.contains(move)) {
     return true;
@@ -365,14 +347,16 @@ void Game::setStone(const int nIndex, const bool bDebug) {
   // TODO(x): Rewrite for > 2 players
   // Below checks never should fail, due to comparisson with legal moves list...
   if (m_pBoard->getField(nIndex).isEmpty() || bDebug) {
-    if (m_pPlayer1->getIsActive() && m_pPlayer1->getStonesLeft() > 0) {
+    if (m_pPlayer1->isActive() && m_pPlayer1->getStonesLeft() > 0) {
       m_pPlayer1->setStonesLeft(m_pPlayer1->getStonesLeft() - 1);
       m_pBoard->addStone(nIndex, 1);
-      qDebug() << "P1 >>" << m_pBoard->getStringCoordFromIndex(nIndex);
-    } else if (m_pPlayer2->getIsActive() && m_pPlayer2->getStonesLeft() > 0) {
+      qDebug() << "P" + m_pPlayer1->getID() + " >> " +
+                  m_pBoard->getStringCoordFromIndex(nIndex);
+    } else if (m_pPlayer2->isActive() && m_pPlayer2->getStonesLeft() > 0) {
       m_pPlayer2->setStonesLeft(m_pPlayer2->getStonesLeft() - 1);
       m_pBoard->addStone(nIndex, 2);
-      qDebug() << "P2 >>" << m_pBoard->getStringCoordFromIndex(nIndex);
+      qDebug() << "P" + m_pPlayer2->getID() + " >> " +
+                  m_pBoard->getStringCoordFromIndex(nIndex);
     } else {
       qWarning() << "Invalid move! Set stone:" << nIndex;
       QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
@@ -432,15 +416,15 @@ void Game::moveTower(const int nFrom, const quint8 nStones, const int nTo) {
                 QString::number(nStones) + "-" +
                 m_pBoard->getStringCoordFromIndex(nTo));
 
-  if (m_pPlayer1->getIsActive()) {
-    qDebug() << "P1 >>" << sMove;
-    if (!m_pPlayer1->getIsHuman()) {
+  if (m_pPlayer1->isActive()) {
+    qDebug() << "P" + m_pPlayer1->getID() + " >> " + sMove;
+    if (!m_pPlayer1->isHuman()) {
       m_pBoard->selectIndexField(nTo);
       m_pBoard->selectIndexField(-1);
     }
   } else {
-    qDebug() << "P2 >>" << sMove;
-    if (!m_pPlayer2->getIsHuman()) {
+    qDebug() << "P" + m_pPlayer2->getID() + " >> " + sMove;
+    if (!m_pPlayer2->isHuman()) {
       m_pBoard->selectIndexField(nTo);
       m_pBoard->selectIndexField(-1);
     }
@@ -467,7 +451,7 @@ void Game::checkTowerWin(const int nIndex) {
   if (m_pBoard->getField(nIndex).size() >= m_nMaxTowerHeight) {
     if (1 == m_pBoard->getField(nIndex).rightRef(1).toInt()) {
       m_pPlayer1->setWonTowers(m_pPlayer1->getWonTowers() + 1);
-      qDebug() << "Player 1 conquered tower" <<
+      qDebug() << "Player " + m_pPlayer1->getID() + " conquered tower " +
                   m_pBoard->getStringCoordFromIndex(nIndex);
       if (m_nWinTowers != m_pPlayer1->getWonTowers()) {
         QMessageBox::information(nullptr, tr("Information"),
@@ -476,7 +460,7 @@ void Game::checkTowerWin(const int nIndex) {
       }
     } else if (2 == m_pBoard->getField(nIndex).rightRef(1).toInt()) {
       m_pPlayer2->setWonTowers(m_pPlayer2->getWonTowers() + 1);
-      qDebug() << "Player 2 conquered tower" <<
+      qDebug() << "Player " + m_pPlayer2->getID() + " conquered tower " +
                   m_pBoard->getStringCoordFromIndex(nIndex);
       if (m_nWinTowers != m_pPlayer2->getWonTowers()) {
         QMessageBox::information(nullptr, tr("Information"),
@@ -529,30 +513,30 @@ void Game::updatePlayers(bool bInitial) {
   emit updateWonP2(QString::number(m_pPlayer2->getWonTowers()));
 
   if (m_nWinTowers == m_pPlayer1->getWonTowers()) {
-    qDebug() << "PLAYER 1 WON!";
+    qDebug() << "PLAYER " + m_pPlayer1->getID() + " WON!";
     emit setInteractive(false);
     emit highlightActivePlayer(false, true);
     QMessageBox::information(nullptr, tr("Information"), tr("%1 won the game!")
                              .arg(m_pPlayer1->getName()));
   } else if (m_nWinTowers == m_pPlayer2->getWonTowers()) {
-    qDebug() << "PLAYER 2 WON!";
+    qDebug() << "PLAYER " + m_pPlayer2->getID() + " WON!";
     emit setInteractive(false);
     emit highlightActivePlayer(false, false, true);
     QMessageBox::information(nullptr, tr("Information"), tr("%1 won the game!")
                              .arg(m_pPlayer2->getName()));
   } else {
     if (!bInitial) {
-      m_pPlayer1->setActive(!m_pPlayer1->getIsActive());
-      m_pPlayer2->setActive(!m_pPlayer2->getIsActive());
+      m_pPlayer1->setActive(!m_pPlayer1->isActive());
+      m_pPlayer2->setActive(!m_pPlayer2->isActive());
     }
-    emit highlightActivePlayer(m_pPlayer1->getIsActive());
+    emit highlightActivePlayer(m_pPlayer1->isActive());
     if (!this->checkPossibleMoves()) {
       m_pBoard->printDebugFields();
       return;
     }
 
-    if ((m_pPlayer1->getIsActive() && !m_pPlayer1->getIsHuman()) ||
-        (m_pPlayer2->getIsActive() && !m_pPlayer2->getIsHuman())) {
+    if ((m_pPlayer1->isActive() && !m_pPlayer1->isHuman()) ||
+        (m_pPlayer2->isActive() && !m_pPlayer2->isHuman())) {
       emit setInteractive(false);
       QTimer::singleShot(800, this, &Game::delayCpu);
     } else {
@@ -568,10 +552,10 @@ void Game::updatePlayers(bool bInitial) {
 
 void Game::delayCpu() {
   // TODO(x): Rewrite for > 2 players
-  if (m_pPlayer1->getIsActive()) {
-    emit makeMoveCpuP1(m_pBoard->getBoard(), m_pPlayer1->getLegalMoves());
+  if (m_pPlayer1->isActive()) {
+    m_pPlayer1->callCpu(m_pBoard->getBoard(), m_pPlayer1->getLegalMoves());
   } else {
-    emit makeMoveCpuP2(m_pBoard->getBoard(), m_pPlayer2->getLegalMoves());
+    m_pPlayer2->callCpu(m_pBoard->getBoard(), m_pPlayer2->getLegalMoves());
   }
 }
 
@@ -586,10 +570,10 @@ auto Game::checkPossibleMoves() -> bool {
                               m_pPlayer2->getStonesLeft() > 0,
                               m_previousMove));
   // TODO(x): Rewrite for > 2 players
-  if (m_pPlayer1->getIsActive() && m_pPlayer1->canMove()) {
+  if (m_pPlayer1->isActive() && m_pPlayer1->canMove()) {
     return true;
   }
-  if (m_pPlayer2->getIsActive() && m_pPlayer2->canMove()) {
+  if (m_pPlayer2->isActive() && m_pPlayer2->canMove()) {
     return true;
   }
 
@@ -601,13 +585,13 @@ auto Game::checkPossibleMoves() -> bool {
                                 "Game ends in a tie!"));
     return false;
   } else if (!m_pPlayer1->canMove()) {
-    qDebug() << "PLAYER 1 HAS TO PASS!";
+    qDebug() << "PLAYER " + m_pPlayer1->getID() + " HAS TO PASS!";
     QMessageBox::information(nullptr, tr("Information"),
                              tr("No move possible!\n%1 has to pass.")
                              .arg(m_pPlayer1->getName()));
     this->updatePlayers();
   } else if (!m_pPlayer2->canMove()) {
-    qDebug() << "PLAYER 2 HAS TO PASS!";
+    qDebug() << "PLAYER " + m_pPlayer2->getID() + " HAS TO PASS!";
     QMessageBox::information(nullptr, tr("Information"),
                              tr("No move possible!\n%1 has to pass.")
                              .arg(m_pPlayer2->getName()));
@@ -660,10 +644,10 @@ auto Game::saveGame(const QString &sFile) -> bool {
   jsonObj[QStringLiteral("StonesLeft1")] = m_pPlayer1->getStonesLeft();
   jsonObj[QStringLiteral("StonesLeft2")] = m_pPlayer2->getStonesLeft();
   jsonObj[QStringLiteral("HumanCpu1")] =
-      m_pPlayer1->getIsHuman() ? QStringLiteral("Human") : m_sJsFileP1;
+      m_pPlayer1->isHuman() ? QStringLiteral("Human") : m_sJsFileP1;
   jsonObj[QStringLiteral("HumanCpu2")] =
-      m_pPlayer2->getIsHuman() ? QStringLiteral("Human") : m_sJsFileP2;
-  jsonObj[QStringLiteral("Current")] = m_pPlayer1->getIsActive() ? 1 : 2;
+      m_pPlayer2->isHuman() ? QStringLiteral("Human") : m_sJsFileP2;
+  jsonObj[QStringLiteral("Current")] = m_pPlayer1->isActive() ? 1 : 2;
   jsonObj[QStringLiteral("Board")] = jsBoard;
   jsonObj[QStringLiteral("BoardFile")] = m_sBoardFile;
   jsonObj[QStringLiteral("BoardFileRelative")] = sRelativeDir;

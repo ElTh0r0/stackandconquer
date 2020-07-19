@@ -29,16 +29,21 @@
 #include <QDebug>
 #include <QMessageBox>
 
-Player::Player(bool bActive, bool bIsHuman,
-               const QString &sName, quint8 nMaxStones)
-  : m_bIsActive(bActive),
-    m_bIsHuman(bIsHuman),
+#include "./opponentjs.h"
+
+Player::Player(bool bActive, const quint8 nID, const QString &sName,
+               const quint8 nMaxStones, const QString &sCpuScript,
+               QObject *parent)
+  : QObject(parent),
+    m_nID(nID),
+    m_bIsActive(bActive),
     m_sName(sName),
+    m_sCpuScript(sCpuScript),
     m_nMaxStones(nMaxStones),
     m_nStonesLeft(nMaxStones),
     m_nWonTowers(0) {
-  if (!m_bIsHuman) {
-    m_sName = QStringLiteral("Computer");
+  if (!m_sCpuScript.isEmpty()) {
+    m_sName = QStringLiteral("Computer ") + QString::number(m_nID);
   }
   qDebug() << "Generate player" << m_sName;
 }
@@ -48,23 +53,45 @@ Player::~Player() = default;
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
+auto Player::initCPU(const QPoint BoadDimensions, const quint8 nMaxTowerHeight,
+                     const QString &sOut, const QString &sPad) -> bool {
+  m_pJsCpu = new OpponentJS(m_nID, BoadDimensions, nMaxTowerHeight, sOut, sPad);
+  connect(m_pJsCpu, &OpponentJS::actionCPU, this, &Player::actionCPU);
+  connect(m_pJsCpu, &OpponentJS::scriptError, this, &Player::scriptError);
+  return m_pJsCpu->loadAndEvalCpuScript(m_sCpuScript);
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void Player::callCpu(const QJsonArray &board, const QJsonDocument &legalMoves) {
+  m_pJsCpu->callJsCpu(board, legalMoves);
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 void Player::setActive(const bool bActive) {
   m_bIsActive = bActive;
 }
 
-auto Player::getIsActive() const -> bool {
+auto Player::isActive() const -> bool {
   return m_bIsActive;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-auto Player::getIsHuman() const -> bool {
-  return m_bIsHuman;
+auto Player::isHuman() const -> bool {
+  return m_sCpuScript.isEmpty();
 }
 
 auto Player::getName() const -> QString {
   return m_sName;
+}
+
+auto Player::getID() const -> QString {
+  return QString::number(m_nID);
 }
 
 // ---------------------------------------------------------------------------
@@ -104,6 +131,7 @@ auto Player::getStonesLeft() const -> quint8 {
 // ---------------------------------------------------------------------------
 
 void Player::setWonTowers(const quint8 nWonTowers) {
+  // TODO(x): Check in player class if game is won and emit signal
   m_nWonTowers = nWonTowers;
 }
 

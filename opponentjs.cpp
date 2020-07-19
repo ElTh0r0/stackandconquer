@@ -62,9 +62,10 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
 
   QJSValue result(m_jsEngine->evaluate(source, sFilepath));
   if (result.isError()) {
-    qCritical() << "Error in CPU" << m_nID << "script at line" <<
-                   result.property(QStringLiteral("lineNumber")).toInt() <<
-                   "\n" << result.toString();
+    qCritical() << "Error in CPU P" + QString::number(m_nID) +
+                   "script at line " +
+                   result.property(QStringLiteral("lineNumber")).toInt() +
+                   "\n" + result.toString();
     emit scriptError();
     return false;
   }
@@ -72,8 +73,8 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
   // Check if callCPU() is available for calling the script
   if (!m_obj.hasProperty(QStringLiteral("callCPU")) ||
       !m_obj.property(QStringLiteral("callCPU")).isCallable()) {
-    qCritical() << "Error in CPU" << m_nID << "script - function callCPU() " <<
-                   "not found or not callable!";
+    qCritical() << "Error in CPU P" + QString::number(m_nID) +
+                   "script - function callCPU() not found or not callable!";
     emit scriptError();
     return false;
   }
@@ -100,16 +101,16 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
 
   QJSValue result = m_obj.property(QStringLiteral("callCPU")).call();
   if (result.isError()) {
-    qCritical() << "CPU" << m_nID <<
-                   "- Error calling \"callCPU\" function at line:" <<
-                   result.property(QStringLiteral("lineNumber")).toInt() <<
-                   "\n" << result.toString();
+    qCritical() << "CPU P" + QString::number(m_nID) +
+                   "- Error calling \"callCPU\" function at line: " +
+                   result.property(QStringLiteral("lineNumber")).toInt() +
+                   "\n" + result.toString();
     QMessageBox::warning(nullptr, tr("Warning"),
                          tr("CPU script execution error! "
                             "Please check the debug log."));
     emit scriptError();
   }
-  // qDebug() << "Result of callCPU():" << result.toString();
+  // qDebug() << "Result of callCPU(): " + result.toString();
 
   // CPU has to return an int array with length 3
   QJsonArray move;
@@ -131,8 +132,8 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
     }
   }
 
-  qCritical() << "CPU" << m_nID << "script invalid return from callCPU():" <<
-                 result.toString();
+  qCritical() << "CPU P" + QString::number(m_nID) +
+                 "script invalid return from callCPU(): " + result.toString();
   QMessageBox::warning(nullptr, tr("Warning"),
                        tr("CPU script execution error! "
                           "Please check the debug log."));
@@ -143,5 +144,5 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
 // ---------------------------------------------------------------------------
 
 void OpponentJS::log(const QString &sMsg) {
-  qDebug() << "CPU" << m_nID << "-" << sMsg;
+  qDebug() << "CPU P" + QString::number(m_nID) + " - " + sMsg;
 }

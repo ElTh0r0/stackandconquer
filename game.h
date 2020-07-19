@@ -36,7 +36,6 @@ class QJsonObject;
 
 class Board;
 class Player;
-class OpponentJS;
 class Settings;
 
 class Game : public QObject {
@@ -60,10 +59,6 @@ class Game : public QObject {
     void setInteractive(bool bEnabled);
     void highlightActivePlayer(bool bPlayer1,
                                bool bP1Won = false, bool bP2Won = false);
-    void makeMoveCpuP1(const QJsonArray &board,
-                       const QJsonDocument &legalMoves);
-    void makeMoveCpuP2(const QJsonArray &board,
-                       const QJsonDocument &legalMoves);
 
  private slots:
     void makeMove(QJsonArray move);
@@ -73,24 +68,20 @@ class Game : public QObject {
  private:
     void setStone(const int nIndex, const bool bDebug);
     void moveTower(const int nFrom, const quint8 nStones, const int nTo);
-    void createCPU1();
-    void createCPU2();
     static auto loadGame(const QString &sFile) -> QJsonObject;
     auto checkPossibleMoves() -> bool;
-    auto checkMovesIsValid(const QJsonDocument &legalMoves,
-                           const QJsonArray &move) -> bool;
+    auto checkMoveIsValid(const QJsonDocument &legalMoves,
+                          const QJsonArray &move) -> bool;
     void checkTowerWin(const int nIndex);
     void returnStones(const int nIndex);
 
     Settings *m_pSettings;
     Board *m_pBoard;
     QString m_sBoardFile;
-    OpponentJS *m_jsCpuP1;
-    OpponentJS *m_jsCpuP2;
-    Player *m_pPlayer1;
+    Player *m_pPlayer1;   // TODO(x): Replace by player array
     Player *m_pPlayer2;
-    QString m_sJsFileP1;
-    QString m_sJsFileP2;
+    QString m_sJsFileP1;  // TODO(x): To be removed
+    QString m_sJsFileP2;  // TODO(x): To be removed
 
     const quint8 m_nMaxTowerHeight;
     const quint16 m_nGridSize;

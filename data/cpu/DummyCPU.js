@@ -183,7 +183,7 @@ function preventWin(moveToWin, nPossibleMove) {
           (route > 0 && DIRS[dir] < 0 ||   // If route pos., dir has to be neg.
            route < 0 && DIRS[dir] > 0)) {  // If route neg., dir has to be pos.
         var moves = route / DIRS[dir];
-        // There is more than one filed in between
+        // There is more than one field in between
         if (Math.abs(moves) > 1 && (1 === nPossibleMove || 3 === nPossibleMove)) {
           move.push(-1);
           move.push(1);

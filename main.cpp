@@ -125,12 +125,12 @@ void setupLogger(const QString &sDebugFilePath,
   // Create new file
   logfile.setFileName(sDebugFilePath);
   if (!logfile.open(QIODevice::WriteOnly)) {
-    qWarning() << "Couldn't create logging file: " << sDebugFilePath;
+    qWarning() << "Couldn't create logging file: " + sDebugFilePath;
   } else {
     qInstallMessageHandler(LoggingHandler);
   }
 
-  qDebug() << sAppName << sVersion;
+  qDebug() << sAppName + " v" + sVersion;
   qDebug() << "Compiled with Qt" << QT_VERSION_STR;
   qDebug() << "Qt runtime" <<  qVersion();
 }
