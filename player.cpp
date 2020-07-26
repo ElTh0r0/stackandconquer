@@ -96,6 +96,10 @@ auto Player::getName() const -> QString {
   return m_sName;
 }
 
+auto Player::getCpuScript() const -> QString {
+  return m_sCpuScript;
+}
+
 auto Player::getID() const -> QString {
   return QString::number(m_nID);
 }

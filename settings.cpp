@@ -312,7 +312,7 @@ void Settings::accept() {
   m_pSettings->remove(QStringLiteral("P2HumanCpu"));
 
   if (nRet == QMessageBox::Yes) {
-    emit this->newGame(QStringList());
+    emit this->newGame(QString());
   }
 
   QDialog::accept();
@@ -545,20 +545,24 @@ auto Settings::getPlayerName(const quint8 nPlayer) const -> QString {
   return QStringLiteral("Anonymos");
 }
 
-auto Settings::getPlayerHumanCpu(const quint8 nPlayer) const -> QString {
+auto Settings::getPlayerCpuScript(const quint8 nPlayer) const -> QString {
   if ((nPlayer - 1) < m_Players.size() &&
       (nPlayer - 1) < m_listPlayerCombo.size()) {
     if (-1 != m_listPlayerCombo[nPlayer-1]->findText(
           m_Players[nPlayer-1][QStringLiteral("HumanCpu")])) {
-      return m_sListCPUs[m_listPlayerCombo[nPlayer-1]->findText(
-          m_Players[nPlayer-1][QStringLiteral("HumanCpu")])];
+      QString s(m_sListCPUs[m_listPlayerCombo[nPlayer-1]->findText(
+            m_Players[nPlayer-1][QStringLiteral("HumanCpu")])]);
+      if ("Human" == s) {
+        s.clear();
+      }
+      return s;
     }
-    return QStringLiteral("Human");
+    return QLatin1String("");
   }
   qWarning() << "Array length exceeded! m_Player:" << m_Players.size() <<
                 "- m_listPlayerCombo:" << m_listPlayerCombo.size() <<
                 "- requested (nPlayer - 1):" << nPlayer-1;
-  return QStringLiteral("Human");
+  return QLatin1String("");
 }
 
 auto Settings::getPlayerColor(const quint8 nPlayer) const -> QString {
@@ -577,17 +581,17 @@ auto Settings::getNumOfPlayers() const -> quint8 {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto Settings::getBoardFile() const -> QStringList {
+auto Settings::getBoardFile() const -> QString {
   // TODO(x): Rewrite if boards can be chosen
-  QStringList sListTemp;
+  QString sBoard(QLatin1String(""));
   if (QFile::exists(m_sSharePath + "/boards")) {
-    sListTemp << m_sSharePath + "/boards/square_5x5.stackboard";
-    // sListTemp << m_sSharePath + "/boards/triangle.stackboard";
-    // sListTemp << m_sSharePath + "/boards/square_4x2.stackboard";
+    sBoard = m_sSharePath + "/boards/square_5x5.stackboard";
+    // sBoard = m_sSharePath + "/boards/triangle.stackboard";
+    // sBoard = m_sSharePath + "/boards/square_4x2.stackboard";
   } else {
     qWarning() << "Games share path does not exist:" << m_sSharePath;
   }
-  return sListTemp;
+  return sBoard;
 }
 
 auto Settings::getStartPlayer() const -> quint8 {

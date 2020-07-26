@@ -46,43 +46,34 @@
 #include "./player.h"
 #include "./settings.h"
 
-Game::Game(Settings *pSettings, const QStringList &sListFiles)
+Game::Game(Settings *pSettings, const QString &sSavegame)
   : m_pSettings(pSettings),
     m_pBoard(nullptr),
     m_pPlayer1(nullptr),
     m_pPlayer2(nullptr),
-    m_sJsFileP1(QLatin1String("")),
-    m_sJsFileP2(QLatin1String("")),
     m_nMaxTowerHeight(5),
     m_nGridSize(70),
     m_nWinTowers(pSettings->getWinTowers()),
     m_bScriptError(false) {
-  qDebug() << "Starting new game" << sListFiles;
+  qDebug() << "Starting new game" << sSavegame;
 
-  quint8 nNumOfPlayers(0);  // TODO(x): Rewrite for > 2 players
-  QString sP1HumanCpu(QLatin1String(""));
-  QString sName1(QStringLiteral("P1"));
-  QString sP2HumanCpu(QLatin1String(""));
-  QString sName2(QStringLiteral("P2"));
-  quint8 nStartPlayer(0);
+  // Start with default
+  // TODO(x): Rewrite for > 2 players
+  m_sBoardFile = m_pSettings->getBoardFile();
+  quint8 nNumOfPlayers(m_pSettings->getNumOfPlayers());
+  QString sCpuScript1(m_pSettings->getPlayerCpuScript(1));
+  QString sName1(m_pSettings->getPlayerName(1));
+  QString sCpuScript2(m_pSettings->getPlayerCpuScript(2));
+  QString sName2(m_pSettings->getPlayerName(2));
+  quint8 nStartPlayer(m_pSettings->getStartPlayer());
   quint8 nStonesLeftP1(0);
   quint8 nStonesLeftP2(0);
   quint8 nWonP1(0);
   quint8 nWonP2(0);
 
-  if (1 == sListFiles.size()) {
-    if (sListFiles[0].endsWith(QStringLiteral(".stackboard"),
-                               Qt::CaseInsensitive)) {  // Start with default
-      m_sBoardFile = sListFiles[0];
-      sP1HumanCpu = m_pSettings->getPlayerHumanCpu(1);
-      sName1 = m_pSettings->getPlayerName(1);
-      sP2HumanCpu = m_pSettings->getPlayerHumanCpu(2);
-      sName2 = m_pSettings->getPlayerName(2);
-      nStartPlayer = m_pSettings->getStartPlayer();
-      nNumOfPlayers = m_pSettings->getNumOfPlayers();
-    } else if (sListFiles[0].endsWith(QStringLiteral(".stacksav"),
-                               Qt::CaseInsensitive)) {  // Load
-      QJsonObject jsonObj(Game::loadGame(sListFiles[0]));
+  if (!sSavegame.isEmpty() &&  // Savegame
+      sSavegame.endsWith(QStringLiteral(".stacksav"), Qt::CaseInsensitive)) {
+      QJsonObject jsonObj(Game::loadGame(sSavegame));
       if (jsonObj.isEmpty()) {
         qWarning() << "Save file is empty!";
         QMessageBox::critical(nullptr, tr("Warning"),
@@ -93,12 +84,12 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
       // TODO(x): Rewrite for > 2 players
       nNumOfPlayers = static_cast<quint8>(
                         jsonObj[QStringLiteral("NumOfPlayers")].toInt());
-      sP1HumanCpu = jsonObj[QStringLiteral("HumanCpu1")].toString().trimmed();
+      sCpuScript1 = jsonObj[QStringLiteral("CpuScript1")].toString().trimmed();
       sName1 = jsonObj[QStringLiteral("Name1")].toString().trimmed();
       nWonP1 = static_cast<quint8>(jsonObj[QStringLiteral("Won1")].toInt());
       nStonesLeftP1 = static_cast<quint8>(
                         jsonObj[QStringLiteral("StonesLeft1")].toInt());
-      sP2HumanCpu = jsonObj[QStringLiteral("HumanCpu2")].toString().trimmed();
+      sCpuScript2 = jsonObj[QStringLiteral("CpuScript2")].toString().trimmed();
       sName2 = jsonObj[QStringLiteral("Name2")].toString().trimmed();
       nWonP2 = static_cast<quint8>(jsonObj[QStringLiteral("Won2")].toInt());
       nStonesLeftP2 = static_cast<quint8>(
@@ -113,14 +104,12 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
       quint16 nBoardRows = static_cast<quint16>(
                              jsonObj[QStringLiteral("BoardRows")].toInt(0));
 
-      if (sP1HumanCpu.isEmpty() || sP2HumanCpu.isEmpty() ||
-          sName1.isEmpty() || sName2.isEmpty() ||
+      if (sName1.isEmpty() || sName2.isEmpty() ||
           0 == nBoardColumns || 0 == nBoardRows || 0 == nNumOfPlayers ||
           0 == nStartPlayer || 0 == m_nWinTowers) {
         qWarning() << "Save game contains invalid data:"
-                   << "sP1HumanCpu / sP2HumanCpu / sName1 / sName2 /"
-                   << "nBoardColumns / nBoardRows / nNumOfPlayers /"
-                      "nStartPlayer / m_nWinTowers is empty.";
+                   << "sName1 / sName2 / nBoardColumns / nBoardRows / "
+                      "nNumOfPlayers / nStartPlayer / m_nWinTowers is empty.";
         QMessageBox::critical(nullptr, tr("Warning"),
                               tr("Save game contains invalid data."));
         exit(-1);
@@ -151,23 +140,6 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
                              tr("Save game contains invalid data."));
         exit(-1);
       }
-    } else if (sListFiles[0].endsWith(QStringLiteral(".js"),
-                                      Qt::CaseInsensitive)) {  // 1 CPU
-      sP1HumanCpu = QStringLiteral("Human");
-      sName1 = m_pSettings->getPlayerName(1);
-      sP2HumanCpu = sListFiles[0];
-      sName2 = QStringLiteral("Computer");
-      nStartPlayer = m_pSettings->getStartPlayer();
-    }
-  } else if (2 == sListFiles.size()) {  // 2 CPU players
-    sP1HumanCpu = sListFiles[0];
-    sName1 = QStringLiteral("Computer");
-    sP2HumanCpu = sListFiles[1];
-    sName2 = QStringLiteral("Computer");
-    nStartPlayer = m_pSettings->getStartPlayer();
-  } else {
-    qWarning() << "Invalid start up!";
-    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
   }
 
   // No save game: Start empty board with default values
@@ -179,14 +151,6 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   }
 
   connect(m_pBoard, &Board::actionPlayer, this, &Game::makeMove);
-
-  if ("Human" != sP1HumanCpu) {
-    m_sJsFileP1 = sP1HumanCpu;
-  }
-
-  if ("Human" != sP2HumanCpu) {
-    m_sJsFileP2 = sP2HumanCpu;
-  }
 
   // Select start player
   if (0 == nStartPlayer) {  // Random
@@ -200,13 +164,13 @@ Game::Game(Settings *pSettings, const QStringList &sListFiles)
   }
 
   m_pPlayer1 = new Player((1 == nStartPlayer), 1, sName1,
-                          m_pBoard->getMaxPlayerStones(), m_sJsFileP1);
+                          m_pBoard->getMaxPlayerStones(), sCpuScript1);
   if (!m_pPlayer1->isHuman()) {
     connect(m_pPlayer1, &Player::actionCPU, this, &Game::makeMove);
     connect(m_pPlayer1, &Player::scriptError, this, &Game::caughtScriptError);
   }
   m_pPlayer2 = new Player((2 == nStartPlayer), 2, sName2,
-                          m_pBoard->getMaxPlayerStones(), m_sJsFileP2);
+                          m_pBoard->getMaxPlayerStones(), sCpuScript2);
   if (!m_pPlayer2->isHuman()) {
     connect(m_pPlayer2, &Player::actionCPU, this, &Game::makeMove);
     connect(m_pPlayer2, &Player::scriptError, this, &Game::caughtScriptError);
@@ -634,10 +598,8 @@ auto Game::saveGame(const QString &sFile) -> bool {
   jsonObj[QStringLiteral("WinTowers")] = m_nWinTowers;
   jsonObj[QStringLiteral("StonesLeft1")] = m_pPlayer1->getStonesLeft();
   jsonObj[QStringLiteral("StonesLeft2")] = m_pPlayer2->getStonesLeft();
-  jsonObj[QStringLiteral("HumanCpu1")] =
-      m_pPlayer1->isHuman() ? QStringLiteral("Human") : m_sJsFileP1;
-  jsonObj[QStringLiteral("HumanCpu2")] =
-      m_pPlayer2->isHuman() ? QStringLiteral("Human") : m_sJsFileP2;
+  jsonObj[QStringLiteral("CpuScript1")] = m_pPlayer1->getCpuScript();
+  jsonObj[QStringLiteral("CpuScript2")] = m_pPlayer2->getCpuScript();
   jsonObj[QStringLiteral("Current")] = m_pPlayer1->isActive() ? 1 : 2;
   jsonObj[QStringLiteral("Board")] = jsBoard;
   jsonObj[QStringLiteral("BoardFile")] = m_sBoardFile;

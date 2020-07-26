@@ -76,46 +76,23 @@ StackAndConquer::~StackAndConquer() = default;
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::checkCmdArgs(const QStringList &sListArgs) {
-  // Choose CPU script(s) or load game from command line
-  QStringList sListTemp;
+  // Open savegame from command line
+  QString sSavegame(QLatin1String(""));
   if (!sListArgs.isEmpty()) {
-    for (int i = 0; i < sListArgs.size(); i++) {
-      // Load save game
-      if (sListArgs.at(i).endsWith(QStringLiteral(".stacksav"),
-                                   Qt::CaseInsensitive)) {
-        if (QFile::exists(sListArgs.at(i))) {
-          sListTemp.clear();
-          sListTemp << sListArgs[i];
-          break;
-        }
-        qWarning() << "Specified JS file not found:" << sListArgs[i];
+    // Load save game
+    if (sListArgs.at(0).endsWith(QStringLiteral(".stacksav"),
+                                 Qt::CaseInsensitive)) {
+      if (QFile::exists(sListArgs.at(0))) {
+        sSavegame = sListArgs.at(0);
+      } else {
+        qWarning() << "Specified savegame not found:" << sListArgs.at(0);
         QMessageBox::warning(this, tr("Warning"),
                              tr("Specified file not found:") + "\n" +
-                             sListArgs[i]);
-        sListTemp.clear();
-        break;
-      }
-      if (sListArgs.at(i).endsWith(QStringLiteral(".js"),
-                                   Qt::CaseInsensitive)) {
-        // Load CPU script(s)
-        if (QFile::exists(sListArgs.at(i))) {
-          if (2 == sListTemp.size()) {
-            break;
-          }
-          sListTemp << sListArgs[i];
-        } else {
-          qWarning() << "Specified JS file not found:" << sListArgs[i];
-          QMessageBox::warning(this, tr("Warning"),
-                               tr("Specified file not found:") + "\n" +
-                               sListArgs[i]);
-          sListTemp.clear();
-          break;
-        }
+                             sListArgs.at(0));
       }
     }
   }
-
-  this->startNewGame(sListTemp);
+  this->startNewGame(sSavegame);
 }
 
 // ---------------------------------------------------------------------------
@@ -125,7 +102,7 @@ void StackAndConquer::setupMenu() {
   // New game
   m_pUi->action_NewGame->setShortcut(QKeySequence::New);
   connect(m_pUi->action_NewGame, &QAction::triggered,
-          this, [this]() { this->startNewGame(QStringList()); });
+          this, [this]() { this->startNewGame(QString()); });
 
   // Load game
   m_pUi->action_LoadGame->setShortcut(QKeySequence::Open);
@@ -255,13 +232,9 @@ void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void StackAndConquer::startNewGame(const QStringList &sListArgs) {
+void StackAndConquer::startNewGame(const QString &sSavegame) {
   delete m_pGame;
-  if (sListArgs.isEmpty()) {
-    m_pGame = new Game(m_pSettings, m_pSettings->getBoardFile());
-  } else {
-    m_pGame = new Game(m_pSettings, sListArgs);
-  }
+  m_pGame = new Game(m_pSettings, sSavegame);
 
   connect(m_pGame, &Game::updateNameP1, m_plblPlayer1, &QLabel::setText);
   connect(m_pGame, &Game::updateNameP2, m_plblPlayer2, &QLabel::setText);
@@ -301,7 +274,7 @@ void StackAndConquer::loadGame() {
     if (!sFile.endsWith(QStringLiteral(".stacksav"), Qt::CaseInsensitive)) {
       QMessageBox::warning(this, tr("Warning"), tr("Invalid save game file."));
     } else {
-      this->startNewGame(QStringList() << sFile);
+      this->startNewGame(sFile);
     }
   }
 }

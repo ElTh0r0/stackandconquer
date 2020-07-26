@@ -42,7 +42,8 @@ class Game : public QObject {
   Q_OBJECT
 
  public:
-    explicit Game(Settings *pSettings, const QStringList &sListFiles);
+    explicit Game(Settings *pSettings,
+                  const QString &sSavegame = QLatin1String(""));
     ~Game();
     auto getScene() const -> QGraphicsScene*;
     auto saveGame(const QString &sFile) -> bool;
@@ -80,8 +81,6 @@ class Game : public QObject {
     QString m_sBoardFile;
     Player *m_pPlayer1;   // TODO(x): Replace by player array
     Player *m_pPlayer2;
-    QString m_sJsFileP1;  // TODO(x): To be removed
-    QString m_sJsFileP2;  // TODO(x): To be removed
 
     const quint8 m_nMaxTowerHeight;
     const quint16 m_nGridSize;

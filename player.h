@@ -54,6 +54,7 @@ class Player : public QObject {
     auto isActive() const -> bool;
     auto isHuman() const -> bool;
     auto getName() const -> QString;
+    auto getCpuScript() const -> QString;
     auto getID() const -> QString;
     void setStonesLeft(const quint8 nStones);
     auto getStonesLeft() const -> quint8;

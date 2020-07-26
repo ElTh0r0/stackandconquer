@@ -63,9 +63,8 @@ auto main(int argc, char *argv[]) -> int {
                                  QStringLiteral("Enable debug mode"));
   cmdparser.addOption(enableDebug);
   cmdparser.addPositionalArgument(
-        QStringLiteral("file(s)"),
-        QStringLiteral("File(s) to be opened (savegame *.stacksav "
-                       "or CPU opponent(s) *.js)"));
+        QStringLiteral("savegame"),
+        QStringLiteral("Savegame file to be opened (*.stacksav)"));
   cmdparser.process(app);
 
   // Default share data path (Windows and debugging)
