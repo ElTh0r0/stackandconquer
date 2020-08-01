@@ -332,7 +332,8 @@ void Game::setStone(const int nIndex, const bool bDebug) {
 
 void Game::moveTower(const int nFrom, const quint8 nStones, const int nTo) {
   QList<int> listStones;
-  for (auto ch : m_pBoard->getField(nFrom)) {
+  const QString s(m_pBoard->getField(nFrom));
+  for (const auto &ch : s) {
     listStones.append(ch.digitValue());
   }
 

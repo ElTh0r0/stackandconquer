@@ -177,27 +177,29 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
 
   // Cpu scripts in share folder
   if (cpuDir.cd(QStringLiteral("cpu"))) {
-    foreach (QFileInfo file, cpuDir.entryInfoList(QDir::Files)) {
+    const QFileInfoList listFiles(cpuDir.entryInfoList(QDir::Files));
+    for (const auto &file : listFiles) {
       if ("js" == file.suffix().toLower()) {
         sListAvailableCpu << file.baseName();
         m_sListCPUs << file.absoluteFilePath();
       }
     }
   }
-  for (auto combo : m_listPlayerCombo) {
-    combo->addItems(sListAvailableCpu);
+  for (int i = 0; i < m_listPlayerCombo.size(); i++) {
+    m_listPlayerCombo[i]->addItems(sListAvailableCpu);
   }
 
   // Cpu scripts in user folder
   cpuDir.setPath(userDataDir);
   if (cpuDir.cd(QStringLiteral("cpu"))) {
-    foreach (QFileInfo file, cpuDir.entryInfoList(QDir::Files)) {
+    const QFileInfoList listFiles(cpuDir.entryInfoList(QDir::Files));
+    for (const auto &file : listFiles) {
       if ("js" == file.suffix().toLower()) {
         sListAvailableCpu << file.baseName();
-        for (auto combo : m_listPlayerCombo) {
-          combo->addItem(QIcon(
-                           QStringLiteral(":/images/user.png")),
-                         sListAvailableCpu.last());
+        for (int i = 0; i < m_listPlayerCombo.size(); i++) {
+          m_listPlayerCombo[i]->addItem(QIcon(
+                                          QStringLiteral(":/images/user.png")),
+                                        sListAvailableCpu.last());
         }
         m_sListCPUs << file.absoluteFilePath();
       }
@@ -275,10 +277,10 @@ void Settings::accept() {
 
   // Players
   QStringList slistTmpColors;
-  for (auto player : m_Players) {
+  for (int i = 0; i < m_Players.size(); i++) {
     // TODO(x): Temp store colors as long as not avail. through settings dialog
-    slistTmpColors << player[QStringLiteral("Color")];
-    player.clear();
+    slistTmpColors << m_Players[i][QStringLiteral("Color")];
+    m_Players[i].clear();
   }
   m_Players.clear();
   for (quint8 i = 0; i < m_maxPlayers; i++) {
@@ -349,8 +351,8 @@ void Settings::readSettings() {
   m_pUi->spinNumToWin->setValue(m_nNumOfPlayers);
   this->changeNumOfPlayers();
 
-  for (auto player : m_Players) {
-    player.clear();
+  for (int i = 0; i < m_Players.size(); i++) {
+    m_Players[i].clear();
   }
   m_Players.clear();
 

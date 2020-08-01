@@ -137,8 +137,8 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
   }
 
   tmpBoard.clear();
-  QJsonArray jsBoard(jso.value(QStringLiteral("Board")).toArray());
-  foreach (QJsonValue js, jsBoard) {
+  const QJsonArray jsBoard(jso.value(QStringLiteral("Board")).toArray());
+  for (const auto &js : jsBoard) {
     QString s = js.toString();
     if (js.isNull() || s.isEmpty() || (sOUT != s && sIN != s && sPAD != s)) {
       qWarning() << "Board array contains invalid data:" << s;
@@ -331,11 +331,10 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
     return false;
   }
 
-  QString s;
   for (int i = 0; i < jsBoard.size(); i++) {
-    s = jsBoard.at(i).toString();
+    const QString s = jsBoard.at(i).toString();
     if (!s.isEmpty() && sPAD != s && sOUT != s) {
-      for (auto ch : s) {
+      for (const auto &ch : s) {
         if (-1 != ch.digitValue() &&
             sPAD != m_jsBoard.at(i).toString() &&
             sOUT != m_jsBoard.at(i).toString()) {
@@ -373,9 +372,9 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
 
 void Board::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
   if (m_boardPath.contains(p_Event->scenePos())) {
-    QList<QGraphicsItem *> items = this->items(p_Event->scenePos());
+    const QList<QGraphicsItem *> items = this->items(p_Event->scenePos());
     QJsonArray move;
-    foreach (auto item, items) {
+    for (const auto &item : items) {
       int field = m_listFields.indexOf(
                     qgraphicsitem_cast<QGraphicsRectItem *>(item));
       if (field > -1) {
@@ -564,7 +563,8 @@ void Board::removeStone(const int nIndex, const bool bAll) {
   }
 
   if (bAll) {  // Remove all (tower conquered)
-    for (auto ch : this->getField(nIndex)) {
+    const QString s(this->getField(nIndex));
+    for (const auto &ch : s) {
       // Foreach starts at the beginning of the list
       m_listPlayerStones[ch.digitValue()-1].append(
             m_FieldStones[nIndex].first());
@@ -708,12 +708,12 @@ auto Board::checkNeighbourhood(const int nIndex) const -> QList<int> {
 void Board::highlightNeighbourhood(const QList<int> &neighbours) {
   static QList<QGraphicsRectItem *> listPossibleMoves;
 
-  foreach (QGraphicsRectItem *rect, listPossibleMoves) {
+  for (auto *rect : listPossibleMoves) {
     delete rect;
   }
   listPossibleMoves.clear();
 
-  foreach (int nIndex, neighbours) {
+  for (auto nIndex : neighbours) {
     QPoint point(this->getCoordinateFromIndex(nIndex));
     listPossibleMoves << new QGraphicsRectItem(point.x()*m_nGridSize,
                                                point.y()*m_nGridSize,
@@ -736,7 +736,6 @@ auto Board::getLegalMoves(const bool bStonesLeft,
   QVariantList varMove;
   QJsonArray move;
   QJsonArray jsMoves;
-  QList<int> neighbours;
   int nField = -1;
   int nTo;
   QString s;
@@ -755,9 +754,9 @@ auto Board::getLegalMoves(const bool bStonesLeft,
           continue;
         }
 
-        neighbours = this->checkNeighbourhood(nTo);
+        const QList<int> neighbours = this->checkNeighbourhood(nTo);
         if (!neighbours.isEmpty()) {  // Possible tower moves
-          for (auto nFrom : neighbours) {
+          for (const auto nFrom : neighbours) {
             for (int nStones = 1;
                  nStones <= m_jsBoard.at(nFrom).toString().size();
                  nStones++) {
