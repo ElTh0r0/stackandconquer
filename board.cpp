@@ -50,9 +50,7 @@ Board::Board(const QString &sBoard, quint16 nGridSize, const quint8 nMaxTower,
     m_nMaxPlayerStones(0),
     m_pSettings(pSettings),
     m_nMaxTower(nMaxTower),
-    m_NumOfPlayers(NumOfPlayers),
-    m_pSvgRendererP1(nullptr),
-    m_pSvgRendererP2(nullptr) {
+    m_NumOfPlayers(NumOfPlayers) {
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
 
   QList<QString> tmpBoard;
@@ -296,39 +294,29 @@ void Board::createStones() {
   QString sSvg = in.readAll();
   fStone.close();
 
-  // stone.svg HAS to be filled with #ff0000, so that below replace can work.
-  QString sTmpSvg = sSvg;
-  QByteArray aSvg1(sTmpSvg.replace(
-                     QLatin1String("#ff0000"),
-                     m_pSettings->getPlayerColor(1)).toUtf8());
-  sTmpSvg = sSvg;
-  QByteArray aSvg2(sTmpSvg.replace(QLatin1String("#ff0000"),
-                                   m_pSettings->getPlayerColor(2)).toUtf8());
-
-  // TODO(x): Create dynamic list to support >2 players.
-  auto *m_pSvgRendererP1 = new QSvgRenderer(aSvg1);
-  auto *m_pSvgRendererP2 = new QSvgRenderer(aSvg2);
-
+  QList<QGraphicsSvgItem *> tmpSvgList;
   // Create a few more than maximum of stones because of wrong
   // order during move tower add/remove
-  for (int i = 0; i < m_nMaxPlayerStones + 4; i++) {
-    m_listStonesP1.append(new QGraphicsSvgItem());
-    // Don't transform graphics to isometric view!
-    m_listStonesP1.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    m_listStonesP1.last()->setSharedRenderer(m_pSvgRendererP1);
-    this->addItem(m_listStonesP1.last());
-    m_listStonesP1.last()->setPos(0, 0);
-    m_listStonesP1.last()->setZValue(5);
-    m_listStonesP1.last()->setVisible(false);
+  for (int nPlayers = 0; nPlayers < m_NumOfPlayers; nPlayers++) {
+    // stone.svg HAS to be filled with #ff0000, so that below replace can work.
+    QString sTmpSvg = sSvg;
+    QByteArray aSvg(sTmpSvg.replace(
+                      QLatin1String("#ff0000"),
+                      m_pSettings->getPlayerColor(nPlayers+1)).toUtf8());
+    auto *pSvgRenderer = new QSvgRenderer(aSvg);
+    tmpSvgList.clear();
 
-    m_listStonesP2.append(new QGraphicsSvgItem());
-    // Don't transform graphics to isometric view!
-    m_listStonesP2.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    m_listStonesP2.last()->setSharedRenderer(m_pSvgRendererP2);
-    this->addItem(m_listStonesP2.last());
-    m_listStonesP2.last()->setPos(0, 0);
-    m_listStonesP2.last()->setZValue(5);
-    m_listStonesP2.last()->setVisible(false);
+    for (int i = 0; i < m_nMaxPlayerStones + 4; i++) {
+      tmpSvgList.append(new QGraphicsSvgItem());
+      // Don't transform graphics to isometric view!
+      tmpSvgList.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+      tmpSvgList.last()->setSharedRenderer(pSvgRenderer);
+      this->addItem(tmpSvgList.last());
+      tmpSvgList.last()->setPos(0, 0);
+      tmpSvgList.last()->setZValue(5);
+      tmpSvgList.last()->setVisible(false);
+    }
+    m_listPlayerStones << tmpSvgList;
   }
 }
 
@@ -510,14 +498,9 @@ void Board::addStone(const int nIndex, const quint8 nStone, const bool bAnim) {
   }
 
   m_jsBoard[nIndex] = m_jsBoard.at(nIndex).toString() + QString::number(nStone);
-  // TODO(x): Rewrite for dynamic stone generation and > 2 players
-  if (1 == nStone) {
-    m_FieldStones[nIndex].append(m_listStonesP1.last());
-    m_listStonesP1.removeLast();
-  } else if (2 == nStone) {
-    m_FieldStones[nIndex].append(m_listStonesP2.last());
-    m_listStonesP2.removeLast();
-  }
+
+  m_FieldStones[nIndex].append(m_listPlayerStones.at(nStone-1).last());
+  m_listPlayerStones[nStone-1].removeLast();
 
   if (bAnim) {
     this->startAnimation(this->getCoordinateFromIndex(nIndex));
@@ -582,30 +565,19 @@ void Board::removeStone(const int nIndex, const bool bAll) {
 
   if (bAll) {  // Remove all (tower conquered)
     for (auto ch : this->getField(nIndex)) {
-      // TODO(x): Rewrite for > 2 players
       // Foreach starts at the beginning of the list
-      if (1 == ch.digitValue()) {  // Player 1
-        m_listStonesP1.append(m_FieldStones[nIndex].first());
-        m_FieldStones[nIndex].first()->setVisible(false);
-        m_FieldStones[nIndex].removeFirst();
-      } else {  // Player 2
-        m_listStonesP2.append(m_FieldStones[nIndex].first());
-        m_FieldStones[nIndex].first()->setVisible(false);
-        m_FieldStones[nIndex].removeFirst();
-      }
+      m_listPlayerStones[ch.digitValue()-1].append(
+            m_FieldStones[nIndex].first());
+      m_FieldStones[nIndex].first()->setVisible(false);
+      m_FieldStones[nIndex].removeFirst();
     }
     m_jsBoard[nIndex] = QString();
   } else {  // Remove only one
-    // TODO(x): Rewrite for > 2 players
-    if (1 == m_jsBoard.at(nIndex).toString().rightRef(1).toInt()) {  // Player 1
-      m_listStonesP1.append(m_FieldStones[nIndex].last());
-      m_FieldStones[nIndex].last()->setVisible(false);
-      m_FieldStones[nIndex].removeLast();
-    } else {  // Player 2
-      m_listStonesP2.append(m_FieldStones[nIndex].last());
-      m_FieldStones[nIndex].last()->setVisible(false);
-      m_FieldStones[nIndex].removeLast();
-    }
+    int nPlayer(m_jsBoard.at(nIndex).toString().rightRef(1).toInt());
+    m_listPlayerStones[nPlayer-1].append(m_FieldStones[nIndex].last());
+    m_FieldStones[nIndex].last()->setVisible(false);
+    m_FieldStones[nIndex].removeLast();
+
     QString s(m_jsBoard.at(nIndex).toString());
     s.chop(1);
     m_jsBoard[nIndex] = s;

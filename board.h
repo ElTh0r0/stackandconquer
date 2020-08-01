@@ -35,7 +35,6 @@
 
 class QGraphicsSceneMouseEvent;
 class QGraphicsSvgItem;
-class QSvgRenderer;
 
 class Settings;
 
@@ -108,16 +107,13 @@ class Board : public QGraphicsScene {
     quint8 m_nMaxPlayerStones;
     Settings *m_pSettings;
     const quint8 m_nMaxTower;
-    quint8 m_NumOfPlayers;
+    const quint8 m_NumOfPlayers;
     QList<int> m_DIRS;
     QGraphicsRectItem *m_pHighlightRect{};
     QGraphicsRectItem *m_pSelectedField{};
     QGraphicsRectItem *m_pAnimateField{};
     QGraphicsRectItem *m_pAnimateField2{};
-    QSvgRenderer *m_pSvgRendererP1;
-    QSvgRenderer *m_pSvgRendererP2;
-    QList<QGraphicsSvgItem *> m_listStonesP1;
-    QList<QGraphicsSvgItem *> m_listStonesP2;
+    QList<QList<QGraphicsSvgItem *>> m_listPlayerStones;
     QList<QList<QGraphicsSvgItem *> > m_FieldStones;
     QList<QGraphicsSimpleTextItem *> m_Captions;
 };
