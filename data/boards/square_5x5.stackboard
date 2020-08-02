@@ -1,6 +1,4 @@
 {
-    "2PlayersStones": 20,
-    "3PlayersStones": 15,
     "Board": [
         "0",
         "0",
@@ -29,5 +27,9 @@
         "0"
     ],
     "Columns": 5,
+    "PlayersStones": [
+        20,
+        15
+    ],
     "Rows": 5
 }

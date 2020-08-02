@@ -113,10 +113,10 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
       !jso.value(QStringLiteral("Columns")).isDouble() ||
       jso.value(QStringLiteral("Rows")).isUndefined() ||
       !jso.value(QStringLiteral("Rows")).isDouble() ||
-      jso.value(QStringLiteral("2PlayersStones")).isUndefined() ||
-      !jso.value(QStringLiteral("2PlayersStones")).isDouble()) {
-    // TODO(x): Extent check for all neeeded sections
-    qWarning() << "Board file doesn't contain all required sections!" << sBoard;
+      jso.value(QStringLiteral("PlayersStones")).isUndefined() ||
+      !jso.value(QStringLiteral("PlayersStones")).isArray()) {
+    qWarning() << "Board file doesn't contain all required keys:" << sBoard;
+    qWarning() << "Found json keys:" << jso.keys();
     QMessageBox::critical(nullptr, tr("Warning"),
                          tr("Error while opening board file!"));
     return;
@@ -124,13 +124,27 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
 
   m_BoardDimensions.setX(jso.value(QStringLiteral("Columns")).toInt());
   m_BoardDimensions.setY(jso.value(QStringLiteral("Rows")).toInt());
-  // TODO(x): Rewrite for > 2 players
-  m_nMaxPlayerStones = jso.value(QStringLiteral("2PlayersStones")).toInt();
-
   if (0 == m_BoardDimensions.x() || 0 == m_BoardDimensions.y()) {
     qWarning() << "Board file contains invalid dimensions:" <<
                   m_BoardDimensions;
     qWarning() << "Board:" << sBoard;
+    QMessageBox::critical(nullptr, tr("Warning"),
+                         tr("Error while opening board file!"));
+    return;
+  }
+
+  const QJsonArray stones(jso.value(QStringLiteral("PlayersStones")).toArray());
+  if (stones.size() < m_NumOfPlayers) {
+    // Use last value as fallback, if number of stones
+    // not specified for number of players
+    m_nMaxPlayerStones = stones.last().toInt();
+    qWarning() << "Player stones not specified for" << m_NumOfPlayers <<
+                  "players. Using fallback:" << m_nMaxPlayerStones;
+  } else {
+    m_nMaxPlayerStones = stones.at(m_NumOfPlayers - 2).toInt();
+  }
+  if (0 == m_nMaxPlayerStones) {
+    qWarning() << "Number of player stone is 0!";
     QMessageBox::critical(nullptr, tr("Warning"),
                          tr("Error while opening board file!"));
     return;
@@ -565,7 +579,7 @@ void Board::removeStone(const int nIndex, const bool bAll) {
   if (bAll) {  // Remove all (tower conquered)
     const QString s(this->getField(nIndex));
     for (const auto &ch : s) {
-      // Foreach starts at the beginning of the list
+      // For starts at the beginning of the list
       m_listPlayerStones[ch.digitValue()-1].append(
             m_FieldStones[nIndex].first());
       m_FieldStones[nIndex].first()->setVisible(false);
