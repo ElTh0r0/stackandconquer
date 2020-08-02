@@ -68,9 +68,8 @@ class StackAndConquer : public QMainWindow {
     void loadGame();
     void saveGame();
     void setViewInteractive(const bool bEnabled);
-    void highlightActivePlayer(const bool bPlayer1,
-                               const bool bP1Won = false,
-                               const bool bP2Won = false);
+    void highlightActivePlayer(const quint8 nActivePlayer,
+                               const quint8 nPlayerWon = 0);
     void loadLanguage(const QString &sLang);
     void showRules();
     static void reportBug();

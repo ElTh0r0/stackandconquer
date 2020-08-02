@@ -31,13 +31,11 @@
 
 #include "./opponentjs.h"
 
-Player::Player(bool bActive, const quint8 nID, const QString &sName,
-               const quint8 nMaxStones, const QString &sCpuScript,
-               QObject *parent)
+Player::Player(const quint8 nID, const QString &sName, const quint8 nMaxStones,
+               const QString &sCpuScript, QObject *parent)
   : QObject(parent),
     m_nID(nID),
     m_pJsCpu(nullptr),
-    m_bIsActive(bActive),
     m_sName(sName),
     m_sCpuScript(sCpuScript),
     m_nMaxStones(nMaxStones),
@@ -72,17 +70,6 @@ void Player::callCpu(const QJsonArray &board, const QJsonDocument &legalMoves) {
     return;
   }
   m_pJsCpu->callJsCpu(board, legalMoves);
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-void Player::setActive(const bool bActive) {
-  m_bIsActive = bActive;
-}
-
-auto Player::isActive() const -> bool {
-  return m_bIsActive;
 }
 
 // ---------------------------------------------------------------------------

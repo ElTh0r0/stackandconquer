@@ -156,6 +156,7 @@ void StackAndConquer::setupGraphView() {
   m_pFrame = new QFrame(m_pGraphView);
   m_pLayout = new QGridLayout;
   m_pLayout->setVerticalSpacing(0);
+  // TODO(x): Rewrite for > 2 players
   m_plblPlayer1 = new QLabel(m_pSettings->getPlayerName(1));
   m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
                                m_pSettings->getTextColor().name());
@@ -236,6 +237,7 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
   delete m_pGame;
   m_pGame = new Game(m_pSettings, sSavegame);
 
+  // TODO(x): Rewrite for > 2 players
   connect(m_pGame, &Game::updateNameP1, m_plblPlayer1, &QLabel::setText);
   connect(m_pGame, &Game::updateNameP2, m_plblPlayer2, &QLabel::setText);
 
@@ -307,21 +309,21 @@ void StackAndConquer::setViewInteractive(const bool bEnabled) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void StackAndConquer::highlightActivePlayer(const bool bPlayer1,
-                                            const bool bP1Won,
-                                            const bool bP2Won) {
-  if (bP1Won) {
+void StackAndConquer::highlightActivePlayer(const quint8 nActivePlayer,
+                                            const quint8 nPlayerWon) {
+  // TODO(x): Rewrite for > 2 players
+  if (1 == nPlayerWon) {
     m_pUi->statusBar->showMessage(
           tr("%1 won the game!").arg(m_plblPlayer1->text()));
     return;
   }
-  if (bP2Won) {
+  if (2 == nPlayerWon) {
     m_pUi->statusBar->showMessage(
           tr("%1 won the game!").arg(m_plblPlayer2->text()));
     return;
   }
 
-  if (bPlayer1) {
+  if (1 == nActivePlayer) {
     m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
                                  m_pSettings->getTextHighlightColor().name());
     m_plblPlayer2->setStyleSheet(QStringLiteral("color: ") +

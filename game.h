@@ -58,8 +58,7 @@ class Game : public QObject {
     void updateWonP1(const QString &sWon);
     void updateWonP2(const QString &sWon);
     void setInteractive(bool bEnabled);
-    void highlightActivePlayer(bool bPlayer1,
-                               bool bP1Won = false, bool bP2Won = false);
+    void highlightActivePlayer(quint8 nActivePlayer, quint8 nPlayerWon = 0);
 
  private slots:
     void makeMove(QJsonArray move);
@@ -79,6 +78,7 @@ class Game : public QObject {
     Settings *m_pSettings;
     Board *m_pBoard;
     QString m_sBoardFile;
+    quint8 m_NumOfPlayers;
     Player *m_pPlayer1;   // TODO(x): Replace by player array
     Player *m_pPlayer2;
 
@@ -88,6 +88,11 @@ class Game : public QObject {
 
     bool m_bScriptError;
     QList<int> m_previousMove;
+
+    struct currentPlayer {
+        quint8 ID;
+        bool isHuman;
+    } activePlayer;
 };
 
 #endif  // GAME_H_
