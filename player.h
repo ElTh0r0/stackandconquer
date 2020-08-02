@@ -42,7 +42,7 @@ class Player : public QObject {
   Q_OBJECT
 
  public:
-    Player(const quint8 nID, const QString &sName, const quint8 nMaxStones,
+    Player(const quint8 nID, const quint8 nMaxStones,
            const QString &sCpuScript = QLatin1String(""),
            QObject *parent = nullptr);
     ~Player();

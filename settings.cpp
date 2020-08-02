@@ -26,6 +26,7 @@
 
 #include "./settings.h"
 
+#include <QColorDialog>
 #include <QDebug>
 #include <QDirIterator>
 #include <QLineEdit>
@@ -82,19 +83,21 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
           this, &Settings::reject);
 
   for (int i = m_maxPlayers-1; i >= 0; i--) {
+    m_listColorLbls.push_front(
+          new QLabel(tr("Color player %1").arg(QString::number(i+1))));
+    m_listColorEdit.push_front(new QLineEdit(this));
+    m_pUi->formLayout->insertRow(2, m_listColorLbls.first(),
+                                 m_listColorEdit.first());
+    m_listColorEdit.first()->installEventFilter(this);
+    connect(m_listColorEdit.first(), &QLineEdit::textChanged,
+            this, &Settings::changedSettings);
+
     m_listHumCpuLbls.push_front(
           new QLabel(tr("Player %1 Human/CPU").arg(QString::number(i+1))));
     m_listPlayerCombo.push_front(new QComboBox(this));
     m_pUi->formLayout->insertRow(2, m_listHumCpuLbls.first(),
                                  m_listPlayerCombo.first());
     connect(m_listPlayerCombo.first(), &QComboBox::currentTextChanged,
-            this, &Settings::changedSettings);
-    m_listNameLbls.push_front(
-          new QLabel(tr("Name player %1").arg(QString::number(i+1))));
-    m_listNameEdit.push_front(new QLineEdit(this));
-    m_pUi->formLayout->insertRow(2, m_listNameLbls.first(),
-                                 m_listNameEdit.first());
-    connect(m_listNameEdit.first(), &QLineEdit::textChanged,
             this, &Settings::changedSettings);
   }
 
@@ -276,33 +279,34 @@ void Settings::accept() {
   m_pSettings->endGroup();
 
   // Players
-  QStringList slistTmpColors;
   for (int i = 0; i < m_Players.size(); i++) {
-    // TODO(x): Temp store colors as long as not avail. through settings dialog
-    slistTmpColors << m_Players[i][QStringLiteral("Color")];
     m_Players[i].clear();
   }
   m_Players.clear();
   for (quint8 i = 0; i < m_maxPlayers; i++) {
     QMap<QString, QString> tmpMap;
-    tmpMap[QStringLiteral("Name")] = m_listNameEdit[i]->text().trimmed();
-    if (tmpMap[QStringLiteral("Name")].isEmpty()) {
-      tmpMap[QStringLiteral("Name")] = tr("Player") + " " +
-                                       QString::number(i+1);
-      m_listNameEdit[i]->setText(tmpMap[QStringLiteral("Name")]);
-    }
     tmpMap[QStringLiteral("HumanCpu")] = m_listPlayerCombo[i]->currentText();
-    // TODO(x): Temp store colors as long as not avail. through settings dialog
-    tmpMap[QStringLiteral("Color")] = slistTmpColors[i];
 
+    QColor color(m_listColorEdit[i]->text());
+    if (!color.isValid()) {
+      qWarning() << "User chose invalid stone color:" <<
+                    m_listColorEdit[i]->text();
+      if (i < m_DefaultPlayerColors.size()) {
+        color.setNamedColor(m_DefaultPlayerColors[i]);
+      } else {
+        qWarning() << "Fallback player color missing!";
+        color.setNamedColor(m_DefaultPlayerColors[0]);
+      }
+    }
+    tmpMap[QStringLiteral("Color")] = color.name();
     m_Players << tmpMap;
+
     m_pSettings->beginGroup("Player" + QString::number(i+1));
-    m_pSettings->setValue(QStringLiteral("Name"),
-                          tmpMap[QStringLiteral("Name")]);
     m_pSettings->setValue(QStringLiteral("HumanCpu"),
                           tmpMap[QStringLiteral("HumanCpu")]);
     m_pSettings->setValue(QStringLiteral("Color"),
                           tmpMap[QStringLiteral("Color")]);
+    m_pSettings->remove(QStringLiteral("Name"));
     m_pSettings->endGroup();
   }
 
@@ -359,11 +363,6 @@ void Settings::readSettings() {
   for (quint8 i = 0; i < m_maxPlayers; i++) {
     m_pSettings->beginGroup("Player" + QString::number(i+1));
     QMap<QString, QString> map;
-    map[QStringLiteral("Name")] = m_pSettings->value(QStringLiteral("Name"),
-                                     tr("Player") + " " +
-                                     QString::number(i+1)).toString();
-    m_listNameEdit[i]->setText(map[QStringLiteral("Name")]);
-
     map[QStringLiteral("HumanCpu")] = m_pSettings->value(
                                         QStringLiteral("HumanCpu"),
                                         QStringLiteral("Human")).toString();
@@ -385,6 +384,7 @@ void Settings::readSettings() {
       map[QStringLiteral("Color")] = this->readColor(QStringLiteral("Color"),
                                      m_DefaultPlayerColors[i]).name();
     }
+    m_listColorEdit[i]->setText(map[QStringLiteral("Color")]);
 
     m_Players << map;
     m_pSettings->endGroup();
@@ -438,6 +438,23 @@ void Settings::readSettings() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
+bool Settings::eventFilter(QObject *pObj, QEvent *pEvent) {
+  for (int i = 0; i < m_listColorEdit.size(); i++) {
+    if (pObj == m_listColorEdit.at(i) &&
+        pEvent->type() == QEvent::MouseButtonPress) {
+      QColor newColor = QColorDialog::getColor(m_listColorEdit.at(i)->text());
+      if (newColor.isValid()) {
+        m_listColorEdit.at(i)->setText(newColor.name());
+      }
+      break;
+    }
+  }
+  return QDialog::eventFilter(pObj, pEvent);
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 auto Settings::readColor(const QString &sKey,
                          const QString &sFallback) const -> QColor {
   QString sValue = m_pSettings->value(sKey, sFallback).toString();
@@ -459,8 +476,8 @@ void Settings::updateUiLang() {
 
   // Widgets, which had not been created through UI have to be handled manually
   for (int i = 0; i < m_maxPlayers; i++) {
-    m_listNameLbls[i]->setText(
-          tr("Name player %1").arg(QString::number(i+1)));
+    m_listColorLbls[i]->setText(
+          tr("Color player %1").arg(QString::number(i+1)));
     m_listHumCpuLbls[i]->setText(
           tr("Player %1 Human/CPU").arg(QString::number(i+1)));
   }
@@ -499,16 +516,17 @@ auto Settings::getLanguage() -> QString {
 void Settings::changeNumOfPlayers() {
   m_nNumOfPlayers = m_pUi->spinNumOfPlayers->value();
   for (int i = 0; i < m_maxPlayers; i++) {
-    m_listNameLbls[i]->setVisible(false);
-    m_listNameEdit[i]->setVisible(false);
-    m_listHumCpuLbls[i]->setVisible(false);
-    m_listPlayerCombo[i]->setVisible(false);
-  }
-  for (int i = 0; i < m_nNumOfPlayers; i++) {
-    m_listNameLbls[i]->setVisible(true);
-    m_listNameEdit[i]->setVisible(true);
-    m_listHumCpuLbls[i]->setVisible(true);
-    m_listPlayerCombo[i]->setVisible(true);
+    if (i < m_nNumOfPlayers) {
+      m_listColorLbls[i]->setVisible(true);
+      m_listColorEdit[i]->setVisible(true);
+      m_listHumCpuLbls[i]->setVisible(true);
+      m_listPlayerCombo[i]->setVisible(true);
+    } else {
+      m_listColorLbls[i]->setVisible(false);
+      m_listColorEdit[i]->setVisible(false);
+      m_listHumCpuLbls[i]->setVisible(false);
+      m_listPlayerCombo[i]->setVisible(false);
+    }
   }
   this->updateStartCombo();
   this->adjustSize();
@@ -537,15 +555,6 @@ void Settings::changedSettings() {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-
-auto Settings::getPlayerName(const quint8 nPlayer) const -> QString {
-  if ((nPlayer - 1) < m_Players.size()) {
-    return m_Players[nPlayer-1][QStringLiteral("Name")];
-  }
-  qWarning() << "Player array length exceeded! Size:" <<
-                m_Players.size() << "- requested (nPlayer - 1):" << nPlayer-1;
-  return QStringLiteral("Anonymos");
-}
 
 auto Settings::getPlayerCpuScript(const quint8 nPlayer) const -> QString {
   if ((nPlayer - 1) < m_Players.size() &&

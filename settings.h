@@ -52,7 +52,6 @@ class Settings : public QDialog {
     virtual ~Settings();
 
     auto getBoardFile() const -> QString;
-    auto getPlayerName(const quint8 nPlayer) const -> QString;
     auto getPlayerCpuScript(const quint8 nPlayer) const -> QString;
     auto getPlayerColor(const quint8 nPlayer) const -> QString;
     auto getNumOfPlayers() const -> quint8;
@@ -76,8 +75,8 @@ class Settings : public QDialog {
     auto getNeighboursBorderColor() const -> QColor;
 
  public slots:
-    void accept();
-    void reject();
+    void accept() override;
+    void reject() override;
     void updateUiLang();
 
  signals:
@@ -85,7 +84,8 @@ class Settings : public QDialog {
     void changeLang(const QString &sLang);
 
  protected:
-    void showEvent(QShowEvent *pEvent);
+    void showEvent(QShowEvent *pEvent) override;
+    bool eventFilter(QObject *pObj, QEvent *pEvent) override;
 
  private slots:
     void changeNumOfPlayers();
@@ -99,16 +99,15 @@ class Settings : public QDialog {
     void searchCpuScripts(const QString &userDataDir);
     void updateStartCombo();
 
-    QWidget *m_pParent{};
     Ui::SettingsDialog *m_pUi;
     QSettings *m_pSettings;
     QList<QMap<QString, QString>> m_Players;
     QString m_sSharePath;
     QString m_sGuiLanguage;
 
-    QList<QLabel*> m_listNameLbls;
+    QList<QLabel*> m_listColorLbls;
     QList<QLabel*> m_listHumCpuLbls;
-    QList<QLineEdit*> m_listNameEdit;
+    QList<QLineEdit*> m_listColorEdit;
     QList<QComboBox*> m_listPlayerCombo;
 
     QStringList m_sListCPUs;

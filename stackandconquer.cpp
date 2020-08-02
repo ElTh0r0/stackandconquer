@@ -157,18 +157,23 @@ void StackAndConquer::setupGraphView() {
   m_pLayout = new QGridLayout;
   m_pLayout->setVerticalSpacing(0);
   // TODO(x): Rewrite for > 2 players
-  m_plblPlayer1 = new QLabel(m_pSettings->getPlayerName(1));
+  m_plblPlayer1 = new QLabel(QStringLiteral("Player"));
   m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
                                m_pSettings->getTextColor().name());
+  m_plblIconStones1 = new QLabel();
+  this->drawPlayerIcon(1);
   m_plblP1StonesLeft = new QLabel(QStringLiteral("99"));
   m_plblP1StonesLeft->setStyleSheet(QStringLiteral("color: ") +
                                     m_pSettings->getTextColor().name());
   m_plblP1Won = new QLabel(QStringLiteral("0"));
   m_plblP1Won->setStyleSheet(QStringLiteral("color: ") +
                              m_pSettings->getTextColor().name());
-  m_plblPlayer2 = new QLabel(m_pSettings->getPlayerName(2));
+
+  m_plblPlayer2 = new QLabel(QStringLiteral("Player"));
   m_plblPlayer2->setStyleSheet(QStringLiteral("color: ") +
                                m_pSettings->getTextColor().name());
+  m_plblIconStones2 = new QLabel();
+  this->drawPlayerIcon(2);
   m_plblPlayer2->setAlignment(Qt::AlignRight);
   m_plblP2StonesLeft = new QLabel(QStringLiteral("99"));
   m_plblP2StonesLeft->setStyleSheet(QStringLiteral("color: ") +
@@ -178,23 +183,6 @@ void StackAndConquer::setupGraphView() {
   m_plblP2Won->setStyleSheet(QStringLiteral("color: ") +
                              m_pSettings->getTextColor().name());
   m_plblP2Won->setAlignment(Qt::AlignRight);
-
-  QPixmap iconStone(16, 16);
-  iconStone.fill(m_pSettings->getBgColor());
-  QPainter *paint = new QPainter(&iconStone);
-  paint->setPen(QPen(Qt::black));
-  paint->setBrush(QBrush(QColor(m_pSettings->getPlayerColor(1))));
-  paint->drawEllipse(0, 0, 15, 15);
-  m_plblIconStones1 = new QLabel();
-  m_plblIconStones1->setPixmap(iconStone);
-  m_plblIconStones1->setAlignment(Qt::AlignCenter);
-  paint->setPen(QPen(Qt::black));
-  paint->setBrush(QBrush(QColor(m_pSettings->getPlayerColor(2))));
-  paint->drawEllipse(0, 0, 15, 15);
-  m_plblIconStones2 = new QLabel();
-  m_plblIconStones2->setPixmap(iconStone);
-  m_plblIconStones2->setAlignment(Qt::AlignCenter);
-  delete paint;
 
   QPixmap iconWin(QStringLiteral(":/images/win.png"));
   m_plblIconWin1 = new QLabel();
@@ -226,6 +214,27 @@ void StackAndConquer::setupGraphView() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
+void StackAndConquer::drawPlayerIcon(const quint8 nID) {
+  QPixmap iconStone(16, 16);
+  iconStone.fill(m_pSettings->getBgColor());
+  QPainter *paint = new QPainter(&iconStone);
+  paint->setPen(QPen(Qt::black));
+  paint->setBrush(QBrush(QColor(m_pSettings->getPlayerColor(nID))));
+  paint->drawEllipse(0, 0, 15, 15);
+
+  if (1 == nID) {
+    m_plblIconStones1->setPixmap(iconStone);
+    m_plblIconStones1->setAlignment(Qt::AlignCenter);
+  } else if (2 == nID) {
+    m_plblIconStones2->setPixmap(iconStone);
+    m_plblIconStones2->setAlignment(Qt::AlignCenter);
+  }
+  delete paint;
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
   m_pFrame->setFixedWidth(pEvent->size().width());
 }
@@ -240,6 +249,7 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
   // TODO(x): Rewrite for > 2 players
   connect(m_pGame, &Game::updateNameP1, m_plblPlayer1, &QLabel::setText);
   connect(m_pGame, &Game::updateNameP2, m_plblPlayer2, &QLabel::setText);
+  connect(m_pGame, &Game::drawIcon, this, &StackAndConquer::drawPlayerIcon);
 
   connect(m_pGame, &Game::updateStonesP1, m_plblP1StonesLeft, &QLabel::setText);
   connect(m_pGame, &Game::updateStonesP2, m_plblP2StonesLeft, &QLabel::setText);

@@ -61,7 +61,7 @@ class StackAndConquer : public QMainWindow {
     void updateUiLang();
 
  protected:
-    void changeEvent(QEvent *pEvent);
+    void changeEvent(QEvent *pEvent) override;
 
  private slots:
     void startNewGame(const QString &sSavegame = QLatin1String(""));
@@ -70,6 +70,7 @@ class StackAndConquer : public QMainWindow {
     void setViewInteractive(const bool bEnabled);
     void highlightActivePlayer(const quint8 nActivePlayer,
                                const quint8 nPlayerWon = 0);
+    void drawPlayerIcon(const quint8 nID);
     void loadLanguage(const QString &sLang);
     void showRules();
     static void reportBug();
@@ -82,7 +83,7 @@ class StackAndConquer : public QMainWindow {
                                  const QString &sPath = QString()) -> bool;
     void setupMenu();
     void setupGraphView();
-    void resizeEvent(QResizeEvent *pEvent);
+    void resizeEvent(QResizeEvent *pEvent) override;
 
     Ui::StackAndConquer *m_pUi;
     const QDir m_userDataDir;

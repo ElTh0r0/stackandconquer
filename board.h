@@ -73,8 +73,8 @@ class Board : public QGraphicsScene {
     void actionPlayer(QJsonArray move);
 
  protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *p_Event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *p_Event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event) override;
 
  private slots:
     void resetAnimation();

@@ -31,20 +31,20 @@
 
 #include "./opponentjs.h"
 
-Player::Player(const quint8 nID, const QString &sName, const quint8 nMaxStones,
+Player::Player(const quint8 nID, const quint8 nMaxStones,
                const QString &sCpuScript, QObject *parent)
   : QObject(parent),
     m_nID(nID),
     m_pJsCpu(nullptr),
-    m_sName(sName),
+    m_sName(tr("Player") + " " + QString::number(m_nID)),
     m_sCpuScript(sCpuScript),
     m_nMaxStones(nMaxStones),
     m_nStonesLeft(nMaxStones),
     m_nWonTowers(0) {
   if (!m_sCpuScript.isEmpty()) {
-    m_sName = QStringLiteral("Computer ") + QString::number(m_nID);
+    m_sName += (QStringLiteral(" (CPU)"));
   }
-  qDebug() << "Generate player" << m_sName;
+  qDebug() << "Generating " + m_sName;
 }
 
 Player::~Player() = default;
