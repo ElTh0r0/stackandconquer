@@ -79,9 +79,8 @@ class Game : public QObject {
     Settings *m_pSettings;
     Board *m_pBoard;
     QString m_sBoardFile;
-    quint8 m_NumOfPlayers;
-    Player *m_pPlayer1;   // TODO(x): Replace by player array
-    Player *m_pPlayer2;
+    quint8 m_nNumOfPlayers;
+    QList<Player *> m_pPlayers;
 
     const quint8 m_nMaxTowerHeight;
     const quint16 m_nGridSize;
