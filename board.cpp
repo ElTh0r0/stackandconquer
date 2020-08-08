@@ -796,6 +796,9 @@ auto Board::getLegalMoves(const bool bStonesLeft,
   }
 
   QJsonDocument legalMoves(jsMoves);
+  if (jsMoves.isEmpty()) {
+    return QJsonDocument();
+  }
   return legalMoves;
 }
 
