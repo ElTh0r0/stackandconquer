@@ -70,6 +70,7 @@ class StackAndConquer : public QMainWindow {
     void setViewInteractive(const bool bEnabled);
     void highlightActivePlayer(const quint8 nActivePlayer,
                                const quint8 nPlayerWon = 0);
+    void updateNames(const QStringList &sListName);
     void drawPlayerIcon(const quint8 nID);
     void loadLanguage(const QString &sLang);
     void showRules();
@@ -88,6 +89,7 @@ class StackAndConquer : public QMainWindow {
     Ui::StackAndConquer *m_pUi;
     const QDir m_userDataDir;
     const QString m_sSharePath;
+    const quint8 m_nMaxPlayers;
     QTranslator m_translator;    // App translations
     QTranslator m_translatorQt;  // Qt translations
     QString m_sCurrLang;

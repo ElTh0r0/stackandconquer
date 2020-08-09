@@ -51,12 +51,9 @@ class Game : public QObject {
     auto initCpu() -> bool;
 
  signals:
-    void updateNameP1(const QString &sName);
-    void updateNameP2(const QString &sName);
-    void updateStonesP1(const QString &sStones);
-    void updateStonesP2(const QString &sStones);
-    void updateWonP1(const QString &sWon);
-    void updateWonP2(const QString &sWon);
+    void updateNames(const QStringList &sListName);
+    void updateStones(const quint8 nID, const QString &sStones);
+    void updateWon(const quint8 nID, const QString &sWon);
     void drawIcon(const quint8 nID);
     void setInteractive(bool bEnabled);
     void highlightActivePlayer(quint8 nActivePlayer, quint8 nPlayerWon = 0);

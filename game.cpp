@@ -427,11 +427,10 @@ void Game::updatePlayers(bool bInitial) {
     return;
   }
 
-  // TODO(x): Rewrite for > 2 player
-  emit updateStonesP1(QString::number(m_pPlayers.at(0)->getStonesLeft()));
-  emit updateStonesP2(QString::number(m_pPlayers.at(1)->getStonesLeft()));
-  emit updateWonP1(QString::number(m_pPlayers.at(0)->getWonTowers()));
-  emit updateWonP2(QString::number(m_pPlayers.at(1)->getWonTowers()));
+  for (int i = 0; i < m_nNumOfPlayers; i++) {
+    emit updateStones(i, QString::number(m_pPlayers.at(i)->getStonesLeft()));
+    emit updateWon(i, QString::number(m_pPlayers.at(i)->getWonTowers()));
+  }
 
   bool bWon(false);
   for (int i = 0; i < m_nNumOfPlayers; i++) {
@@ -448,11 +447,12 @@ void Game::updatePlayers(bool bInitial) {
 
   if (!bWon) {
     if (bInitial) {
-      // TODO(x): Rewrite for > 2 player
-      emit drawIcon(1);
-      emit drawIcon(2);
-      emit updateNameP1(m_pPlayers.at(0)->getName());
-      emit updateNameP2(m_pPlayers.at(1)->getName());
+      QStringList sListPlayers;
+      for (int i = 0; i < m_nNumOfPlayers; i++) {
+        emit drawIcon(i);
+        sListPlayers << m_pPlayers.at(i)->getName();
+      }
+      emit updateNames(sListPlayers);
     } else {  // Toogle active player
       activePlayer.ID++;
       if (activePlayer.ID > m_nNumOfPlayers) {
@@ -461,7 +461,6 @@ void Game::updatePlayers(bool bInitial) {
       activePlayer.isHuman = m_pPlayers.at(activePlayer.ID - 1)->isHuman();
     }
 
-    // TODO(x): Rewrite for > 2 player
     emit highlightActivePlayer(activePlayer.ID);
     if (!this->checkPossibleMoves()) {
       m_pBoard->printDebugFields();

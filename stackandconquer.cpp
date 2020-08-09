@@ -51,12 +51,14 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
     m_pUi(new Ui::StackAndConquer),
     m_userDataDir(userDataPath),
     m_sSharePath(sharePath.absolutePath()),
+    m_nMaxPlayers(2),
     m_sCurrLang(QString()),
     m_pGame(nullptr) {
   m_pUi->setupUi(this);
   this->setWindowTitle(qApp->applicationName());
 
-  m_pSettings = new Settings(m_sSharePath, m_userDataDir.absolutePath(), this);
+  m_pSettings = new Settings(m_sSharePath, m_userDataDir.absolutePath(),
+                             m_nMaxPlayers, this);
   connect(m_pSettings, &Settings::newGame,
           this, &StackAndConquer::startNewGame);
   connect(m_pSettings, &Settings::changeLang,
@@ -99,39 +101,27 @@ void StackAndConquer::checkCmdArgs(const QStringList &sListArgs) {
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::setupMenu() {
-  // New game
+  // Game menu
   m_pUi->action_NewGame->setShortcut(QKeySequence::New);
   connect(m_pUi->action_NewGame, &QAction::triggered,
           this, [this]() { this->startNewGame(QString()); });
-
-  // Load game
   m_pUi->action_LoadGame->setShortcut(QKeySequence::Open);
   connect(m_pUi->action_LoadGame, &QAction::triggered,
           this, &StackAndConquer::loadGame);
-
-  // Save game
   m_pUi->action_SaveGame->setShortcut(QKeySequence::Save);
   connect(m_pUi->action_SaveGame, &QAction::triggered,
           this, &StackAndConquer::saveGame);
-
-  // Settings
   connect(m_pUi->action_Preferences, &QAction::triggered,
           m_pSettings, &Settings::show);
-
-  // Exit game
   m_pUi->action_Quit->setShortcut(QKeySequence::Quit);
   connect(m_pUi->action_Quit, &QAction::triggered,
           this, &StackAndConquer::close);
 
-  // Show rules
+  // Help menu
   connect(m_pUi->action_Rules, &QAction::triggered,
           this, &StackAndConquer::showRules);
-
-  // Report bug
   connect(m_pUi->action_ReportBug, &QAction::triggered,
           this, &StackAndConquer::reportBug);
-
-  // About
   connect(m_pUi->action_Info, &QAction::triggered,
           this, &StackAndConquer::showInfoBox);
 }
@@ -156,54 +146,44 @@ void StackAndConquer::setupGraphView() {
   m_pFrame = new QFrame(m_pGraphView);
   m_pLayout = new QGridLayout;
   m_pLayout->setVerticalSpacing(0);
-  // TODO(x): Rewrite for > 2 players
-  m_pLblsPlayerName << new QLabel(QStringLiteral("Player"));
-  m_pLblsPlayerName.last()->setStyleSheet(QStringLiteral("color: ") +
-                                          m_pSettings->getTextColor().name());
-  m_pLblsStoneIcon << new QLabel();
-  this->drawPlayerIcon(1);
-  m_pLblsStonesLeft << new QLabel(QStringLiteral("99"));
-  m_pLblsStonesLeft.last()->setStyleSheet(QStringLiteral("color: ") +
-                                          m_pSettings->getTextColor().name());
-  m_pLblsWon << new QLabel(QStringLiteral("0"));
-  m_pLblsWon.last()->setStyleSheet(QStringLiteral("color: ") +
-                                   m_pSettings->getTextColor().name());
-
-  m_pLblsPlayerName << new QLabel(QStringLiteral("Player"));
-  m_pLblsPlayerName.last()->setStyleSheet(QStringLiteral("color: ") +
-                                          m_pSettings->getTextColor().name());
-  m_pLblsPlayerName.last()->setAlignment(Qt::AlignRight);
-  m_pLblsStoneIcon << new QLabel();
-  this->drawPlayerIcon(2);
-  m_pLblsStonesLeft << new QLabel(QStringLiteral("99"));
-  m_pLblsStonesLeft.last()->setStyleSheet(QStringLiteral("color: ") +
-                                          m_pSettings->getTextColor().name());
-  m_pLblsStonesLeft.last()->setAlignment(Qt::AlignRight);
-  m_pLblsWon << new QLabel(QStringLiteral("0"));
-  m_pLblsWon.last()->setStyleSheet(QStringLiteral("color: ") +
-                                   m_pSettings->getTextColor().name());
-  m_pLblsWon.last()->setAlignment(Qt::AlignRight);
-
   QPixmap iconWin(QStringLiteral(":/images/win.png"));
-  m_pLblsWinIcon << new QLabel();
-  m_pLblsWinIcon.last()->setPixmap(iconWin);
-  m_pLblsWinIcon.last()->setAlignment(Qt::AlignCenter);
-  m_pLblsWinIcon << new QLabel();
-  m_pLblsWinIcon.last()->setPixmap(iconWin);
-  m_pLblsWinIcon.last()->setAlignment(Qt::AlignCenter);
 
-  // addWidget(*widget, row, column, rowspan, colspan)
-  m_pLayout->addWidget(m_pLblsPlayerName.at(0), 0, 0, 1, 2);
-  m_pLayout->addWidget(m_pLblsStoneIcon.at(0), 1, 0, 1, 1);
-  m_pLayout->addWidget(m_pLblsStonesLeft.at(0), 1, 1, 1, 1);
-  m_pLayout->addWidget(m_pLblsWinIcon.at(0), 2, 0, 1, 1);
-  m_pLayout->addWidget(m_pLblsWon.at(0), 2, 1, 1, 1);
+  for (int i = 0; i < m_nMaxPlayers; i++) {
+    m_pLblsPlayerName << new QLabel(QStringLiteral("Player"));
+    m_pLblsPlayerName.last()->setStyleSheet(QStringLiteral("color: ") +
+                                            m_pSettings->getTextColor().name());
+    m_pLblsStoneIcon << new QLabel();
+    this->drawPlayerIcon(i);
+    m_pLblsStonesLeft << new QLabel(QStringLiteral("99"));
+    m_pLblsStonesLeft.last()->setStyleSheet(QStringLiteral("color: ") +
+                                            m_pSettings->getTextColor().name());
+    m_pLblsWon << new QLabel(QStringLiteral("0"));
+    m_pLblsWon.last()->setStyleSheet(QStringLiteral("color: ") +
+                                     m_pSettings->getTextColor().name());
 
-  m_pLayout->addWidget(m_pLblsPlayerName.at(1), 0, 2, 1, 2);
-  m_pLayout->addWidget(m_pLblsStonesLeft.at(1), 1, 2, 1, 1);
-  m_pLayout->addWidget(m_pLblsStoneIcon.at(1), 1, 3, 1, 1);
-  m_pLayout->addWidget(m_pLblsWon.at(1), 2, 2, 1, 1);
-  m_pLayout->addWidget(m_pLblsWinIcon.at(1), 2, 3, 1, 1);
+    m_pLblsWinIcon << new QLabel();
+    m_pLblsWinIcon.last()->setPixmap(iconWin);
+    m_pLblsWinIcon.last()->setAlignment(Qt::AlignCenter);
+
+    if (0 == i % 2) {
+      // addWidget(*widget, row, column, rowspan, colspan)
+      m_pLayout->addWidget(m_pLblsPlayerName.last(), i + ((i/2)*4), 0, 1, 2);
+      m_pLayout->addWidget(m_pLblsStoneIcon.last(), i+1 + ((i/2)*4), 0, 1, 1);
+      m_pLayout->addWidget(m_pLblsStonesLeft.last(), i+1 + ((i/2)*4), 1, 1, 1);
+      m_pLayout->addWidget(m_pLblsWinIcon.last(), i+2 + ((i/2)*4), 0, 1, 1);
+      m_pLayout->addWidget(m_pLblsWon.last(), i+2 + ((i/2)*4), 1, 1, 1);
+    } else {
+      m_pLayout->addWidget(m_pLblsPlayerName.last(), i-1 + ((i/2)*4), 2, 1, 2);
+      m_pLayout->addWidget(m_pLblsStonesLeft.last(), i + ((i/2)*4), 2, 1, 1);
+      m_pLayout->addWidget(m_pLblsStoneIcon.last(), i + ((i/2)*4), 3, 1, 1);
+      m_pLayout->addWidget(m_pLblsWon.last(), i+1 + ((i/2)*4), 2, 1, 1);
+      m_pLayout->addWidget(m_pLblsWinIcon.last(), i+1 + ((i/2)*4), 3, 1, 1);
+
+      m_pLblsPlayerName.last()->setAlignment(Qt::AlignRight);
+      m_pLblsStonesLeft.last()->setAlignment(Qt::AlignRight);
+      m_pLblsWon.last()->setAlignment(Qt::AlignRight);
+    }
+  }
 
   m_pFrame->setFixedWidth(this->width());
   m_pFrame->setLayout(m_pLayout);
@@ -221,9 +201,31 @@ void StackAndConquer::drawPlayerIcon(const quint8 nID) {
   paint->setPen(QPen(Qt::black));
   paint->setBrush(QBrush(QColor(m_pSettings->getPlayerColor(nID))));
   paint->drawEllipse(0, 0, 15, 15);
-  m_pLblsStoneIcon[nID - 1]->setPixmap(iconStone);
-  m_pLblsStoneIcon[nID - 1]->setAlignment(Qt::AlignCenter);
+  m_pLblsStoneIcon[nID]->setPixmap(iconStone);
+  m_pLblsStoneIcon[nID]->setAlignment(Qt::AlignCenter);
   delete paint;
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void StackAndConquer::updateNames(const QStringList &sListName) {
+  for (int i = 0; i < m_nMaxPlayers; i++) {
+    if (i < sListName.size()) {
+      m_pLblsPlayerName[i]->setText(sListName.at(i));
+      m_pLblsPlayerName[i]->setVisible(true);
+      m_pLblsStoneIcon[i]->setVisible(true);
+      m_pLblsStonesLeft[i]->setVisible(true);
+      m_pLblsWinIcon[i]->setVisible(true);
+      m_pLblsWon[i]->setVisible(true);
+    } else {
+      m_pLblsPlayerName[i]->setVisible(false);
+      m_pLblsStoneIcon[i]->setVisible(false);
+      m_pLblsStonesLeft[i]->setVisible(false);
+      m_pLblsWinIcon[i]->setVisible(false);
+      m_pLblsWon[i]->setVisible(false);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -240,18 +242,16 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
   delete m_pGame;
   m_pGame = new Game(m_pSettings, sSavegame);
 
-  // TODO(x): Rewrite for > 2 players
-  connect(m_pGame, &Game::updateNameP1, m_pLblsPlayerName[0], &QLabel::setText);
-  connect(m_pGame, &Game::updateNameP2, m_pLblsPlayerName[1], &QLabel::setText);
+  connect(m_pGame, &Game::updateNames, this, &StackAndConquer::updateNames);
   connect(m_pGame, &Game::drawIcon, this, &StackAndConquer::drawPlayerIcon);
-
-  connect(m_pGame, &Game::updateStonesP1,
-          m_pLblsStonesLeft[0], &QLabel::setText);
-  connect(m_pGame, &Game::updateStonesP2,
-          m_pLblsStonesLeft[1], &QLabel::setText);
-
-  connect(m_pGame, &Game::updateWonP1, m_pLblsWon[0], &QLabel::setText);
-  connect(m_pGame, &Game::updateWonP2, m_pLblsWon[1], &QLabel::setText);
+  connect(m_pGame, &Game::updateStones,
+          this, [this](const quint8 nID, const QString &sStones) {
+    m_pLblsStonesLeft[nID]->setText(sStones);
+  });
+  connect(m_pGame, &Game::updateWon,
+          this, [this](const quint8 nID, const QString &sWon) {
+    m_pLblsWon[nID]->setText(sWon);
+  });
 
   connect(m_pGame, &Game::setInteractive,
           this, &StackAndConquer::setViewInteractive);

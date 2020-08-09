@@ -48,7 +48,7 @@ class Settings : public QDialog {
 
  public:
     explicit Settings(const QString &sSharePath, const QString &userDataDir,
-                      QWidget *pParent = nullptr);
+                      const quint8 nMaxPlayers, QWidget *pParent = nullptr);
     virtual ~Settings();
 
     auto getBoardFile() const -> QString;
@@ -131,7 +131,7 @@ class Settings : public QDialog {
     QColor m_neighboursColor;
     QColor m_neighboursBorderColor;
 
-    const quint8 m_maxPlayers;
+    const quint8 m_nMaxPlayers;
     const QStringList m_DefaultPlayerColors;
 };
 

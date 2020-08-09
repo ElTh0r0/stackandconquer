@@ -316,7 +316,7 @@ void Board::createStones() {
     QString sTmpSvg = sSvg;
     QByteArray aSvg(sTmpSvg.replace(
                       QLatin1String("#ff0000"),
-                      m_pSettings->getPlayerColor(nPlayers+1)).toUtf8());
+                      m_pSettings->getPlayerColor(nPlayers)).toUtf8());
     auto *pSvgRenderer = new QSvgRenderer(aSvg);
     tmpSvgList.clear();
 

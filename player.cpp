@@ -128,7 +128,6 @@ auto Player::getStonesLeft() const -> quint8 {
 // ---------------------------------------------------------------------------
 
 void Player::setWonTowers(const quint8 nWonTowers) {
-  // TODO(x): Check in player class if game is won and emit signal
   m_nWonTowers = nWonTowers;
 }
 

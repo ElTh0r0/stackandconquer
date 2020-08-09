@@ -38,11 +38,11 @@
 #include "ui_settings.h"
 
 Settings::Settings(const QString &sSharePath, const QString &userDataDir,
-                   QWidget *pParent)
+                   const quint8 nMaxPlayers, QWidget *pParent)
   : QDialog(pParent),
     m_pUi(new Ui::SettingsDialog()),
     m_sSharePath(sSharePath),
-    m_maxPlayers(2),
+    m_nMaxPlayers(nMaxPlayers),
     m_DefaultPlayerColors{"#EF2929", "#FCAF3E", "#729FCF", "#8F5902"} {
   m_pUi->setupUi(this);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -60,7 +60,7 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
 
   m_pUi->cbGuiLanguage->addItems(this->searchTranslations());
 
-  m_pUi->spinNumOfPlayers->setMaximum(m_maxPlayers);
+  m_pUi->spinNumOfPlayers->setMaximum(m_nMaxPlayers);
   connect(m_pUi->spinNumOfPlayers,
           static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
           this, &Settings::changeNumOfPlayers);
@@ -68,6 +68,7 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
           static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
           this, &Settings::changedSettings);
   // TODO(x): Remove after implenmentation of > 2 players
+  // TODO(x): Implement rules for > 2 players
   m_pUi->spinNumOfPlayers->setVisible(false);
   m_pUi->lblNumOfPlayers->setVisible(false);
 
@@ -82,7 +83,7 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
   connect(m_pUi->buttonBox, &QDialogButtonBox::rejected,
           this, &Settings::reject);
 
-  for (int i = m_maxPlayers-1; i >= 0; i--) {
+  for (int i = m_nMaxPlayers-1; i >= 0; i--) {
     m_listColorLbls.push_front(
           new QLabel(tr("Color player %1").arg(QString::number(i+1))));
     m_listColorEdit.push_front(new QLineEdit(this));
@@ -283,7 +284,7 @@ void Settings::accept() {
     m_Players[i].clear();
   }
   m_Players.clear();
-  for (quint8 i = 0; i < m_maxPlayers; i++) {
+  for (quint8 i = 0; i < m_nMaxPlayers; i++) {
     QMap<QString, QString> tmpMap;
     tmpMap[QStringLiteral("HumanCpu")] = m_listPlayerCombo[i]->currentText();
 
@@ -349,8 +350,8 @@ void Settings::readSettings() {
 
   m_nNumOfPlayers = m_pSettings->value(
                       QStringLiteral("NumOfPlayers"), 2).toInt();
-  if (m_nNumOfPlayers > m_maxPlayers) {
-    m_nNumOfPlayers = m_maxPlayers;
+  if (m_nNumOfPlayers > m_nMaxPlayers) {
+    m_nNumOfPlayers = m_nMaxPlayers;
   }
   m_pUi->spinNumToWin->setValue(m_nNumOfPlayers);
   this->changeNumOfPlayers();
@@ -360,7 +361,7 @@ void Settings::readSettings() {
   }
   m_Players.clear();
 
-  for (quint8 i = 0; i < m_maxPlayers; i++) {
+  for (quint8 i = 0; i < m_nMaxPlayers; i++) {
     m_pSettings->beginGroup("Player" + QString::number(i+1));
     QMap<QString, QString> map;
     map[QStringLiteral("HumanCpu")] = m_pSettings->value(
@@ -376,7 +377,7 @@ void Settings::readSettings() {
     }
     map[QStringLiteral("HumanCpu")] = m_listPlayerCombo[i]->currentText();
 
-    if (m_DefaultPlayerColors.size() < m_maxPlayers) {
+    if (m_DefaultPlayerColors.size() < m_nMaxPlayers) {
       qWarning() << "Fallback player color missing!";
       map[QStringLiteral("Color")] = this->readColor(QStringLiteral("Color"),
                                      m_DefaultPlayerColors[0]).name();
@@ -475,7 +476,7 @@ void Settings::updateUiLang() {
   m_pUi->retranslateUi(this);
 
   // Widgets, which had not been created through UI have to be handled manually
-  for (int i = 0; i < m_maxPlayers; i++) {
+  for (int i = 0; i < m_nMaxPlayers; i++) {
     m_listColorLbls[i]->setText(
           tr("Color player %1").arg(QString::number(i+1)));
     m_listHumCpuLbls[i]->setText(
@@ -515,7 +516,7 @@ auto Settings::getLanguage() -> QString {
 
 void Settings::changeNumOfPlayers() {
   m_nNumOfPlayers = m_pUi->spinNumOfPlayers->value();
-  for (int i = 0; i < m_maxPlayers; i++) {
+  for (int i = 0; i < m_nMaxPlayers; i++) {
     if (i < m_nNumOfPlayers) {
       m_listColorLbls[i]->setVisible(true);
       m_listColorEdit[i]->setVisible(true);
@@ -577,11 +578,11 @@ auto Settings::getPlayerCpuScript(const quint8 nPlayer) const -> QString {
 }
 
 auto Settings::getPlayerColor(const quint8 nPlayer) const -> QString {
-  if ((nPlayer - 1) < m_Players.size()) {
-    return m_Players[nPlayer-1][QStringLiteral("Color")];
+  if (nPlayer < m_Players.size()) {
+    return m_Players[nPlayer][QStringLiteral("Color")];
   }
   qWarning() << "Player array length exceeded! Size:" <<
-                m_Players.size() << "- requested (nPlayer - 1):" << nPlayer-1;
+                m_Players.size() << "- requested nPlayer:" << nPlayer;
   return m_DefaultPlayerColors[0];
 }
 
