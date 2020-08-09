@@ -56,7 +56,6 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
   qDebug() << "Starting new game" << sSavegame;
 
   // Start with default
-  // TODO(x): Rewrite for > 2 players
   m_sBoardFile = m_pSettings->getBoardFile();
   m_nNumOfPlayers = m_pSettings->getNumOfPlayers();
   quint8 nStartPlayer(m_pSettings->getStartPlayer());

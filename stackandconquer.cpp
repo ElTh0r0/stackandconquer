@@ -157,53 +157,53 @@ void StackAndConquer::setupGraphView() {
   m_pLayout = new QGridLayout;
   m_pLayout->setVerticalSpacing(0);
   // TODO(x): Rewrite for > 2 players
-  m_plblPlayer1 = new QLabel(QStringLiteral("Player"));
-  m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
-                               m_pSettings->getTextColor().name());
-  m_plblIconStones1 = new QLabel();
+  m_pLblsPlayerName << new QLabel(QStringLiteral("Player"));
+  m_pLblsPlayerName.last()->setStyleSheet(QStringLiteral("color: ") +
+                                          m_pSettings->getTextColor().name());
+  m_pLblsStoneIcon << new QLabel();
   this->drawPlayerIcon(1);
-  m_plblP1StonesLeft = new QLabel(QStringLiteral("99"));
-  m_plblP1StonesLeft->setStyleSheet(QStringLiteral("color: ") +
-                                    m_pSettings->getTextColor().name());
-  m_plblP1Won = new QLabel(QStringLiteral("0"));
-  m_plblP1Won->setStyleSheet(QStringLiteral("color: ") +
-                             m_pSettings->getTextColor().name());
+  m_pLblsStonesLeft << new QLabel(QStringLiteral("99"));
+  m_pLblsStonesLeft.last()->setStyleSheet(QStringLiteral("color: ") +
+                                          m_pSettings->getTextColor().name());
+  m_pLblsWon << new QLabel(QStringLiteral("0"));
+  m_pLblsWon.last()->setStyleSheet(QStringLiteral("color: ") +
+                                   m_pSettings->getTextColor().name());
 
-  m_plblPlayer2 = new QLabel(QStringLiteral("Player"));
-  m_plblPlayer2->setStyleSheet(QStringLiteral("color: ") +
-                               m_pSettings->getTextColor().name());
-  m_plblIconStones2 = new QLabel();
+  m_pLblsPlayerName << new QLabel(QStringLiteral("Player"));
+  m_pLblsPlayerName.last()->setStyleSheet(QStringLiteral("color: ") +
+                                          m_pSettings->getTextColor().name());
+  m_pLblsPlayerName.last()->setAlignment(Qt::AlignRight);
+  m_pLblsStoneIcon << new QLabel();
   this->drawPlayerIcon(2);
-  m_plblPlayer2->setAlignment(Qt::AlignRight);
-  m_plblP2StonesLeft = new QLabel(QStringLiteral("99"));
-  m_plblP2StonesLeft->setStyleSheet(QStringLiteral("color: ") +
-                                    m_pSettings->getTextColor().name());
-  m_plblP2StonesLeft->setAlignment(Qt::AlignRight);
-  m_plblP2Won = new QLabel(QStringLiteral("0"));
-  m_plblP2Won->setStyleSheet(QStringLiteral("color: ") +
-                             m_pSettings->getTextColor().name());
-  m_plblP2Won->setAlignment(Qt::AlignRight);
+  m_pLblsStonesLeft << new QLabel(QStringLiteral("99"));
+  m_pLblsStonesLeft.last()->setStyleSheet(QStringLiteral("color: ") +
+                                          m_pSettings->getTextColor().name());
+  m_pLblsStonesLeft.last()->setAlignment(Qt::AlignRight);
+  m_pLblsWon << new QLabel(QStringLiteral("0"));
+  m_pLblsWon.last()->setStyleSheet(QStringLiteral("color: ") +
+                                   m_pSettings->getTextColor().name());
+  m_pLblsWon.last()->setAlignment(Qt::AlignRight);
 
   QPixmap iconWin(QStringLiteral(":/images/win.png"));
-  m_plblIconWin1 = new QLabel();
-  m_plblIconWin1->setPixmap(iconWin);
-  m_plblIconWin1->setAlignment(Qt::AlignCenter);
-  m_plblIconWin2 = new QLabel();
-  m_plblIconWin2->setPixmap(iconWin);
-  m_plblIconWin2->setAlignment(Qt::AlignCenter);
+  m_pLblsWinIcon << new QLabel();
+  m_pLblsWinIcon.last()->setPixmap(iconWin);
+  m_pLblsWinIcon.last()->setAlignment(Qt::AlignCenter);
+  m_pLblsWinIcon << new QLabel();
+  m_pLblsWinIcon.last()->setPixmap(iconWin);
+  m_pLblsWinIcon.last()->setAlignment(Qt::AlignCenter);
 
   // addWidget(*widget, row, column, rowspan, colspan)
-  m_pLayout->addWidget(m_plblPlayer1, 0, 0, 1, 2);
-  m_pLayout->addWidget(m_plblIconStones1, 1, 0, 1, 1);
-  m_pLayout->addWidget(m_plblP1StonesLeft, 1, 1, 1, 1);
-  m_pLayout->addWidget(m_plblIconWin1, 2, 0, 1, 1);
-  m_pLayout->addWidget(m_plblP1Won, 2, 1, 1, 1);
+  m_pLayout->addWidget(m_pLblsPlayerName.at(0), 0, 0, 1, 2);
+  m_pLayout->addWidget(m_pLblsStoneIcon.at(0), 1, 0, 1, 1);
+  m_pLayout->addWidget(m_pLblsStonesLeft.at(0), 1, 1, 1, 1);
+  m_pLayout->addWidget(m_pLblsWinIcon.at(0), 2, 0, 1, 1);
+  m_pLayout->addWidget(m_pLblsWon.at(0), 2, 1, 1, 1);
 
-  m_pLayout->addWidget(m_plblPlayer2, 0, 2, 1, 2);
-  m_pLayout->addWidget(m_plblP2StonesLeft, 1, 2, 1, 1);
-  m_pLayout->addWidget(m_plblIconStones2, 1, 3, 1, 1);
-  m_pLayout->addWidget(m_plblP2Won, 2, 2, 1, 1);
-  m_pLayout->addWidget(m_plblIconWin2, 2, 3, 1, 1);
+  m_pLayout->addWidget(m_pLblsPlayerName.at(1), 0, 2, 1, 2);
+  m_pLayout->addWidget(m_pLblsStonesLeft.at(1), 1, 2, 1, 1);
+  m_pLayout->addWidget(m_pLblsStoneIcon.at(1), 1, 3, 1, 1);
+  m_pLayout->addWidget(m_pLblsWon.at(1), 2, 2, 1, 1);
+  m_pLayout->addWidget(m_pLblsWinIcon.at(1), 2, 3, 1, 1);
 
   m_pFrame->setFixedWidth(this->width());
   m_pFrame->setLayout(m_pLayout);
@@ -221,14 +221,8 @@ void StackAndConquer::drawPlayerIcon(const quint8 nID) {
   paint->setPen(QPen(Qt::black));
   paint->setBrush(QBrush(QColor(m_pSettings->getPlayerColor(nID))));
   paint->drawEllipse(0, 0, 15, 15);
-
-  if (1 == nID) {
-    m_plblIconStones1->setPixmap(iconStone);
-    m_plblIconStones1->setAlignment(Qt::AlignCenter);
-  } else if (2 == nID) {
-    m_plblIconStones2->setPixmap(iconStone);
-    m_plblIconStones2->setAlignment(Qt::AlignCenter);
-  }
+  m_pLblsStoneIcon[nID - 1]->setPixmap(iconStone);
+  m_pLblsStoneIcon[nID - 1]->setAlignment(Qt::AlignCenter);
   delete paint;
 }
 
@@ -247,15 +241,17 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
   m_pGame = new Game(m_pSettings, sSavegame);
 
   // TODO(x): Rewrite for > 2 players
-  connect(m_pGame, &Game::updateNameP1, m_plblPlayer1, &QLabel::setText);
-  connect(m_pGame, &Game::updateNameP2, m_plblPlayer2, &QLabel::setText);
+  connect(m_pGame, &Game::updateNameP1, m_pLblsPlayerName[0], &QLabel::setText);
+  connect(m_pGame, &Game::updateNameP2, m_pLblsPlayerName[1], &QLabel::setText);
   connect(m_pGame, &Game::drawIcon, this, &StackAndConquer::drawPlayerIcon);
 
-  connect(m_pGame, &Game::updateStonesP1, m_plblP1StonesLeft, &QLabel::setText);
-  connect(m_pGame, &Game::updateStonesP2, m_plblP2StonesLeft, &QLabel::setText);
+  connect(m_pGame, &Game::updateStonesP1,
+          m_pLblsStonesLeft[0], &QLabel::setText);
+  connect(m_pGame, &Game::updateStonesP2,
+          m_pLblsStonesLeft[1], &QLabel::setText);
 
-  connect(m_pGame, &Game::updateWonP1, m_plblP1Won, &QLabel::setText);
-  connect(m_pGame, &Game::updateWonP2, m_plblP2Won, &QLabel::setText);
+  connect(m_pGame, &Game::updateWonP1, m_pLblsWon[0], &QLabel::setText);
+  connect(m_pGame, &Game::updateWonP2, m_pLblsWon[1], &QLabel::setText);
 
   connect(m_pGame, &Game::setInteractive,
           this, &StackAndConquer::setViewInteractive);
@@ -321,32 +317,25 @@ void StackAndConquer::setViewInteractive(const bool bEnabled) {
 
 void StackAndConquer::highlightActivePlayer(const quint8 nActivePlayer,
                                             const quint8 nPlayerWon) {
-  // TODO(x): Rewrite for > 2 players
-  if (1 == nPlayerWon) {
+  if (nPlayerWon > 0) {
     m_pUi->statusBar->showMessage(
-          tr("%1 won the game!").arg(m_plblPlayer1->text()));
-    return;
-  }
-  if (2 == nPlayerWon) {
-    m_pUi->statusBar->showMessage(
-          tr("%1 won the game!").arg(m_plblPlayer2->text()));
+          tr("%1 won the game!").arg(
+            m_pLblsPlayerName.at(nPlayerWon - 1)->text()));
     return;
   }
 
-  if (1 == nActivePlayer) {
-    m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
-                                 m_pSettings->getTextHighlightColor().name());
-    m_plblPlayer2->setStyleSheet(QStringLiteral("color: ") +
-                                 m_pSettings->getTextColor().name());
-    m_pUi->statusBar->showMessage(
-          tr("%1's turn").arg(m_plblPlayer1->text()));
-  } else {
-    m_plblPlayer1->setStyleSheet(QStringLiteral("color: ") +
-                                 m_pSettings->getTextColor().name());
-    m_plblPlayer2->setStyleSheet(QStringLiteral("color: ") +
-                                 m_pSettings->getTextHighlightColor().name());
-    m_pUi->statusBar->showMessage(
-          tr("%1's turn").arg(m_plblPlayer2->text()));
+  for (int i = 0; i < m_pLblsPlayerName.size(); i++) {
+    if ((nActivePlayer - 1) == i) {
+      m_pLblsPlayerName[i]->setStyleSheet(
+            QStringLiteral("color: ") +
+            m_pSettings->getTextHighlightColor().name());
+      m_pUi->statusBar->showMessage(
+            tr("%1's turn").arg(m_pLblsPlayerName.at(i)->text()));
+    } else {
+      m_pLblsPlayerName[i]->setStyleSheet(
+            QStringLiteral("color: ") +
+            m_pSettings->getTextColor().name());
+    }
   }
 }
 

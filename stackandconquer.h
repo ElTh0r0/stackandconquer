@@ -97,16 +97,11 @@ class StackAndConquer : public QMainWindow {
 
     QFrame *m_pFrame{};
     QGridLayout *m_pLayout{};
-    QLabel *m_plblPlayer1{};
-    QLabel *m_plblPlayer2{};
-    QLabel *m_plblIconStones1{};
-    QLabel *m_plblIconWin1{};
-    QLabel *m_plblIconStones2{};
-    QLabel *m_plblIconWin2{};
-    QLabel *m_plblP1StonesLeft{};
-    QLabel *m_plblP2StonesLeft{};
-    QLabel *m_plblP1Won{};
-    QLabel *m_plblP2Won{};
+    QList<QLabel *> m_pLblsPlayerName;
+    QList<QLabel *> m_pLblsStoneIcon;
+    QList<QLabel *> m_pLblsStonesLeft;
+    QList<QLabel *> m_pLblsWinIcon;
+    QList<QLabel *> m_pLblsWon;
 };
 
 #endif  // STACKANDCONQUER_H_
