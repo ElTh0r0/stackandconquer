@@ -97,6 +97,7 @@ unix: !macx {
 
     data.path       = $$PREFIX/share/stackandconquer
     data.files     += data/cpu
+    data.files     += data/boards
 
     desktop.path    = $$PREFIX/share/applications
     desktop.files  += data/stackandconquer.desktop
