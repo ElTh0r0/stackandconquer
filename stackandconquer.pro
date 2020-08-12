@@ -82,6 +82,7 @@ macx {
 
   CPU_DATA.path      = Contents/Resources
   CPU_DATA.files    += data/cpu
+  CPU_DATA.files    += data/boards
   QMAKE_BUNDLE_DATA += CPU_DATA
 }
 
