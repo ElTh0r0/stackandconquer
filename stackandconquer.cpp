@@ -470,7 +470,7 @@ void StackAndConquer::showInfoBox() {
                 "Mixtour</a> by Dieter Stein."),
              "<i>" + tr("Translations") +
              "</i><br />"
-             "&nbsp;&nbsp;- Dutch: Vistaus<br />"
+             "&nbsp;&nbsp;- Dutch: Vistaus, Elbert Pol<br />"
              "&nbsp;&nbsp;- German: ElThoro<br />"
              "&nbsp;&nbsp;- Italian: davi92"));
 }

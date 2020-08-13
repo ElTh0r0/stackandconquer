@@ -57,94 +57,90 @@
 <context>
     <name>Game</name>
     <message>
-        <location filename="../game.cpp" line="77"/>
-        <location filename="../game.cpp" line="108"/>
-        <location filename="../game.cpp" line="255"/>
-        <location filename="../game.cpp" line="264"/>
-        <location filename="../game.cpp" line="280"/>
-        <location filename="../game.cpp" line="311"/>
-        <location filename="../game.cpp" line="322"/>
+        <location filename="../game.cpp" line="71"/>
+        <location filename="../game.cpp" line="90"/>
+        <location filename="../game.cpp" line="107"/>
+        <location filename="../game.cpp" line="245"/>
+        <location filename="../game.cpp" line="254"/>
+        <location filename="../game.cpp" line="270"/>
+        <location filename="../game.cpp" line="298"/>
+        <location filename="../game.cpp" line="309"/>
+        <location filename="../game.cpp" line="326"/>
+        <location filename="../game.cpp" line="332"/>
         <location filename="../game.cpp" line="339"/>
-        <location filename="../game.cpp" line="345"/>
-        <location filename="../game.cpp" line="352"/>
-        <location filename="../game.cpp" line="360"/>
-        <location filename="../game.cpp" line="418"/>
+        <location filename="../game.cpp" line="347"/>
+        <location filename="../game.cpp" line="387"/>
         <source>Warning</source>
         <translation>Avviso</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="78"/>
+        <location filename="../game.cpp" line="72"/>
         <source>Error while opening save game.</source>
         <translation>Errore durante l&apos;apertura del salvataggio del gioco.</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="109"/>
-        <location filename="../game.cpp" line="123"/>
-        <location filename="../game.cpp" line="135"/>
+        <location filename="../game.cpp" line="91"/>
+        <location filename="../game.cpp" line="108"/>
+        <location filename="../game.cpp" line="122"/>
+        <location filename="../game.cpp" line="134"/>
         <source>Save game contains invalid data.</source>
         <translation>Salva gioco contiene dati non validi.</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="260"/>
-        <location filename="../game.cpp" line="400"/>
-        <location filename="../game.cpp" line="409"/>
-        <location filename="../game.cpp" line="459"/>
-        <location filename="../game.cpp" line="465"/>
-        <location filename="../game.cpp" line="537"/>
-        <location filename="../game.cpp" line="543"/>
-        <location filename="../game.cpp" line="549"/>
+        <location filename="../game.cpp" line="250"/>
+        <location filename="../game.cpp" line="397"/>
+        <location filename="../game.cpp" line="442"/>
+        <location filename="../game.cpp" line="509"/>
+        <location filename="../game.cpp" line="518"/>
         <source>Information</source>
         <translation>Informazione</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="261"/>
+        <location filename="../game.cpp" line="251"/>
         <source>No stones left! Please move a tower.</source>
         <translation>Non sono rimaste pietre! Per favore, sposta una torre.</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="265"/>
+        <location filename="../game.cpp" line="255"/>
         <source>Invalid move!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="256"/>
-        <location filename="../game.cpp" line="361"/>
+        <location filename="../game.cpp" line="246"/>
+        <location filename="../game.cpp" line="348"/>
         <source>CPU script made an invalid move! Please check the debug log.</source>
         <translation>Lo script della CPU ha effettuato una mossa non valida! Controlla il registro di debug.</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="280"/>
-        <location filename="../game.cpp" line="311"/>
-        <location filename="../game.cpp" line="322"/>
+        <location filename="../game.cpp" line="270"/>
+        <location filename="../game.cpp" line="298"/>
+        <location filename="../game.cpp" line="309"/>
+        <location filename="../game.cpp" line="327"/>
+        <location filename="../game.cpp" line="333"/>
         <location filename="../game.cpp" line="340"/>
-        <location filename="../game.cpp" line="346"/>
-        <location filename="../game.cpp" line="353"/>
-        <location filename="../game.cpp" line="419"/>
+        <location filename="../game.cpp" line="388"/>
         <source>Something went wrong!</source>
         <translation>Qualcosa è andato storto!</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="401"/>
-        <location filename="../game.cpp" line="410"/>
+        <location filename="../game.cpp" line="398"/>
         <source>%1 conquered a tower!</source>
         <translation>%1 ha conquistato una torre!</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="459"/>
-        <location filename="../game.cpp" line="465"/>
+        <location filename="../game.cpp" line="443"/>
         <source>%1 won the game!</source>
         <translation>%1 ha vinto la partita!</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="538"/>
+        <location filename="../game.cpp" line="510"/>
         <source>No moves possible anymore.
 Game ends in a tie!</source>
         <translation>Non sono più possibili mosse.
 Il gioco finisce in pareggio!</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="544"/>
-        <location filename="../game.cpp" line="550"/>
+        <location filename="../game.cpp" line="519"/>
         <source>No move possible!
 %1 has to pass.</source>
         <translation>Nessuna mossa possibile!
@@ -187,29 +183,29 @@ Il gioco finisce in pareggio!</translation>
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../settings.cpp" line="96"/>
-        <location filename="../settings.cpp" line="482"/>
+        <location filename="../settings.cpp" line="97"/>
+        <location filename="../settings.cpp" line="483"/>
         <source>Player %1 Human/CPU</source>
         <translation>Giocatore %1 Umano/CPU</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="539"/>
+        <location filename="../settings.cpp" line="540"/>
         <source>Player</source>
         <translation>Giocatori</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="537"/>
+        <location filename="../settings.cpp" line="538"/>
         <source>Random</source>
         <translation>Casuale</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="87"/>
-        <location filename="../settings.cpp" line="480"/>
+        <location filename="../settings.cpp" line="88"/>
+        <location filename="../settings.cpp" line="481"/>
         <source>Color player %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="233"/>
+        <location filename="../settings.cpp" line="234"/>
         <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
         <translation>Le principali impostazioni di gioco sono state modificate.&lt;br&gt;Vuoi iniziare una nuova partita?</translation>
     </message>
@@ -301,7 +297,7 @@ Il gioco finisce in pareggio!</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="104"/>
-        <location filename="../stackandconquer.cpp" line="299"/>
+        <location filename="../stackandconquer.cpp" line="295"/>
         <source>Save game</source>
         <translation>Salva partita</translation>
     </message>
@@ -312,7 +308,7 @@ Il gioco finisce in pareggio!</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="117"/>
-        <location filename="../stackandconquer.cpp" line="283"/>
+        <location filename="../stackandconquer.cpp" line="279"/>
         <source>Load game</source>
         <translation>Carica partita</translation>
     </message>
@@ -332,89 +328,87 @@ Il gioco finisce in pareggio!</translation>
         <translation>&amp;Regole</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="89"/>
-        <location filename="../stackandconquer.cpp" line="271"/>
-        <location filename="../stackandconquer.cpp" line="287"/>
-        <location filename="../stackandconquer.cpp" line="306"/>
-        <location filename="../stackandconquer.cpp" line="425"/>
+        <location filename="../stackandconquer.cpp" line="91"/>
+        <location filename="../stackandconquer.cpp" line="267"/>
+        <location filename="../stackandconquer.cpp" line="283"/>
+        <location filename="../stackandconquer.cpp" line="302"/>
+        <location filename="../stackandconquer.cpp" line="414"/>
         <source>Warning</source>
         <translation>Avviso</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="90"/>
+        <location filename="../stackandconquer.cpp" line="92"/>
         <source>Specified file not found:</source>
         <translation>File specificato non trovato:</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="272"/>
+        <location filename="../stackandconquer.cpp" line="268"/>
         <source>An error occured during CPU initialization.</source>
         <translation>Si è verificato un errore durante l&apos;inizializzazione della CPU.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="284"/>
-        <location filename="../stackandconquer.cpp" line="300"/>
+        <location filename="../stackandconquer.cpp" line="280"/>
+        <location filename="../stackandconquer.cpp" line="296"/>
         <source>Save games</source>
         <translation>Salva partita</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="287"/>
+        <location filename="../stackandconquer.cpp" line="283"/>
         <source>Invalid save game file.</source>
         <translation>Salvataggio di gioco non valido.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="306"/>
+        <location filename="../stackandconquer.cpp" line="302"/>
         <source>Game could not be saved.</source>
         <translation>Impossibile salvare il gioco.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="327"/>
-        <location filename="../stackandconquer.cpp" line="332"/>
+        <location filename="../stackandconquer.cpp" line="322"/>
         <source>%1 won the game!</source>
         <translation>%1 ha vinto la partita!</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="342"/>
-        <location filename="../stackandconquer.cpp" line="349"/>
+        <location filename="../stackandconquer.cpp" line="333"/>
         <source>%1&apos;s turn</source>
         <translation>È il turno di %1</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="402"/>
+        <location filename="../stackandconquer.cpp" line="391"/>
         <source>Rules</source>
         <translation>Regole</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="425"/>
+        <location filename="../stackandconquer.cpp" line="414"/>
         <source>Could not open rules!</source>
         <translation>Impossibile aprire le regole!</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="433"/>
+        <location filename="../stackandconquer.cpp" line="422"/>
         <source>These rules are licensed under Creative Commons &lt;a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;&gt;Attribution-Noncommercial 4.0 International&lt;/a&gt; license.</source>
         <translation>Queste regole sono concesse in licenza da Creative Commons &lt;a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;&gt;licenza di Attribuzione Non commerciale 4.0 Internationale&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="457"/>
+        <location filename="../stackandconquer.cpp" line="446"/>
         <source>About</source>
         <translation>Riguardo a</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="473"/>
+        <location filename="../stackandconquer.cpp" line="462"/>
         <source>License</source>
         <translation>Licenza</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="476"/>
+        <location filename="../stackandconquer.cpp" line="465"/>
         <source>This application uses icons from &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;Tango project&lt;/a&gt;.</source>
         <translation>Questa applicazione utilizza le icone del &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt; progetto Tango&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="479"/>
+        <location filename="../stackandconquer.cpp" line="468"/>
         <source>The game is based on &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;Mixtour&lt;/a&gt; by Dieter Stein.</source>
         <translation>Il gioco si basa su &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;Mixtour&lt;/a&gt; di Dieter Stein.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="482"/>
+        <location filename="../stackandconquer.cpp" line="471"/>
         <source>Translations</source>
         <translation>Traduzioni</translation>
     </message>
