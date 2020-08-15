@@ -297,7 +297,7 @@ Jullie eindigen in gelijkspel!</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="104"/>
-        <location filename="../stackandconquer.cpp" line="295"/>
+        <location filename="../stackandconquer.cpp" line="296"/>
         <source>Save game</source>
         <translation>Spel opslaan</translation>
     </message>
@@ -308,7 +308,7 @@ Jullie eindigen in gelijkspel!</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="117"/>
-        <location filename="../stackandconquer.cpp" line="279"/>
+        <location filename="../stackandconquer.cpp" line="280"/>
         <source>Load game</source>
         <translation>Spel laden</translation>
     </message>
@@ -328,87 +328,99 @@ Jullie eindigen in gelijkspel!</translation>
         <translation>&amp;Regels</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="391"/>
+        <location filename="../stackandconquer.cpp" line="392"/>
         <source>Rules</source>
         <translation>Regels</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="91"/>
-        <location filename="../stackandconquer.cpp" line="267"/>
-        <location filename="../stackandconquer.cpp" line="283"/>
-        <location filename="../stackandconquer.cpp" line="302"/>
-        <location filename="../stackandconquer.cpp" line="414"/>
+        <location filename="../stackandconquer.cpp" line="92"/>
+        <location filename="../stackandconquer.cpp" line="268"/>
+        <location filename="../stackandconquer.cpp" line="284"/>
+        <location filename="../stackandconquer.cpp" line="303"/>
+        <location filename="../stackandconquer.cpp" line="419"/>
+        <location filename="../stackandconquer.cpp" line="434"/>
         <source>Warning</source>
         <translation>Waarschuwing</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="92"/>
+        <location filename="../stackandconquer.cpp" line="93"/>
         <source>Specified file not found:</source>
         <translation>Het opgegeven bestand kan niet worden gevonden:</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="268"/>
+        <location filename="../stackandconquer.cpp" line="269"/>
         <source>An error occured during CPU initialization.</source>
         <translation>Er is een fout opgetreden tijdens het initialiseren van de computer.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="280"/>
-        <location filename="../stackandconquer.cpp" line="296"/>
+        <location filename="../stackandconquer.cpp" line="281"/>
+        <location filename="../stackandconquer.cpp" line="297"/>
         <source>Save games</source>
         <translation>Opgeslagen spellen</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="283"/>
+        <location filename="../stackandconquer.cpp" line="284"/>
         <source>Invalid save game file.</source>
         <translation>Ongeldig opgeslagen spel-bestand.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="302"/>
+        <location filename="../stackandconquer.cpp" line="303"/>
         <source>Game could not be saved.</source>
         <translation>Het spel kan niet worden opgeslagen.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="322"/>
+        <location filename="../stackandconquer.cpp" line="323"/>
         <source>%1 won the game!</source>
         <translation>%1 heeft het spel gewonnen!</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="333"/>
+        <location filename="../stackandconquer.cpp" line="334"/>
         <source>%1&apos;s turn</source>
         <translation>%1 is aan zet</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="414"/>
+        <location filename="../stackandconquer.cpp" line="400"/>
+        <source>Standard rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stackandconquer.cpp" line="401"/>
+        <source>Addition for &gt; 2 players</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../stackandconquer.cpp" line="419"/>
+        <location filename="../stackandconquer.cpp" line="434"/>
         <source>Could not open rules!</source>
         <translation>De regels kunnen niet worden geopend!</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="422"/>
+        <location filename="../stackandconquer.cpp" line="443"/>
         <source>These rules are licensed under Creative Commons &lt;a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;&gt;Attribution-Noncommercial 4.0 International&lt;/a&gt; license.</source>
         <translation>Deze regels zijn uitgebracht onder de Creative Commons &lt;a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;&gt;Attribution-Noncommercial 4.0 International&lt;/a&gt;-licentie.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="446"/>
+        <location filename="../stackandconquer.cpp" line="467"/>
         <source>About</source>
         <translation>Over</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="462"/>
+        <location filename="../stackandconquer.cpp" line="483"/>
         <source>License</source>
         <translation>Licentie</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="465"/>
+        <location filename="../stackandconquer.cpp" line="486"/>
         <source>This application uses icons from &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;Tango project&lt;/a&gt;.</source>
         <translation>Deze applicatie gebruikt pictogrammen van het &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;Tango-project&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="468"/>
+        <location filename="../stackandconquer.cpp" line="489"/>
         <source>The game is based on &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;Mixtour&lt;/a&gt; by Dieter Stein.</source>
         <translation>Het spel is gebadeerd op &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;mixtour&lt;a/&gt; door Dieter Stein.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="471"/>
+        <location filename="../stackandconquer.cpp" line="492"/>
         <source>Translations</source>
         <translation>Vertalingen</translation>
     </message>

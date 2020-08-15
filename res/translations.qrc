@@ -7,5 +7,7 @@
         <file alias="rules_de.html">../lang/rules_de.html</file>
         <file alias="rules_it.html">../lang/rules_it.html</file>
         <file alias="rules_nl.html">../lang/rules_nl.html</file>
+        <file alias="rules_a_trois_en.html">../lang/rules_a_trois_en.html</file>
+        <file alias="rules_a_trois_de.html">../lang/rules_a_trois_de.html</file>
     </qresource>
 </RCC>

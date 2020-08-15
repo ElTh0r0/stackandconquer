@@ -36,6 +36,7 @@
 #include <QLibraryInfo>
 #include <QMessageBox>
 #include <QResizeEvent>
+#include <QTabWidget>
 #include <QTextEdit>
 
 #include "./game.h"
@@ -197,13 +198,13 @@ void StackAndConquer::setupGraphView() {
 void StackAndConquer::drawPlayerIcon(const quint8 nID) {
   QPixmap iconStone(16, 16);
   iconStone.fill(m_pSettings->getBgColor());
-  QPainter *paint = new QPainter(&iconStone);
-  paint->setPen(QPen(Qt::black));
-  paint->setBrush(QBrush(QColor(m_pSettings->getPlayerColor(nID))));
-  paint->drawEllipse(0, 0, 15, 15);
+  QPainter *pPainter = new QPainter(&iconStone);
+  pPainter->setPen(QPen(Qt::black));
+  pPainter->setBrush(QBrush(QColor(m_pSettings->getPlayerColor(nID))));
+  pPainter->drawEllipse(0, 0, 15, 15);
   m_pLblsStoneIcon[nID]->setPixmap(iconStone);
   m_pLblsStoneIcon[nID]->setAlignment(Qt::AlignCenter);
-  delete paint;
+  delete pPainter;
 }
 
 // ---------------------------------------------------------------------------
@@ -385,21 +386,30 @@ auto StackAndConquer::switchTranslator(QTranslator *translator,
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::showRules() {
-  auto *dialog = new QDialog(this, this->windowFlags()
+  auto *pDialog = new QDialog(this, this->windowFlags()
                              & ~Qt::WindowContextHelpButtonHint);
-  auto *layout = new QGridLayout(dialog);
-  dialog->setWindowTitle(tr("Rules"));
-  dialog->setMinimumSize(700, 450);
+  auto *pLayout = new QGridLayout(pDialog);
+  pDialog->setWindowTitle(tr("Rules"));
+  pDialog->setMinimumSize(700, 450);
 
-  auto *textEdit = new QTextEdit;
-  textEdit->setReadOnly(true);
-  auto *credits = new QLabel;
-  credits->setOpenExternalLinks(true);
+  auto *pTextEditRules = new QTextEdit;
+  pTextEditRules->setReadOnly(true);
+  auto *pTextEditRulesATrois = new QTextEdit;
+  pTextEditRulesATrois->setReadOnly(true);
+  auto *pTabs = new QTabWidget(pDialog);
+  pTabs->addTab(pTextEditRules, tr("Standard rules"));
+  // TODO(x): Implement rules for > 2 players
+  // TODO(x): Remove after implementation of > 2 players
+  if (m_nMaxPlayers > 2) {
+    pTabs->addTab(pTextEditRulesATrois, tr("Addition for > 2 players"));
+  }
+  auto *pCredits = new QLabel;
+  pCredits->setOpenExternalLinks(true);
 
-  layout->setContentsMargins(2, 2, 2, 2);
-  layout->setSpacing(0);
-  layout->addWidget(textEdit);
-  layout->addWidget(credits);
+  pLayout->setContentsMargins(2, 2, 2, 2);
+  pLayout->setSpacing(0);
+  pLayout->addWidget(pTabs);
+  pLayout->addWidget(pCredits);
 
   QString sLang(m_pSettings->getLanguage());
   sLang = sLang.left(2);
@@ -408,7 +418,6 @@ void StackAndConquer::showRules() {
     qWarning() << rules.fileName() << "does not exist. Loading EN fallback.";
     rules.setFileName(QStringLiteral(":/rules_en.html"));
   }
-
   if (!rules.open(QFile::ReadOnly | QFile::Text)) {
     qWarning() << "Could not open rules:" << rules.fileName();
     QMessageBox::warning(this, tr("Warning"), tr("Could not open rules!"));
@@ -416,9 +425,25 @@ void StackAndConquer::showRules() {
   }
   QTextStream stream(&rules);
   stream.setCodec("UTF-8");
-  textEdit->setHtml(stream.readAll());
+  pTextEditRules->setHtml(stream.readAll());
+  rules.close();
 
-  credits->setText(
+  rules.setFileName(":/rules_a_trois_" + sLang + ".html");
+  if (!rules.exists()) {
+    qWarning() << rules.fileName() << "does not exist. Loading EN fallback.";
+    rules.setFileName(QStringLiteral(":/rules_a_trois_en.html"));
+  }
+  if (!rules.open(QFile::ReadOnly | QFile::Text)) {
+    qWarning() << "Could not open rules a trois:" << rules.fileName();
+    QMessageBox::warning(this, tr("Warning"), tr("Could not open rules!"));
+    return;
+  }
+  stream.setDevice(&rules);
+  stream.setCodec("UTF-8");
+  pTextEditRulesATrois->setHtml(stream.readAll());
+  rules.close();
+
+  pCredits->setText(
         "<p>" + tr("These rules are licensed under Creative Commons "
                    "<a href=\"https://creativecommons.org/licenses/by-nc/"
                    "4.0/\">Attribution-Noncommercial 4.0 International</a> "
@@ -426,7 +451,7 @@ void StackAndConquer::showRules() {
         "<br />Designer: Dieter Stein, <a href=\"https://spielstein.com/games/"
         "mixtour/rules\">spielstein.com</a></p>");
 
-  dialog->show();
+  pDialog->show();
 }
 
 // ---------------------------------------------------------------------------
