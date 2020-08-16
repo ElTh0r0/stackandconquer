@@ -494,6 +494,7 @@ auto Game::checkPossibleMoves() -> bool {
   bool bTie(true);
   for (int i = 0; i < m_nNumOfPlayers; i++) {
     m_pPlayers[i]->setLegalMoves(m_pBoard->getLegalMoves(
+                                   m_pPlayers.at(i)->getID(),
                                    m_pPlayers.at(i)->getStonesLeft() > 0,
                                    m_previousMove));
 

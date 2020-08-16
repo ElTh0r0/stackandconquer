@@ -58,7 +58,7 @@ class Board : public QGraphicsScene {
     auto getBoadDimensions() const -> QPoint;
     auto getMaxPlayerStones() const -> quint8;
     auto getField(const int index) const -> QString;
-    auto getLegalMoves(const bool bStonesLeft,
+    auto getLegalMoves(const QString &sID, const bool bStonesLeft,
                        const QList<int> &lastMove) const -> QJsonDocument;
     auto checkNeighbourhood(const int nIndex) const -> QList<int>;
     void printDebugFields() const;

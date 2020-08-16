@@ -745,7 +745,7 @@ void Board::highlightNeighbourhood(const QList<int> &neighbours) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-auto Board::getLegalMoves(const bool bStonesLeft,
+auto Board::getLegalMoves(const QString &sID, const bool bStonesLeft,
                           const QList<int> &lastMove) const -> QJsonDocument {
   QVariantList varMove;
   QJsonArray move;
@@ -771,9 +771,16 @@ auto Board::getLegalMoves(const bool bStonesLeft,
         const QList<int> neighbours = this->checkNeighbourhood(nTo);
         if (!neighbours.isEmpty()) {  // Possible tower moves
           for (const auto nFrom : neighbours) {
+            const QString sTower = m_jsBoard.at(nFrom).toString();
             for (int nStones = 1;
                  nStones <= m_jsBoard.at(nFrom).toString().size();
                  nStones++) {
+              // Skip suicide moves (opponent wins)
+              if ((m_jsBoard.at(nTo).toString().size() + nStones >= m_nMaxTower)
+                  && sTower.rightRef(1).toString() != sID) {
+                continue;
+              }
+
               varMove.clear();
               varMove << nFrom << nStones << nTo;
               move = QJsonArray::fromVariantList(varMove);
