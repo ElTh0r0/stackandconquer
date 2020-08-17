@@ -53,8 +53,10 @@ Player::~Player() = default;
 // ---------------------------------------------------------------------------
 
 auto Player::initCPU(const QPoint BoadDimensions, const quint8 nMaxTowerHeight,
-                     const QString &sOut, const QString &sPad) -> bool {
-  m_pJsCpu = new OpponentJS(m_nID, BoadDimensions, nMaxTowerHeight, sOut, sPad);
+                     const quint8 nNumOfPlayers, const QString &sOut,
+                     const QString &sPad) -> bool {
+  m_pJsCpu = new OpponentJS(m_nID, BoadDimensions, nMaxTowerHeight,
+                            nNumOfPlayers, sOut, sPad);
   connect(m_pJsCpu, &OpponentJS::actionCPU, this, &Player::actionCPU);
   connect(m_pJsCpu, &OpponentJS::scriptError, this, &Player::scriptError);
   return m_pJsCpu->loadAndEvalCpuScript(m_sCpuScript);
@@ -63,13 +65,14 @@ auto Player::initCPU(const QPoint BoadDimensions, const quint8 nMaxTowerHeight,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Player::callCpu(const QJsonArray &board, const QJsonDocument &legalMoves) {
+void Player::callCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
+                     const qint8 nDirection) {
   if (nullptr == m_pJsCpu) {
     qWarning() << "callCPU called for Human player P" + this->getID();
     QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
     return;
   }
-  m_pJsCpu->callJsCpu(board, legalMoves);
+  m_pJsCpu->callJsCpu(board, legalMoves, nDirection);
 }
 
 // ---------------------------------------------------------------------------

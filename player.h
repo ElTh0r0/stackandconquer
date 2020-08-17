@@ -48,7 +48,8 @@ class Player : public QObject {
     ~Player();
 
     auto initCPU(const QPoint BoadDimensions, const quint8 nMaxTowerHeight,
-                 const QString &sOut, const QString &sPad) -> bool;
+                 const quint8 nNumOfPlayers, const QString &sOut,
+                 const QString &sPad) -> bool;
     auto isHuman() const -> bool;
     auto getName() const -> QString;
     auto getCpuScript() const -> QString;
@@ -60,7 +61,8 @@ class Player : public QObject {
     void setLegalMoves(const QJsonDocument &legalMoves);
     auto getLegalMoves() const -> QJsonDocument;
     auto canMove() const -> bool;
-    void callCpu(const QJsonArray &board, const QJsonDocument &legalMoves);
+    void callCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
+                 const qint8 nDirection);
 
  signals:
     void actionCPU(QJsonArray move);

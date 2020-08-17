@@ -30,6 +30,8 @@
  * nBoardDimensionsX
  * nBoardDimensionsY
  * nHeightTowerWin
+ * nNumOfPlayers
+ * nDirection
  * sOut
  * sPad
  */
@@ -69,18 +71,33 @@ function callCPU() {
     return MoveToWin[0];
   }
 
-  // Check if opponent can win
-  if (2 === nID) {
-    MoveToWin = canWin(1);
+  // Check if next opponent can win depending on playing direction
+  if (nDirection > 0) {
+    if (nID === nNumOfPlayers) {
+      MoveToWin = canWin(1);
+    } else {
+      MoveToWin = canWin(nID + 1);
+    }
+    if (0 !== MoveToWin.length) {
+      // TODO(x): Rewrite preventWin() with new legal moves list
+      // var PreventWin = preventWin(MoveToWin[0], nPossibleMove);
+      // if (3 === PreventWin.length) {
+      //  return PreventWin;
+      // }
+    }
   } else {
-    MoveToWin = canWin(2);
-  }
-  if (0 !== MoveToWin.length) {
-    // TODO(x): Rewrite preventWin() with new legal moves list
-    // var PreventWin = preventWin(MoveToWin[0], nPossibleMove);
-    // if (3 === PreventWin.length) {
-    //  return PreventWin;
-    // }
+    if (nID === 1) {
+      MoveToWin = canWin(nNumOfPlayers);
+    } else {
+      MoveToWin = canWin(nID - 1);
+    }
+    if (0 !== MoveToWin.length) {
+      // TODO(x): Rewrite preventWin() with new legal moves list
+      // var PreventWin = preventWin(MoveToWin[0], nPossibleMove);
+      // if (3 === PreventWin.length) {
+      //  return PreventWin;
+      // }
+    }
   }
 
   cpu.log("Possible moves: " + legalMoves.length);

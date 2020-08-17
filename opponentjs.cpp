@@ -34,12 +34,14 @@
 #include <QJSEngine>
 
 OpponentJS::OpponentJS(const quint8 nID, const QPoint BoardDimensions,
-                       const quint8 nHeightTowerWin, const QString &sOut,
-                       const QString &sPad, QObject *parent)
+                       const quint8 nHeightTowerWin, const quint8 nNumOfPlayers,
+                       const QString &sOut, const QString &sPad,
+                       QObject *parent)
   : QObject(parent),
     m_nID(nID),
     m_BoardDimensions(BoardDimensions),
     m_nHeightTowerWin(nHeightTowerWin),
+    m_nNumOfPlayers(nNumOfPlayers),
     m_sOut(sOut),
     m_sPad(sPad),
     m_jsEngine(new QJSEngine(parent)) {
@@ -83,6 +85,7 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
   m_obj.setProperty(QStringLiteral("nBoardDimensionsX"), m_BoardDimensions.x());
   m_obj.setProperty(QStringLiteral("nBoardDimensionsY"), m_BoardDimensions.y());
   m_obj.setProperty(QStringLiteral("nHeightTowerWin"), m_nHeightTowerWin);
+  m_obj.setProperty(QStringLiteral("nNumOfPlayers"), m_nNumOfPlayers);
   m_obj.setProperty(QStringLiteral("sOut"), m_sOut);
   m_obj.setProperty(QStringLiteral("sPad"), m_sPad);
   return true;
@@ -92,12 +95,14 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
 // ---------------------------------------------------------------------------
 
 void OpponentJS::callJsCpu(const QJsonArray &board,
-                           const QJsonDocument &legalMoves) {
+                           const QJsonDocument &legalMoves,
+                           const qint8 nDirection) {
   QJsonDocument jsdoc(board);
   QString sJsBoard(jsdoc.toJson(QJsonDocument::Compact));
   QString sJsMoves(legalMoves.toJson(QJsonDocument::Compact));
   m_obj.setProperty(QStringLiteral("jsboard"), sJsBoard);
   m_obj.setProperty(QStringLiteral("jsmoves"), sJsMoves);
+  m_obj.setProperty(QStringLiteral("nDirection"), nDirection);
 
   QJSValue result = m_obj.property(QStringLiteral("callCPU")).call();
   if (result.isError()) {

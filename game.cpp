@@ -59,6 +59,7 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
   m_sBoardFile = m_pSettings->getBoardFile();
   m_nNumOfPlayers = m_pSettings->getNumOfPlayers();
   quint8 nStartPlayer(m_pSettings->getStartPlayer());
+  qint8 nDirection = 1;
   QJsonArray Won;
   QJsonArray StonesLeft;
   QJsonArray CpuScript;
@@ -75,6 +76,8 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
 
       nStartPlayer = static_cast<quint8>(
                        jsonObj[QStringLiteral("Current")].toInt());
+      nDirection = static_cast<qint8>(
+                     jsonObj[QStringLiteral("Direction")].toInt());
       m_nWinTowers = static_cast<quint8>(
                        jsonObj[QStringLiteral("WinTowers")].toInt());
       quint16 nBoardColumns =
@@ -83,10 +86,11 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
       quint16 nBoardRows = static_cast<quint16>(
                              jsonObj[QStringLiteral("BoardRows")].toInt(0));
       if (0 == nBoardColumns || 0 == nBoardRows ||
-          0 == nStartPlayer || 0 == m_nWinTowers) {
+          0 == nStartPlayer || 0 == m_nWinTowers ||
+          (-1 != nDirection && 1 != nDirection)) {
         qWarning() << "Save game contains invalid data:"
-                   << "nBoardColumns / nBoardRows / "
-                      "nStartPlayer / m_nWinTowers is empty.";
+                   << "nBoardColumns / nBoardRows / nStartPlayer / "
+                      "m_nWinTowers is empty or direction != 1/-1";
         QMessageBox::critical(nullptr, tr("Warning"),
                               tr("Save game contains invalid data."));
         exit(-1);
@@ -177,6 +181,7 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
 
   activePlayer.ID = nStartPlayer;
   activePlayer.isHuman = m_pPlayers.at(activePlayer.ID - 1)->isHuman();
+  activePlayer.Direction = nDirection;
 
   m_previousMove.clear();
 }
@@ -199,6 +204,7 @@ auto Game::initCpu() -> bool {
     if (!m_pPlayers.at(i)->isHuman()) {
       if (!m_pPlayers.at(i)->initCPU(m_pBoard->getBoadDimensions(),
                                      m_nMaxTowerHeight,
+                                     m_nNumOfPlayers,
                                      m_pBoard->getOut(),
                                      m_pBoard->getPad())) {
         return false;
@@ -454,9 +460,12 @@ void Game::updatePlayers(bool bInitial) {
       }
       emit updateNames(sListPlayers);
     } else {  // Toogle active player
-      activePlayer.ID++;
+      activePlayer.ID += activePlayer.Direction;
       if (activePlayer.ID > m_nNumOfPlayers) {
         activePlayer.ID = 1;
+      }
+      if (activePlayer.ID < 1) {
+        activePlayer.ID = m_nNumOfPlayers;
       }
       activePlayer.isHuman = m_pPlayers.at(activePlayer.ID - 1)->isHuman();
     }
@@ -484,7 +493,8 @@ void Game::updatePlayers(bool bInitial) {
 void Game::delayCpu() {
   m_pPlayers.at(activePlayer.ID - 1)->callCpu(
         m_pBoard->getBoard(),
-        m_pPlayers.at(activePlayer.ID - 1)->getLegalMoves());
+        m_pPlayers.at(activePlayer.ID - 1)->getLegalMoves(),
+        activePlayer.Direction);
 }
 
 // ---------------------------------------------------------------------------
@@ -567,6 +577,7 @@ auto Game::saveGame(const QString &sFile) -> bool {
   jsonObj[QStringLiteral("BoardRows")] = m_pBoard->getBoadDimensions().y();
   jsonObj[QStringLiteral("WinTowers")] = m_nWinTowers;
   jsonObj[QStringLiteral("Current")] = activePlayer.ID;
+  jsonObj[QStringLiteral("Direction")] = activePlayer.Direction;
   jsonObj[QStringLiteral("NumOfPlayers")] = m_nNumOfPlayers;
   QJsonArray arrWon;
   QJsonArray arrStonesLeft;

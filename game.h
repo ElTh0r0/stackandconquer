@@ -89,6 +89,7 @@ class Game : public QObject {
     struct currentPlayer {
         quint8 ID;
         bool isHuman;
+        qint8 Direction;  // 1 = clockwiese / -1 = anti-clockwise
     } activePlayer;
 };
 
