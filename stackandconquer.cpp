@@ -153,18 +153,26 @@ void StackAndConquer::setupGraphView() {
     m_pLblsPlayerName << new QLabel(QStringLiteral("Player"));
     m_pLblsPlayerName.last()->setStyleSheet(QStringLiteral("color: ") +
                                             m_pSettings->getTextColor().name());
+    QSizePolicy sp_retain = m_pLblsPlayerName.last()->sizePolicy();
+    sp_retain.setRetainSizeWhenHidden(true);
+    m_pLblsPlayerName.last()->setSizePolicy(sp_retain);
+
     m_pLblsStoneIcon << new QLabel();
     this->drawPlayerIcon(i);
+    m_pLblsStoneIcon.last()->setSizePolicy(sp_retain);
     m_pLblsStonesLeft << new QLabel(QStringLiteral("99"));
     m_pLblsStonesLeft.last()->setStyleSheet(QStringLiteral("color: ") +
                                             m_pSettings->getTextColor().name());
-    m_pLblsWon << new QLabel(QStringLiteral("0"));
-    m_pLblsWon.last()->setStyleSheet(QStringLiteral("color: ") +
-                                     m_pSettings->getTextColor().name());
+    m_pLblsStonesLeft.last()->setSizePolicy(sp_retain);
 
     m_pLblsWinIcon << new QLabel();
     m_pLblsWinIcon.last()->setPixmap(iconWin);
     m_pLblsWinIcon.last()->setAlignment(Qt::AlignCenter);
+    m_pLblsWinIcon.last()->setSizePolicy(sp_retain);
+    m_pLblsWon << new QLabel(QStringLiteral("0"));
+    m_pLblsWon.last()->setStyleSheet(QStringLiteral("color: ") +
+                                     m_pSettings->getTextColor().name());
+    m_pLblsWon.last()->setSizePolicy(sp_retain);
 
     if (0 == i % 2) {
       // addWidget(*widget, row, column, rowspan, colspan)

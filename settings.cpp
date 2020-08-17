@@ -68,8 +68,10 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
           static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
           this, &Settings::changedSettings);
   // TODO(x): Remove after implementation of > 2 players
-  m_pUi->spinNumOfPlayers->setVisible(false);
-  m_pUi->lblNumOfPlayers->setVisible(false);
+  if (m_nMaxPlayers < 3) {
+    m_pUi->spinNumOfPlayers->setVisible(false);
+    m_pUi->lblNumOfPlayers->setVisible(false);
+  }
 
   connect(m_pUi->spinNumToWin,
           static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
