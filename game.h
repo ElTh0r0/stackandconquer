@@ -47,7 +47,7 @@ class Game : public QObject {
     ~Game();
     auto getScene() const -> QGraphicsScene*;
     auto saveGame(const QString &sFile) -> bool;
-    void updatePlayers(bool bInitial = false);
+    void updatePlayers(bool bInitial = false, bool bChangeDir = false);
     auto initCpu() -> bool;
 
  signals:

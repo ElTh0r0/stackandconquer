@@ -164,6 +164,7 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
     tmpBoard << s;
   }
 
+  qDebug() << "Board file:" << sBoard;
   qDebug() << "Board dimensions:" << m_BoardDimensions.x() << "columns x"
            << m_BoardDimensions.y() << "rows";
 }

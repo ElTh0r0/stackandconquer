@@ -427,7 +427,7 @@ void Game::returnStones(const int nIndex) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::updatePlayers(bool bInitial) {
+void Game::updatePlayers(bool bInitial, bool bChangeDir) {
   if (m_bScriptError) {
     emit setInteractive(false);
     return;
@@ -460,6 +460,10 @@ void Game::updatePlayers(bool bInitial) {
       }
       emit updateNames(sListPlayers);
     } else {  // Toogle active player
+      if (bChangeDir) {
+        activePlayer.Direction = activePlayer.Direction * (-1);
+      }
+
       activePlayer.ID += activePlayer.Direction;
       if (activePlayer.ID > m_nNumOfPlayers) {
         activePlayer.ID = 1;
@@ -526,11 +530,35 @@ auto Game::checkPossibleMoves() -> bool {
   if (!m_pPlayers.at(activePlayer.ID - 1)->canMove()) {
     qDebug() << "PLAYER " + m_pPlayers.at(activePlayer.ID - 1)->getID() +
                 " HAS TO PASS!";
+    QString sDirectionChange(QLatin1String(""));
+    bool bDirectionChange(false);
+    if (m_nNumOfPlayers > 2) {
+      qint8 tmpDir(activePlayer.Direction);
+      quint8 tmpID(activePlayer.ID);
+      tmpDir = tmpDir * (-1);
+      tmpID += tmpDir;
+      if (tmpID > m_nNumOfPlayers) {
+        tmpID = 1;
+      }
+      if (tmpID < 1) {
+        tmpID = m_nNumOfPlayers;
+      }
+
+      // Check if player after direction change would be able to move.
+      // If not, do not change direction, since it would lead to infinity loop.
+      if (m_pPlayers.at(tmpID - 1)->canMove()) {
+        sDirectionChange = "\n" + tr("Playing direction changes!");
+        qDebug() << "Playing direction changes!";
+        bDirectionChange = true;
+      }
+    }
     QMessageBox::information(nullptr, tr("Information"),
-                             tr("No move possible!\n%1 has to pass.")
+                             tr("No move possible! %1 has to pass.")
                              .arg(
-                               m_pPlayers.at(activePlayer.ID - 1)->getName()));
-    this->updatePlayers();
+                               m_pPlayers.at(activePlayer.ID - 1)->getName()) +
+                             sDirectionChange);
+    this->updatePlayers(false, bDirectionChange);
+    return false;
   }
 
   return true;
