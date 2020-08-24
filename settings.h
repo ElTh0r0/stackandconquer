@@ -55,6 +55,7 @@ class Settings : public QDialog {
     auto getPlayerCpuScript(const quint8 nPlayer) const -> QString;
     auto getPlayerColor(const quint8 nPlayer) const -> QString;
     auto getNumOfPlayers() const -> quint8;
+    auto getMaxNumOfPlayers() const -> quint8;
     auto getStartPlayer() const -> quint8;
     auto getWinTowers() const -> quint8;
     auto getShowPossibleMoveTowers() const -> bool;

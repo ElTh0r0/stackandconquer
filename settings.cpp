@@ -587,8 +587,15 @@ auto Settings::getPlayerColor(const quint8 nPlayer) const -> QString {
   return m_DefaultPlayerColors[0];
 }
 
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 auto Settings::getNumOfPlayers() const -> quint8 {
   return m_nNumOfPlayers;
+}
+
+auto Settings::getMaxNumOfPlayers() const -> quint8 {
+  return m_nMaxPlayers;
 }
 
 // ----------------------------------------------------------------------------

@@ -80,17 +80,10 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
                      jsonObj[QStringLiteral("Direction")].toInt());
       m_nWinTowers = static_cast<quint8>(
                        jsonObj[QStringLiteral("WinTowers")].toInt());
-      quint16 nBoardColumns =
-          static_cast<quint16>(
-            jsonObj[QStringLiteral("BoardColumns")].toInt(0));
-      quint16 nBoardRows = static_cast<quint16>(
-                             jsonObj[QStringLiteral("BoardRows")].toInt(0));
-      if (0 == nBoardColumns || 0 == nBoardRows ||
-          0 == nStartPlayer || 0 == m_nWinTowers ||
+      if (0 == nStartPlayer || 0 == m_nWinTowers ||
           (-1 != nDirection && 1 != nDirection)) {
         qWarning() << "Save game contains invalid data:"
-                   << "nBoardColumns / nBoardRows / nStartPlayer / "
-                      "m_nWinTowers is empty or direction != 1/-1";
+                   << "nStartPlayer / m_nWinTowers empty or direction != 1/-1";
         QMessageBox::critical(nullptr, tr("Warning"),
                               tr("Save game contains invalid data."));
         exit(-1);
@@ -98,6 +91,15 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
 
       m_nNumOfPlayers = static_cast<quint8>(
                          jsonObj[QStringLiteral("NumOfPlayers")].toInt());
+      if (m_nNumOfPlayers > m_pSettings->getMaxNumOfPlayers() ||
+          nStartPlayer > m_nNumOfPlayers) {
+        qWarning() << "Save game contains invalid data:"
+                   << "NumOfPlayers > max number of players or "
+                      "nStartPlayer > m_nNumOfPlayers";
+        QMessageBox::critical(nullptr, tr("Warning"),
+                              tr("Save game contains invalid data."));
+        exit(-1);
+      }
       CpuScript = jsonObj[QStringLiteral("CpuScript")].toArray();
       Won = jsonObj[QStringLiteral("Won")].toArray();
       StonesLeft = jsonObj[QStringLiteral("StonesLeft")].toArray();
@@ -133,7 +135,7 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
       m_pBoard = new Board(m_sBoardFile, m_nGridSize, m_nMaxTowerHeight,
                            m_nNumOfPlayers, m_pSettings);
       if (!m_pBoard->setupSavegame(jsBoard)) {
-        qWarning() << "Save game contains invalid data - board not found!";
+        qWarning() << "Save game contains invalid data!";
         QMessageBox::warning(nullptr, qApp->applicationName(),
                              tr("Save game contains invalid data."));
         exit(-1);
@@ -601,8 +603,6 @@ auto Game::saveGame(const QString &sFile) -> bool {
   jsonObj[QStringLiteral("Board")] = jsBoard;
   jsonObj[QStringLiteral("BoardFile")] = m_sBoardFile;
   jsonObj[QStringLiteral("BoardFileRelative")] = sRelativeDir;
-  jsonObj[QStringLiteral("BoardColumns")] = m_pBoard->getBoadDimensions().x();
-  jsonObj[QStringLiteral("BoardRows")] = m_pBoard->getBoadDimensions().y();
   jsonObj[QStringLiteral("WinTowers")] = m_nWinTowers;
   jsonObj[QStringLiteral("Current")] = activePlayer.ID;
   jsonObj[QStringLiteral("Direction")] = activePlayer.Direction;
