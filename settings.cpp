@@ -537,7 +537,7 @@ void Settings::changeNumOfPlayers() {
 void Settings::updateStartCombo() {
   QStringList sListStartPlayer;
   sListStartPlayer << tr("Random");
-  for (quint8 i = 1; i <= m_pUi->spinNumOfPlayers->value(); i++) {
+  for (int i = 1; i <= m_pUi->spinNumOfPlayers->value(); i++) {
     sListStartPlayer << tr("Player") + " " + QString::number(i);
   }
   m_pUi->cbStartPlayer->clear();
