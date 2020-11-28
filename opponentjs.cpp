@@ -98,8 +98,8 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
                            const QJsonDocument &legalMoves,
                            const qint8 nDirection) {
   QJsonDocument jsdoc(board);
-  QString sJsBoard(jsdoc.toJson(QJsonDocument::Compact));
-  QString sJsMoves(legalMoves.toJson(QJsonDocument::Compact));
+  QString sJsBoard(QString::fromLatin1(jsdoc.toJson(QJsonDocument::Compact)));
+  QString sJsMoves(QString::fromLatin1(legalMoves.toJson(QJsonDocument::Compact)));
   m_obj.setProperty(QStringLiteral("jsboard"), sJsBoard);
   m_obj.setProperty(QStringLiteral("jsmoves"), sJsMoves);
   m_obj.setProperty(QStringLiteral("nDirection"), nDirection);

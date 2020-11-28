@@ -477,7 +477,7 @@ void StackAndConquer::reportBug() {
 void StackAndConquer::showInfoBox() {
   QMessageBox::about(
         this, tr("About"),
-        QString("<center>"
+        QString::fromLatin1("<center>"
                 "<big><b>%1 %2</b></big><br/>"
                 "%3<br/>"
                 "<small>%4</small><br/><br/>"

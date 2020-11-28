@@ -166,6 +166,7 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
 #endif
   }
 
+  m_pPlayers.reserve(m_nNumOfPlayers);
   for (int i = 0; i < m_nNumOfPlayers; i++) {
     m_pPlayers << new Player(i+1, m_pBoard->getMaxPlayerStones(),
                              CpuScript.at(i).toString(
@@ -324,6 +325,7 @@ void Game::setStone(const int nIndex, const bool bDebug) {
 void Game::moveTower(const int nFrom, const quint8 nStones, const int nTo) {
   QList<int> listStones;
   const QString s(m_pBoard->getField(nFrom));
+  listStones.reserve(s.size());
   for (const auto &ch : s) {
     listStones.append(ch.digitValue());
   }

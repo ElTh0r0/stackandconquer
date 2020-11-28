@@ -495,7 +495,7 @@ auto Settings::getLanguage() -> QString {
 #ifdef Q_OS_UNIX
     QByteArray lang = qgetenv("LANG");
     if (!lang.isEmpty()) {
-      return QLocale(lang).name();
+      return QLocale(QString::fromLatin1(lang)).name();
     }
 #endif
     return QLocale::system().name();
@@ -536,6 +536,7 @@ void Settings::changeNumOfPlayers() {
 
 void Settings::updateStartCombo() {
   QStringList sListStartPlayer;
+  sListStartPlayer.reserve(m_pUi->spinNumOfPlayers->value() + 1);
   sListStartPlayer << tr("Random");
   for (int i = 1; i <= m_pUi->spinNumOfPlayers->value(); i++) {
     sListStartPlayer << tr("Player") + " " + QString::number(i);
