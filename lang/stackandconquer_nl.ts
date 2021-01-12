@@ -142,7 +142,7 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../game.cpp" line="550"/>
         <source>Playing direction changes!</source>
-        <translation type="unfinished"></translation>
+        <translation>De speelrchting veranderd!</translation>
     </message>
     <message>
         <location filename="../game.cpp" line="556"/>
@@ -384,12 +384,12 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../stackandconquer.cpp" line="408"/>
         <source>Standard rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Standaard spelregels</translation>
     </message>
     <message>
         <location filename="../stackandconquer.cpp" line="412"/>
         <source>Addition for &gt; 2 players</source>
-        <translation type="unfinished"></translation>
+        <translation>Toevoeging voor &gt; 2 spelers</translation>
     </message>
     <message>
         <location filename="../stackandconquer.cpp" line="431"/>
