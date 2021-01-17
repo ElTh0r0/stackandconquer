@@ -61,6 +61,9 @@ class Settings : public QDialog {
     auto getShowPossibleMoveTowers() const -> bool;
     auto getLanguage() -> QString;
 
+    auto getGridSize() const -> quint16;
+    auto getDefaultGrid() const -> qreal;
+
     auto getBgColor() const -> QColor;
     auto getTextColor() const -> QColor;
     auto getTextHighlightColor() const -> QColor;
@@ -132,6 +135,8 @@ class Settings : public QDialog {
     QColor m_neighboursColor;
     QColor m_neighboursBorderColor;
 
+    quint16 m_nGridSize;
+    const qreal m_nDefaultGrid;
     const quint8 m_nMaxPlayers;
     const QStringList m_DefaultPlayerColors;
 };

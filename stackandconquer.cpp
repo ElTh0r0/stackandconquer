@@ -137,7 +137,6 @@ void StackAndConquer::setupGraphView() {
   // QGraphicsView forwards the event to the scene.
   m_pGraphView->setMouseTracking(true);
 
-  // TODO(volunteer): Scalable window/board/stones
   // Transform coordinate system to "isometric" view
   QTransform transfISO;
   transfISO = transfISO.scale(1.0, 0.5).rotate(45);
@@ -194,6 +193,9 @@ void StackAndConquer::setupGraphView() {
     }
   }
 
+  QSize defSize(600, 480);  // Size is based on default grid size of 70!
+  this->resize(
+        defSize * m_pSettings->getGridSize() / m_pSettings->getDefaultGrid());
   m_pFrame->setFixedWidth(this->width());
   m_pFrame->setLayout(m_pLayout);
   m_pLayout->setColumnStretch(1, 1);

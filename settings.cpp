@@ -42,6 +42,7 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
   : QDialog(pParent),
     m_pUi(new Ui::SettingsDialog()),
     m_sSharePath(sSharePath),
+    m_nDefaultGrid(70),  // Default stone SVG size fits to grid size of 70!
     m_nMaxPlayers(nMaxPlayers),
     m_DefaultPlayerColors{"#EF2929", "#FCAF3E", "#729FCF", "#8F5902"} {
   m_pUi->setupUi(this);
@@ -349,6 +350,8 @@ void Settings::readSettings() {
   }
   m_sGuiLanguage = m_pUi->cbGuiLanguage->currentText();
 
+  m_nGridSize = m_pSettings->value(QStringLiteral("GridSize"), 70).toInt();
+
   m_nNumOfPlayers = m_pSettings->value(
                       QStringLiteral("NumOfPlayers"), 2).toInt();
   if (m_nNumOfPlayers > m_nMaxPlayers) {
@@ -623,6 +626,16 @@ auto Settings::getWinTowers() const -> quint8 {
 }
 auto Settings::getShowPossibleMoveTowers() const -> bool {
   return m_bShowPossibleMoveTowers;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+auto Settings::getGridSize() const -> quint16 {
+  return m_nGridSize;
+}
+auto Settings::getDefaultGrid() const -> qreal {
+  return m_nDefaultGrid;
 }
 
 // ----------------------------------------------------------------------------

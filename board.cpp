@@ -41,12 +41,13 @@
 
 #include "./settings.h"
 
-Board::Board(const QString &sBoard, quint16 nGridSize, const quint8 nMaxTower,
-             quint8 NumOfPlayers, Settings *pSettings)
+Board::Board(const QString &sBoard, quint16 nGridSize, qreal nScale,
+             const quint8 nMaxTower, quint8 NumOfPlayers, Settings *pSettings)
   : sIN(QStringLiteral("0")),
     sOUT(QStringLiteral("#")),
     sPAD(QStringLiteral("-")),
     m_nGridSize(nGridSize),
+    m_nScale(nScale),
     m_nMaxPlayerStones(0),
     m_pSettings(pSettings),
     m_nMaxTower(nMaxTower),
@@ -323,8 +324,7 @@ void Board::createStones() {
 
     for (int i = 0; i < m_nMaxPlayerStones + 4; i++) {
       tmpSvgList.append(new QGraphicsSvgItem());
-      // Don't transform graphics to isometric view!
-      tmpSvgList.last()->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+      tmpSvgList.last()->setScale(m_nScale);
       tmpSvgList.last()->setSharedRenderer(pSvgRenderer);
       this->addItem(tmpSvgList.last());
       tmpSvgList.last()->setPos(0, 0);
@@ -520,12 +520,15 @@ void Board::addStone(const int nIndex, const quint8 nStone, const bool bAnim) {
     this->startAnimation(this->getCoordinateFromIndex(nIndex));
   }
 
-  // TODO(x): Make position dynamic depening on stone size
+  QRectF rect(m_FieldStones[nIndex].last()->boundingRect());
   m_FieldStones[nIndex].last()->setPos(
-        this->getCoordinateFromIndex(nIndex)*m_nGridSize);
+        this->getCoordinateFromIndex(nIndex) * m_nGridSize);
   m_FieldStones[nIndex].last()->setPos(
-        m_FieldStones[nIndex].last()->x() - 16 - 13*nExisting,
-      m_FieldStones[nIndex].last()->y() + 20 - 13*nExisting);
+        m_FieldStones[nIndex].last()->x() -
+        (rect.width()/4 * m_nScale - 3*m_nScale) * nExisting,
+        m_FieldStones[nIndex].last()->y() -
+        (rect.height()/4 * m_nScale - 3*m_nScale) * nExisting);
+
   m_FieldStones[nIndex].last()->setVisible(true);
 
   for (int z = 0; z < m_FieldStones.at(nIndex).size(); z++) {
