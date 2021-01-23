@@ -46,8 +46,8 @@ class Board : public QGraphicsScene {
   Q_OBJECT
 
  public:
-    Board(const QString &sBoard, quint16 nGridSize, qreal nScale,
-          const quint8 nMaxTower, quint8 NumOfPlayers, Settings *pSettings);
+    Board(const QString &sBoard, const quint8 nMaxTower, quint8 NumOfPlayers,
+          Settings *pSettings);
 
     auto setupSavegame(const QJsonArray &jsBoard) -> bool;
     void addStone(const int nIndex, const quint8 nStone,
@@ -71,6 +71,9 @@ class Board : public QGraphicsScene {
 
  signals:
     void actionPlayer(QJsonArray move);
+
+ public slots:
+   void changeZoom();
 
  protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *p_Event) override;
@@ -103,10 +106,10 @@ class Board : public QGraphicsScene {
     QList<QGraphicsRectItem *> m_listFields;
     QPainterPath m_boardPath;
 
-    const quint16 m_nGridSize;
-    const qreal m_nScale;
-    quint8 m_nMaxPlayerStones;
     Settings *m_pSettings;
+    quint16 m_nGridSize;
+    qreal m_nScale;
+    quint8 m_nMaxPlayerStones;
     const quint8 m_nMaxTower;
     const quint8 m_NumOfPlayers;
     QList<int> m_DIRS;

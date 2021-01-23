@@ -350,7 +350,13 @@ void Settings::readSettings() {
   }
   m_sGuiLanguage = m_pUi->cbGuiLanguage->currentText();
 
-  m_nGridSize = m_pSettings->value(QStringLiteral("GridSize"), 70).toInt();
+  m_nGridSize = m_pSettings->value(QStringLiteral("GridSize"),
+                                   m_nDefaultGrid).toInt();
+  if (m_nGridSize < m_nDefaultGrid) {
+    m_nGridSize = m_nDefaultGrid;
+  } else if (m_nGridSize > 200) {
+    m_nGridSize = 200;
+  }
 
   m_nNumOfPlayers = m_pSettings->value(
                       QStringLiteral("NumOfPlayers"), 2).toInt();
@@ -633,6 +639,16 @@ auto Settings::getShowPossibleMoveTowers() const -> bool {
 
 auto Settings::getGridSize() const -> quint16 {
   return m_nGridSize;
+}
+void Settings::setGridSize(const quint16 nNewGrid) {
+  if (nNewGrid < m_nDefaultGrid) {
+    m_nGridSize = m_nDefaultGrid;
+  } else if (nNewGrid > 200) {
+    m_nGridSize = 200;
+  } else {
+    m_nGridSize = nNewGrid;
+  }
+  m_pSettings->setValue(QStringLiteral("GridSize"), m_nGridSize);
 }
 auto Settings::getDefaultGrid() const -> qreal {
   return m_nDefaultGrid;

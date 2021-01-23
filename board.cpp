@@ -41,15 +41,15 @@
 
 #include "./settings.h"
 
-Board::Board(const QString &sBoard, quint16 nGridSize, qreal nScale,
-             const quint8 nMaxTower, quint8 NumOfPlayers, Settings *pSettings)
+Board::Board(const QString &sBoard, const quint8 nMaxTower, quint8 NumOfPlayers,
+             Settings *pSettings)
   : sIN(QStringLiteral("0")),
     sOUT(QStringLiteral("#")),
     sPAD(QStringLiteral("-")),
-    m_nGridSize(nGridSize),
-    m_nScale(nScale),
-    m_nMaxPlayerStones(0),
     m_pSettings(pSettings),
+    m_nGridSize(m_pSettings->getGridSize()),
+    m_nScale(m_pSettings->getGridSize() / m_pSettings->getDefaultGrid()),
+    m_nMaxPlayerStones(0),
     m_nMaxTower(nMaxTower),
     m_NumOfPlayers(NumOfPlayers) {
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
@@ -238,6 +238,8 @@ void Board::drawBoard(const QList<QString> &tmpBoard) {
     }
     if (sOUT == tmpBoard[i]) {
       m_listFields << new QGraphicsRectItem();
+      // Rect is not visible anyway, but isVisible property is used during zoom
+      m_listFields.last()->setVisible(false);
       continue;
     }
 
@@ -333,6 +335,93 @@ void Board::createStones() {
     }
     m_listPlayerStones << tmpSvgList;
   }
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void Board::changeZoom() {
+  m_nGridSize = m_pSettings->getGridSize();
+  m_nScale = m_pSettings->getGridSize() / m_pSettings->getDefaultGrid();
+  qDebug() << "Zoom - new grid size:" << m_nGridSize;
+
+  int x(0);
+  int y(-m_nGridSize);
+  quint8 col(65);
+  quint8 row(0);
+
+  for (int c = 0; c < m_Captions.size(); c++) {
+    this->removeItem(m_Captions[c]);
+    delete m_Captions[c];
+    m_Captions[c] = nullptr;
+  }
+  m_Captions.clear();
+  m_boardPath.clear();
+
+  // Reposition and rescale board fields
+  for (int i = 0; i < m_listFields.size(); i++) {
+    // m_BoardDimensions.x() = columns, m_BoardDimensions.y() = rows
+    if (0 == i % m_BoardDimensions.x()) {  // First item in row
+      x = 0;
+      col = 65;
+      y += m_nGridSize;
+      row++;
+    } else {
+      x += m_nGridSize;
+      col++;
+    }
+    if (false == m_listFields.at(i)->isVisible()) {  // Is outside
+      continue;
+    }
+
+    m_listFields[i]->setRect(x, y, m_nGridSize, m_nGridSize);
+    m_boardPath.addRect(m_listFields[i]->rect());
+    // Field captions for debugging
+    if (qApp->arguments().contains(QStringLiteral("--debug"))) {
+      m_Captions << this->addSimpleText(
+                      QString(static_cast<char>(col)) + QString::number(row));
+      m_Captions.last()->setPos(x+2, y + m_nGridSize - m_nGridSize/3);
+      m_Captions.last()->setFont(QFont(QStringLiteral("Arial"), m_nGridSize/5));
+    }
+  }
+
+  // Rescale highlighters
+  m_pHighlightRect->setRect(0, 0, m_nGridSize, m_nGridSize);
+  m_pSelectedField->setRect(0, 0, m_nGridSize, m_nGridSize);
+  m_pAnimateField->setRect(0, 0, m_nGridSize, m_nGridSize);
+  m_pAnimateField2->setRect(0, 0, m_nGridSize, m_nGridSize);
+
+  // Not yet placed player stones
+  for (int nPlayers = 0; nPlayers < m_NumOfPlayers; nPlayers++) {
+    for (int k = 0; k < m_listPlayerStones[nPlayers].size(); k++) {
+      m_listPlayerStones[nPlayers][k]->setScale(m_nScale);
+    }
+  }
+
+  // Stones on board
+  for (int nIndex = 0; nIndex < m_FieldStones.size(); nIndex++) {
+    for (int nNum = 0; nNum < m_FieldStones.at(nIndex).size(); nNum++) {
+      m_FieldStones[nIndex][nNum]->setScale(m_nScale);
+
+      // Adjust position
+      QRectF rect(m_FieldStones[nIndex][nNum]->boundingRect());
+      m_FieldStones[nIndex][nNum]->setPos(
+            this->getCoordinateFromIndex(nIndex) * m_nGridSize);
+      m_FieldStones[nIndex][nNum]->setPos(
+            m_FieldStones[nIndex][nNum]->x() -
+            (rect.width()/4 * m_nScale - 3*m_nScale) * nNum,
+            m_FieldStones[nIndex][nNum]->y() -
+            (rect.height()/4 * m_nScale - 3*m_nScale) * nNum);
+    }
+  }
+
+  // Redraw board
+  this->update(QRectF(0, 0, m_BoardDimensions.x() * m_nGridSize-1,
+                      m_BoardDimensions.y() * m_nGridSize-1));
+
+  // TODO(x): Might need adjustments for non rectangular shapes!
+  // TODO(x): Not working 100% correct during zoom (scrollbar visible)!
+  this->setSceneRect(this->itemsBoundingRect());
 }
 
 // ---------------------------------------------------------------------------

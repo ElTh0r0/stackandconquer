@@ -35,6 +35,7 @@ class QFrame;
 class QGraphicsView;
 class QGridLayout;
 class QLabel;
+class QSlider;
 
 class Game;
 class Settings;
@@ -59,6 +60,7 @@ class StackAndConquer : public QMainWindow {
 
  signals:
     void updateUiLang();
+    void changeZoom();
 
  protected:
     void changeEvent(QEvent *pEvent) override;
@@ -72,6 +74,7 @@ class StackAndConquer : public QMainWindow {
                                const quint8 nPlayerWon = 0);
     void updateNames(const QStringList &sListName);
     void drawPlayerIcon(const quint8 nID);
+    void zoomChanged(const int nNewGrid);
     void loadLanguage(const QString &sLang);
     void showRules();
     static void reportBug();
@@ -104,6 +107,8 @@ class StackAndConquer : public QMainWindow {
     QList<QLabel *> m_pLblsStonesLeft;
     QList<QLabel *> m_pLblsWinIcon;
     QList<QLabel *> m_pLblsWon;
+    QSlider *m_pZoomSlider;
+    const QSize m_DefaultSize;
 };
 
 #endif  // STACKANDCONQUER_H_

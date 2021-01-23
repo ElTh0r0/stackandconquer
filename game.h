@@ -57,6 +57,7 @@ class Game : public QObject {
     void drawIcon(const quint8 nID);
     void setInteractive(bool bEnabled);
     void highlightActivePlayer(quint8 nActivePlayer, quint8 nPlayerWon = 0);
+    void changeZoom();
 
  private slots:
     void makeMove(QJsonArray move);
@@ -80,8 +81,6 @@ class Game : public QObject {
     QList<Player *> m_pPlayers;
 
     const quint8 m_nMaxTowerHeight;
-    const quint16 m_nGridSize;
-    const qreal m_nScale;
     quint8 m_nWinTowers;
 
     bool m_bScriptError;

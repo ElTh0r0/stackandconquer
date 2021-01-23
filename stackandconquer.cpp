@@ -38,6 +38,7 @@
 #include <QResizeEvent>
 #include <QTabWidget>
 #include <QTextEdit>
+#include <QSlider>
 
 #include "./game.h"
 #include "./settings.h"
@@ -54,7 +55,9 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
     m_sSharePath(sharePath.absolutePath()),
     m_nMaxPlayers(2),
     m_sCurrLang(QString()),
-    m_pGame(nullptr) {
+    m_pGame(nullptr),
+    // Size is based on default grid size of 70!
+    m_DefaultSize(600, 480) {
   m_pUi->setupUi(this);
   this->setWindowTitle(qApp->applicationName());
 
@@ -125,6 +128,18 @@ void StackAndConquer::setupMenu() {
           this, &StackAndConquer::reportBug);
   connect(m_pUi->action_Info, &QAction::triggered,
           this, &StackAndConquer::showInfoBox);
+
+  m_pZoomSlider = new QSlider(Qt::Orientation::Horizontal, this);
+  m_pZoomSlider->setMinimum(m_pSettings->getDefaultGrid());
+  m_pZoomSlider->setMaximum(200);
+  m_pZoomSlider->setSingleStep(5);
+  m_pZoomSlider->setTickInterval(10);
+  m_pZoomSlider->setTracking(false);
+  m_pZoomSlider->setMaximumWidth(200);
+  m_pZoomSlider->setValue(m_pSettings->getGridSize());
+  m_pUi->statusBar->addPermanentWidget(m_pZoomSlider);
+  connect(m_pZoomSlider, &QSlider::valueChanged,
+          this, &StackAndConquer::zoomChanged);
 }
 
 // ---------------------------------------------------------------------------
@@ -193,10 +208,7 @@ void StackAndConquer::setupGraphView() {
     }
   }
 
-  QSize defSize(600, 480);  // Size is based on default grid size of 70!
-  this->resize(
-        defSize * m_pSettings->getGridSize() / m_pSettings->getDefaultGrid());
-  m_pFrame->setFixedWidth(this->width());
+  this->zoomChanged(m_pSettings->getGridSize());
   m_pFrame->setLayout(m_pLayout);
   m_pLayout->setColumnStretch(1, 1);
   m_pLayout->setColumnStretch(2, 1);
@@ -242,6 +254,22 @@ void StackAndConquer::updateNames(const QStringList &sListName) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
+void StackAndConquer::zoomChanged(const int nNewGrid) {
+  static bool bInitial = true;
+
+  if (m_pSettings->getGridSize() != nNewGrid || bInitial) {
+    m_pSettings->setGridSize(nNewGrid);
+    this->resize(
+          m_DefaultSize * m_pSettings->getGridSize() / m_pSettings->getDefaultGrid());
+    m_pFrame->setFixedWidth(this->width());
+    emit changeZoom();
+    bInitial = false;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
 void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
   m_pFrame->setFixedWidth(pEvent->size().width());
 }
@@ -268,6 +296,8 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
           this, &StackAndConquer::setViewInteractive);
   connect(m_pGame, &Game::highlightActivePlayer,
           this, &StackAndConquer::highlightActivePlayer);
+  connect(this, &StackAndConquer::changeZoom,
+          m_pGame, &Game::changeZoom);
 
   m_pGraphView->setScene(m_pGame->getScene());
   m_pGraphView->updateSceneRect(m_pGame->getScene()->sceneRect());

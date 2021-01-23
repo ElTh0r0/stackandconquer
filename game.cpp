@@ -50,10 +50,6 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
   : m_pSettings(pSettings),
     m_pBoard(nullptr),
     m_nMaxTowerHeight(5),
-    m_nGridSize(m_pSettings->getGridSize()),
-    // Default stone SVG size fits to grid size of 70,
-    // so scale is calculated based on default of 70!
-    m_nScale(m_nGridSize / m_pSettings->getDefaultGrid()),
     m_nWinTowers(pSettings->getWinTowers()),
     m_bScriptError(false) {
   qDebug() << "Starting new game" << sSavegame;
@@ -135,8 +131,8 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
       qDebug() << "Loading save game board:" << m_sBoardFile;
 
       QJsonArray jsBoard = jsonObj[QStringLiteral("Board")].toArray();
-      m_pBoard = new Board(m_sBoardFile, m_nGridSize, m_nScale,
-                           m_nMaxTowerHeight, m_nNumOfPlayers, m_pSettings);
+      m_pBoard = new Board(m_sBoardFile, m_nMaxTowerHeight, m_nNumOfPlayers,
+                           m_pSettings);
       if (!m_pBoard->setupSavegame(jsBoard)) {
         qWarning() << "Save game contains invalid data!";
         QMessageBox::warning(nullptr, qApp->applicationName(),
@@ -147,8 +143,8 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
 
   // No save game: Start empty board with default values
   if (nullptr == m_pBoard) {
-    m_pBoard = new Board(m_sBoardFile, m_nGridSize, m_nScale,
-                         m_nMaxTowerHeight, m_nNumOfPlayers, m_pSettings);
+    m_pBoard = new Board(m_sBoardFile, m_nMaxTowerHeight, m_nNumOfPlayers,
+                         m_pSettings);
     for (int i = 1; i <= m_nNumOfPlayers; i++) {
       Won << 0;
       StonesLeft << m_pBoard->getMaxPlayerStones();
@@ -157,6 +153,7 @@ Game::Game(Settings *pSettings, const QString &sSavegame)
   }
 
   connect(m_pBoard, &Board::actionPlayer, this, &Game::makeMove);
+  connect(this, &Game::changeZoom, m_pBoard, &Board::changeZoom);
 
   // Select start player
   if (0 == nStartPlayer) {  // Random

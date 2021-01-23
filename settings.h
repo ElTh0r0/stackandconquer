@@ -62,6 +62,7 @@ class Settings : public QDialog {
     auto getLanguage() -> QString;
 
     auto getGridSize() const -> quint16;
+    void setGridSize(const quint16 nNewGrid);
     auto getDefaultGrid() const -> qreal;
 
     auto getBgColor() const -> QColor;
