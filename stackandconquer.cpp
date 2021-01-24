@@ -162,6 +162,9 @@ void StackAndConquer::setupGraphView() {
   m_pLayout = new QGridLayout;
   m_pLayout->setVerticalSpacing(0);
   QPixmap iconWin(QStringLiteral(":/images/win.png"));
+  if (m_pSettings->getBgColor().lightnessF() < 0.5) {
+    iconWin = QStringLiteral(":/images/win2.png");
+  }
 
   for (int i = 0; i < m_nMaxPlayers; i++) {
     m_pLblsPlayerName << new QLabel(QStringLiteral("Player"));

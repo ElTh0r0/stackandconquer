@@ -12,5 +12,7 @@
         <file>images/example1.png</file>
         <file>images/example2.png</file>
         <file>images/stone.svg</file>
+        <file>images/user2.png</file>
+        <file>images/win2.png</file>
     </qresource>
 </RCC>
