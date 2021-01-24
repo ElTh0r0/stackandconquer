@@ -258,7 +258,7 @@ void Board::drawBoard(const QList<QString> &tmpBoard) {
   }
 
   // TODO(x): Might need adjustments for non rectangular shapes!
-  this->setSceneRect(this->itemsBoundingRect());
+  this->setSceneRect(m_boardPath.boundingRect());
 }
 
 // ---------------------------------------------------------------------------
@@ -425,8 +425,7 @@ void Board::changeZoom() {
                       m_BoardDimensions.y() * m_nGridSize-1));
 
   // TODO(x): Might need adjustments for non rectangular shapes!
-  // TODO(x): Not working 100% correct during zoom (scrollbar visible)!
-  this->setSceneRect(this->itemsBoundingRect());
+  this->setSceneRect(m_boardPath.boundingRect());
 }
 
 // ---------------------------------------------------------------------------
