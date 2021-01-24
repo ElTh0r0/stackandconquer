@@ -64,6 +64,7 @@ class Settings : public QDialog {
     auto getGridSize() const -> quint16;
     void setGridSize(const quint16 nNewGrid);
     auto getDefaultGrid() const -> qreal;
+    auto getMaxGrid() const -> quint16;
 
     auto getBgColor() const -> QColor;
     auto getTextColor() const -> QColor;
@@ -138,6 +139,7 @@ class Settings : public QDialog {
 
     quint16 m_nGridSize;
     const qreal m_nDefaultGrid;
+    const quint16 m_nMaxGrid;
     const quint8 m_nMaxPlayers;
     const QStringList m_DefaultPlayerColors;
 };

@@ -131,7 +131,7 @@ void StackAndConquer::setupMenu() {
 
   m_pZoomSlider = new QSlider(Qt::Orientation::Horizontal, this);
   m_pZoomSlider->setMinimum(m_pSettings->getDefaultGrid());
-  m_pZoomSlider->setMaximum(200);
+  m_pZoomSlider->setMaximum(m_pSettings->getMaxGrid());
   m_pZoomSlider->setSingleStep(5);
   m_pZoomSlider->setTickInterval(10);
   m_pZoomSlider->setTracking(false);
