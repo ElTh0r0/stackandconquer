@@ -356,7 +356,12 @@ void Board::changeZoom() {
     m_Captions[c] = nullptr;
   }
   m_Captions.clear();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
   m_boardPath.clear();
+#else
+  m_boardPath = QPainterPath();
+#endif
 
   // Reposition and rescale board fields
   for (int i = 0; i < m_listFields.size(); i++) {
