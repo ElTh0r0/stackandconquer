@@ -1,24 +1,24 @@
-​<?xml version="1.0" encoding="UTF-8"?>
-​<component type="desktop-application">
-​  <id>stackandconquer.desktop</id>
-​  <metadata_license>FSFAP</metadata_license>
-​  <project_license>GPL-3.0-or-later</project_license>
-​  <name>StackAndConquer</name>
-​  <summary>Challenging tower conquest board game</summary>
-​
-​  <description>
-​    <p>
-​      StackAndConquer is a challenging tower conquest board game inspired 
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>stackandconquer.desktop</id>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>StackAndConquer</name>
+  <summary>Challenging tower conquest board game</summary>
+
+  <description>
+    <p>
+      StackAndConquer is a challenging tower conquest board game inspired 
       by Mixtour. Objective is to build a stack of stones with at least 
       five stones and a stone with the players color on top.
-​    </p>
-​  </description>
-​
-​  <launchable type="desktop-id">stackandconquer.desktop</launchable>
-​
-​  <url type="homepage">https://github.com/ElTh0r0/stackandconquer</url>
-​
-​  <provides>
-​    <binary>stackandconquer</binary>
-​  </provides>
-​</component>
+    </p>
+  </description>
+
+  <launchable type="desktop-id">stackandconquer.desktop</launchable>
+
+  <url type="homepage">https://github.com/ElTh0r0/stackandconquer</url>
+
+  <provides>
+    <binary>stackandconquer</binary>
+  </provides>
+</component>
