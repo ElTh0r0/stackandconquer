@@ -1,7 +1,7 @@
 #
 # spec file for stackandconquer
 #
-# Copyright (C) 2015-2018 Thorsten Roth
+# Copyright (C) 2015-2021 Thorsten Roth
 #
 # StackAndConquer is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 Name:           stackandconquer
 Summary:        Challenging tower conquest board game
-Version:        0.8.2
+Version:        0.9.0
 Release:        1
 License:        GPL-3.0+
 URL:            https://github.com/ElTh0r0/stackandconquer
@@ -29,6 +29,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-build
 #--------------------------------------------------------------------
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 Group:          Amusements/Games
+
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc-c++
 BuildRequires:  hicolor-icon-theme
@@ -42,6 +43,7 @@ BuildRequires:  qt5-qtdeclarative-devel
 #--------------------------------------------------------------------
 %if 0%{?suse_version}
 Group:          Amusements/Games/Board/Other
+
 BuildRequires:  gcc-c++
 BuildRequires:  hicolor-icon-theme
 BuildRequires:  libqt5-qtbase-devel
@@ -72,7 +74,8 @@ make %{?_smp_mflags}
 
 %install
 make install INSTALL_ROOT=%{buildroot}
-desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}.desktop
+desktop-file-validate %{buildroot}/%{_datadir}/applications/com.github.elth0r0.stackandconquer.desktop
+appstream-util validate-relax --nonet %{buildroot}/metainfo/com.github.elth0r0.stackandconquer.metainfo.xml
 
 %clean
 rm -rf %{buildroot}
@@ -98,7 +101,7 @@ make %{?_smp_mflags}
 
 %install
 make INSTALL_ROOT=%{buildroot} install
-%suse_update_desktop_file %{name}
+%suse_update_desktop_file com.github.elth0r0.stackandconquer
 
 %clean
 rm -rf %{buildroot}
@@ -117,13 +120,13 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %if 0%{?suse_version}
 %dir %{_datadir}/metainfo
+%{_datadir}/icons/hicolor/
 %endif
 %{_bindir}/%{name}
 %{_datadir}/%{name}
-%{_datadir}/applications/%{name}.desktop
-%{_datadir}/pixmaps/%{name}_64x64.png
-%{_datadir}/pixmaps/%{name}.xpm
-%{_datadir}/metainfo/%{name}.appdata.xml
+%{_datadir}/applications/com.github.elth0r0.stackandconquer.desktop
+%{_datadir}/icons/hicolor/*/apps/%{name}.*g
+%{_datadir}/metainfo/com.github.elth0r0.stackandconquer.metainfo.xml
 %doc COPYING
 %{_mandir}/*/*
 

@@ -2,7 +2,11 @@
 
   !define APPNAME "StackAndConquer"
   !define DESCRIPTION "Challenging tower conquest board game"
-  !define VERSION "0.8.2.0" ;use always 4 digits w.x.y.z
+  !define VERSIONMAJOR 0
+  !define VERSIONMINOR 9
+  !define VERSIONPATCH 0
+  !define APPVERSION "${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONPATCH}.0"
+  !define ABOUTURL "https://github.com/ElTh0r0/stackandconquer"
   
   !include "LogicLib.nsh"
   !include "MUI2.nsh"
@@ -14,14 +18,14 @@
   !define MUI_ICON "stackandconquer.ico"
   RequestExecutionLevel admin
 
-  VIProductVersion ${VERSION}
+  VIProductVersion ${APPVERSION}
   VIAddVersionKey ProductName "${APPNAME}"
   VIAddVersionKey LegalCopyright "Thorsten Roth"
   VIAddVersionKey FileDescription "${DESCRIPTION}"
-  VIAddVersionKey FileVersion "${VERSION}"
-  VIAddVersionKey ProductVersion "${VERSION}"
+  VIAddVersionKey FileVersion "${APPVERSION}"
+  VIAddVersionKey ProductVersion "${APPVERSION}"
   VIAddVersionKey InternalName "${APPNAME}"
-  BrandingText "${APPNAME} - ${VERSION}"
+  BrandingText "${APPNAME} - ${APPVERSION}"
   
   Var StartMenuFolder
   !define MUI_ABORTWARNING
@@ -58,19 +62,30 @@ Section
   
   !insertmacro MUI_STARTMENU_WRITE_END
 
-  ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
-  IntFmt $0 "0x%08X" $0
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
-                     "EstimatedSize" "$0"
+  WriteRegStr HKLM "Software\${APPNAME}" "" "$INSTDIR"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
                    "DisplayName" "${APPNAME}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
                    "Publisher" "Thorsten Roth"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
-                   "DisplayVersion" "${VERSION}"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
                    "UninstallString" "$\"$INSTDIR\Uninstall.exe$\""
-  
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
+                   "URLInfoAbout" "$\"${ABOUTURL}$\""
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
+                   "DisplayVersion" "${APPVERSION}"
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
+                     "VersionMajor" ${VERSIONMAJOR}
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
+                     "VersionMinor" ${VERSIONMINOR}
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
+                     "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
+                     "NoRepair" 1
+  ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+  IntFmt $0 "0x%08X" $0
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
+                     "EstimatedSize" "$0"
+
 SectionEnd
  
 ;--------------------------------
@@ -87,6 +102,7 @@ Section "Uninstall"
   Delete "$SMPROGRAMS\$StartMenuFolder\${APPNAME}.lnk"
   RMDir "$SMPROGRAMS\$StartMenuFolder"
 
+  DeleteRegKey HKLM "Software\${APPNAME}"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
   
 SectionEnd
