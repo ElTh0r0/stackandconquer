@@ -15,7 +15,6 @@ unset QTDIR ; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
 export VERSION=$(git rev-parse --short HEAD)  # linuxdeployqt uses this for naming the file
 
 echo "Creating AppImage..."
-cp ./res/images/stackandconquer_64x64.png ./appdir/stackandconquer.png
 ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -appimage -bundle-non-qt-libs
 find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
 
