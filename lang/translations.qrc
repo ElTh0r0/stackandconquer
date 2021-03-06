@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>stackandconquer_de.qm</file>
+        <file>stackandconquer_it.qm</file>
+        <file>stackandconquer_nl.qm</file>
+        <file>rules_en.html</file>
+        <file>rules_de.html</file>
+        <file>rules_it.html</file>
+        <file>rules_nl.html</file>
+        <file>rules_a_trois_en.html</file>
+        <file>rules_a_trois_de.html</file>
+        <file>rules_a_trois_nl.html</file>
+    </qresource>
+</RCC>

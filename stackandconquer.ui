@@ -14,8 +14,8 @@
    <string notr="true">StackAndConquer</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="res/stackandconquer_resources.qrc">
-    <normaloff>:/images/stackandconquer_64x64.png</normaloff>:/images/stackandconquer_64x64.png</iconset>
+   <iconset resource="data/data.qrc">
+    <normaloff>:/stackandconquer.png</normaloff>:/stackandconquer.png</iconset>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedKingdom"/>
@@ -58,7 +58,7 @@
   <action name="action_NewGame">
    <property name="icon">
     <iconset theme="document-new">
-     <normalon>:/images/menu/document-new.png</normalon>
+     <normalon>:/menu/document-new.png</normalon>
     </iconset>
    </property>
    <property name="text">
@@ -71,7 +71,7 @@
   <action name="action_Quit">
    <property name="icon">
     <iconset theme="application-exit">
-     <normalon>:/images/menu/system-log-out.png</normalon>
+     <normalon>:/menu/system-log-out.png</normalon>
     </iconset>
    </property>
    <property name="text">
@@ -81,7 +81,7 @@
   <action name="action_Info">
    <property name="icon">
     <iconset theme="help-about">
-     <normalon>:/images/menu/help-browser.png</normalon>
+     <normalon>:/menu/help-browser.png</normalon>
     </iconset>
    </property>
    <property name="text">
@@ -94,7 +94,7 @@
    </property>
    <property name="icon">
     <iconset theme="document-save">
-     <normalon>:/images/menu/document-save.png</normalon>
+     <normalon>:/menu/document-save.png</normalon>
     </iconset>
    </property>
    <property name="text">
@@ -107,7 +107,7 @@
   <action name="action_LoadGame">
    <property name="icon">
     <iconset theme="document-open">
-     <normalon>:/images/menu/document-open.png</normalon>
+     <normalon>:/menu/document-open.png</normalon>
     </iconset>
    </property>
    <property name="text">
@@ -125,7 +125,7 @@
   <action name="action_Preferences">
    <property name="icon">
     <iconset theme="preferences-system">
-     <normalon>:/images/menu/preferences-system.png</normalon>
+     <normalon>:/menu/preferences-system.png</normalon>
     </iconset>
    </property>
    <property name="text">
@@ -140,7 +140,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="res/stackandconquer_resources.qrc"/>
+  <include location="data/data.qrc"/>
  </resources>
  <connections/>
 </ui>

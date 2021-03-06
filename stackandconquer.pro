@@ -66,8 +66,8 @@ HEADERS      += stackandconquer.h \
 FORMS        += stackandconquer.ui \
                 settings.ui
 
-RESOURCES    += res/stackandconquer_resources.qrc \
-                res/translations.qrc
+RESOURCES    += data/data.qrc \
+                lang/translations.qrc
 
 TRANSLATIONS += lang/stackandconquer_de.ts \
                 lang/stackandconquer_nl.ts \
@@ -102,12 +102,8 @@ unix: !macx {
   desktop.path    = $$PREFIX/share/applications
   desktop.files  += data/unix/com.github.elth0r0.stackandconquer.desktop
 
-  pixmap.path     = $$PREFIX/share/pixmaps
-  pixmap.files   += res/images/stackandconquer_64x64.png \
-                    res/images/stackandconquer.xpm
-
-  #icons.path      = $$PREFIX/share/icons
-  #icons.files    += res/images/hicolor
+  icons.path      = $$PREFIX/share/icons
+  icons.files    += icons/hicolor
 
   man.path        = $$PREFIX/share
   man.files      += man
@@ -118,8 +114,7 @@ unix: !macx {
   INSTALLS       += target \
                     data \
                     desktop \
-                    pixmap \
-                    #icons \
+                    icons \
                     man \
                     meta
 }

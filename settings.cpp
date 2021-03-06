@@ -200,9 +200,9 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
   cpuDir.setPath(userDataDir);
   if (cpuDir.cd(QStringLiteral("cpu"))) {
     const QFileInfoList listFiles(cpuDir.entryInfoList(QDir::Files));
-    QString sIcon(QStringLiteral(":/images/user.png"));
+    QString sIcon(QStringLiteral(":/img/user.png"));
     if (this->window()->palette().window().color().lightnessF() < 0.5) {
-      sIcon = QStringLiteral(":/images/user2.png");
+      sIcon = QStringLiteral(":/img/user2.png");
     }
     for (const auto &file : listFiles) {
       if ("js" == file.suffix().toLower()) {

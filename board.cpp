@@ -300,7 +300,7 @@ void Board::createHighlighters() {
 
 void Board::createStones() {
   // Load svg as txt for below color exchange.
-  QFile fStone(QStringLiteral(":/images/stone.svg"));
+  QFile fStone(QStringLiteral(":/img/stone.svg"));
   if (!fStone.open(QFile::ReadOnly | QFile::Text)) {
     qDebug() << "Could not open stone.svg";
     QMessageBox::critical(nullptr, tr("Warning"),

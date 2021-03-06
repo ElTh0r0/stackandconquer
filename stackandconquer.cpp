@@ -59,7 +59,6 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
     // Size is based on default grid size of 70!
     m_DefaultSize(600, 480) {
   m_pUi->setupUi(this);
-  this->setWindowTitle(qApp->applicationName());
 
   m_pSettings = new Settings(m_sSharePath, m_userDataDir.absolutePath(),
                              m_nMaxPlayers, this);
@@ -161,9 +160,9 @@ void StackAndConquer::setupGraphView() {
   m_pFrame = new QFrame(m_pGraphView);
   m_pLayout = new QGridLayout;
   m_pLayout->setVerticalSpacing(0);
-  QPixmap iconWin(QStringLiteral(":/images/win.png"));
+  QPixmap iconWin(QStringLiteral(":/img/win.png"));
   if (m_pSettings->getBgColor().lightnessF() < 0.5) {
-    iconWin = QStringLiteral(":/images/win2.png");
+    iconWin = QStringLiteral(":/img/win2.png");
   }
 
   for (int i = 0; i < m_nMaxPlayers; i++) {
