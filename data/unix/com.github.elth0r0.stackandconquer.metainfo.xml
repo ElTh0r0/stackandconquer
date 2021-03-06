@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2021 Thorsten Roth -->
+<component type="desktop-application">
+  <id>com.github.elth0r0.stackandconquer.desktop</id>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>StackAndConquer</name>
+  <name xml:lang="de">StackAndConquer</name>
+  <summary>Challenging tower conquest board game</summary>
+  <summary xml:lang="de">Ein anspruchsvolles Tower Conquest Brettspiel</summary>
+
+  <description>
+    <p>StackAndConquer is a challenging tower conquest board game inspired by Mixtour. Objective is to build a stack of stones with at least five stones and a stone with the players color on top.</p>
+    <p xml:lang="de">StackAndConquer ist ein anspruchsvolles Tower Conquest Brettspiel, das von Mixtour inspiriert ist. Ziel ist es einen Turm mit mindestens 5 Steinen zu bauen, mit einem eigenen Stein an oberster Stelle.</p>
+  </description>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://user-images.githubusercontent.com/26674558/110220953-70bea280-7ec9-11eb-809f-d490e2987548.png</image>
+    </screenshot>
+  </screenshots>
+
+  <launchable type="desktop-id">com.github.elth0r0.stackandconquer.desktop</launchable>
+
+  <url type="homepage">https://github.com/ElTh0r0/stackandconquer</url>
+  <url type="bugtracker">https://github.com/ElTh0r0/stackandconquer/issues</url>
+
+  <developer_name>Thorsten Roth</developer_name>
+  <update_contact>elthoro@gmx.de</update_contact>
+
+  <provides>
+    <binary>stackandconquer</binary>
+  </provides>
+
+  <content_rating type="oars-1.0" />
+
+  <releases>
+    <release version="0.8.2" date="2020-03-27">
+      <description>
+        <p>Added Italian translation - thanks to davi92!</p>
+      </description>
+    </release>
+    <release version="0.8.1" date="2018-03-11">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Added Dutch translation - thanks to Vistaus!</li>
+          <li>Improved CPU opponent</li>
+          <li>Added AppImage</li>
+          <li>Added macOS build (untested)</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.8.0" date="2017-11-08">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Added rules</li>
+          <li>Load/save game</li>
+          <li>Fixed cmd argument handling</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.7.0" date="2017-09-19">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Improved CPU</li>
+          <li>Added Appyeyor build file</li>
+          <li>Bug fixes</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.6.0" date="2017-04-17">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Added JS engine for CPU scripts and removed plugin interface</li>
+          <li>Minor GUI changes and graphic fixes</li>
+          <li>Added fall-back menu icons</li>
+          <li>Change GUI language without restarting the game</li>
+          <li>Moved project from Launchpad to GitHub</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.5.0" date="2016-11-13">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Added CPU plugin interface</li>
+          <li>Highlight moves</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.4.0" date="2016-05-29">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Check for possible moves</li>
+          <li>Check if previous move is reverted</li>
+          <li>Pretty debug output</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.3.0" date="2016-04-16">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Settings dialog</li>
+          <li>Added German translation</li>
+        </ul>
+      </description>
+    </release>
+    <release version="0.2.0" date="2016-04-08">
+      <description>
+        <p>Improved graphics.</p>
+      </description>
+    </release>
+    <release version="0.1.0" date="2016-04-07">
+      <description>
+        <p>Initial commit. Main game logic implemented.</p>
+      </description>
+    </release>
+  </releases>
+</component>

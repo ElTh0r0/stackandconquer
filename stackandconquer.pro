@@ -14,10 +14,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
 
-lessThan(QT_MAJOR_VERSION, 5) {
-  error("StackAndConquer requires Qt 5.0 or greater")
-}
-
 TEMPLATE      = app
 
 unix: !macx {
@@ -104,7 +100,7 @@ unix: !macx {
   data.files     += data/boards
 
   desktop.path    = $$PREFIX/share/applications
-  desktop.files  += data/stackandconquer.desktop
+  desktop.files  += data/unix/com.github.elth0r0.stackandconquer.desktop
 
   pixmap.path     = $$PREFIX/share/pixmaps
   pixmap.files   += res/images/stackandconquer_64x64.png \
@@ -117,7 +113,7 @@ unix: !macx {
   man.files      += man
 
   meta.path       = $$PREFIX/share/metainfo
-  meta.files     += res/stackandconquer.appdata.xml
+  meta.files     += data/unix/com.github.elth0r0.stackandconquer.metainfo.xml
 
   INSTALLS       += target \
                     data \
