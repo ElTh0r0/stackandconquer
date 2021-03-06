@@ -26,7 +26,9 @@ unix: !macx {
        TARGET = StackAndConquer
 }
 
-VERSION       = 0.9.0
+win32:VERSION  = 0.9.0.0
+else:VERSION   = 0.9.0
+
 QMAKE_TARGET_PRODUCT     = "StackAndConquer"
 QMAKE_TARGET_DESCRIPTION = "Challenging tower conquest board game"
 QMAKE_TARGET_COPYRIGHT   = "(C) 2015-2021 Thorsten Roth"
@@ -70,15 +72,16 @@ FORMS        += stackandconquer.ui \
 
 RESOURCES    += res/stackandconquer_resources.qrc \
                 res/translations.qrc
-win32:RC_FILE = res/stackandconquer_win.rc
 
 TRANSLATIONS += lang/stackandconquer_de.ts \
                 lang/stackandconquer_nl.ts \
                 lang/stackandconquer_it.ts
 
+win32:RC_ICONS = icons/stackandconquer.ico
+
 macx {
-  ICON               = res/images/icon.icns
-  QMAKE_INFO_PLIST   = res/Info.plist
+  ICON               = icons/icon.icns
+  QMAKE_INFO_PLIST   = data/mac/Info.plist
 
   CPU_DATA.path      = Contents/Resources
   CPU_DATA.files    += data/cpu
@@ -87,40 +90,40 @@ macx {
 }
 
 unix: !macx {
-    isEmpty(PREFIX) {
-        PREFIX = /usr/local
-    }
-    isEmpty(BINDIR) {
-        BINDIR = bin
-    }
+  isEmpty(PREFIX) {
+    PREFIX = /usr/local
+  }
+  isEmpty(BINDIR) {
+    BINDIR = bin
+  }
 
-    target.path     = $$PREFIX/$$BINDIR/
+  target.path     = $$PREFIX/$$BINDIR/
 
-    data.path       = $$PREFIX/share/stackandconquer
-    data.files     += data/cpu
-    data.files     += data/boards
+  data.path       = $$PREFIX/share/stackandconquer
+  data.files     += data/cpu
+  data.files     += data/boards
 
-    desktop.path    = $$PREFIX/share/applications
-    desktop.files  += data/stackandconquer.desktop
+  desktop.path    = $$PREFIX/share/applications
+  desktop.files  += data/stackandconquer.desktop
 
-    pixmap.path     = $$PREFIX/share/pixmaps
-    pixmap.files   += res/images/stackandconquer_64x64.png \
-                      res/images/stackandconquer.xpm
+  pixmap.path     = $$PREFIX/share/pixmaps
+  pixmap.files   += res/images/stackandconquer_64x64.png \
+                    res/images/stackandconquer.xpm
 
-    #icons.path      = $$PREFIX/share/icons
-    #icons.files    += res/images/hicolor
+  #icons.path      = $$PREFIX/share/icons
+  #icons.files    += res/images/hicolor
 
-    man.path        = $$PREFIX/share
-    man.files      += man
+  man.path        = $$PREFIX/share
+  man.files      += man
 
-    meta.path       = $$PREFIX/share/metainfo
-    meta.files     += res/stackandconquer.appdata.xml
+  meta.path       = $$PREFIX/share/metainfo
+  meta.files     += res/stackandconquer.appdata.xml
 
-    INSTALLS       += target \
-                      data \
-                      desktop \
-                      pixmap \
-                      #icons \
-                      man \
-                      meta
+  INSTALLS       += target \
+                    data \
+                    desktop \
+                    pixmap \
+                    #icons \
+                    man \
+                    meta
 }
