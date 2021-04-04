@@ -828,6 +828,7 @@ void Board::highlightNeighbourhood(const QList<int> &neighbours) {
   }
   listPossibleMoves.clear();
 
+  listPossibleMoves.reserve(neighbours.size());
   for (auto nIndex : neighbours) {
     QPoint point(this->getCoordinateFromIndex(nIndex));
     listPossibleMoves << new QGraphicsRectItem(point.x()*m_nGridSize,
