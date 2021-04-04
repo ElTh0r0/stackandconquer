@@ -39,7 +39,12 @@ OBJECTS_DIR   = ./.objs
 UI_DIR        = ./.ui
 RCC_DIR       = ./.rcc
 
-QT           += core gui svg qml widgets
+QT           += core gui qml widgets
+lessThan(QT_MAJOR_VERSION, 6) {
+  QT         += svg
+} else {
+  QT         += svgwidgets
+}
 CONFIG       += c++11
 
 CONFIG(debug, debug|release) {

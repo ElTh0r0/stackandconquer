@@ -90,7 +90,7 @@ auto main(int argc, char *argv[]) -> int {
 #endif
 
   QStringList sListPaths = QStandardPaths::standardLocations(
-                             QStandardPaths::DataLocation);
+                             QStandardPaths::AppLocalDataLocation);
   if (sListPaths.isEmpty()) {
     qCritical() << "Error while getting data standard path.";
     sListPaths << app.applicationDirPath();

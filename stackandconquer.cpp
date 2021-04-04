@@ -389,7 +389,11 @@ void StackAndConquer::loadLanguage(const QString &sLang) {
   if (m_sCurrLang != sLang) {
     m_sCurrLang = sLang;
     if (!StackAndConquer::switchTranslator(&m_translatorQt, "qt_" + sLang,
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+                                           QLibraryInfo::path(
+#else
                                            QLibraryInfo::location(
+#endif
                                              QLibraryInfo::TranslationsPath))) {
       StackAndConquer::switchTranslator(&m_translatorQt, "qt_" + sLang,
                                         m_sSharePath + "/lang");
@@ -402,6 +406,7 @@ void StackAndConquer::loadLanguage(const QString &sLang) {
             m_sSharePath + "/lang");
     }
   }
+  m_pUi->retranslateUi(this);
 }
 
 // ---------------------------------------------------------------------------
@@ -466,7 +471,10 @@ void StackAndConquer::showRules() {
     return;
   }
   QTextStream stream(&rules);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+  // Since Qt 6 UTF-8 is used by default
   stream.setCodec("UTF-8");
+#endif
   pTextEditRules->setHtml(stream.readAll());
   rules.close();
 
@@ -481,7 +489,10 @@ void StackAndConquer::showRules() {
     return;
   }
   stream.setDevice(&rules);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+  // Since Qt 6 UTF-8 is used by default
   stream.setCodec("UTF-8");
+#endif
   pTextEditRulesATrois->setHtml(stream.readAll());
   rules.close();
 

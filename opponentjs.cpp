@@ -64,10 +64,11 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
 
   QJSValue result(m_jsEngine->evaluate(source, sFilepath));
   if (result.isError()) {
-    qCritical() << "Error in CPU P" + QString::number(m_nID) +
-                   "script at line " +
-                   result.property(QStringLiteral("lineNumber")).toInt() +
-                   "\n" + result.toString();
+    qCritical().noquote() << "Error in CPU P" + QString::number(m_nID) +
+                             "script at line " +
+                             result.property(
+                               QStringLiteral("lineNumber")).toString() +
+                             "\n         " + result.toString();
     emit scriptError();
     return false;
   }
@@ -108,10 +109,11 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
 
   QJSValue result = m_obj.property(QStringLiteral("callCPU")).call();
   if (result.isError()) {
-    qCritical() << "CPU P" + QString::number(m_nID) +
-                   "- Error calling \"callCPU\" function at line: " +
-                   result.property(QStringLiteral("lineNumber")).toInt() +
-                   "\n" + result.toString();
+    qCritical().noquote() << "CPU P" + QString::number(m_nID) +
+                             "- Error calling \"callCPU\" function at line: " +
+                             result.property(
+                               QStringLiteral("lineNumber")).toString() +
+                             "\n         " + result.toString();
     QMessageBox::warning(nullptr, tr("Warning"),
                          tr("CPU script execution error! "
                             "Please check the debug log."));
