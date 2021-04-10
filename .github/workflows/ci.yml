@@ -1,0 +1,93 @@
+name: "CI"
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [master]
+
+jobs:
+  AppImage_Ubuntu16-04:
+    name: AppImage Ubuntu 16.04
+    runs-on: ubuntu-16.04
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+          
+    - name: Install Dependencies
+      run: sudo apt update && sudo apt install qt5-default qttools5-dev-tools qtdeclarative5-dev libqt5svg5-dev
+
+    - name: Download linuxdeployqt
+      run: |
+       wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+       chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+       unset QTDIR ; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
+       export VERSION=$(git rev-parse --short HEAD)  # linuxdeployqt uses this for naming the file
+        
+    - name: Download ffsend
+      run: |
+       FFSEND_VERSION=$(curl --silent "https://github.com/timvisee/ffsend/releases/latest" | sed 's#.*tag/\(.*\)\".*#\1#')
+       wget -c -nv "https://github.com/timvisee/ffsend/releases/download/$FFSEND_VERSION/ffsend-$FFSEND_VERSION-linux-x64-static"
+       mv ./ffsend-* ./ffsend
+       chmod a+x ./ffsend
+
+    - name: Compile
+      run: |
+       qmake CONFIG+=release PREFIX=/usr
+       make -j$(nproc)
+       make INSTALL_ROOT=appdir -j$(nproc) install
+       find appdir
+
+    - name: Create AppImage
+      run: |
+       ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -appimage -bundle-non-qt-libs -extra-plugins=iconengines,platformthemes/libqgtk3.so
+       find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
+
+    - name: Upload AppImage
+      run: |
+       ./ffsend upload StackAndConquer-*-x86_64.AppImage
+
+  macOS_laetst:
+    name: macOS
+    runs-on: macos-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+          
+    - name: Install Dependencies
+      run: |
+       brew install p7zip qt@5
+       PATH=/usr/local/opt/qt/bin/:${PATH}
+        
+    - name: Download ffsend
+      run: |
+       FFSEND_VERSION=$(curl --silent "https://github.com/timvisee/ffsend/releases/latest" | sed 's#.*tag/\(.*\)\".*#\1#')
+       curl -L https://github.com/timvisee/ffsend/releases/download/${FFSEND_VERSION}/ffsend-${FFSEND_VERSION}-macos > ffsend
+       chmod +x ./ffsend
+
+    - name: Compile
+      run: |
+       mkdir build
+       cd build
+       qmake ../stackandconquer.pro CONFIG+=release
+       make
+       rm -rf .moc
+       rm -rf .obj
+       rm -rf .qrc
+
+    - name: Create dmg archive and zip
+      run: |
+       cd build
+       VERSION=$(git rev-parse --short HEAD) 
+       macdeployqt "StackAndConquer.app" -dmg
+       mv "StackAndConquer.dmg" "StackAndConquer_${VERSION}.dmg"
+       cp "../README.md" "./README.md"
+       cp "../COPYING" "./COPYING"
+       7z a StackAndConquer_${VERSION}_macOS.zip "StackAndConquer_${VERSION}.dmg" "README.md" "COPYING"
+       
+    - name: Upload macOS zip
+      run: |
+       cd build
+       mv "../ffsend" "./ffsend"
+       ./ffsend upload StackAndConquer_*_macOS.zip
