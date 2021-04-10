@@ -57,7 +57,7 @@ jobs:
           
     - name: Install Dependencies
       run: |
-       brew install p7zip qt@5
+       brew install p7zip qt
        PATH=/usr/local/opt/qt/bin/:${PATH}
         
     - name: Download ffsend
