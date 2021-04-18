@@ -392,8 +392,9 @@ void Game::moveTower(const int nFrom, const quint8 nStones, const int nTo) {
 
 void Game::checkTowerWin(const int nIndex) {
   if (m_pBoard->getField(nIndex).size() >= m_nMaxTowerHeight) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    int nWinner(QStringView{m_pBoard->getField(nIndex)}.right(1).toInt() - 1);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    int nWinner(
+          QString(QStringView{m_pBoard->getField(nIndex)}.last()).toInt() - 1);
 #else
     int nWinner(m_pBoard->getField(nIndex).rightRef(1).toInt() - 1);
 #endif

@@ -684,8 +684,10 @@ void Board::removeStone(const int nIndex, const bool bAll) {
     }
     m_jsBoard[nIndex] = QString();
   } else {  // Remove only one
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    int nPlayer(QStringView{m_jsBoard.at(nIndex).toString()}.right(1).toInt());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    int nPlayer(
+          QString(
+            QStringView{m_jsBoard.at(nIndex).toString()}.last()).toInt());
 #else
     int nPlayer(m_jsBoard.at(nIndex).toString().rightRef(1).toInt());
 #endif
@@ -879,8 +881,8 @@ auto Board::getLegalMoves(const QString &sID, const bool bStonesLeft,
                  nStones++) {
               // Skip suicide moves (opponent wins)
               if ((m_jsBoard.at(nTo).toString().size() + nStones >= m_nMaxTower)
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-                  && QStringView{sTower}.right(1).toString() != sID) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+                  && QString(QStringView{sTower}.last()) != sID) {
 #else
                   && sTower.rightRef(1).toString() != sID) {
 #endif
