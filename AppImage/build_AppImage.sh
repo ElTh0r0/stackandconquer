@@ -20,8 +20,6 @@ find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " "
 
 echo "Uploading..."
 ffsend upload StackAndConquer-$VERSION-x86_64.AppImage
-ffsend upload StackAndConquer-$VERSION-x86_64.AppImage
-ffsend upload StackAndConquer-$VERSION-x86_64.AppImage
 ##curl --upload-file StackAndConquer-$VERSION-x86_64.AppImage https://transfer.sh/StackAndConquer-$VERSION-x86_64.AppImage
 echo ""
 

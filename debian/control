@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Thorsten Roth <elthoro@gmx.de>
 Build-Depends:
    debhelper (>= 9),
-   qt5-default,
+   qtbase5-dev,
    qt5-qmake,
    libqt5svg5-dev,
    qtdeclarative5-dev,

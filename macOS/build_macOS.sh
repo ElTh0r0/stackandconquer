@@ -3,7 +3,10 @@
 set -o errexit -o nounset
 
 APP='StackAndConquer'
-FFSEND_VERSION='v0.2.70'
+
+#FFSEND_VERSION='v0.2.71'
+# Get latest ffsend version number
+FFSEND_VERSION=$(curl --silent "https://github.com/timvisee/ffsend/releases/latest" | sed 's#.*tag/\(.*\)\".*#\1#')
 
 # Hold on to current directory
 project_dir=$(pwd)
@@ -55,8 +58,6 @@ echo "Downloading ffsend..."
 curl -L https://github.com/timvisee/ffsend/releases/download/${FFSEND_VERSION}/ffsend-${FFSEND_VERSION}-macos > ffsend
 chmod +x ./ffsend
 echo "Uploading..."
-./ffsend upload ${APP}_${REV_NAME}_macOS.zip
-./ffsend upload ${APP}_${REV_NAME}_macOS.zip
 ./ffsend upload ${APP}_${REV_NAME}_macOS.zip
 #curl --upload-file ${APP}_${REV_NAME}_macOS.zip https://transfer.sh/${APP}_${REV_NAME}_macOS.zip
 echo ""
