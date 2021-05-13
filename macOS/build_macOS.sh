@@ -27,6 +27,7 @@ PATH=/usr/local/opt/qt/bin/:${PATH}
 
 # Build app
 echo "Building..."
+lrelease stackandconquer.pro
 cd ${project_dir}
 mkdir build
 cd build
@@ -48,11 +49,11 @@ macdeployqt "${APP}.app" -dmg
 mv "${APP}.dmg" "${APP}_${REV_NAME}.dmg"
 
 # Copy other project files
-cp "${project_dir}/README.md" "${project_dir}/build/README.md"
+curl -fsSL "https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/ReadMe.txt" > "ReadMe.txt"
 cp "${project_dir}/COPYING" "${project_dir}/build/COPYING"
 
 echo "Packaging zip archive..."
-7z a ${APP}_${REV_NAME}_macOS.zip "${APP}_${REV_NAME}.dmg" "README.md" "COPYING"
+7z a ${APP}_${REV_NAME}_macOS.zip "${APP}_${REV_NAME}.dmg" "ReadMe.txt" "COPYING"
 
 echo "Downloading ffsend..."
 curl -L https://github.com/timvisee/ffsend/releases/download/${FFSEND_VERSION}/ffsend-${FFSEND_VERSION}-macos > ffsend
