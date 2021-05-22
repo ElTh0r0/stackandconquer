@@ -399,6 +399,9 @@ void Settings::readSettings() {
                                      m_DefaultPlayerColors[i]).name();
     }
     m_listColorEdit[i]->setText(map[QStringLiteral("Color")]);
+    QPalette *palette = new QPalette();
+    palette->setColor(QPalette::Base, map[QStringLiteral("Color")]);
+    m_listColorEdit.at(i)->setPalette(*palette);
 
     m_Players << map;
     m_pSettings->endGroup();
@@ -459,6 +462,9 @@ bool Settings::eventFilter(QObject *pObj, QEvent *pEvent) {
       QColor newColor = QColorDialog::getColor(m_listColorEdit.at(i)->text());
       if (newColor.isValid()) {
         m_listColorEdit.at(i)->setText(newColor.name());
+        QPalette *palette = new QPalette();
+        palette->setColor(QPalette::Base, newColor);
+        m_listColorEdit.at(i)->setPalette(*palette);
       }
       break;
     }
