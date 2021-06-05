@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>stackandconquer_en.qm</file>
         <file>stackandconquer_de.qm</file>
         <file>stackandconquer_it.qm</file>
         <file>stackandconquer_nl.qm</file>

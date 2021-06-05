@@ -75,6 +75,7 @@ RESOURCES    += data/data.qrc \
                 lang/translations.qrc
 
 TRANSLATIONS += lang/stackandconquer_de.ts \
+                lang/stackandconquer_en.ts \
                 lang/stackandconquer_nl.ts \
                 lang/stackandconquer_it.ts
 

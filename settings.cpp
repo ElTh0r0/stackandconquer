@@ -166,7 +166,6 @@ auto Settings::searchTranslations() const -> QStringList {
     }
   }
 
-  sList << QStringLiteral("en");
   sList.sort();
   sList.push_front(QStringLiteral("auto"));
   return sList;
