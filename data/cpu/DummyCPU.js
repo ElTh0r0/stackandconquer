@@ -42,9 +42,11 @@ cpu.log("Loading CPU script DummyCPU...");
 // ---------------------------------------------------------------------------
 
 function callCPU() {
-  // Global variables:
-  board = JSON.parse(jsboard);
-  legalMoves = JSON.parse(jsmoves);
+  let board = JSON.parse(jsboard);
+  //cpu.log("BOARD: " + jsboard);
+  let legalMoves = JSON.parse(jsmoves);
+  //cpu.log("LEGAL MOVES: " + jsmoves);
+
   /*
    * Moving directions factor
    * E.g. 5x5 board, max tower height 5 (padding):
@@ -52,6 +54,7 @@ function callCPU() {
    * -1   X    1
    * 14  15   16
    */
+  // Global variable
   DIRS = [];
   DIRS.push(-(2 * nHeightTowerWin + nBoardDimensionsX + 1));  // -16
   DIRS.push(-(2 * nHeightTowerWin + nBoardDimensionsX));      // -15
@@ -66,37 +69,41 @@ function callCPU() {
   //cpu.log("board[81].length: " + board[81].length);
   //cpu.log("board[81][0]: " + board[81][0]);
 
-  var MoveToWin = canWin(nID);
-  if (0 !== MoveToWin.length) {  // CPU can win
-    return MoveToWin[0];
+  let moveToWin = canWin(board, nID);
+  if (0 !== moveToWin.length) {  // CPU can win
+    cpu.log("CPU can win!");
+    return moveToWin[0];
+  }
+
+  if (1 === legalMoves.length) {  // Only one move possible, skip calculation
+    cpu.log("CPU has only one possible move left");
+    return legalMoves[0];
   }
 
   // Check if next opponent can win depending on playing direction
   if (nDirection > 0) {
     if (nID === nNumOfPlayers) {
-      MoveToWin = canWin(1);
+      moveToWin = canWin(board, 1);
     } else {
-      MoveToWin = canWin(nID + 1);
+      moveToWin = canWin(board, nID + 1);
     }
-    if (0 !== MoveToWin.length) {
-      // TODO(x): Rewrite preventWin() with new legal moves list
-      // var PreventWin = preventWin(MoveToWin[0], nPossibleMove);
-      // if (3 === PreventWin.length) {
-      //  return PreventWin;
-      // }
+    if (0 !== moveToWin.length) {
+      let prevWin = preventWin(board, moveToWin[0], legalMoves);
+      if (3 === prevWin.length) {
+        return prevWin;
+      }
     }
   } else {
     if (nID === 1) {
-      MoveToWin = canWin(nNumOfPlayers);
+      moveToWin = canWin(board, nNumOfPlayers);
     } else {
-      MoveToWin = canWin(nID - 1);
+      moveToWin = canWin(board, nID - 1);
     }
-    if (0 !== MoveToWin.length) {
-      // TODO(x): Rewrite preventWin() with new legal moves list
-      // var PreventWin = preventWin(MoveToWin[0], nPossibleMove);
-      // if (3 === PreventWin.length) {
-      //  return PreventWin;
-      // }
+    if (0 !== moveToWin.length) {
+      let prevWin = preventWin(board, moveToWin[0], legalMoves);
+      if (3 === prevWin.length) {
+        return prevWin;
+      }
     }
   }
 
@@ -108,7 +115,7 @@ function callCPU() {
     //cpu.log("Possible moves #1.3: " + legalMoves[0][2]);
 
     // Make random move
-    var nRand = Math.floor(Math.random() * legalMoves.length);
+    let nRand = Math.floor(Math.random() * legalMoves.length);
     return legalMoves[nRand];
   }
 
@@ -120,18 +127,18 @@ function callCPU() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function checkNeighbourhood(nIndex) {
-  var neighbours = [];
-  var nMoves = board[nIndex].length;
+function checkNeighbourhood(currBoard, nIndex) {
+  let neighbours = [];
+  let nMoves = currBoard[nIndex].length;
 
   if (0 === nMoves) {
     return neighbours;
   }
 
-  var sField = "";
-  for (var dir = 0; dir < DIRS.length; dir++) {
-    for (var range = 1; range <= nMoves; range++) {
-      sField = board[nIndex + DIRS[dir]*range];
+  let sField = "";
+  for (let dir = 0; dir < DIRS.length; dir++) {
+    for (let range = 1; range <= nMoves; range++) {
+      sField = currBoard[nIndex + DIRS[dir]*range];
       if (0 !== sField.length && range < nMoves) {  // Route blocked
         break;
       }
@@ -147,18 +154,18 @@ function checkNeighbourhood(nIndex) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function canWin(nPlayerID) {
-  var ret = [];
-  for (var nIndex = 0; nIndex < board.length; nIndex++) {
-    if (0 !== board[nIndex].length &&
-        sOut !== board[nIndex] &&
-        sPad !== board[nIndex]) {
-      var neighbours = checkNeighbourhood(nIndex);
-      for (var point = 0; point < neighbours.length; point++) {
-        var tower = board[(neighbours[point])];
-        if ((board[nIndex].length + tower.length >= nHeightTowerWin) &&
+function canWin(currBoard, nPlayerID) {
+  let ret = [];
+  for (let nIndex = 0; nIndex < currBoard.length; nIndex++) {
+    if (0 !== currBoard[nIndex].length &&
+        sOut !== currBoard[nIndex] &&
+        sPad !== currBoard[nIndex]) {
+      let neighbours = checkNeighbourhood(currBoard, nIndex);
+      for (let point = 0; point < neighbours.length; point++) {
+        let tower = currBoard[(neighbours[point])];
+        if ((currBoard[nIndex].length + tower.length >= nHeightTowerWin) &&
             nPlayerID === parseInt(tower[tower.length - 1], 10)) {  // Top = own
-          var move = [];  // From, num of stones, to
+          let move = [];  // From, num of stones, to
           move.push(neighbours[point]);
           move.push(tower.length);
           move.push(nIndex);
@@ -177,56 +184,88 @@ function canWin(nPlayerID) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function preventWin(moveToWin, nPossibleMove) {
-  var move = [];
-  var pointFrom = moveToWin[0];
-  var nNumber = moveToWin[1];
-  var pointTo = moveToWin[2];
+function preventWin(currBoard, moveToWin, legalMoves) {
+  //let prevWin = [];
+  let move = [];
+  let pointFrom = moveToWin[0];
+  let nNumber = moveToWin[1];
+  let pointTo = moveToWin[2];
 
   // Check if a blocking towers in between can be placed
-  var route = pointTo - pointFrom;
-  for (var dir = 0; dir < DIRS.length; dir++) {
+  let route = pointTo - pointFrom;
+  for (let dir = 0; dir < DIRS.length; dir++) {
     if (1 === Math.abs(DIRS[dir])) {  // +1 / -1
       if (Math.abs(route) < (nBoardDimensionsX-2) &&
           (route > 0 && DIRS[dir] < 0 ||
            route < 0 && DIRS[dir] > 0)) {
-        move.push(-1);
-        move.push(1);
-        move.push(pointTo + DIRS[dir]);
-        return move;
+          //let move = [];
+          move.push(-1);
+          move.push(1);
+          move.push(pointTo + DIRS[dir]);
+
+          if (isLegalMove(move, legalMoves)) {
+            //prevWin.push(move);
+            return move;
+          }
       }
     } else {
       if (0 === route % DIRS[dir] &&       // There is a route between points
           (route > 0 && DIRS[dir] < 0 ||   // If route pos., dir has to be neg.
            route < 0 && DIRS[dir] > 0)) {  // If route neg., dir has to be pos.
-        var moves = route / DIRS[dir];
+        let moves = route / DIRS[dir];
         // There is more than one field in between
-        if (Math.abs(moves) > 1 && (1 === nPossibleMove || 3 === nPossibleMove)) {
-          move.push(-1);
-          move.push(1);
-          move.push(pointTo + DIRS[dir]);
-          return move
+        if (Math.abs(moves) > 1) {
+            //let move = [];
+            move.push(-1);
+            move.push(1);
+            move.push(pointTo + DIRS[dir]);
+
+            if (isLegalMove(move, legalMoves)) {
+              //prevWin.push(move);
+              return move;
+            }
         }
-        // if (nPossibleMove >= 2) {
+
         // TODO(x): Try to move tower to prevent win
-        // }
       }
     }
   }
 
+  /*
+  if (prevWin.length > 0) {
+    let nRand = Math.floor(Math.random() * prevWin.length);
+    return prevWin[nRand];
+  } else {
+    return prevWin;
+  }
+  */
   return move;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function setRandom() {
+function isLegalMove(move, legalMoves) {
+  let sMove = JSON.stringify(move);
+  for (let i = 0; i < legalMoves.length; i++) {
+    if (JSON.stringify(legalMoves[i]) === sMove) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+function setRandom(currBoard) {
   // Seed random?
-  var move = [];
-  var nRand;
+  let move = [];
+  let nRand;
   do {
-    nRand = Math.floor(Math.random() * board.length);
-  } while (0 !== board[nRand].length);
+    nRand = Math.floor(Math.random() * currBoard.length);
+  } while (0 !== currBoard[nRand].length);
 
   move.push(-1);
   move.push(1);
@@ -238,18 +277,18 @@ function setRandom() {
 // ---------------------------------------------------------------------------
 
 function moveRandom(oppWinning) {
-  var nCnt = 0;
+  let nCnt = 0;
   do {
-    var bBreak = false;
-    var nRandTo = Math.floor(Math.random() * board.length);
+    let bBreak = false;
+    let nRandTo = Math.floor(Math.random() * board.length);
     if (sOut !== board[nRandTo] && sPad !== board[nRandTo]) {
-      var neighbours = checkNeighbourhood(nRandTo);
+      let neighbours = checkNeighbourhood(nRandTo);
 
       if (neighbours.length > 0) {
-        var choose = Math.floor(Math.random() * neighbours.length);
+        let choose = Math.floor(Math.random() * neighbours.length);
         // Tower from which stones are moved:
-        var nMaxStones = board[(neighbours[choose])].length;
-        var move = [];  // From, num of stones, to
+        let nMaxStones = board[(neighbours[choose])].length;
+        let move = [];  // From, num of stones, to
         move.push(neighbours[choose]);
         move.push(Math.floor(Math.random() * nMaxStones) + 1);
         move.push(nRandTo);
@@ -258,7 +297,7 @@ function moveRandom(oppWinning) {
         // move which doesn't let opponent win.
         nCnt += 1;
         if (nCnt < 10) {
-          for (var i = 0; i < oppWinning.length; i++) {
+          for (let i = 0; i < oppWinning.length; i++) {
             if (oppWinning[i][0] === move[0] &&
                 oppWinning[i][1] === move[1] &&
                 oppWinning[i][2] === move[2]) {
@@ -281,9 +320,9 @@ function moveRandom(oppWinning) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function findFreeFields() {
-  for (var nIndex = 0; nIndex < board.length; nIndex++) {
-    if (0 === board[nIndex].length) {
+function findFreeFields(currBoard) {
+  for (let nIndex = 0; nIndex < currBoard.length; nIndex++) {
+    if (0 === currBoard[nIndex].length) {
       return true;
     }
   }
