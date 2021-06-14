@@ -112,7 +112,7 @@ function chooseMove(currBoard, legalMoves) {
   
   let cpuMoveToWin = canWin(currBoard, nID);
   if (0 !== cpuMoveToWin.length) {  // CPU can win
-    if (isLegalMove(cpuMoveToWin, cpuMoveToWin)) {
+    if (isLegalMove(cpuMoveToWin[0], legalMoves)) {
       cpu.log("CPU can win!");
       return cpuMoveToWin[0];
     }
