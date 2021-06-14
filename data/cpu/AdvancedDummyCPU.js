@@ -73,12 +73,6 @@ function callCPU() {
   cpu.log("board[113][0]: " + board[113][0]);
   */
 
-  let moveToWin = canWin(board, nID);
-  if (0 !== moveToWin.length) {  // CPU can win
-    cpu.log("CPU can win!");
-    return moveToWin[0];
-  }
-
   if (1 === legalMoves.length) {  // Only one move possible, skip calculation
     cpu.log("CPU has only one possible move left");
     return legalMoves[0];
@@ -116,20 +110,40 @@ function chooseMove(currBoard, legalMoves) {
   let nScore = -9999;
   let bestmove = [-1, -1, -1];
   
+  let cpuMoveToWin = canWin(currBoard, nID);
+  if (0 !== cpuMoveToWin.length) {  // CPU can win
+    if (isLegalMove(cpuMoveToWin, cpuMoveToWin)) {
+      cpu.log("CPU can win!");
+      return cpuMoveToWin[0];
+    }
+  }
+
   // Check if opponent could win on current board
-  for (let playerID = 1; playerID <= nNumOfPlayers; playerID++) {
-    let oppWinningMoves = canWin(currBoard, playerID);
+  skipMe: for (let opponentID = 1; opponentID <= nNumOfPlayers; opponentID++) {
+    if (opponentID === nID) {  // Skip loop for myself (was already checked in previsous loop)
+      continue skipMe;
+    }
+
+    let oppWinningMoves = canWin(currBoard, opponentID);
     if (0 !== oppWinningMoves.length) {
       for (let k = 0; k < oppWinningMoves.length; k++) {
-        cpu.log("Opponent #" + playerID + " could win: " + getMoveString(oppWinningMoves[k]));
+        cpu.log("Opponent #" + opponentID + " could win: " + getMoveString(oppWinningMoves[k]));
         let prevWin = preventWin(currBoard, oppWinningMoves[k], legalMoves);
         if (0 !== prevWin.length) {
           cpu.log("Found preventive move");
           return prevWin;
         }
       }
+
       cpu.log("No move found to prevent opponent to win!!");
     }
+  }
+
+  // Store current winning moves to be compared with new board winning moves later
+  let canWinMoves = [];
+  for (let pID = 1; pID <= nNumOfPlayers; pID++) {
+    let tempWinMoves = canWin(currBoard, pID);
+    canWinMoves.push(tempWinMoves);
   }
 
   // Check what could happen after executing one of the legal moves
@@ -137,17 +151,22 @@ function chooseMove(currBoard, legalMoves) {
     let newBoard = makePseudoMove(currBoard, legalMoves[i], nID);
     cpu.log("Check PseudoMove " + getMoveString(legalMoves[i]));
 
-    let cpuToWin = canWin(newBoard, nID);  // Check if CPU could win in *next* round
+    // Check if CPU could win in *next* round
+    let cpuToWin = canWin(newBoard, nID);
     if (0 !== cpuToWin.length) {
       cpu.log("CPU" + nID + " could win after NEXT round, placing " + getMoveString(legalMoves[i]));
       return legalMoves[i];
     }
+
+    // Check if any opponent could win in next round if move will be executed
     for (let playerID = 1; playerID <= nNumOfPlayers; playerID++) {
       if (playerID !== nID) {  
-        let MoveToWin = canWin(newBoard, playerID);
-        if (0 !== MoveToWin.length) {  // Opponent could win in *next* round
-          cpu.log("Opponent #" + playerID + " could win after excuting move " + getMoveString(legalMoves[i]) + " - skipping this move!");
-          continue skipMove;  // Skip move, since it could let to opponent win
+        let movesToWin = canWin(newBoard, playerID);
+        
+        if (0 !== movesToWin.length &&  // Opponent could win in *next* round
+          JSON.stringify(canWinMoves[playerID - 1]) !== JSON.stringify(movesToWin)) {  // New winning moves found (not already available before on old board)
+            cpu.log("Opponent #" + playerID + " could win after excuting move " + getMoveString(legalMoves[i]) + " - skipping this move!");
+            continue skipMove;  // Skip move, since it could let to opponent win
         }
       }
     }
