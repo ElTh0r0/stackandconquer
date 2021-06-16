@@ -99,15 +99,14 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
                            const QJsonDocument &legalMoves,
                            const qint8 nDirection) {
   QJsonDocument jsdoc(board);
-  QString sJsBoard(
+  QString sJsonBoard(
         QString::fromLatin1(jsdoc.toJson(QJsonDocument::Compact)));
-  QString sJsMoves(
+  QString sJsonMoves(
         QString::fromLatin1(legalMoves.toJson(QJsonDocument::Compact)));
-  m_obj.setProperty(QStringLiteral("jsboard"), sJsBoard);
-  m_obj.setProperty(QStringLiteral("jsmoves"), sJsMoves);
-  m_obj.setProperty(QStringLiteral("nDirection"), nDirection);
+  QJSValueList args;
+  args << sJsonBoard << sJsonMoves << nDirection;
 
-  QJSValue result = m_obj.property(QStringLiteral("callCPU")).call();
+  QJSValue result = m_obj.property(QStringLiteral("callCPU")).call(args);
   if (result.isError()) {
     qCritical().noquote() << "CPU P" + QString::number(m_nID) +
                              "- Error calling \"callCPU\" function at line: " +

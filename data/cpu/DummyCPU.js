@@ -24,14 +24,11 @@
  * Dummy CPU opponent.
  *
  * Variables provided externally from game:
- * jsboard
- * jsmoves
  * nID (1 or 2 = player 1 / player 2)
  * nBoardDimensionsX
  * nBoardDimensionsY
  * nHeightTowerWin
  * nNumOfPlayers
- * nDirection
  * sOut
  * sPad
  */
@@ -41,11 +38,11 @@ cpu.log("Loading CPU script DummyCPU...");
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function callCPU() {
-  let board = JSON.parse(jsboard);
-  //cpu.log("BOARD: " + jsboard);
-  let legalMoves = JSON.parse(jsmoves);
-  //cpu.log("LEGAL MOVES: " + jsmoves);
+function callCPU(jsonBoard, jsonMoves, nDirection) {
+  let board = JSON.parse(jsonBoard);
+  // cpu.log("BOARD: " + jsonBoard);
+  let legalMoves = JSON.parse(jsonMoves);
+  // cpu.log("LEGAL MOVES: " + jsonMoves);
 
   /*
    * Moving directions factor
@@ -138,12 +135,12 @@ function checkNeighbourhood(currBoard, nIndex) {
   let sField = "";
   for (let dir = 0; dir < DIRS.length; dir++) {
     for (let range = 1; range <= nMoves; range++) {
-      sField = currBoard[nIndex + DIRS[dir]*range];
+      sField = currBoard[nIndex + DIRS[dir] * range];
       if (0 !== sField.length && range < nMoves) {  // Route blocked
         break;
       }
       if (!isNaN(parseInt(sField, 10)) && range === nMoves) {
-        neighbours.push(nIndex + DIRS[dir]*range);
+        neighbours.push(nIndex + DIRS[dir] * range);
       }
     }
   }
@@ -158,13 +155,13 @@ function canWin(currBoard, nPlayerID) {
   let ret = [];
   for (let nIndex = 0; nIndex < currBoard.length; nIndex++) {
     if (0 !== currBoard[nIndex].length &&
-        sOut !== currBoard[nIndex] &&
-        sPad !== currBoard[nIndex]) {
+      sOut !== currBoard[nIndex] &&
+      sPad !== currBoard[nIndex]) {
       let neighbours = checkNeighbourhood(currBoard, nIndex);
       for (let point = 0; point < neighbours.length; point++) {
         let tower = currBoard[(neighbours[point])];
         if ((currBoard[nIndex].length + tower.length >= nHeightTowerWin) &&
-            nPlayerID === parseInt(tower[tower.length - 1], 10)) {  // Top = own
+          nPlayerID === parseInt(tower[tower.length - 1], 10)) {  // Top = own
           let move = [];  // From, num of stones, to
           move.push(neighbours[point]);
           move.push(tower.length);
@@ -195,9 +192,26 @@ function preventWin(currBoard, moveToWin, legalMoves) {
   let route = pointTo - pointFrom;
   for (let dir = 0; dir < DIRS.length; dir++) {
     if (1 === Math.abs(DIRS[dir])) {  // +1 / -1
-      if (Math.abs(route) < (nBoardDimensionsX-2) &&
-          (route > 0 && DIRS[dir] < 0 ||
-           route < 0 && DIRS[dir] > 0)) {
+      if (Math.abs(route) < (nBoardDimensionsX - 2) &&
+        (route > 0 && DIRS[dir] < 0 ||
+          route < 0 && DIRS[dir] > 0)) {
+        //let move = [];
+        move.push(-1);
+        move.push(1);
+        move.push(pointTo + DIRS[dir]);
+
+        if (isLegalMove(move, legalMoves)) {
+          //prevWin.push(move);
+          return move;
+        }
+      }
+    } else {
+      if (0 === route % DIRS[dir] &&      // There is a route between points
+        (route > 0 && DIRS[dir] < 0 ||    // If route pos., dir has to be neg.
+          route < 0 && DIRS[dir] > 0)) {  // If route neg., dir has to be pos.
+        let moves = route / DIRS[dir];
+        // There is more than one field in between
+        if (Math.abs(moves) > 1) {
           //let move = [];
           move.push(-1);
           move.push(1);
@@ -207,23 +221,6 @@ function preventWin(currBoard, moveToWin, legalMoves) {
             //prevWin.push(move);
             return move;
           }
-      }
-    } else {
-      if (0 === route % DIRS[dir] &&       // There is a route between points
-          (route > 0 && DIRS[dir] < 0 ||   // If route pos., dir has to be neg.
-           route < 0 && DIRS[dir] > 0)) {  // If route neg., dir has to be pos.
-        let moves = route / DIRS[dir];
-        // There is more than one field in between
-        if (Math.abs(moves) > 1) {
-            //let move = [];
-            move.push(-1);
-            move.push(1);
-            move.push(pointTo + DIRS[dir]);
-
-            if (isLegalMove(move, legalMoves)) {
-              //prevWin.push(move);
-              return move;
-            }
         }
 
         // TODO(x): Try to move tower to prevent win
@@ -270,7 +267,7 @@ function setRandom(currBoard) {
   move.push(-1);
   move.push(1);
   move.push(nRand);
-  return move
+  return move;
 }
 
 // ---------------------------------------------------------------------------
@@ -299,8 +296,8 @@ function moveRandom(oppWinning) {
         if (nCnt < 10) {
           for (let i = 0; i < oppWinning.length; i++) {
             if (oppWinning[i][0] === move[0] &&
-                oppWinning[i][1] === move[1] &&
-                oppWinning[i][2] === move[2]) {
+              oppWinning[i][1] === move[1] &&
+              oppWinning[i][2] === move[2]) {
               bBreak = true;
               break;
             }
