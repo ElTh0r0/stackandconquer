@@ -31,6 +31,7 @@
 #include <QJSValue>
 #include <QObject>
 #include <QPoint>
+#include <QVector>
 
 class QJSEngine;
 
