@@ -23,17 +23,16 @@
  * \section DESCRIPTION
  * Dummy CPU opponent.
  *
- * Variables provided externally from game:
- * nID (1 or 2 = player 1 / player 2)
- * nBoardDimensionsX
- * nBoardDimensionsY
- * nHeightTowerWin
- * nNumOfPlayers
- * sOut
- * sPad
+ * Following function can be used to access data from game:
+ *   cpu.getID();
+ *   cpu.getNumOfPlayers();
+ *   cpu.getHeightToWin();
+ *   cpu.getBoardDimension();
+ *   cpu.getOutside();
+ *   cpu.getPadding();
  */
 
-cpu.log("Loading CPU script DummyCPU...");
+cpu.log("Loading CPU script 'DummyCPU' with player ID " + cpu.getID());
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -53,9 +52,9 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
    */
   // Global variable
   DIRS = [];
-  DIRS.push(-(2 * nHeightTowerWin + nBoardDimensionsX + 1));  // -16
-  DIRS.push(-(2 * nHeightTowerWin + nBoardDimensionsX));      // -15
-  DIRS.push(-(2 * nHeightTowerWin + nBoardDimensionsX - 1));  // -14
+  DIRS.push(-(2 * cpu.getHeightToWin() + cpu.getBoardDimension()[0] + 1));  // -16
+  DIRS.push(-(2 * cpu.getHeightToWin() + cpu.getBoardDimension()[0]));      // -15
+  DIRS.push(-(2 * cpu.getHeightToWin() + cpu.getBoardDimension()[0] - 1));  // -14
   DIRS.push(-1);  // -1
   DIRS.push(1);   //  1
   DIRS.push(-DIRS[2]);  // 14
@@ -66,7 +65,7 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
   //cpu.log("board[81].length: " + board[81].length);
   //cpu.log("board[81][0]: " + board[81][0]);
 
-  let moveToWin = canWin(board, nID);
+  let moveToWin = canWin(board, cpu.getID());
   if (0 !== moveToWin.length) {  // CPU can win
     cpu.log("CPU can win!");
     return moveToWin[0];
@@ -79,10 +78,10 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
 
   // Check if next opponent can win depending on playing direction
   if (nDirection > 0) {
-    if (nID === nNumOfPlayers) {
+    if (cpu.getID() === cpu.getNumOfPlayers()) {
       moveToWin = canWin(board, 1);
     } else {
-      moveToWin = canWin(board, nID + 1);
+      moveToWin = canWin(board, cpu.getID() + 1);
     }
     if (0 !== moveToWin.length) {
       let prevWin = preventWin(board, moveToWin[0], legalMoves);
@@ -91,10 +90,10 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
       }
     }
   } else {
-    if (nID === 1) {
-      moveToWin = canWin(board, nNumOfPlayers);
+    if (cpu.getID() === 1) {
+      moveToWin = canWin(board, cpu.getNumOfPlayers());
     } else {
-      moveToWin = canWin(board, nID - 1);
+      moveToWin = canWin(board, cpu.getID() - 1);
     }
     if (0 !== moveToWin.length) {
       let prevWin = preventWin(board, moveToWin[0], legalMoves);
@@ -152,6 +151,11 @@ function checkNeighbourhood(currBoard, nIndex) {
 // ---------------------------------------------------------------------------
 
 function canWin(currBoard, nPlayerID) {
+  const nID = cpu.getID();
+  const nHeightTowerWin = cpu.getHeightToWin();
+  const sOut = cpu.getOutside();
+  const sPad = cpu.getPadding();
+
   let ret = [];
   for (let nIndex = 0; nIndex < currBoard.length; nIndex++) {
     if (0 !== currBoard[nIndex].length &&
@@ -182,6 +186,7 @@ function canWin(currBoard, nPlayerID) {
 // ---------------------------------------------------------------------------
 
 function preventWin(currBoard, moveToWin, legalMoves) {
+  const nBoardDimensionsX = cpu.getBoardDimension()[0];
   //let prevWin = [];
   let move = [];
   let pointFrom = moveToWin[0];
@@ -274,6 +279,7 @@ function setRandom(currBoard) {
 // ---------------------------------------------------------------------------
 
 function moveRandom(oppWinning) {
+  const sOut = cpu.getOutside();
   let nCnt = 0;
   do {
     let bBreak = false;

@@ -51,6 +51,12 @@ class OpponentJS : public QObject {
 
  public slots:
     void log(const QString &sMsg);
+    quint8 getID();
+    quint8 getNumOfPlayers();
+    quint8 getHeightToWin();
+    QVector<int> getBoardDimension();
+    QString getOutside();
+    QString getPadding();
 
  signals:
     void actionCPU(QJsonArray move);

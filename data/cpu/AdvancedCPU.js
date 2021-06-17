@@ -23,45 +23,62 @@
  * \section DESCRIPTION
  * Advanced CPU opponent.
  *
- * Variables provided externally from game:
- * nID (1 or 2 = player 1 / player 2)
- * nBoardDimensionsX
- * nBoardDimensionsY
- * nHeightTowerWin
- * nNumOfPlayers
- * sOut
- * sPad
+ * Following function can be used to access data from game:
+ *   cpu.getID();
+ *   cpu.getNumOfPlayers();
+ *   cpu.getHeightToWin();
+ *   cpu.getBoardDimension();
+ *   cpu.getOutside();
+ *   cpu.getPadding();
  */
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // !!! Uncomment block for script debugging only !!!
 /*
-class DebugLog {
+class DebugCPU {
+  #nID = 2;
+  #nNumOfPlayers = 2;
+  #nHeightTowerWin = 5;
+  #nBoardDimensionsX = 5;
+  #nBoardDimensionsY = 5;
+  #sOut = "#";
+  #sPad = "-";
+  
   log(sMessage) {
     console.log(sMessage);
   }
+  getID() {
+    return this.#nID;
+  }
+  getNumOfPlayers() {
+    return this.#nNumOfPlayers;
+  }
+  getHeightToWin() {
+    return this.#nHeightTowerWin;
+  }
+  getBoardDimension() {
+    return [this.#nBoardDimensionsX, this.#nBoardDimensionsY];
+  }
+  getOutside() {
+    return this.#sOut
+  }
+  getPadding() {
+    return this.#sPad
+  }
 }
-cpu = new DebugLog();
-
-nID = 2;
-nBoardDimensionsX = 5;
-nBoardDimensionsY = 5;
-nHeightTowerWin = 5;
-nNumOfPlayers = 2;
-nDirection = 1;
-sOut = "#";
-sPad = "-";
+cpu = new DebugCPU();
 
 let jsboard = "[\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"2\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"1\",\"\",\"2\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"2\",\"2\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"21\",\"\",\"\",\"\",\"1111\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\"]";
 let jsmoves = JSON.stringify([[96,1,80],[-1,1,81],[-1,1,82],[-1,1,83],[-1,1,84],[-1,1,95],[80,1,96],[110,1,96],[111,1,96],[-1,1,97],[-1,1,99],[96,1,110],[111,1,110],[96,1,111],[110,1,111],[-1,1,112],[-1,1,113],[-1,1,114],[-1,1,125],[-1,1,126],[-1,1,127],[-1,1,128],[-1,1,129],[110,1,140],[-1,1,141],[-1,1,142],[-1,1,143]]);
+let nDirection = 1;
 
-console.log('CPU script returned: ' + getMoveString(callCPU(jsboard, jsmoves, 1)));
+console.log('CPU script returned: ' + getMoveString(callCPU(jsboard, jsmoves, nDirection)));
 */
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-cpu.log("Loading CPU script AdvancedCPU...");
+cpu.log("Loading CPU script 'AdvancedCPU' with player ID " + cpu.getID());
 
 function callCPU(jsonBoard, jsonMoves, nDirection) {
   let board = JSON.parse(jsonBoard);
@@ -79,9 +96,9 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
    */
   // Global variable
   DIRS = [];
-  DIRS.push(-(2 * nHeightTowerWin + nBoardDimensionsX + 1));  // -16
-  DIRS.push(-(2 * nHeightTowerWin + nBoardDimensionsX));      // -15
-  DIRS.push(-(2 * nHeightTowerWin + nBoardDimensionsX - 1));  // -14
+  DIRS.push(-(2 * cpu.getHeightToWin() + cpu.getBoardDimension()[0] + 1));  // -16
+  DIRS.push(-(2 * cpu.getHeightToWin() + cpu.getBoardDimension()[0]));      // -15
+  DIRS.push(-(2 * cpu.getHeightToWin() + cpu.getBoardDimension()[0] - 1));  // -14
   DIRS.push(-1);  // -1
   DIRS.push(1);   //  1
   DIRS.push(-DIRS[2]);  // 14
@@ -119,6 +136,9 @@ function shuffleArray(array) {
 // ---------------------------------------------------------------------------
 
 function chooseMove(currBoard, legalMoves) {
+  const nID = cpu.getID();
+  const nNumOfPlayers = cpu.getNumOfPlayers();
+  
   const SET_NO_OWN_NEIGHBOUR = 1;
   const SET_NO_NEIGHBOUR = 2;
   const SET_OWN_NEIGHBOUR = 5;
@@ -319,6 +339,10 @@ function chooseMove(currBoard, legalMoves) {
 // ---------------------------------------------------------------------------
 
 function preventWin(currBoard, moveToWin, legalMoves) {
+  const nID = cpu.getID();
+  const nNumOfPlayers = cpu.getNumOfPlayers();
+  const nBoardDimensionsX = cpu.getBoardDimension()[0];
+
   let prevWin = [];
   let pointFrom = moveToWin[0];
   let nNumber = moveToWin[1];
@@ -452,6 +476,11 @@ function checkNeighbourhood(currBoard, nIndex) {
 // ---------------------------------------------------------------------------
 
 function canWin(currBoard, nPlayerID) {
+  const nID = cpu.getID();
+  const nHeightTowerWin = cpu.getHeightToWin();
+  const sOut = cpu.getOutside();
+  const sPad = cpu.getPadding();
+
   let ret = [];
   for (let nIndex = 0; nIndex < currBoard.length; nIndex++) {
     if (0 !== currBoard[nIndex].length &&
@@ -482,6 +511,8 @@ function canWin(currBoard, nPlayerID) {
 // ---------------------------------------------------------------------------
 
 function getFieldFromIndex(nIndex) {
+  const nHeightTowerWin = cpu.getHeightToWin();
+  const nBoardDimensionsX = cpu.getBoardDimension()[0];
   let nTop = nHeightTowerWin * (2 * nHeightTowerWin + nBoardDimensionsX);
   let nFirst = nTop + nHeightTowerWin;
   let nLeftRight = 2 * nHeightTowerWin * (Math.floor(nIndex / (nBoardDimensionsX + 2 * nHeightTowerWin)) - nHeightTowerWin);
@@ -489,6 +520,7 @@ function getFieldFromIndex(nIndex) {
 }
 
 function getCoordinateFromField(nField) {
+  const nBoardDimensionsX = cpu.getBoardDimension()[0];
   let x = nField % nBoardDimensionsX;
   let y = Math.floor(nField / nBoardDimensionsX);
   return [x, y];

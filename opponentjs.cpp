@@ -82,13 +82,6 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
     return false;
   }
 
-  m_obj.setProperty(QStringLiteral("nID"), m_nID);
-  m_obj.setProperty(QStringLiteral("nBoardDimensionsX"), m_BoardDimensions.x());
-  m_obj.setProperty(QStringLiteral("nBoardDimensionsY"), m_BoardDimensions.y());
-  m_obj.setProperty(QStringLiteral("nHeightTowerWin"), m_nHeightTowerWin);
-  m_obj.setProperty(QStringLiteral("nNumOfPlayers"), m_nNumOfPlayers);
-  m_obj.setProperty(QStringLiteral("sOut"), m_sOut);
-  m_obj.setProperty(QStringLiteral("sPad"), m_sPad);
   return true;
 }
 
@@ -150,6 +143,32 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
+// Functions accessible by external JavaScript
+
+auto OpponentJS::getID() -> quint8 {
+  return m_nID;
+}
+
+auto OpponentJS::getNumOfPlayers() -> quint8 {
+  return m_nNumOfPlayers;
+}
+
+auto OpponentJS::getHeightToWin() -> quint8 {
+  return m_nHeightTowerWin;
+}
+
+auto OpponentJS::getBoardDimension() -> QVector<int> {
+  static QVector<int> dim;
+  dim << m_BoardDimensions.x() << m_BoardDimensions.y();
+  return dim;
+}
+
+auto OpponentJS::getOutside() -> QString {
+  return m_sOut;
+}
+auto OpponentJS::getPadding() -> QString {
+  return m_sPad;
+}
 
 void OpponentJS::log(const QString &sMsg) {
   qDebug() << "CPU P" + QString::number(m_nID) + " - " + sMsg;
