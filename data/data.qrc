@@ -10,9 +10,13 @@
         <file>img/example1.png</file>
         <file>img/example2.png</file>
         <file>img/stone.svg</file>
-        <file>img/win.png</file>
+        <file>img/code.png</file>
+        <file>img/code2.png</file>
+        <file>img/computer.png</file>
+        <file>img/computer2.png</file>
+        <file>img/trophy.png</file>
+        <file>img/trophy2.png</file>
         <file>img/user.png</file>
         <file>img/user2.png</file>
-        <file>img/win2.png</file>
     </qresource>
 </RCC>

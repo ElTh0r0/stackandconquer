@@ -175,41 +175,49 @@ auto Settings::searchTranslations() const -> QStringList {
 // ----------------------------------------------------------------------------
 
 void Settings::searchCpuScripts(const QString &userDataDir) {
-  QStringList sListAvailableCpu;
-  sListAvailableCpu << QStringLiteral("Human");
+  QDir cpuDir = m_sSharePath;
+
   m_sListCPUs.clear();
   m_sListCPUs << QStringLiteral("Human");
-  QDir cpuDir = m_sSharePath;
+  QString sIcon(QStringLiteral(":/img/user.png"));
+  if (this->window()->palette().window().color().lightnessF() < 0.5) {
+    sIcon = QStringLiteral(":/img/user2.png");
+  }
+  for (int i = 0; i < m_listPlayerCombo.size(); i++) {
+    m_listPlayerCombo[i]->addItem(QIcon(sIcon), m_sListCPUs.first());
+  }
 
   // Cpu scripts in share folder
   if (cpuDir.cd(QStringLiteral("cpu"))) {
     const QFileInfoList listFiles(cpuDir.entryInfoList(QDir::Files));
+    sIcon = QStringLiteral(":/img/computer.png");
+    if (this->window()->palette().window().color().lightnessF() < 0.5) {
+      sIcon = QStringLiteral(":/img/computer2.png");
+    }
     for (const auto &file : listFiles) {
       if ("js" == file.suffix().toLower()) {
-        sListAvailableCpu << file.baseName();
         m_sListCPUs << file.absoluteFilePath();
+        for (int i = 0; i < m_listPlayerCombo.size(); i++) {
+          m_listPlayerCombo[i]->addItem(QIcon(sIcon), file.baseName());
+        }
       }
     }
-  }
-  for (int i = 0; i < m_listPlayerCombo.size(); i++) {
-    m_listPlayerCombo[i]->addItems(sListAvailableCpu);
   }
 
   // Cpu scripts in user folder
   cpuDir.setPath(userDataDir);
   if (cpuDir.cd(QStringLiteral("cpu"))) {
     const QFileInfoList listFiles(cpuDir.entryInfoList(QDir::Files));
-    QString sIcon(QStringLiteral(":/img/user.png"));
+    sIcon = QStringLiteral(":/img/code.png");
     if (this->window()->palette().window().color().lightnessF() < 0.5) {
-      sIcon = QStringLiteral(":/img/user2.png");
+      sIcon = QStringLiteral(":/img/code2.png");
     }
     for (const auto &file : listFiles) {
       if ("js" == file.suffix().toLower()) {
-        sListAvailableCpu << file.baseName();
-        for (int i = 0; i < m_listPlayerCombo.size(); i++) {
-          m_listPlayerCombo[i]->addItem(QIcon(sIcon), sListAvailableCpu.last());
-        }
         m_sListCPUs << file.absoluteFilePath();
+        for (int i = 0; i < m_listPlayerCombo.size(); i++) {
+          m_listPlayerCombo[i]->addItem(QIcon(sIcon), file.baseName());
+        }
       }
     }
   }

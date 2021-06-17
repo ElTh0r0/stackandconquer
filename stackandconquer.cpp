@@ -160,9 +160,9 @@ void StackAndConquer::setupGraphView() {
   m_pFrame = new QFrame(m_pGraphView);
   m_pLayout = new QGridLayout;
   m_pLayout->setVerticalSpacing(0);
-  QPixmap iconWin(QStringLiteral(":/img/win.png"));
+  QPixmap iconWin(QStringLiteral(":/img/trophy.png"));
   if (m_pSettings->getBgColor().lightnessF() < 0.5) {
-    iconWin = QStringLiteral(":/img/win2.png");
+    iconWin = QStringLiteral(":/img/trophy2.png");
   }
 
   for (int i = 0; i < m_nMaxPlayers; i++) {
