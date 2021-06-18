@@ -27,6 +27,7 @@
 #include "./player.h"
 
 #include <QDebug>
+#include <QFileInfo>
 #include <QMessageBox>
 
 #include "./opponentjs.h"
@@ -42,7 +43,8 @@ Player::Player(const quint8 nID, const quint8 nMaxStones,
     m_nStonesLeft(nMaxStones),
     m_nWonTowers(0) {
   if (!m_sCpuScript.isEmpty()) {
-    m_sName += (QStringLiteral(" (CPU)"));
+    QFileInfo fi(m_sCpuScript);
+    m_sName += " (" + fi.baseName() + ")";
   }
   qDebug() << "Generating " + m_sName;
 }

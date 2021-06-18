@@ -147,7 +147,8 @@ function chooseMove(currBoard, legalMoves) {
   const nHeightTowerWin = game.getHeightToWin();
   
   const SET_NO_OWN_NEIGHBOUR = 1;
-  const SET_NO_NEIGHBOUR = 2;
+  const MOVE_NO_OWN_TOWER = 2;
+  const SET_NO_NEIGHBOUR = 3;
   const SET_OWN_NEIGHBOUR = 5;
   const MOVE_TOWER_TOP2 = 10;
   const MOVE_TOWER_TOP3 = 20;
@@ -322,6 +323,12 @@ function chooseMove(currBoard, legalMoves) {
                 game.log("DESTROY_OPP_TOWER3_NEWTOP " + getMoveString(legalMoves[i]) + " - score: " + nScore);
               }
             }
+          }
+        } else {  // Any other opponent tower move
+          if (MOVE_NO_OWN_TOWER > nScore) {
+            nScore = MOVE_NO_OWN_TOWER;
+            bestmove = legalMoves[i];
+            game.log("MOVE_NO_OWN_TOWER " + getMoveString(legalMoves[i]) + " - score: " + nScore);
           }
         }
       }

@@ -67,10 +67,6 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
   let legalMoves = JSON.parse(jsonMoves);
   // game.log("LEGAL MOVES: " + jsonMoves);
 
-  //game.log("board[80].length: " + board[80].length);
-  //game.log("board[81].length: " + board[81].length);
-  //game.log("board[81][0]: " + board[81][0]);
-
   let moveToWin = canWin(board, MY_ID, game.getHeightToWin());
   if (0 !== moveToWin.length) {  // CPU can win
     game.log("CPU can win!");
@@ -111,11 +107,6 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
 
   game.log("Possible moves: " + legalMoves.length);
   if (0 !== legalMoves.length) {
-    //game.log("Possible moves #1: " + legalMoves[0]);
-    //game.log("Possible moves #1.1: " + legalMoves[0][0]);
-    //game.log("Possible moves #1.2: " + legalMoves[0][1]);
-    //game.log("Possible moves #1.3: " + legalMoves[0][2]);
-
     // Make random move
     let nRand = Math.floor(Math.random() * legalMoves.length);
     return legalMoves[nRand];
@@ -259,79 +250,5 @@ function isLegalMove(move, legalMoves) {
     }
   }
 
-  return false;
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-function setRandom(currBoard) {
-  // Seed random?
-  let move = [];
-  let nRand;
-  do {
-    nRand = Math.floor(Math.random() * currBoard.length);
-  } while (0 !== currBoard[nRand].length);
-
-  move.push(-1);
-  move.push(1);
-  move.push(nRand);
-  return move;
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-function moveRandom(oppWinning) {
-  const sOut = game.getOutside();
-  let nCnt = 0;
-  do {
-    let bBreak = false;
-    let nRandTo = Math.floor(Math.random() * board.length);
-    if (sOut !== board[nRandTo] && sPad !== board[nRandTo]) {
-      let neighbours = checkNeighbourhood(nRandTo);
-
-      if (neighbours.length > 0) {
-        let choose = Math.floor(Math.random() * neighbours.length);
-        // Tower from which stones are moved:
-        let nMaxStones = board[(neighbours[choose])].length;
-        let move = [];  // From, num of stones, to
-        move.push(neighbours[choose]);
-        move.push(Math.floor(Math.random() * nMaxStones) + 1);
-        move.push(nRandTo);
-
-        // Dumb workaround for trying to find another
-        // move which doesn't let opponent win.
-        nCnt += 1;
-        if (nCnt < 10) {
-          for (let i = 0; i < oppWinning.length; i++) {
-            if (oppWinning[i][0] === move[0] &&
-              oppWinning[i][1] === move[1] &&
-              oppWinning[i][2] === move[2]) {
-              bBreak = true;
-              break;
-            }
-          }
-          if (true === bBreak) {
-            // game.log("Trying to find another move...");
-            continue;
-          }
-        }
-
-        return move;
-      }
-    }
-  } while (true);
-}
-
-// ---------------------------------------------------------------------------
-// ---------------------------------------------------------------------------
-
-function findFreeFields(currBoard) {
-  for (let nIndex = 0; nIndex < currBoard.length; nIndex++) {
-    if (0 === currBoard[nIndex].length) {
-      return true;
-    }
-  }
   return false;
 }
