@@ -46,7 +46,7 @@ OpponentJS::OpponentJS(const quint8 nID, const QPoint BoardDimensions,
     m_sPad(sPad),
     m_jsEngine(new QJSEngine(parent)) {
   m_obj = m_jsEngine->globalObject();
-  m_obj.setProperty(QStringLiteral("cpu"), m_jsEngine->newQObject(this));
+  m_obj.setProperty(QStringLiteral("game"), m_jsEngine->newQObject(this));
 }
 
 // ---------------------------------------------------------------------------
@@ -80,6 +80,24 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
                    "script - function callCPU() not found or not callable!";
     emit scriptError();
     return false;
+  }
+
+  // Call (optional) init() function if available
+  if (m_obj.hasProperty(QStringLiteral("initCPU")) &&
+      m_obj.property(QStringLiteral("initCPU")).isCallable()) {
+    QJSValue result = m_obj.property(QStringLiteral("initCPU")).call();
+    if (result.isError()) {
+      qCritical().noquote() << "CPU P" + QString::number(m_nID) +
+                               "- Error calling \"initCPU\" function at line: " +
+                               result.property(
+                                 QStringLiteral("lineNumber")).toString() +
+                               "\n         " + result.toString();
+      QMessageBox::warning(nullptr, tr("Warning"),
+                           tr("CPU script execution error! "
+                              "Please check the debug log."));
+      emit scriptError();
+      return false;
+    }
   }
 
   return true;

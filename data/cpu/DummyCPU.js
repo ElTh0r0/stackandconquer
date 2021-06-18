@@ -24,25 +24,22 @@
  * Dummy CPU opponent.
  *
  * Following function can be used to access data from game:
- *   cpu.getID();
- *   cpu.getNumOfPlayers();
- *   cpu.getHeightToWin();
- *   cpu.getBoardDimension();
- *   cpu.getOutside();
- *   cpu.getPadding();
+ *   game.getID();
+ *   game.getNumOfPlayers();
+ *   game.getHeightToWin();
+ *   game.getBoardDimension();
+ *   game.getOutside();
+ *   game.getPadding();
  */
 
-cpu.log("Loading CPU script 'DummyCPU' with player ID " + cpu.getID());
-
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function callCPU(jsonBoard, jsonMoves, nDirection) {
-  let board = JSON.parse(jsonBoard);
-  // cpu.log("BOARD: " + jsonBoard);
-  let legalMoves = JSON.parse(jsonMoves);
-  // cpu.log("LEGAL MOVES: " + jsonMoves);
+function initCPU() {
+  game.log("Loading CPU script 'DummyCPU' with player ID " + game.getID());
 
+  // Global variables
+  MY_ID = game.getID();
   /*
    * Moving directions factor
    * E.g. 5x5 board, max tower height 5 (padding):
@@ -50,38 +47,47 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
    * -1   X    1
    * 14  15   16
    */
-  // Global variable
   DIRS = [];
-  DIRS.push(-(2 * cpu.getHeightToWin() + cpu.getBoardDimension()[0] + 1));  // -16
-  DIRS.push(-(2 * cpu.getHeightToWin() + cpu.getBoardDimension()[0]));      // -15
-  DIRS.push(-(2 * cpu.getHeightToWin() + cpu.getBoardDimension()[0] - 1));  // -14
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimension()[0] + 1));  // -16
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimension()[0]));      // -15
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimension()[0] - 1));  // -14
   DIRS.push(-1);  // -1
   DIRS.push(1);   //  1
   DIRS.push(-DIRS[2]);  // 14
   DIRS.push(-DIRS[1]);  // 15
   DIRS.push(-DIRS[0]);  // 16
+}
 
-  //cpu.log("board[80].length: " + board[80].length);
-  //cpu.log("board[81].length: " + board[81].length);
-  //cpu.log("board[81][0]: " + board[81][0]);
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 
-  let moveToWin = canWin(board, cpu.getID());
+function callCPU(jsonBoard, jsonMoves, nDirection) {
+  let board = JSON.parse(jsonBoard);
+  // game.log("BOARD: " + jsonBoard);
+  let legalMoves = JSON.parse(jsonMoves);
+  // game.log("LEGAL MOVES: " + jsonMoves);
+
+  //game.log("board[80].length: " + board[80].length);
+  //game.log("board[81].length: " + board[81].length);
+  //game.log("board[81][0]: " + board[81][0]);
+
+  let moveToWin = canWin(board, MY_ID, game.getHeightToWin());
   if (0 !== moveToWin.length) {  // CPU can win
-    cpu.log("CPU can win!");
+    game.log("CPU can win!");
     return moveToWin[0];
   }
 
   if (1 === legalMoves.length) {  // Only one move possible, skip calculation
-    cpu.log("CPU has only one possible move left");
+    game.log("CPU has only one possible move left");
     return legalMoves[0];
   }
 
   // Check if next opponent can win depending on playing direction
   if (nDirection > 0) {
-    if (cpu.getID() === cpu.getNumOfPlayers()) {
-      moveToWin = canWin(board, 1);
+    if (MY_ID === game.getNumOfPlayers()) {
+      moveToWin = canWin(board, 1, game.getHeightToWin());
     } else {
-      moveToWin = canWin(board, cpu.getID() + 1);
+      moveToWin = canWin(board, MY_ID + 1, game.getHeightToWin());
     }
     if (0 !== moveToWin.length) {
       let prevWin = preventWin(board, moveToWin[0], legalMoves);
@@ -90,10 +96,10 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
       }
     }
   } else {
-    if (cpu.getID() === 1) {
-      moveToWin = canWin(board, cpu.getNumOfPlayers());
+    if (MY_ID === 1) {
+      moveToWin = canWin(board, game.getNumOfPlayers(), game.getHeightToWin());
     } else {
-      moveToWin = canWin(board, cpu.getID() - 1);
+      moveToWin = canWin(board, MY_ID - 1, game.getHeightToWin());
     }
     if (0 !== moveToWin.length) {
       let prevWin = preventWin(board, moveToWin[0], legalMoves);
@@ -103,12 +109,12 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
     }
   }
 
-  cpu.log("Possible moves: " + legalMoves.length);
+  game.log("Possible moves: " + legalMoves.length);
   if (0 !== legalMoves.length) {
-    //cpu.log("Possible moves #1: " + legalMoves[0]);
-    //cpu.log("Possible moves #1.1: " + legalMoves[0][0]);
-    //cpu.log("Possible moves #1.2: " + legalMoves[0][1]);
-    //cpu.log("Possible moves #1.3: " + legalMoves[0][2]);
+    //game.log("Possible moves #1: " + legalMoves[0]);
+    //game.log("Possible moves #1.1: " + legalMoves[0][0]);
+    //game.log("Possible moves #1.2: " + legalMoves[0][1]);
+    //game.log("Possible moves #1.3: " + legalMoves[0][2]);
 
     // Make random move
     let nRand = Math.floor(Math.random() * legalMoves.length);
@@ -116,7 +122,7 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
   }
 
   // This line never should be reached!
-  cpu.log("ERROR: No legal moves passed to script?!");
+  game.log("ERROR: No legal moves passed to script?!");
   return "";
 }
 
@@ -150,11 +156,9 @@ function checkNeighbourhood(currBoard, nIndex) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function canWin(currBoard, nPlayerID) {
-  const nID = cpu.getID();
-  const nHeightTowerWin = cpu.getHeightToWin();
-  const sOut = cpu.getOutside();
-  const sPad = cpu.getPadding();
+function canWin(currBoard, nPlayerID, nHeightTowerWin) {
+  const sOut = game.getOutside();
+  const sPad = game.getPadding();
 
   let ret = [];
   for (let nIndex = 0; nIndex < currBoard.length; nIndex++) {
@@ -172,7 +176,7 @@ function canWin(currBoard, nPlayerID) {
           move.push(nIndex);
           ret.push(move);  // Generate list of all opponent winning moves
 
-          if (nPlayerID === nID) {  // Return first found move for CPU to win
+          if (nPlayerID === MY_ID) {  // Return first found move for CPU to win
             return ret;
           }
         }
@@ -186,7 +190,7 @@ function canWin(currBoard, nPlayerID) {
 // ---------------------------------------------------------------------------
 
 function preventWin(currBoard, moveToWin, legalMoves) {
-  const nBoardDimensionsX = cpu.getBoardDimension()[0];
+  const nBoardDimensionsX = game.getBoardDimension()[0];
   //let prevWin = [];
   let move = [];
   let pointFrom = moveToWin[0];
@@ -279,7 +283,7 @@ function setRandom(currBoard) {
 // ---------------------------------------------------------------------------
 
 function moveRandom(oppWinning) {
-  const sOut = cpu.getOutside();
+  const sOut = game.getOutside();
   let nCnt = 0;
   do {
     let bBreak = false;
@@ -309,7 +313,7 @@ function moveRandom(oppWinning) {
             }
           }
           if (true === bBreak) {
-            // cpu.log("Trying to find another move...");
+            // game.log("Trying to find another move...");
             continue;
           }
         }
