@@ -215,6 +215,12 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
     int nIndex = -1;
     for (const auto &file : listFiles) {
       if ("js" == file.suffix().toLower()) {
+        if (-1 != m_listPlayerCombo[0]->findText(file.baseName())) {
+          qWarning() << "Duplicate CPU script name found, skipping script" <<
+                        file.absoluteFilePath();
+          continue;
+        }
+
         nIndex = (nIndex < 0) ? m_sListCPUs.length() : nIndex;
         m_sListCPUs << file.absoluteFilePath();
         for (int i = 0; i < m_listPlayerCombo.size(); i++) {

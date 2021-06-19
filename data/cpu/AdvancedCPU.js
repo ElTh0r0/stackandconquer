@@ -69,8 +69,8 @@ class DebugCPU {
 }
 game = new DebugCPU();
 
-let jsboard = "[\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"2\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"1\",\"\",\"2\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"2\",\"2\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"21\",\"\",\"\",\"\",\"1111\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\"]";
-let jsmoves = JSON.stringify([[96,1,80],[-1,1,81],[-1,1,82],[-1,1,83],[-1,1,84],[-1,1,95],[80,1,96],[110,1,96],[111,1,96],[-1,1,97],[-1,1,99],[96,1,110],[111,1,110],[96,1,111],[110,1,111],[-1,1,112],[-1,1,113],[-1,1,114],[-1,1,125],[-1,1,126],[-1,1,127],[-1,1,128],[-1,1,129],[110,1,140],[-1,1,141],[-1,1,142],[-1,1,143]]);
+let jsboard = "[\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"1\",\"1\",\"\",\"2\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\"]";
+let jsmoves = JSON.stringify([[-1,1,95],[-1,1,128],[-1,1,80],[-1,1,81],[-1,1,82],[-1,1,83],[-1,1,84],[-1,1,95],[-1,1,96],[-1,1,97],[-1,1,98],[-1,1,99],[-1,1,110],[-1,1,111],[-1,1,112],[-1,1,113],[-1,1,114],[-1,1,125],[-1,1,126],[-1,1,127],[-1,1,129],[-1,1,140],[142,1,141],[141,1,142],[-1,1,143]]);
 let nDirection = 1;
 
 initCPU();
@@ -153,6 +153,7 @@ function chooseMove(currBoard, legalMoves) {
   const MOVE_TOWER_TOP2 = 10;
   const MOVE_TOWER_TOP3 = 20;
   const MOVE_TOWER_TOP4 = 50;
+  const COULD_WIN_NEXT_ROUND_OPP_NEIGHBOUR = 90;
   const COULD_WIN_NEXT_ROUND = 100;
 
   const DESTROY_OPP_TOWER3 = 30;
@@ -225,7 +226,7 @@ function chooseMove(currBoard, legalMoves) {
     if (0 !== cpuToWin.length) {
       if (COULD_WIN_NEXT_ROUND > nScore) {
         nScore = COULD_WIN_NEXT_ROUND;
-        bestmove = legalMoves[i];
+        bestmove = legalMoves[i].slice();
         game.log("CPU" + MY_ID + " COULD_WIN_NEXT_ROUND " + getMoveString(legalMoves[i]) + " - score: " + nScore);
       }
     }
@@ -236,25 +237,37 @@ function chooseMove(currBoard, legalMoves) {
       if (0 === newNeighbours.length) {  // No neighbours at all
         if (SET_NO_NEIGHBOUR > nScore) {
           nScore = SET_NO_NEIGHBOUR;
-          bestmove = legalMoves[i];
+          bestmove = legalMoves[i].slice();
           game.log("SET_NO_NEIGHBOUR " + getMoveString(legalMoves[i]) + " - score: " + nScore);
         }
-      }
+      } else {  // Neighbour(s)
+        let bFoundOppNeighbour = false;
+        for (let point = 0; point < newNeighbours.length; point++) {  // Check all neighbours
+          let neighbourTower = newBoard[(newNeighbours[point])];
 
-      for (let point = 0; point < newNeighbours.length; point++) {  // Check new neighbours
-        let neighbourTower = newBoard[(newNeighbours[point])];
+          if (MY_ID !== parseInt(neighbourTower[neighbourTower.length - 1], 10)) {  // Neighbour = Opp
+            bFoundOppNeighbour = true;
 
-        if (MY_ID === parseInt(neighbourTower[neighbourTower.length - 1], 10)) {  // Neighbour = own
-          if (SET_OWN_NEIGHBOUR > nScore) {
-            nScore = SET_OWN_NEIGHBOUR;
-            bestmove = legalMoves[i];
-            game.log("SET_OWN_NEIGHBOUR " + getMoveString(legalMoves[i]) + " - score: " + nScore);
+            if (COULD_WIN_NEXT_ROUND === nScore &&
+              JSON.stringify(legalMoves[i]) === JSON.stringify(bestmove)) {
+              nScore = COULD_WIN_NEXT_ROUND_OPP_NEIGHBOUR;
+              game.log("Reducing score! Found opponent neighbour.");
+              game.log("COULD_WIN_NEXT_ROUND_OPP_NEIGHBOUR " + getMoveString(legalMoves[i]) + " - score: " + nScore);
+            }
           }
-        } else {
+        }
+
+        if (bFoundOppNeighbour) {
           if (SET_NO_OWN_NEIGHBOUR > nScore) {
             nScore = SET_NO_OWN_NEIGHBOUR;
-            bestmove = legalMoves[i];
+            bestmove = legalMoves[i].slice();
             game.log("SET_NO_OWN_NEIGHBOUR " + getMoveString(legalMoves[i]) + " - score: " + nScore);
+          }
+        } else {
+          if (SET_OWN_NEIGHBOUR > nScore) {
+            nScore = SET_OWN_NEIGHBOUR;
+            bestmove = legalMoves[i].slice();
+            game.log("SET_OWN_NEIGHBOUR " + getMoveString(legalMoves[i]) + " - score: " + nScore);
           }
         }
       }
@@ -268,19 +281,19 @@ function chooseMove(currBoard, legalMoves) {
         if (2 === (nNum + sTo.length)) {  // Build stack of 2 stone
           if (MOVE_TOWER_TOP2 > nScore) {
             nScore = MOVE_TOWER_TOP2;
-            bestmove = legalMoves[i];
+            bestmove = legalMoves[i].slice();
             game.log("MOVE_TOWER_TOP2 " + getMoveString(legalMoves[i]) + " - score: " + nScore);
           }
         } else if (3 === (nNum + sTo.length)) {  // Build stack of 3 stone
           if (MOVE_TOWER_TOP3 > nScore) {
             nScore = MOVE_TOWER_TOP3;
-            bestmove = legalMoves[i];
+            bestmove = legalMoves[i].slice();
             game.log("MOVE_TOWER_TOP3 " + getMoveString(legalMoves[i]) + " - score: " + nScore);
           }
         } else if (4 === (nNum + sTo.length)) {  // Build stack of 4 stone
           if (MOVE_TOWER_TOP4 > nScore) {
             nScore = MOVE_TOWER_TOP4;
-            bestmove = legalMoves[i];
+            bestmove = legalMoves[i].slice();
             game.log("MOVE_TOWER_TOP4 " + getMoveString(legalMoves[i]) + " - score: " + nScore);
           }
         }
@@ -290,19 +303,19 @@ function chooseMove(currBoard, legalMoves) {
       if (MY_ID !== parseInt(sFrom[sFrom.length - 1], 10)) {
         let sNewFrom = sFrom.substring(sFrom.length - nNum, sFrom.length);
 
-        if (4 === sFrom.length &&       // Destroy opponent tower with height 4
-          4 !== (nNum + sTo.length)) {  // and new tower is not height 4 as well!
+        if (4 === sFrom.length &&     // Destroy opponent tower with height 4
+          (nNum + sTo.length) < 4) {  // and new tower is not height 4 as well!
           if ("" !== sNewFrom) {
             if (MY_ID !== parseInt(sNewFrom[sNewFrom.length - 1], 10)) {  // On from remains opponont stone on top
               if (DESTROY_OPP_TOWER4 > nScore) {
                 nScore = DESTROY_OPP_TOWER4;
-                bestmove = legalMoves[i];
+                bestmove = legalMoves[i].slice();
                 game.log("DESTROY_OPP_TOWER4 " + getMoveString(legalMoves[i]) + " - score: " + nScore);
               }
             } else {  // On from remains own stone on top
               if (DESTROY_OPP_TOWER4_NEWTOP > nScore) {
                 nScore = DESTROY_OPP_TOWER4_NEWTOP;
-                bestmove = legalMoves[i];
+                bestmove = legalMoves[i].slice();
                 game.log("DESTROY_OPP_TOWER4_NEWTOP " + getMoveString(legalMoves[i]) + " - score: " + nScore);
               }
             }
@@ -313,13 +326,13 @@ function chooseMove(currBoard, legalMoves) {
             if (MY_ID !== parseInt(sNewFrom[sNewFrom.length - 1], 10)) {  // On from remains opponont stone on top
               if (DESTROY_OPP_TOWER3 > nScore) {
                 nScore = DESTROY_OPP_TOWER3;
-                bestmove = legalMoves[i];
+                bestmove = legalMoves[i].slice();
                 game.log("DESTROY_OPP_TOWER3 " + getMoveString(legalMoves[i]) + " - score: " + nScore);
               }
             } else {  // On from remains own stone on top
               if (DESTROY_OPP_TOWER3_NEWTOP > nScore) {
                 nScore = DESTROY_OPP_TOWER3_NEWTOP;
-                bestmove = legalMoves[i];
+                bestmove = legalMoves[i].slice();
                 game.log("DESTROY_OPP_TOWER3_NEWTOP " + getMoveString(legalMoves[i]) + " - score: " + nScore);
               }
             }
@@ -327,7 +340,7 @@ function chooseMove(currBoard, legalMoves) {
         } else {  // Any other opponent tower move
           if (MOVE_NO_OWN_TOWER > nScore) {
             nScore = MOVE_NO_OWN_TOWER;
-            bestmove = legalMoves[i];
+            bestmove = legalMoves[i].slice();
             game.log("MOVE_NO_OWN_TOWER " + getMoveString(legalMoves[i]) + " - score: " + nScore);
           }
         }
@@ -340,7 +353,7 @@ function chooseMove(currBoard, legalMoves) {
     -1 === bestmove[1] &&
     -1 === bestmove[2]) {
     let nRand = Math.floor(Math.random() * legalMoves.length);
-    bestmove = legalMoves[nRand];
+    bestmove = legalMoves[nRand].slice();
     game.log("No best move found, choosing randome move: " + getMoveString(bestmove));
   } else {
     game.log("Best score: " + nScore + " - move: " + getMoveString(bestmove));
