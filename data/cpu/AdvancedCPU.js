@@ -61,16 +61,16 @@ class DebugCPU {
     return [this.#nBoardDimensionsX, this.#nBoardDimensionsY];
   }
   getOutside() {
-    return this.#sOut
+    return this.#sOut;
   }
   getPadding() {
-    return this.#sPad
+    return this.#sPad;
   }
 }
 game = new DebugCPU();
 
-let jsboard = "[\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"1\",\"1\",\"\",\"2\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\"]";
-let jsmoves = JSON.stringify([[-1,1,95],[-1,1,128],[-1,1,80],[-1,1,81],[-1,1,82],[-1,1,83],[-1,1,84],[-1,1,95],[-1,1,96],[-1,1,97],[-1,1,98],[-1,1,99],[-1,1,110],[-1,1,111],[-1,1,112],[-1,1,113],[-1,1,114],[-1,1,125],[-1,1,126],[-1,1,127],[-1,1,129],[-1,1,140],[142,1,141],[141,1,142],[-1,1,143]]);
+let jsboard = "[\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"1111\",\"11\",\"1\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"1\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"222\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"\",\"\",\"22\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"\",\"\",\"2\",\"\",\"\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\",\"-\"]";
+let jsmoves = JSON.stringify([[-1,1,80],[-1,1,81],[83,1,84],[83,2,84],[-1,1,95],[-1,1,96],[82,1,97],[82,2,97],[82,3,97],[83,1,97],[83,2,97],[-1,1,98],[-1,1,99],[-1,1,110],[-1,1,111],[-1,1,112],[-1,1,113],[-1,1,125],[-1,1,126],[-1,1,127],[-1,1,128],[97,1,129],[-1,1,140],[-1,1,141],[-1,1,143],[-1,1,144]]);
 let nDirection = 1;
 
 initCPU();
@@ -182,7 +182,7 @@ function chooseMove(currBoard, legalMoves) {
     if (0 !== oppWinningMoves.length) {
       for (let k = 0; k < oppWinningMoves.length; k++) {
         game.log("Opponent #" + opponentID + " could win: " + getMoveString(oppWinningMoves[k]));
-        let prevWin = preventWin(currBoard, oppWinningMoves[k], legalMoves);
+        let prevWin = preventWin(currBoard, oppWinningMoves[k], legalMoves, nHeightTowerWin);
         if (0 !== prevWin.length) {
           game.log("Found preventive move");
           return prevWin;
@@ -370,60 +370,115 @@ function preventWin(currBoard, moveToWin, legalMoves, nHeightTowerWin) {
   const nBoardDimensionsX = game.getBoardDimension()[0];
 
   let prevWin = [];
+  let optimal = [];
   let pointFrom = moveToWin[0];
-  let nNumber = moveToWin[1];
   let pointTo = moveToWin[2];
 
-  // Check if a blocking towers in between can be placed
-  let route = pointTo - pointFrom;
-  for (let dir = 0; dir < DIRS.length; dir++) {
-    if (1 === Math.abs(DIRS[dir])) {  // +1 / -1
-      if (Math.abs(route) < (nBoardDimensionsX - 2) &&
-        (route > 0 && DIRS[dir] < 0 ||
-          route < 0 && DIRS[dir] > 0)) {
-        let move = [];
-        move.push(-1);
-        move.push(1);
-        move.push(pointTo + DIRS[dir]);
+  /* Example for board 5x5 and padding 5
+  * -16 -15 -14
+  * -1   X    1
+  * 14  15   16
+  */
+  let fieldsBetween;
+  let direction = pointTo - pointFrom;
+  let sign = Math.sign(direction);
+  for (let dir = 0; dir < 4; dir++) {  // Just checking half of arry, since other half is just inverted -/+
+    if (0 === direction % DIRS[dir]) {
+      fieldsBetween = Math.abs(direction / DIRS[dir]) - 1;
+      direction = sign * Math.abs(DIRS[dir]);
+      break;
+    }
+  }
 
-        let oppCouldWin = false;
+  if (fieldsBetween > 0) {
+    // Check for blocking tower in between
+    skipTry: for (between = 1; between <= fieldsBetween; between++) {
+      // ToDo: Evaluate neighbourhood when placing one stone
+      let move = [];
+      move.push(-1);
+      move.push(1);
+      move.push(pointTo - (direction * between));
+
+      if (isLegalMove(move, legalMoves)) {
         for (let playerID = 1; playerID <= nNumOfPlayers; playerID++) {
-          if (playerID !== MY_ID && !oppCouldWin) {
+          if (playerID !== MY_ID) {
             let newBoard = makePseudoMove(currBoard, move, MY_ID);
-            oppCouldWin = (canWin(newBoard, playerID, nHeightTowerWin).length > 0);
-          }
-        }
-        if (isLegalMove(move, legalMoves) && !oppCouldWin) {
-          prevWin.push(move);
-        }
-      }
-    } else {
-      if (0 === route % DIRS[dir] &&      // There is a route between points
-        (route > 0 && DIRS[dir] < 0 ||    // If route pos., dir has to be neg.
-          route < 0 && DIRS[dir] > 0)) {  // If route neg., dir has to be pos.
-        let moves = route / DIRS[dir];
-        // There is more than one field in between
-        if (Math.abs(moves) > 1) {
-          let move = [];
-          move.push(-1);
-          move.push(1);
-          move.push(pointTo + DIRS[dir]);
-
-          let oppCouldWin = false;
-          for (let playerID = 1; playerID <= nNumOfPlayers; playerID++) {
-            if (playerID !== MY_ID && !oppCouldWin) {
-              let newBoard = makePseudoMove(currBoard, move, MY_ID);
-              oppCouldWin = (canWin(newBoard, playerID, nHeightTowerWin).length > 0);
+            let oppCouldWin = (canWin(newBoard, playerID, nHeightTowerWin).length > 0);
+            if (oppCouldWin) {
+              continue skipTry;
             }
           }
-          if (isLegalMove(move, legalMoves) && !oppCouldWin) {
-            prevWin.push(move);
-          }
         }
-
-        // TODO(x): Try to move tower to prevent win
+        prevWin.push(move.slice());
+        game.log("Prevent opponent to win by blocking route: " + getMoveString(move));
       }
     }
+    
+    // Search moves to destroy source or destination
+    // Loop through legalMoves where source or destination is used in move.
+    proceedLoop: for (let k = 0; k < legalMoves.length; k++) {
+      if (pointFrom === legalMoves[k][0] ||
+        pointFrom === legalMoves[k][2] ||
+        pointTo === legalMoves[k][0] ||
+        pointTo === legalMoves[k][2]) {
+        for (let playerID = 1; playerID <= nNumOfPlayers; playerID++) {
+          if (playerID !== MY_ID) {
+            let newBoard2 = makePseudoMove(currBoard, legalMoves[k], MY_ID);
+            let oppCouldWin = (canWin(newBoard2, playerID, nHeightTowerWin).length > 0);
+            if (oppCouldWin) {
+              continue proceedLoop;
+            }
+          }
+        }
+        game.log("Prevent opponent to win by destroying source/destination tower: " + getMoveString(legalMoves[k]));
+        prevWin.push(legalMoves[k].slice());
+      }
+    }
+
+  } else {  // Source tower is next to destination, tower of height 4 has to be destroyed
+    let sFrom = currBoard[pointFrom];
+    // Remove from source max current height - 2 (= two stone remain)
+    // otherwise opp could win in one of next rounds again
+    skipTry2: for (stones = 1; stones <= sFrom.length - 2; stones++) {
+      let move = [];
+      move.push(pointFrom);
+      move.push(stones);
+      move.push(pointTo);
+      
+      for (let playerID = 1; playerID <= nNumOfPlayers; playerID++) {
+        if (playerID !== MY_ID) {
+          let newBoard = makePseudoMove(currBoard, move, MY_ID);
+          let oppCouldWin = (canWin(newBoard, playerID, nHeightTowerWin).length > 0);
+          if (oppCouldWin) {
+            continue skipTry2;
+          }
+        }
+      }
+
+      if (isLegalMove(move, legalMoves)) {
+        game.log("Prevent opponent to win by destroying destination: " + getMoveString(move));
+        prevWin.push(move.slice());
+
+        let pseudo = makePseudoMove(currBoard, move, MY_ID);
+        if (canWin(pseudo, MY_ID, nHeightTowerWin).length > 0) {
+          game.log("Prevent opponent to win and possibility for CPU to win in next round: " + getMoveString(move));
+          return move;
+        }
+
+        // Check if own color could remain on top of source after moving stones
+        if (0 === optimal.length) {
+          if (MY_ID === parseInt(
+            sFrom.substring(sFrom.length - 1 - stones, sFrom.length - stones), 10)) {
+              game.log("Prevent opponent to win and own stone on top of source tower: " + getMoveString(move));
+              optimal = move.slice();
+          }
+        }
+      }
+    }
+  }
+
+  if (optimal.length > 0) {
+    return optimal;
   }
 
   if (prevWin.length > 0) {
