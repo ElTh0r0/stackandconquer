@@ -251,6 +251,11 @@ void Game::makeMove(QJsonArray move) {
     if (!bValidMove) {
       if (!activePlayer.isHuman) {
         m_bScriptError = true;
+        qWarning() << "Invalid move!" <<
+                      "P" + QString::number(activePlayer.ID) + " >> [" +
+                      QString::number(move.at(0).toInt()) + ", " +
+                      QString::number(move.at(1).toInt()) + ", " +
+                      QString::number(move.at(2).toInt()) + "]";
         QMessageBox::warning(nullptr, tr("Warning"),
                              tr("CPU script made an invalid move! "
                                 "Please check the debug log."));

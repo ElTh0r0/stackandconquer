@@ -14,13 +14,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
 
-lessThan(QT_MAJOR_VERSION, 5) {
-  error("StackAndConquer requires Qt 5.12 or higher")
-}
-equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 9) {
-  error("StackAndConquer requires Qt 5.12 or higher")
-}
-
 TEMPLATE      = app
 
 unix: !macx {

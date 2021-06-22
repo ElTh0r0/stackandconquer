@@ -30,6 +30,9 @@
  *   game.getBoardDimension();
  *   game.getOutside();
  *   game.getPadding();
+ *
+ * Remark: Qt <= 5.11 supports only ECMAScript 5, so
+ * ES5 should be chosen for compatibility reasons!
  */
 
 // ---------------------------------------------------------------------------
@@ -62,12 +65,12 @@ function initCPU() {
 // ---------------------------------------------------------------------------
 
 function callCPU(jsonBoard, jsonMoves, nDirection) {
-  let board = JSON.parse(jsonBoard);
+  var board = JSON.parse(jsonBoard);
   // game.log("BOARD: " + jsonBoard);
-  let legalMoves = JSON.parse(jsonMoves);
+  var legalMoves = JSON.parse(jsonMoves);
   // game.log("LEGAL MOVES: " + jsonMoves);
 
-  let moveToWin = canWin(board, MY_ID, game.getHeightToWin());
+  var moveToWin = canWin(board, MY_ID, game.getHeightToWin());
   if (0 !== moveToWin.length) {  // CPU can win
     game.log("CPU can win!");
     return moveToWin[0];
@@ -79,6 +82,7 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
   }
 
   // Check if next opponent can win depending on playing direction
+  var prevWin;
   if (nDirection > 0) {
     if (MY_ID === game.getNumOfPlayers()) {
       moveToWin = canWin(board, 1, game.getHeightToWin());
@@ -86,7 +90,7 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
       moveToWin = canWin(board, MY_ID + 1, game.getHeightToWin());
     }
     if (0 !== moveToWin.length) {
-      let prevWin = preventWin(board, moveToWin[0], legalMoves);
+      prevWin = preventWin(board, moveToWin[0], legalMoves);
       if (3 === prevWin.length) {
         return prevWin;
       }
@@ -98,7 +102,7 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
       moveToWin = canWin(board, MY_ID - 1, game.getHeightToWin());
     }
     if (0 !== moveToWin.length) {
-      let prevWin = preventWin(board, moveToWin[0], legalMoves);
+      prevWin = preventWin(board, moveToWin[0], legalMoves);
       if (3 === prevWin.length) {
         return prevWin;
       }
@@ -108,7 +112,7 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
   game.log("Possible moves: " + legalMoves.length);
   if (0 !== legalMoves.length) {
     // Make random move
-    let nRand = Math.floor(Math.random() * legalMoves.length);
+    var nRand = Math.floor(Math.random() * legalMoves.length);
     return legalMoves[nRand];
   }
 
@@ -121,16 +125,16 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
 // ---------------------------------------------------------------------------
 
 function checkNeighbourhood(currBoard, nIndex) {
-  let neighbours = [];
-  let nMoves = currBoard[nIndex].length;
+  var neighbours = [];
+  var nMoves = currBoard[nIndex].length;
 
   if (0 === nMoves) {
     return neighbours;
   }
 
-  let sField = "";
-  for (let dir = 0; dir < DIRS.length; dir++) {
-    for (let range = 1; range <= nMoves; range++) {
+  var sField = "";
+  for (var dir = 0; dir < DIRS.length; dir++) {
+    for (var range = 1; range <= nMoves; range++) {
       sField = currBoard[nIndex + DIRS[dir] * range];
       if (0 !== sField.length && range < nMoves) {  // Route blocked
         break;
@@ -148,20 +152,20 @@ function checkNeighbourhood(currBoard, nIndex) {
 // ---------------------------------------------------------------------------
 
 function canWin(currBoard, nPlayerID, nHeightTowerWin) {
-  const sOut = game.getOutside();
-  const sPad = game.getPadding();
+  var sOut = game.getOutside();
+  var sPad = game.getPadding();
 
-  let ret = [];
-  for (let nIndex = 0; nIndex < currBoard.length; nIndex++) {
+  var ret = [];
+  for (var nIndex = 0; nIndex < currBoard.length; nIndex++) {
     if (0 !== currBoard[nIndex].length &&
       sOut !== currBoard[nIndex] &&
       sPad !== currBoard[nIndex]) {
-      let neighbours = checkNeighbourhood(currBoard, nIndex);
-      for (let point = 0; point < neighbours.length; point++) {
-        let tower = currBoard[(neighbours[point])];
+      var neighbours = checkNeighbourhood(currBoard, nIndex);
+      for (var point = 0; point < neighbours.length; point++) {
+        var tower = currBoard[(neighbours[point])];
         if ((currBoard[nIndex].length + tower.length >= nHeightTowerWin) &&
           nPlayerID === parseInt(tower[tower.length - 1], 10)) {  // Top = own
-          let move = [];  // From, num of stones, to
+          var move = [];  // From, num of stones, to
           move.push(neighbours[point]);
           move.push(tower.length);
           move.push(nIndex);
@@ -181,21 +185,21 @@ function canWin(currBoard, nPlayerID, nHeightTowerWin) {
 // ---------------------------------------------------------------------------
 
 function preventWin(currBoard, moveToWin, legalMoves) {
-  const nBoardDimensionsX = game.getBoardDimension()[0];
-  //let prevWin = [];
-  let move = [];
-  let pointFrom = moveToWin[0];
-  let nNumber = moveToWin[1];
-  let pointTo = moveToWin[2];
+  var nBoardDimensionsX = game.getBoardDimension()[0];
+  //var prevWin = [];
+  var move = [];
+  var pointFrom = moveToWin[0];
+  var nNumber = moveToWin[1];
+  var pointTo = moveToWin[2];
 
   // Check if a blocking towers in between can be placed
-  let route = pointTo - pointFrom;
-  for (let dir = 0; dir < DIRS.length; dir++) {
+  var route = pointTo - pointFrom;
+  for (var dir = 0; dir < DIRS.length; dir++) {
     if (1 === Math.abs(DIRS[dir])) {  // +1 / -1
       if (Math.abs(route) < (nBoardDimensionsX - 2) &&
         (route > 0 && DIRS[dir] < 0 ||
           route < 0 && DIRS[dir] > 0)) {
-        //let move = [];
+        //move = [];
         move.push(-1);
         move.push(1);
         move.push(pointTo + DIRS[dir]);
@@ -203,16 +207,18 @@ function preventWin(currBoard, moveToWin, legalMoves) {
         if (isLegalMove(move, legalMoves)) {
           //prevWin.push(move);
           return move;
+        } else {
+          move.pop();
         }
       }
     } else {
       if (0 === route % DIRS[dir] &&      // There is a route between points
         (route > 0 && DIRS[dir] < 0 ||    // If route pos., dir has to be neg.
           route < 0 && DIRS[dir] > 0)) {  // If route neg., dir has to be pos.
-        let moves = route / DIRS[dir];
+        var moves = route / DIRS[dir];
         // There is more than one field in between
         if (Math.abs(moves) > 1) {
-          //let move = [];
+          //move = [];
           move.push(-1);
           move.push(1);
           move.push(pointTo + DIRS[dir]);
@@ -220,6 +226,8 @@ function preventWin(currBoard, moveToWin, legalMoves) {
           if (isLegalMove(move, legalMoves)) {
             //prevWin.push(move);
             return move;
+          } else {
+            move.pop();
           }
         }
 
@@ -230,7 +238,7 @@ function preventWin(currBoard, moveToWin, legalMoves) {
 
   /*
   if (prevWin.length > 0) {
-    let nRand = Math.floor(Math.random() * prevWin.length);
+    var nRand = Math.floor(Math.random() * prevWin.length);
     return prevWin[nRand];
   } else {
     return prevWin;
@@ -243,8 +251,8 @@ function preventWin(currBoard, moveToWin, legalMoves) {
 // ---------------------------------------------------------------------------
 
 function isLegalMove(move, legalMoves) {
-  let sMove = JSON.stringify(move);
-  for (let i = 0; i < legalMoves.length; i++) {
+  var sMove = JSON.stringify(move);
+  for (var i = 0; i < legalMoves.length; i++) {
     if (JSON.stringify(legalMoves[i]) === sMove) {
       return true;
     }
