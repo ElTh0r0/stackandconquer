@@ -27,7 +27,8 @@
  *   game.getID();
  *   game.getNumOfPlayers();
  *   game.getHeightToWin();
- *   game.getBoardDimension();
+ *   game.getBoardDimensionX();
+ *   game.getBoardDimensionY();
  *   game.getOutside();
  *   game.getPadding();
  *
@@ -51,9 +52,9 @@ function initCPU() {
    * 14  15   16
    */
   DIRS = [];
-  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimension()[0] + 1));  // -16
-  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimension()[0]));      // -15
-  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimension()[0] - 1));  // -14
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX() + 1));  // -16
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX()));      // -15
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX() - 1));  // -14
   DIRS.push(-1);  // -1
   DIRS.push(1);   //  1
   DIRS.push(-DIRS[2]);  // 14
@@ -185,7 +186,7 @@ function canWin(currBoard, nPlayerID, nHeightTowerWin) {
 // ---------------------------------------------------------------------------
 
 function preventWin(currBoard, moveToWin, legalMoves) {
-  var nBoardDimensionsX = game.getBoardDimension()[0];
+  var nBoardDimensionsX = game.getBoardDimensionX();
   //var prevWin = [];
   var move = [];
   var pointFrom = moveToWin[0];

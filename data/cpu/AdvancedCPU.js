@@ -27,7 +27,8 @@
  *   game.getID();
  *   game.getNumOfPlayers();
  *   game.getHeightToWin();
- *   game.getBoardDimension();
+ *   game.getBoardDimensionX();
+ *   game.getBoardDimensionY();
  *   game.getOutside();
  *   game.getPadding();
  *
@@ -43,8 +44,8 @@ class DebugCPU {
   #nID = 2;
   #nNumOfPlayers = 2;
   #nHeightTowerWin = 5;
-  #nBoardDimensionsX = 5;
-  #nBoardDimensionsY = 5;
+  #nBoardDimensionX = 5;
+  #nBoardDimensionY = 5;
   #sOut = "#";
   #sPad = "-";
   
@@ -60,8 +61,11 @@ class DebugCPU {
   getHeightToWin() {
     return this.#nHeightTowerWin;
   }
-  getBoardDimension() {
-    return [this.#nBoardDimensionsX, this.#nBoardDimensionsY];
+  getBoardDimensionX() {
+    return this.#nBoardDimensionX;
+  }
+  getBoardDimensionY() {
+    return this.#nBoardDimensionY;
   }
   getOutside() {
     return this.#sOut;
@@ -95,9 +99,9 @@ function initCPU() {
    * 14  15   16
    */
   DIRS = [];
-  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimension()[0] + 1));  // -16
-  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimension()[0]));      // -15
-  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimension()[0] - 1));  // -14
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX() + 1));  // -16
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX()));      // -15
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX() - 1));  // -14
   DIRS.push(-1);  // -1
   DIRS.push(1);   //  1
   DIRS.push(-DIRS[2]);  // 14
@@ -609,15 +613,15 @@ function canWin(currBoard, nPlayerID, nHeightTowerWin) {
 // ---------------------------------------------------------------------------
 
 function getFieldFromIndex(nIndex) {
-  var nTop = game.getHeightToWin() * (2 * game.getHeightToWin() + game.getBoardDimension()[0]);
+  var nTop = game.getHeightToWin() * (2 * game.getHeightToWin() + game.getBoardDimensionX());
   var nFirst = nTop + game.getHeightToWin();
-  var nLeftRight = 2 * game.getHeightToWin() * (Math.floor(nIndex / (game.getBoardDimension()[0] + 2 * game.getHeightToWin())) - game.getHeightToWin());
+  var nLeftRight = 2 * game.getHeightToWin() * (Math.floor(nIndex / (game.getBoardDimensionX() + 2 * game.getHeightToWin())) - game.getHeightToWin());
   return nIndex - nFirst - nLeftRight;
 }
 
 function getCoordinateFromField(nField) {
-  var x = nField % game.getBoardDimension()[0];
-  var y = Math.floor(nField / game.getBoardDimension()[0]);
+  var x = nField % game.getBoardDimensionX();
+  var y = Math.floor(nField / game.getBoardDimensionX());
   return [x, y];
 }
 

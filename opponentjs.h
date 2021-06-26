@@ -55,7 +55,8 @@ class OpponentJS : public QObject {
     quint8 getID();
     quint8 getNumOfPlayers();
     quint8 getHeightToWin();
-    QVector<int> getBoardDimension();
+    int getBoardDimensionX();
+    int getBoardDimensionY();
     QString getOutside();
     QString getPadding();
 

@@ -175,10 +175,11 @@ auto OpponentJS::getHeightToWin() -> quint8 {
   return m_nHeightTowerWin;
 }
 
-auto OpponentJS::getBoardDimension() -> QVector<int> {
-  static QVector<int> dim;
-  dim << m_BoardDimensions.x() << m_BoardDimensions.y();
-  return dim;
+auto OpponentJS::getBoardDimensionX() -> int {
+  return m_BoardDimensions.x();
+}
+auto OpponentJS::getBoardDimensionY() -> int {
+  return m_BoardDimensions.y();
 }
 
 auto OpponentJS::getOutside() -> QString {
