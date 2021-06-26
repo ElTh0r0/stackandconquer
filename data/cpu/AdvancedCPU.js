@@ -387,7 +387,7 @@ function preventWin(currBoard, moveToWin, legalMoves, nHeightTowerWin) {
   */
   var fieldsBetween;
   var direction = pointTo - pointFrom;
-  var sign = Math.sign(direction);
+  var sign = direction >= 0 ? 1 : -1;
   for (var dir = 0; dir < 4; dir++) {  // Just checking half of arry, since other half is just inverted -/+
     if (0 === direction % DIRS[dir]) {
       fieldsBetween = Math.abs(direction / DIRS[dir]) - 1;
