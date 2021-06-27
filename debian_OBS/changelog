@@ -1,3 +1,20 @@
+stackandconquer (0.9.0-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Improve CPU opponent
+  * Dynamic scale change
+  * Icon for dark background
+  * Check for legal moves
+  * Implement direction change
+  * Save game fixes
+  * Configurable stone color
+  * Rewrite of board handling
+  * Update Dutch translation - thanks to Elbert
+  * Packaging changes
+  * Support for Qt 6
+
+ -- Thorsten Roth <elthoro@gmx.de>  Sat, 27 Jun 2021 15:27:00 +0200
+
 stackandconquer (0.8.2-0) unstable; urgency=low
 
   [ Thorsten Roth ]
