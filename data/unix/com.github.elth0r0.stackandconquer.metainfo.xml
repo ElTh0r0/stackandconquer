@@ -35,6 +35,26 @@
   <content_rating type="oars-1.0" />
 
   <releases>
+    <release version="0.9.0" date="2021-06-27">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Improve CPU opponent</li>
+          <li>Dynamic scale change</li>
+          <li>Icon for dark background</li>
+          <li>Theoretic support for more than 2 players</li>
+          <li>Theoretic support for none rectangular boards</li>
+          <li>Check for legal moves</li>
+          <li>Implement direction change</li>
+          <li>Save game fixes</li>
+          <li>Configurable stone color</li>
+          <li>Rewrite of board handling</li>
+          <li>Update Dutch translation - thanks to Elbert</li>
+          <li>Packaging changes</li>
+          <li>Support for Qt 6</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.8.2" date="2020-03-27">
       <description>
         <p>Added Italian translation - thanks to davi92!</p>
