@@ -313,7 +313,7 @@ function chooseMove(currBoard, legalMoves) {
         if (4 === sFrom.length &&     // Destroy opponent tower with height 4
           (nNum + sTo.length) < 4) {  // and new tower is not height 4 as well!
           if ("" !== sNewFrom) {
-            if (MY_ID !== parseInt(sNewFrom[sNewFrom.length - 1], 10)) {  // On from remains opponont stone on top
+            if (MY_ID !== parseInt(sNewFrom[sNewFrom.length - 1], 10)) {  // On from remains opponent stone on top
               if (DESTROY_OPP_TOWER4 > nScore) {
                 nScore = DESTROY_OPP_TOWER4;
                 bestmove = legalMoves[i].slice();
@@ -330,7 +330,7 @@ function chooseMove(currBoard, legalMoves) {
         } else if (3 === sFrom.length &&  // Destroy opponent tower with height 3
           (nNum + sTo.length) < 3) {      // and new tower is not height 3 or heigher!
           if ("" !== sNewFrom) {
-            if (MY_ID !== parseInt(sNewFrom[sNewFrom.length - 1], 10)) {  // On from remains opponont stone on top
+            if (MY_ID !== parseInt(sNewFrom[sNewFrom.length - 1], 10)) {  // On from remains opponent stone on top
               if (DESTROY_OPP_TOWER3 > nScore) {
                 nScore = DESTROY_OPP_TOWER3;
                 bestmove = legalMoves[i].slice();
