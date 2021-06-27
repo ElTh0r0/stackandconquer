@@ -181,7 +181,7 @@ function chooseMove(currBoard, legalMoves) {
 
   // Check if opponent could win on current board
   skipMe: for (var opponentID = 1; opponentID <= nNumOfPlayers; opponentID++) {
-    if (opponentID === MY_ID) {  // Skip loop for myself (was already checked in previsous loop)
+    if (opponentID === MY_ID) {  // Skip loop for myself (was already checked in previous loop)
       continue skipMe;
     }
 
