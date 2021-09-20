@@ -38,11 +38,85 @@
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
+// !!! Uncomment block for script debugging only !!!
+/*
+var game = {
+  _nID: 2,
+  _nNumOfPlayers: 2,
+  _nHeightTowerWin: 5,
+  _nBoardDimensionX: 5,
+  _nBoardDimensionY: 5,
+  _sOut: "#",
+  _sPad: "-",
+
+  log: function (sMessage) {
+    console.log(sMessage);
+  },
+  getID: function () {
+    return this._nID;
+  },
+  getNumOfPlayers: function () {
+    return this._nNumOfPlayers;
+  },
+  getHeightToWin: function () {
+    return this._nHeightTowerWin;
+  },
+  getBoardDimensionX: function () {
+    return this._nBoardDimensionX;
+  },
+  getBoardDimensionY: function () {
+    return this._nBoardDimensionY;
+  },
+  getOutside: function () {
+    return this._sOut;
+  },
+  getPadding: function () {
+    return this._sPad;
+  },
+
+  _jsboard:
+    '["-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","1","","2","22","222","-","-","-","-","-","-","-","-","-","-","","","","","111","-","-","-","-","-","-","-","-","-","-","2","","122","","","-","-","-","-","-","-","-","-","-","-","","","","","","-","-","-","-","-","-","-","-","-","-","1111","1","","1","","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"]',
+
+  _jsmoves: JSON.stringify([
+    [-1, 1, 81],
+    [83, 1, 82],
+    [83, 2, 82],
+    [-1, 1, 95],
+    [-1, 1, 96],
+    [-1, 1, 97],
+    [-1, 1, 98],
+    [141, 1, 99],
+    [-1, 1, 111],
+    [-1, 1, 113],
+    [-1, 1, 114],
+    [-1, 1, 125],
+    [-1, 1, 126],
+    [-1, 1, 127],
+    [-1, 1, 128],
+    [-1, 1, 129],
+    [140, 1, 141],
+    [140, 2, 141],
+    [140, 3, 141],
+    [-1, 1, 142],
+    [-1, 1, 144],
+  ]),
+
+  _nDirection: 1,
+};
+
+initCPU();
+console.log(
+  "CPU script returned: " +
+    callCPU(game._jsboard, game._jsmoves, game._nDirection)
+);
+*/
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 
 function initCPU() {
   game.log("Loading CPU script 'DummyCPU' with player ID " + game.getID());
 
-  // Global variables
+  /* global MY_ID:writable, DIRS:writable */
   MY_ID = game.getID();
   /*
    * Moving directions factor
@@ -52,14 +126,14 @@ function initCPU() {
    * 14  15   16
    */
   DIRS = [];
-  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX() + 1));  // -16
-  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX()));      // -15
-  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX() - 1));  // -14
-  DIRS.push(-1);  // -1
-  DIRS.push(1);   //  1
-  DIRS.push(-DIRS[2]);  // 14
-  DIRS.push(-DIRS[1]);  // 15
-  DIRS.push(-DIRS[0]);  // 16
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX() + 1)); // -16
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX())); // -15
+  DIRS.push(-(2 * game.getHeightToWin() + game.getBoardDimensionX() - 1)); // -14
+  DIRS.push(-1); // -1
+  DIRS.push(1); //  1
+  DIRS.push(-DIRS[2]); // 14
+  DIRS.push(-DIRS[1]); // 15
+  DIRS.push(-DIRS[0]); // 16
 }
 
 // ---------------------------------------------------------------------------
@@ -72,12 +146,14 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
   // game.log("LEGAL MOVES: " + jsonMoves);
 
   var moveToWin = canWin(board, MY_ID, game.getHeightToWin());
-  if (0 !== moveToWin.length) {  // CPU can win
+  if (0 !== moveToWin.length) {
+    // CPU can win
     game.log("CPU can win!");
     return moveToWin[0];
   }
 
-  if (1 === legalMoves.length) {  // Only one move possible, skip calculation
+  if (1 === legalMoves.length) {
+    // Only one move possible, skip calculation
     game.log("CPU has only one possible move left");
     return legalMoves[0];
   }
@@ -137,7 +213,8 @@ function checkNeighbourhood(currBoard, nIndex) {
   for (var dir = 0; dir < DIRS.length; dir++) {
     for (var range = 1; range <= nMoves; range++) {
       sField = currBoard[nIndex + DIRS[dir] * range];
-      if (0 !== sField.length && range < nMoves) {  // Route blocked
+      if (0 !== sField.length && range < nMoves) {
+        // Route blocked
         break;
       }
       if (!isNaN(parseInt(sField, 10)) && range === nMoves) {
@@ -158,21 +235,27 @@ function canWin(currBoard, nPlayerID, nHeightTowerWin) {
 
   var ret = [];
   for (var nIndex = 0; nIndex < currBoard.length; nIndex++) {
-    if (0 !== currBoard[nIndex].length &&
+    if (
+      0 !== currBoard[nIndex].length &&
       sOut !== currBoard[nIndex] &&
-      sPad !== currBoard[nIndex]) {
+      sPad !== currBoard[nIndex]
+    ) {
       var neighbours = checkNeighbourhood(currBoard, nIndex);
       for (var point = 0; point < neighbours.length; point++) {
-        var tower = currBoard[(neighbours[point])];
-        if ((currBoard[nIndex].length + tower.length >= nHeightTowerWin) &&
-          nPlayerID === parseInt(tower[tower.length - 1], 10)) {  // Top = own
-          var move = [];  // From, num of stones, to
+        var tower = currBoard[neighbours[point]];
+        if (
+          currBoard[nIndex].length + tower.length >= nHeightTowerWin &&
+          nPlayerID === parseInt(tower[tower.length - 1], 10)
+        ) {
+          // Top = own
+          var move = []; // From, num of stones, to
           move.push(neighbours[point]);
           move.push(tower.length);
           move.push(nIndex);
-          ret.push(move);  // Generate list of all opponent winning moves
+          ret.push(move); // Generate list of all opponent winning moves
 
-          if (nPlayerID === MY_ID) {  // Return first found move for CPU to win
+          if (nPlayerID === MY_ID) {
+            // Return first found move for CPU to win
             return ret;
           }
         }
@@ -190,16 +273,18 @@ function preventWin(currBoard, moveToWin, legalMoves) {
   //var prevWin = [];
   var move = [];
   var pointFrom = moveToWin[0];
-  var nNumber = moveToWin[1];
+  //var nNumber = moveToWin[1];
   var pointTo = moveToWin[2];
 
   // Check if a blocking towers in between can be placed
   var route = pointTo - pointFrom;
   for (var dir = 0; dir < DIRS.length; dir++) {
-    if (1 === Math.abs(DIRS[dir])) {  // +1 / -1
-      if (Math.abs(route) < (nBoardDimensionsX - 2) &&
-        (route > 0 && DIRS[dir] < 0 ||
-          route < 0 && DIRS[dir] > 0)) {
+    if (1 === Math.abs(DIRS[dir])) {
+      // +1 / -1
+      if (
+        Math.abs(route) < nBoardDimensionsX - 2 &&
+        ((route > 0 && DIRS[dir] < 0) || (route < 0 && DIRS[dir] > 0))
+      ) {
         //move = [];
         move.push(-1);
         move.push(1);
@@ -213,9 +298,12 @@ function preventWin(currBoard, moveToWin, legalMoves) {
         }
       }
     } else {
-      if (0 === route % DIRS[dir] &&      // There is a route between points
-        (route > 0 && DIRS[dir] < 0 ||    // If route pos., dir has to be neg.
-          route < 0 && DIRS[dir] > 0)) {  // If route neg., dir has to be pos.
+      if (
+        0 === route % DIRS[dir] && // There is a route between points
+        ((route > 0 && DIRS[dir] < 0) || // If route pos., dir has to be neg.
+          (route < 0 && DIRS[dir] > 0))
+      ) {
+        // If route neg., dir has to be pos.
         var moves = route / DIRS[dir];
         // There is more than one field in between
         if (Math.abs(moves) > 1) {
