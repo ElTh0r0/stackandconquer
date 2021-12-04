@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2021 Thorsten Roth -->
+<!-- Copyright 2022 Thorsten Roth -->
 <component type="desktop-application">
   <id>com.github.elth0r0.stackandconquer.desktop</id>
   <metadata_license>FSFAP</metadata_license>
@@ -35,6 +35,12 @@
   <content_rating type="oars-1.0" />
 
   <releases>
+    <release version="0.9.1" date="2021-12-04">
+      <description>
+        <p>Updated Italian translation - thanks to davi92!</p>
+        <p>ESLint, Prettier JS code</p>
+      </description>
+    </release>
     <release version="0.9.0" date="2021-06-27">
       <description>
         <p>Main changes:</p>
