@@ -46,12 +46,13 @@
 #include "./player.h"
 #include "./settings.h"
 
-Game::Game(Settings *pSettings, const QString &sSavegame)
+Game::Game(Settings *pSettings, const QString &sSavegame, QObject *pParent)
   : m_pSettings(pSettings),
     m_pBoard(nullptr),
     m_nMaxTowerHeight(5),
     m_nWinTowers(pSettings->getWinTowers()),
     m_bScriptError(false) {
+  Q_UNUSED(pParent)
   qDebug() << "Starting new game" << sSavegame;
 
   // Start with default

@@ -42,7 +42,7 @@
 #include "./settings.h"
 
 Board::Board(const QString &sBoard, const quint8 nMaxTower, quint8 NumOfPlayers,
-             Settings *pSettings)
+             Settings *pSettings, QObject *pParent)
   : sIN(QStringLiteral("0")),
     sOUT(QStringLiteral("#")),
     sPAD(QStringLiteral("-")),
@@ -52,6 +52,7 @@ Board::Board(const QString &sBoard, const quint8 nMaxTower, quint8 NumOfPlayers,
     m_nMaxPlayerStones(0),
     m_nMaxTower(nMaxTower),
     m_NumOfPlayers(NumOfPlayers) {
+  Q_UNUSED(pParent)
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
 
   QList<QString> tmpBoard;

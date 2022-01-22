@@ -47,7 +47,7 @@ class Board : public QGraphicsScene {
 
  public:
     Board(const QString &sBoard, const quint8 nMaxTower, quint8 NumOfPlayers,
-          Settings *pSettings);
+          Settings *pSettings, QObject *pParent = nullptr);
 
     auto setupSavegame(const QJsonArray &jsBoard) -> bool;
     void addStone(const int nIndex, const quint8 nStone,

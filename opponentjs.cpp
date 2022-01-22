@@ -36,15 +36,14 @@
 OpponentJS::OpponentJS(const quint8 nID, const QPoint BoardDimensions,
                        const quint8 nHeightTowerWin, const quint8 nNumOfPlayers,
                        const QString &sOut, const QString &sPad,
-                       QObject *parent)
-  : QObject(parent),
-    m_nID(nID),
+                       QObject *pParent)
+  : m_nID(nID),
     m_BoardDimensions(BoardDimensions),
     m_nHeightTowerWin(nHeightTowerWin),
     m_nNumOfPlayers(nNumOfPlayers),
     m_sOut(sOut),
     m_sPad(sPad),
-    m_jsEngine(new QJSEngine(parent)) {
+    m_jsEngine(new QJSEngine(pParent)) {
   m_obj = m_jsEngine->globalObject();
   m_obj.setProperty(QStringLiteral("game"), m_jsEngine->newQObject(this));
 }
@@ -85,7 +84,7 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
   // Call (optional) init() function if available
   if (m_obj.hasProperty(QStringLiteral("initCPU")) &&
       m_obj.property(QStringLiteral("initCPU")).isCallable()) {
-    QJSValue result = m_obj.property(QStringLiteral("initCPU")).call();
+    result = m_obj.property(QStringLiteral("initCPU")).call();
     if (result.isError()) {
       qCritical().noquote() << "CPU P" + QString::number(m_nID) +
                                "- Error calling \"initCPU\" function at line: " +

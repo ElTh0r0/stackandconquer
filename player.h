@@ -44,7 +44,7 @@ class Player : public QObject {
  public:
     Player(const quint8 nID, const quint8 nMaxStones,
            const QString &sCpuScript = QLatin1String(""),
-           QObject *parent = nullptr);
+           QObject *pParent = nullptr);
     ~Player();
 
     auto initCPU(const QPoint BoadDimensions, const quint8 nMaxTowerHeight,

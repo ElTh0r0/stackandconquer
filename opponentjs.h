@@ -45,7 +45,7 @@ class OpponentJS : public QObject {
                         const quint8 nNumOfPlayers,
                         const QString &sOut,
                         const QString &sPad,
-                        QObject *parent = nullptr);
+                        QObject *pParent = nullptr);
     auto loadAndEvalCpuScript(const QString &sFilepath) -> bool;
     void callJsCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
                    const qint8 nDirection);

@@ -43,7 +43,8 @@ class Game : public QObject {
 
  public:
     explicit Game(Settings *pSettings,
-                  const QString &sSavegame = QLatin1String(""));
+                  const QString &sSavegame = QLatin1String(""),
+                  QObject *pParent = nullptr);
     ~Game();
     auto getScene() const -> QGraphicsScene*;
     auto saveGame(const QString &sFile) -> bool;

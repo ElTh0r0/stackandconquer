@@ -39,13 +39,13 @@
 
 Settings::Settings(const QString &sSharePath, const QString &userDataDir,
                    const quint8 nMaxPlayers, QWidget *pParent)
-  : QDialog(pParent),
-    m_pUi(new Ui::SettingsDialog()),
+  : m_pUi(new Ui::SettingsDialog()),
     m_sSharePath(sSharePath),
     m_nDefaultGrid(70),  // Default stone SVG size fits to grid size of 70!
     m_nMaxGrid(200),
     m_nMaxPlayers(nMaxPlayers),
     m_DefaultPlayerColors{"#EF2929", "#FCAF3E", "#729FCF", "#8F5902"} {
+  Q_UNUSED(pParent)
   m_pUi->setupUi(this);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
   this->setModal(true);

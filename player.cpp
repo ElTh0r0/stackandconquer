@@ -33,15 +33,15 @@
 #include "./opponentjs.h"
 
 Player::Player(const quint8 nID, const quint8 nMaxStones,
-               const QString &sCpuScript, QObject *parent)
-  : QObject(parent),
-    m_nID(nID),
+               const QString &sCpuScript, QObject *pParent)
+  : m_nID(nID),
     m_pJsCpu(nullptr),
     m_sName(tr("Player") + " " + QString::number(m_nID)),
     m_sCpuScript(sCpuScript),
     m_nMaxStones(nMaxStones),
     m_nStonesLeft(nMaxStones),
     m_nWonTowers(0) {
+  Q_UNUSED(pParent)
   if (!m_sCpuScript.isEmpty()) {
     QFileInfo fi(m_sCpuScript);
     m_sName += " (" + fi.baseName() + ")";
