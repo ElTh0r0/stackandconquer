@@ -80,6 +80,8 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
           this, &Settings::changedSettings);
   connect(m_pUi->cbStartPlayer, &QComboBox::currentTextChanged,
           this, &Settings::changedSettings);
+  connect(m_pUi->cbBoard, &QComboBox::currentTextChanged,
+          this, &Settings::changedSettings);
 
   connect(m_pUi->buttonBox, &QDialogButtonBox::accepted,
           this, &Settings::accept);
@@ -106,6 +108,7 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
   }
 
   this->searchCpuScripts(userDataDir);
+  this->searchBoards(userDataDir);
   this->readSettings();
 }
 
@@ -122,6 +125,9 @@ Settings::~Settings() {
 void Settings::showEvent(QShowEvent *pEvent) {
   this->readSettings();
   m_bSettingChanged = false;
+  m_pUi->tabWidget->setCurrentIndex(0);
+  // TODO(x): To be removed when boards dialog completed
+  m_pUi->tabWidget->setTabEnabled(1, false);
   QDialog::showEvent(pEvent);
 }
 
@@ -232,6 +238,47 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
+void Settings::searchBoards(const QString &userDataDir) {
+  QDir boardsDir = m_sSharePath;
+
+  m_sListBoards.clear();
+  // Boards in share folder
+  if (boardsDir.cd(QStringLiteral("boards"))) {
+    const QFileInfoList listFiles(boardsDir.entryInfoList(QDir::Files));
+    for (const auto &file : listFiles) {
+      if ("stackboard" == file.suffix().toLower()) {
+        m_sListBoards << file.absoluteFilePath();
+        m_pUi->cbBoard->addItem(file.baseName());
+      }
+    }
+  }
+
+  // Boards in user folder
+  boardsDir.setPath(userDataDir);
+  if (boardsDir.cd(QStringLiteral("boards"))) {
+    const QFileInfoList listFiles(boardsDir.entryInfoList(QDir::Files));
+    QString sIcon = QStringLiteral(":/img/code.png");
+    if (this->window()->palette().window().color().lightnessF() < 0.5) {
+      sIcon = QStringLiteral(":/img/code2.png");
+    }
+    for (const auto &file : listFiles) {
+      if ("stackboard" == file.suffix().toLower()) {
+        if (-1 != m_pUi->cbBoard->findText(file.baseName())) {
+          qWarning() << "Duplicate baord name found, skipping board" <<
+                        file.absoluteFilePath();
+          continue;
+        }
+
+        m_sListBoards << file.absoluteFilePath();
+        m_pUi->cbBoard->addItem(QIcon(sIcon), file.baseName());
+      }
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 void Settings::accept() {
   QString sOldGuiLang = m_sGuiLanguage;
   m_sGuiLanguage = m_pUi->cbGuiLanguage->currentText();
@@ -268,6 +315,9 @@ void Settings::accept() {
 
   m_nWinTowers = m_pUi->spinNumToWin->value();
   m_pSettings->setValue(QStringLiteral("NumWinTowers"), m_nWinTowers);
+
+  m_sBoard = m_sListBoards.at(m_pUi->cbBoard->currentIndex());
+  m_pSettings->setValue(QStringLiteral("Board"), m_sBoard);
 
   // Colors
   m_pSettings->beginGroup(QStringLiteral("Colors"));
@@ -432,6 +482,20 @@ void Settings::readSettings() {
                                 QStringLiteral("ShowPossibleMoveTowers"),
                                 true).toBool();
   m_pUi->checkShowPossibleMoves->setChecked(m_bShowPossibleMoveTowers);
+
+  const QString sDefaultBoard(m_sSharePath + "/boards/Square_5x5.stackboard");
+  m_sBoard = m_pSettings->value(QStringLiteral("Board"),
+                                sDefaultBoard).toString();
+  if (m_sListBoards.contains(m_sBoard)) {
+    m_pUi->cbBoard->setCurrentIndex(m_sListBoards.indexOf(m_sBoard));
+  } else {
+    if (m_sListBoards.contains(sDefaultBoard)) {
+      m_pUi->cbBoard->setCurrentIndex(m_sListBoards.indexOf(sDefaultBoard));
+    } else {
+      m_sBoard = m_sListBoards.at(0);
+      m_pUi->cbBoard->setCurrentIndex(0);
+    }
+  }
 
   m_pSettings->beginGroup(QStringLiteral("Colors"));
   m_bgColor = this->readColor(QStringLiteral("BgColor"),
@@ -634,16 +698,13 @@ auto Settings::getMaxNumOfPlayers() const -> quint8 {
 // ----------------------------------------------------------------------------
 
 auto Settings::getBoardFile() const -> QString {
-  // TODO(x): Rewrite if boards can be chosen
-  QString sBoard(QLatin1String(""));
-  if (QFile::exists(m_sSharePath + "/boards")) {
-    sBoard = m_sSharePath + "/boards/square_5x5.stackboard";
-    // sBoard = m_sSharePath + "/boards/triangle.stackboard";
-    // sBoard = m_sSharePath + "/boards/square_4x2.stackboard";
-  } else {
-    qWarning() << "Games share path does not exist:" << m_sSharePath;
+  if (!QFile::exists(m_sBoard)) {
+    QMessageBox::warning(nullptr, this->windowTitle(),
+                     tr("Selected board could not be found!"));
+    qWarning() << "Board not found:" << m_sBoard;
+    return QString();
   }
-  return sBoard;
+  return m_sBoard;
 }
 
 auto Settings::getStartPlayer() const -> quint8 {

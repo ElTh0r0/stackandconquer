@@ -129,6 +129,7 @@ Game::Game(Settings *pSettings, const QString &sSavegame, QObject *pParent)
           exit(-1);
         }
       }
+      // TODO(x): Update settings board combo box when save game loaded
       qDebug() << "Loading save game board:" << m_sBoardFile;
 
       QJsonArray jsBoard = jsonObj[QStringLiteral("Board")].toArray();

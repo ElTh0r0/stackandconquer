@@ -281,7 +281,7 @@ void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
 
 void StackAndConquer::startNewGame(const QString &sSavegame) {
   delete m_pGame;
-  m_pGame = new Game(m_pSettings, sSavegame);
+  m_pGame = new Game(m_pSettings, sSavegame, this);
 
   connect(m_pGame, &Game::updateNames, this, &StackAndConquer::updateNames);
   connect(m_pGame, &Game::drawIcon, this, &StackAndConquer::drawPlayerIcon);
@@ -304,6 +304,9 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
   m_pGraphView->setScene(m_pGame->getScene());
   m_pGraphView->updateSceneRect(m_pGame->getScene()->sceneRect());
   m_pGraphView->setInteractive(true);
+
+  QFileInfo fiBoard(m_pSettings->getBoardFile());
+  this->setWindowTitle(fiBoard.baseName());
 
   if (!m_pGame->initCpu()) {
     m_pGraphView->setInteractive(false);

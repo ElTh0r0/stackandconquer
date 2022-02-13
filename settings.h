@@ -103,6 +103,7 @@ class Settings : public QDialog {
                    const QString &sFallback) const -> QColor;
     auto searchTranslations() const -> QStringList;
     void searchCpuScripts(const QString &userDataDir);
+    void searchBoards(const QString &userDataDir);
     void updateStartCombo();
 
     Ui::SettingsDialog *m_pUi;
@@ -117,6 +118,8 @@ class Settings : public QDialog {
     QList<QComboBox*> m_listPlayerCombo;
 
     QStringList m_sListCPUs;
+    QStringList m_sListBoards;
+    QString m_sBoard;
     int m_nNumOfPlayers{};
     int m_nStartPlayer{};
     int m_nWinTowers{};

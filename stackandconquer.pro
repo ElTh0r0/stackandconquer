@@ -22,8 +22,8 @@ unix: !macx {
        TARGET = StackAndConquer
 }
 
-win32:VERSION  = 0.9.1.0
-else:VERSION   = 0.9.1
+win32:VERSION  = 0.10.0.0
+else:VERSION   = 0.10.0
 
 QMAKE_TARGET_PRODUCT     = "StackAndConquer"
 QMAKE_TARGET_DESCRIPTION = "Challenging tower conquest board game"

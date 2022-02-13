@@ -35,10 +35,15 @@
   <content_rating type="oars-1.0" />
 
   <releases>
-    <release version="0.9.1" date="2021-12-04">
+    <release version="0.10.0" date="2022-02-13">
       <description>
-        <p>Updated Italian translation - thanks to davi92!</p>
-        <p>ESLint, Prettier JS code</p>
+        <p>Main changes:</p>
+        <ul>
+          <li>Add board settings dialog</li>
+          <li>Updated Italian translation - thanks to davi92!</li>
+          <li>Fix for loading user CPU scripts</li>
+          <li>ESLint, Prettier JS code</li>
+        </ul>
       </description>
     </release>
     <release version="0.9.0" date="2021-06-27">
