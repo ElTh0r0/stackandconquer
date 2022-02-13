@@ -281,7 +281,7 @@ void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
 
 void StackAndConquer::startNewGame(const QString &sSavegame) {
   delete m_pGame;
-  m_pGame = new Game(m_pSettings, sSavegame, this);
+  m_pGame = new Game(m_pSettings, sSavegame);
 
   connect(m_pGame, &Game::updateNames, this, &StackAndConquer::updateNames);
   connect(m_pGame, &Game::drawIcon, this, &StackAndConquer::drawPlayerIcon);
