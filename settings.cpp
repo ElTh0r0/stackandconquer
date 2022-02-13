@@ -212,7 +212,6 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
     if (this->window()->palette().window().color().lightnessF() < 0.5) {
       sIcon = QStringLiteral(":/img/code2.png");
     }
-    int nIndex = -1;
     for (const auto &file : listFiles) {
       if ("js" == file.suffix().toLower()) {
         if (-1 != m_listPlayerCombo[0]->findText(file.baseName())) {
@@ -221,18 +220,10 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
           continue;
         }
 
-        nIndex = (nIndex < 0) ? m_sListCPUs.length() : nIndex;
         m_sListCPUs << file.absoluteFilePath();
         for (int i = 0; i < m_listPlayerCombo.size(); i++) {
           m_listPlayerCombo[i]->addItem(QIcon(sIcon), file.baseName());
         }
-      }
-    }
-
-    // Separator between game CPU scripts and user scripts
-    if (nIndex > 0) {
-      for (int i = 0; i < m_listPlayerCombo.size(); i++) {
-        m_listPlayerCombo[i]->insertSeparator(nIndex);
       }
     }
   }
