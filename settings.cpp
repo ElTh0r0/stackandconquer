@@ -368,7 +368,7 @@ void Settings::loadBoardStyle(const QString &sStyleFile) {
                                        qApp->applicationName().toLower(),
                                        sStyleFile);
 #else
-  QSettings *pStyleSet = new QSettings(QSettings::IniFormat
+  QSettings *pStyleSet = new QSettings(QSettings::IniFormat,
                                        QSettings::UserScope,
                                        qApp->applicationName().toLower(),
                                        sStyleFile);
@@ -448,7 +448,7 @@ void Settings::saveBoardStyle(const QString &sStyleFile) {
                                        qApp->applicationName().toLower(),
                                        sStyleFile);
 #else
-  QSettings *pStyleSet = new QSettings(QSettings::IniFormat
+  QSettings *pStyleSet = new QSettings(QSettings::IniFormat,
                                        QSettings::UserScope,
                                        qApp->applicationName().toLower(),
                                        sStyleFile);
