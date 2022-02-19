@@ -96,13 +96,19 @@ class Settings : public QDialog {
  private slots:
     void changeNumOfPlayers();
     void changedSettings();
+    void changedStyle(int nIndex);
+    void clickedStyleCell(int nRow, int nCol);
 
  private:
+    void copyDefaultStyles();
     void readSettings();
-    auto readColor(const QString &sKey,
+    auto readColor(QSettings *pSet, const QString &sKey,
                    const QString &sFallback) const -> QColor;
     auto searchTranslations() const -> QStringList;
     void searchCpuScripts(const QString &userDataDir);
+    void searchBoardStyles(const QString &sStyleDir);
+    void loadBoardStyle(const QString &sStyleFile);
+    void saveBoardStyle(const QString &sStyleFile);
     void searchBoards(const QString &userDataDir);
     void updateStartCombo();
 
@@ -126,6 +132,8 @@ class Settings : public QDialog {
     bool m_bShowPossibleMoveTowers{};
     bool m_bSettingChanged{};
 
+    QString m_sBoardStyleFile;
+    QString m_sExt;
     QColor m_bgColor;
     QColor m_txtColor;
     QColor m_txtHighColor;

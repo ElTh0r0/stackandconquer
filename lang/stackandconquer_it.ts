@@ -190,34 +190,109 @@ Il gioco finisce in pareggio!</translation>
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../settings.cpp" line="102"/>
-        <location filename="../settings.cpp" line="579"/>
+        <location filename="../settings.cpp" line="105"/>
+        <location filename="../settings.cpp" line="779"/>
         <source>Player %1 Human/CPU</source>
         <translation>Giocatore %1 Umano/CPU</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="637"/>
+        <location filename="../settings.cpp" line="837"/>
         <source>Player</source>
         <translation>Giocatore</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="635"/>
+        <location filename="../settings.cpp" line="835"/>
         <source>Random</source>
         <translation>Casuale</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="93"/>
-        <location filename="../settings.cpp" line="577"/>
+        <location filename="../settings.cpp" line="96"/>
+        <location filename="../settings.cpp" line="777"/>
         <source>Color player %1</source>
         <translation>Colore giocatore %1</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="299"/>
+        <location filename="../settings.cpp" line="332"/>
+        <source>Create new style...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="346"/>
+        <source>Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="349"/>
+        <source>Main background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="349"/>
+        <source>Board background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="350"/>
+        <source>Grid color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="350"/>
+        <source>Animate color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="351"/>
+        <source>Animate border color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="351"/>
+        <source>Highlight color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="352"/>
+        <source>Highlight border color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="352"/>
+        <source>Neighbours color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="353"/>
+        <source>Neighbours border color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="353"/>
+        <source>Selected color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="354"/>
+        <source>Selected border color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="354"/>
+        <source>Text color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="355"/>
+        <source>Text highlight color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="527"/>
         <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
         <translation>Le impostazioni di gioco sono state modificate.&lt;br&gt;Vuoi iniziare una nuova partita?</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="703"/>
+        <location filename="../settings.cpp" line="903"/>
         <source>Selected board could not be found!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -255,33 +330,38 @@ Il gioco finisce in pareggio!</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="107"/>
+        <location filename="../settings.ui" line="117"/>
         <source>Towers needed to win</source>
         <translation>Torri necessarie per vincere</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="124"/>
+        <location filename="../settings.ui" line="134"/>
         <source>Possible tower moves</source>
         <translation>Spostamenti della torre possibili</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="131"/>
+        <location filename="../settings.ui" line="141"/>
         <source>Show movable towers after selection</source>
         <translation>Mostra le torri disponibili dopo la selezione</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="145"/>
+        <location filename="../settings.ui" line="155"/>
         <source>GUI language</source>
         <translation>Linguaggio GUI</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="156"/>
-        <source>Board</source>
+        <location filename="../settings.ui" line="166"/>
+        <source>Board style</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="168"/>
-        <source>Board:</source>
+        <location filename="../settings.ui" line="175"/>
+        <source>Style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.ui" line="110"/>
+        <source>Board</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

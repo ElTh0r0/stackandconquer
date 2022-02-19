@@ -18,5 +18,6 @@
         <file>img/trophy2.png</file>
         <file>img/user.png</file>
         <file>img/user2.png</file>
+        <file>boardstyles/standard-style.conf</file>
     </qresource>
 </RCC>

@@ -190,34 +190,109 @@ Das Spiel endet unentschieden!</translation>
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../settings.cpp" line="102"/>
-        <location filename="../settings.cpp" line="579"/>
+        <location filename="../settings.cpp" line="105"/>
+        <location filename="../settings.cpp" line="779"/>
         <source>Player %1 Human/CPU</source>
         <translation>Spieler %1 Mensch/CPU</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="93"/>
-        <location filename="../settings.cpp" line="577"/>
+        <location filename="../settings.cpp" line="96"/>
+        <location filename="../settings.cpp" line="777"/>
         <source>Color player %1</source>
         <translation>Farbe Spieler %1</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="299"/>
+        <location filename="../settings.cpp" line="332"/>
+        <source>Create new style...</source>
+        <translation>Neuen Stil erstellen...</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="346"/>
+        <source>Color</source>
+        <translation>Farbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="349"/>
+        <source>Main background</source>
+        <translation>Fensterhintergrund</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="349"/>
+        <source>Board background</source>
+        <translation>Spielfeldhintergrund</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="350"/>
+        <source>Grid color</source>
+        <translation>Gitternetzfarbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="350"/>
+        <source>Animate color</source>
+        <translation>Animationsfarbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="351"/>
+        <source>Animate border color</source>
+        <translation>Animationsrahmenfarbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="351"/>
+        <source>Highlight color</source>
+        <translation>Hervorhebungsfarbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="352"/>
+        <source>Highlight border color</source>
+        <translation>Hervorhebungsrahmenfarbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="352"/>
+        <source>Neighbours color</source>
+        <translation>Nachbarfarbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="353"/>
+        <source>Neighbours border color</source>
+        <translation>Nachbarrahmenfarbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="353"/>
+        <source>Selected color</source>
+        <translation>Auswahlfarbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="354"/>
+        <source>Selected border color</source>
+        <translation>Auswahlrahmenfarbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="354"/>
+        <source>Text color</source>
+        <translation>Textfarbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="355"/>
+        <source>Text highlight color</source>
+        <translation>Texthervorhebungsfarbe</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="527"/>
         <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
         <translation>Grundlegende Spieleinstellungen wurden geändert.&lt;br&gt;Soll ein neues Spiel gestartet werden?</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="637"/>
+        <location filename="../settings.cpp" line="837"/>
         <source>Player</source>
         <translation>Spieler</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="703"/>
+        <location filename="../settings.cpp" line="903"/>
         <source>Selected board could not be found!</source>
         <translation>Ausgewähltes Spielfeld konnte nicht gefunden werden!</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="635"/>
+        <location filename="../settings.cpp" line="835"/>
         <source>Random</source>
         <translation>Zufällig</translation>
     </message>
@@ -255,34 +330,39 @@ Das Spiel endet unentschieden!</translation>
         <translation>Allgemein</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="107"/>
+        <location filename="../settings.ui" line="117"/>
         <source>Towers needed to win</source>
         <translation>Anzahl Türme zum Sieg</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="124"/>
+        <location filename="../settings.ui" line="134"/>
         <source>Possible tower moves</source>
         <translation>Mögliche Turmzüge</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="131"/>
+        <location filename="../settings.ui" line="141"/>
         <source>Show movable towers after selection</source>
         <translation>Bewegbare Türme nach Selektion anzeigen</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="145"/>
+        <location filename="../settings.ui" line="155"/>
         <source>GUI language</source>
         <translation>Gui Sprache</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="156"/>
-        <source>Board</source>
-        <translation>Spielfeld</translation>
+        <location filename="../settings.ui" line="166"/>
+        <source>Board style</source>
+        <translation>Spielfeld-Stil</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="168"/>
-        <source>Board:</source>
-        <translation>Spielfeld:</translation>
+        <location filename="../settings.ui" line="175"/>
+        <source>Style</source>
+        <translation>Stil</translation>
+    </message>
+    <message>
+        <location filename="../settings.ui" line="110"/>
+        <source>Board</source>
+        <translation>Spielfeld</translation>
     </message>
 </context>
 <context>
