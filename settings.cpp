@@ -31,6 +31,7 @@
 #include <QDirIterator>
 #include <QLineEdit>
 #include <QIcon>
+#include <QInputDialog>
 #include <QMessageBox>
 #include <QSettings>
 #include <QSpinBox>
@@ -144,7 +145,7 @@ void Settings::copyDefaultStyles() {
       qWarning() << "Couldn't create style file: " << stylefile.fileName();
     }
   }
-/*
+
   stylefile.setFileName(confDir.absolutePath() + "/dark-style" + m_sExt);
   if (!stylefile.exists()) {
     if (QFile::copy(QStringLiteral(":/boardstyles/dark-style.conf"),
@@ -155,7 +156,6 @@ void Settings::copyDefaultStyles() {
       qWarning() << "Couldn't create style file: " << stylefile.fileName();
     }
   }
-*/
 }
 
 // ----------------------------------------------------------------------------
@@ -165,9 +165,8 @@ void Settings::showEvent(QShowEvent *pEvent) {
   this->readSettings();
   m_bSettingChanged = false;
   m_pUi->tabWidget->setCurrentIndex(0);
-  // TODO(x): To be removed when boards dialog completed
+  // TODO(x): To be removed when more than one board available
   m_pUi->cbBoard->setEnabled(false);
-  m_pUi->tabWidget->setTabEnabled(1, false);
   QDialog::showEvent(pEvent);
 }
 
@@ -384,56 +383,73 @@ void Settings::loadBoardStyle(const QString &sStyleFile) {
                               QStringLiteral("BgColor"),
                               QStringLiteral("#EEEEEC"));
   m_pUi->tableBoardStyle->item(0, 0)->setText(m_bgColor.name());
+  m_pUi->tableBoardStyle->item(0, 0)->setBackground(QBrush(m_bgColor));
   m_bgBoardColor = this->readColor(pStyleSet,
                                    QStringLiteral("BgBoardColor"),
                                    QStringLiteral("#FFFFFF"));
   m_pUi->tableBoardStyle->item(1, 0)->setText(m_bgBoardColor.name());
+  m_pUi->tableBoardStyle->item(1, 0)->setBackground(QBrush(m_bgBoardColor));
   m_gridBoardColor = this->readColor(pStyleSet,
                                      QStringLiteral("GridBoardColor"),
                                      QStringLiteral("#888A85"));
   m_pUi->tableBoardStyle->item(2, 0)->setText(m_gridBoardColor.name());
+  m_pUi->tableBoardStyle->item(2, 0)->setBackground(QBrush(m_gridBoardColor));
   m_animateColor = this->readColor(pStyleSet,
                                    QStringLiteral("AnimateColor"),
                                    QStringLiteral("#fce94f"));
   m_pUi->tableBoardStyle->item(3, 0)->setText(m_animateColor.name());
+  m_pUi->tableBoardStyle->item(3, 0)->setBackground(QBrush(m_animateColor));
   m_animateBorderColor = this->readColor(pStyleSet,
                                          QStringLiteral("AnimateBorderColor"),
                                          QStringLiteral("#000000"));
   m_pUi->tableBoardStyle->item(4, 0)->setText(m_animateBorderColor.name());
+  m_pUi->tableBoardStyle->item(4, 0)->setBackground(
+        QBrush(m_animateBorderColor));
   m_highlightColor = this->readColor(pStyleSet,
                                      QStringLiteral("HighlightColor"),
                                      QStringLiteral("#8ae234"));
   m_pUi->tableBoardStyle->item(5, 0)->setText(m_highlightColor.name());
+  m_pUi->tableBoardStyle->item(5, 0)->setBackground(QBrush(m_highlightColor));
   m_highlightBorderColor = this->readColor(
         pStyleSet,
         QStringLiteral("HighlightBorderColor"),
         QStringLiteral("#888A85"));
   m_pUi->tableBoardStyle->item(6, 0)->setText(m_highlightBorderColor.name());
+  m_pUi->tableBoardStyle->item(6, 0)->setBackground(
+        QBrush(m_highlightBorderColor));
   m_neighboursColor = this->readColor(pStyleSet,
                                       QStringLiteral("NeighboursColor"),
                                       QStringLiteral("#ad7fa8"));
   m_pUi->tableBoardStyle->item(7, 0)->setText(m_neighboursColor.name());
+  m_pUi->tableBoardStyle->item(7, 0)->setBackground(QBrush(m_neighboursColor));
   m_neighboursBorderColor = this->readColor(
         pStyleSet,
         QStringLiteral("NeighboursBorderColor"),
         QStringLiteral("#000000"));
   m_pUi->tableBoardStyle->item(8, 0)->setText(m_neighboursBorderColor.name());
+  m_pUi->tableBoardStyle->item(8, 0)->setBackground(
+        QBrush(m_neighboursBorderColor));
   m_selectedColor = this->readColor(pStyleSet,
                                     QStringLiteral("SelectedColor"),
                                     QStringLiteral("#fce94f"));
   m_pUi->tableBoardStyle->item(9, 0)->setText(m_selectedColor.name());
+  m_pUi->tableBoardStyle->item(9, 0)->setBackground(QBrush(m_selectedColor));
   m_selectedBorderColor = this->readColor(pStyleSet,
                                           QStringLiteral("SelectedBorderColor"),
                                           QStringLiteral("#000000"));
   m_pUi->tableBoardStyle->item(10, 0)->setText(m_selectedBorderColor.name());
+  m_pUi->tableBoardStyle->item(10, 0)->setBackground(
+        QBrush(m_selectedBorderColor));
   m_txtColor = this->readColor(pStyleSet,
                                QStringLiteral("TextColor"),
                                QStringLiteral("#000000"));
   m_pUi->tableBoardStyle->item(11, 0)->setText(m_txtColor.name());
+  m_pUi->tableBoardStyle->item(11, 0)->setBackground(QBrush(m_txtColor));
   m_txtHighColor = this->readColor(pStyleSet,
                                    QStringLiteral("TextHighlightColor"),
                                    QStringLiteral("#FF0000"));
   m_pUi->tableBoardStyle->item(12, 0)->setText(m_txtHighColor.name());
+  m_pUi->tableBoardStyle->item(12, 0)->setBackground(QBrush(m_txtHighColor));
 
   pStyleSet->endGroup();
 }
@@ -460,47 +476,87 @@ void Settings::saveBoardStyle(const QString &sStyleFile) {
   }
 
   pStyleSet->beginGroup(QStringLiteral("Colors"));
+
+  QColor sTmp = m_bgColor;
   m_bgColor.setNamedColor(m_pUi->tableBoardStyle->item(0, 0)->text());
+  if (sTmp != m_bgColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("BgColor"), m_bgColor.name());
+
+  sTmp = m_bgBoardColor;
   m_bgBoardColor.setNamedColor(m_pUi->tableBoardStyle->item(1, 0)->text());
+  if (sTmp != m_bgBoardColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("BgBoardColor"),
                       m_bgBoardColor.name());
+
+  sTmp = m_gridBoardColor;
   m_gridBoardColor.setNamedColor(m_pUi->tableBoardStyle->item(2, 0)->text());
+  if (sTmp != m_gridBoardColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("GridBoardColor"),
                       m_gridBoardColor.name());
+
+  sTmp = m_animateColor;
   m_animateColor.setNamedColor(m_pUi->tableBoardStyle->item(3, 0)->text());
+  if (sTmp != m_animateColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("AnimateColor"),
                       m_animateColor.name());
+
+  sTmp = m_animateBorderColor;
   m_animateBorderColor.setNamedColor(
         m_pUi->tableBoardStyle->item(4, 0)->text());
+  if (sTmp != m_animateBorderColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("AnimateBorderColor"),
                       m_animateBorderColor.name());
+
+  sTmp = m_highlightColor;
   m_highlightColor.setNamedColor(m_pUi->tableBoardStyle->item(5, 0)->text());
+  if (sTmp != m_highlightColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("HighlightColor"),
                       m_highlightColor.name());
+
+  sTmp = m_highlightBorderColor;
   m_highlightBorderColor.setNamedColor(
         m_pUi->tableBoardStyle->item(6, 0)->text());
+  if (sTmp != m_highlightBorderColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("HighlightBorderColor"),
                       m_highlightBorderColor.name());
+
+  sTmp = m_neighboursColor;
   m_neighboursColor.setNamedColor(m_pUi->tableBoardStyle->item(7, 0)->text());
+  if (sTmp != m_neighboursColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("NeighboursColor"),
                       m_neighboursColor.name());
+
+  sTmp = m_neighboursBorderColor;
   m_neighboursBorderColor.setNamedColor(
         m_pUi->tableBoardStyle->item(8, 0)->text());
+  if (sTmp != m_neighboursBorderColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("NeighboursBorderColor"),
                       m_neighboursBorderColor.name());
+
+  sTmp = m_selectedColor;
   m_selectedColor.setNamedColor(m_pUi->tableBoardStyle->item(9, 0)->text());
+  if (sTmp != m_selectedColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("SelectedColor"),
                       m_selectedColor.name());
+
+  sTmp = m_selectedBorderColor;
   m_selectedBorderColor.setNamedColor(
         m_pUi->tableBoardStyle->item(10, 0)->text());
+  if (sTmp != m_selectedBorderColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("SelectedBorderColor"),
                       m_selectedBorderColor.name());
+
+  sTmp = m_txtColor;
   m_txtColor.setNamedColor(m_pUi->tableBoardStyle->item(11, 0)->text());
+  if (sTmp != m_txtColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("TextColor"), m_txtColor.name());
+
+  sTmp = m_txtHighColor;
   m_txtHighColor.setNamedColor(m_pUi->tableBoardStyle->item(12, 0)->text());
+  if (sTmp != m_txtHighColor) this->changedSettings();
   pStyleSet->setValue(QStringLiteral("TextHighlightColor"),
                       m_txtHighColor.name());
+
   pStyleSet->endGroup();
 }
 
@@ -519,6 +575,13 @@ void Settings::accept() {
   m_bShowPossibleMoveTowers = m_pUi->checkShowPossibleMoves->isChecked();
   m_pSettings->setValue(QStringLiteral("ShowPossibleMoveTowers"),
                         m_bShowPossibleMoveTowers);
+
+  // Save style before check for changed settings
+  QString sTmp(m_sBoardStyleFile);
+  m_sBoardStyleFile = m_pUi->cbBoardStyle->currentText();
+  if (sTmp != m_sBoardStyleFile) this->changedSettings();
+  m_pSettings->setValue(QStringLiteral("BoardStyle"), m_sBoardStyleFile);
+  this->saveBoardStyle(m_sBoardStyleFile);
 
   int nRet = QMessageBox::No;
   if (m_bSettingChanged) {
@@ -546,10 +609,6 @@ void Settings::accept() {
 
   m_sBoard = m_sListBoards.at(m_pUi->cbBoard->currentIndex());
   m_pSettings->setValue(QStringLiteral("Board"), m_sBoard);
-
-  m_sBoardStyleFile = m_pUi->cbBoardStyle->currentText();
-  m_pSettings->setValue(QStringLiteral("BoardStyle"), m_sBoardStyleFile);
-  this->saveBoardStyle(m_sBoardStyleFile);
 
   // Players
   for (int i = 0; i < m_Players.size(); i++) {
@@ -713,10 +772,64 @@ void Settings::readSettings() {
 // ---------------------------------------------------------------------------
 
 void Settings::changedStyle(int nIndex) {
-  QMessageBox::information(this, "Debug",
-                           "To be implemented. Index = " +
-                           QString::number(nIndex));
+  QString sFileName(QLatin1String(""));
+
+  if (0 == nIndex) {  // Create new style
+    bool bOk;
+    QFileInfo fi(m_pSettings->fileName());
+    QFileInfo fiStyle(fi.absolutePath() + "/" + m_sBoardStyleFile + m_sExt);
+
+    sFileName = QInputDialog::getText(nullptr, tr("New style"),
+                                      tr("Please insert name of "
+                                         "new style file:"),
+                                      QLineEdit::Normal,
+                                      QLatin1String(""),
+                                      &bOk);
+    if (!bOk || sFileName.isEmpty()) {
+      // Reset selection
+      m_pUi->cbBoardStyle->setCurrentIndex(
+            m_pUi->cbBoardStyle->findText(m_sBoardStyleFile));
+      return;
+    }
+
+    sFileName = sFileName + "-style";
+    QFile fileStyle(fiStyle.absolutePath() + "/" + sFileName + m_sExt);
+
+    if (fileStyle.exists()) {
+      // Reset selection
+      m_pUi->cbBoardStyle->setCurrentIndex(
+            m_pUi->cbBoardStyle->findText(m_sBoardStyleFile));
+
+      QMessageBox::warning(nullptr, tr("Error"), tr("File already exists."));
+      qWarning() << "Style file already exists:" << fileStyle.fileName();
+      return;
+    }
+    bOk = QFile::copy(fiStyle.absoluteFilePath(),
+                      fileStyle.fileName());
+    if (!bOk) {
+      // Reset selection
+      m_pUi->cbBoardStyle->setCurrentIndex(
+            m_pUi->cbBoardStyle->findText(m_sBoardStyleFile));
+
+      QMessageBox::warning(nullptr, tr("Error"),
+                           tr("Could not create new style."));
+      qWarning() << "Could not create new style file:";
+      qWarning() << "Org:" << fiStyle.absoluteFilePath();
+      qWarning() << "Copy:" << fileStyle.fileName();
+      return;
+    }
+    m_pUi->cbBoardStyle->addItem(sFileName);
+    m_pUi->cbBoardStyle->setCurrentIndex(
+          m_pUi->cbBoardStyle->findText(sFileName));
+  } else {  // Load existing style file
+    sFileName = m_pUi->cbBoardStyle->currentText();
+  }
+
+  this->loadBoardStyle(sFileName);
 }
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
 
 void Settings::clickedStyleCell(int nRow, int nCol) {
   if (0 == nCol) {
@@ -724,6 +837,7 @@ void Settings::clickedStyleCell(int nRow, int nCol) {
     QColor newColor = QColorDialog::getColor(initialColor);
     if (newColor.isValid()) {
       m_pUi->tableBoardStyle->item(nRow, nCol)->setText(newColor.name());
+      m_pUi->tableBoardStyle->item(nRow, nCol)->setBackground(QBrush(newColor));
     } else if (newColor.name().isEmpty()) {
       m_pUi->tableBoardStyle->item(nRow, nCol)->setText(QLatin1String(""));
     }

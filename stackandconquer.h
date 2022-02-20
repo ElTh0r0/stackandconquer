@@ -88,6 +88,7 @@ class StackAndConquer : public QMainWindow {
     void setupMenu();
     void setupGraphView();
     void resizeEvent(QResizeEvent *pEvent) override;
+    void recolor();
 
     Ui::StackAndConquer *m_pUi;
     const QDir m_userDataDir;

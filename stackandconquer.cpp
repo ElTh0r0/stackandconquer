@@ -280,6 +280,7 @@ void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::startNewGame(const QString &sSavegame) {
+  this->recolor();
   delete m_pGame;
   m_pGame = new Game(m_pSettings, sSavegame);
 
@@ -563,4 +564,24 @@ void StackAndConquer::changeEvent(QEvent *pEvent) {
     }
   }
   QMainWindow::changeEvent(pEvent);
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+void StackAndConquer::recolor() {
+  QPixmap iconWin(QStringLiteral(":/img/trophy.png"));
+  if (m_pSettings->getBgColor().lightnessF() < 0.5) {
+    iconWin = QStringLiteral(":/img/trophy2.png");
+  }
+
+  for (int i = 0; i < m_nMaxPlayers; i++) {
+    m_pLblsPlayerName[i]->setStyleSheet(QStringLiteral("color: ") +
+                                        m_pSettings->getTextColor().name());
+    m_pLblsStonesLeft[i]->setStyleSheet(QStringLiteral("color: ") +
+                                        m_pSettings->getTextColor().name());
+    m_pLblsWinIcon[i]->setPixmap(iconWin);
+    m_pLblsWon[i]->setStyleSheet(QStringLiteral("color: ") +
+                                 m_pSettings->getTextColor().name());
+  }
 }
