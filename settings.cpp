@@ -379,79 +379,69 @@ void Settings::loadBoardStyle(const QString &sStyleFile) {
   }
 
   pStyleSet->beginGroup(QStringLiteral("Colors"));
-  m_bgColor = this->readColor(pStyleSet,
-                              QStringLiteral("BgColor"),
-                              QStringLiteral("#EEEEEC"));
-  m_pUi->tableBoardStyle->item(0, 0)->setText(m_bgColor.name());
-  m_pUi->tableBoardStyle->item(0, 0)->setBackground(QBrush(m_bgColor));
-  m_bgBoardColor = this->readColor(pStyleSet,
-                                   QStringLiteral("BgBoardColor"),
-                                   QStringLiteral("#FFFFFF"));
-  m_pUi->tableBoardStyle->item(1, 0)->setText(m_bgBoardColor.name());
-  m_pUi->tableBoardStyle->item(1, 0)->setBackground(QBrush(m_bgBoardColor));
-  m_gridBoardColor = this->readColor(pStyleSet,
-                                     QStringLiteral("GridBoardColor"),
-                                     QStringLiteral("#888A85"));
-  m_pUi->tableBoardStyle->item(2, 0)->setText(m_gridBoardColor.name());
-  m_pUi->tableBoardStyle->item(2, 0)->setBackground(QBrush(m_gridBoardColor));
-  m_animateColor = this->readColor(pStyleSet,
-                                   QStringLiteral("AnimateColor"),
-                                   QStringLiteral("#fce94f"));
-  m_pUi->tableBoardStyle->item(3, 0)->setText(m_animateColor.name());
-  m_pUi->tableBoardStyle->item(3, 0)->setBackground(QBrush(m_animateColor));
-  m_animateBorderColor = this->readColor(pStyleSet,
-                                         QStringLiteral("AnimateBorderColor"),
-                                         QStringLiteral("#000000"));
-  m_pUi->tableBoardStyle->item(4, 0)->setText(m_animateBorderColor.name());
-  m_pUi->tableBoardStyle->item(4, 0)->setBackground(
-        QBrush(m_animateBorderColor));
-  m_highlightColor = this->readColor(pStyleSet,
-                                     QStringLiteral("HighlightColor"),
-                                     QStringLiteral("#8ae234"));
-  m_pUi->tableBoardStyle->item(5, 0)->setText(m_highlightColor.name());
-  m_pUi->tableBoardStyle->item(5, 0)->setBackground(QBrush(m_highlightColor));
-  m_highlightBorderColor = this->readColor(
-        pStyleSet,
-        QStringLiteral("HighlightBorderColor"),
-        QStringLiteral("#888A85"));
-  m_pUi->tableBoardStyle->item(6, 0)->setText(m_highlightBorderColor.name());
-  m_pUi->tableBoardStyle->item(6, 0)->setBackground(
-        QBrush(m_highlightBorderColor));
-  m_neighboursColor = this->readColor(pStyleSet,
-                                      QStringLiteral("NeighboursColor"),
-                                      QStringLiteral("#ad7fa8"));
-  m_pUi->tableBoardStyle->item(7, 0)->setText(m_neighboursColor.name());
-  m_pUi->tableBoardStyle->item(7, 0)->setBackground(QBrush(m_neighboursColor));
-  m_neighboursBorderColor = this->readColor(
-        pStyleSet,
-        QStringLiteral("NeighboursBorderColor"),
-        QStringLiteral("#000000"));
-  m_pUi->tableBoardStyle->item(8, 0)->setText(m_neighboursBorderColor.name());
-  m_pUi->tableBoardStyle->item(8, 0)->setBackground(
-        QBrush(m_neighboursBorderColor));
-  m_selectedColor = this->readColor(pStyleSet,
-                                    QStringLiteral("SelectedColor"),
-                                    QStringLiteral("#fce94f"));
-  m_pUi->tableBoardStyle->item(9, 0)->setText(m_selectedColor.name());
-  m_pUi->tableBoardStyle->item(9, 0)->setBackground(QBrush(m_selectedColor));
-  m_selectedBorderColor = this->readColor(pStyleSet,
-                                          QStringLiteral("SelectedBorderColor"),
-                                          QStringLiteral("#000000"));
-  m_pUi->tableBoardStyle->item(10, 0)->setText(m_selectedBorderColor.name());
-  m_pUi->tableBoardStyle->item(10, 0)->setBackground(
-        QBrush(m_selectedBorderColor));
-  m_txtColor = this->readColor(pStyleSet,
-                               QStringLiteral("TextColor"),
-                               QStringLiteral("#000000"));
-  m_pUi->tableBoardStyle->item(11, 0)->setText(m_txtColor.name());
-  m_pUi->tableBoardStyle->item(11, 0)->setBackground(QBrush(m_txtColor));
-  m_txtHighColor = this->readColor(pStyleSet,
-                                   QStringLiteral("TextHighlightColor"),
-                                   QStringLiteral("#FF0000"));
-  m_pUi->tableBoardStyle->item(12, 0)->setText(m_txtHighColor.name());
-  m_pUi->tableBoardStyle->item(12, 0)->setBackground(QBrush(m_txtHighColor));
+  this->readStyle_SetTable(m_bgColor, pStyleSet, 0,
+                           QStringLiteral("BgColor"),
+                           QStringLiteral("#EEEEEC"));
 
+  this->readStyle_SetTable(m_bgBoardColor, pStyleSet, 1,
+                           QStringLiteral("BgBoardColor"),
+                           QStringLiteral("#FFFFFF"));
+
+  this->readStyle_SetTable(m_gridBoardColor, pStyleSet, 2,
+                           QStringLiteral("GridBoardColor"),
+                           QStringLiteral("#888A85"));
+
+  this->readStyle_SetTable(m_animateColor, pStyleSet, 3,
+                           QStringLiteral("AnimateColor"),
+                           QStringLiteral("#fce94f"));
+
+  this->readStyle_SetTable(m_animateBorderColor, pStyleSet, 4,
+                           QStringLiteral("AnimateBorderColor"),
+                           QStringLiteral("#000000"));
+
+  this->readStyle_SetTable(m_highlightColor, pStyleSet, 5,
+                           QStringLiteral("HighlightColor"),
+                           QStringLiteral("#8ae234"));
+
+  this->readStyle_SetTable(m_highlightBorderColor, pStyleSet, 6,
+                           QStringLiteral("HighlightBorderColor"),
+                           QStringLiteral("#888A85"));
+
+  this->readStyle_SetTable(m_neighboursColor, pStyleSet, 7,
+                           QStringLiteral("NeighboursColor"),
+                           QStringLiteral("#ad7fa8"));
+
+  this->readStyle_SetTable(m_neighboursBorderColor, pStyleSet, 8,
+                           QStringLiteral("NeighboursBorderColor"),
+                           QStringLiteral("#000000"));
+
+  this->readStyle_SetTable(m_selectedColor, pStyleSet, 9,
+                           QStringLiteral("SelectedColor"),
+                           QStringLiteral("#fce94f"));
+
+  this->readStyle_SetTable(m_selectedBorderColor, pStyleSet, 10,
+                           QStringLiteral("SelectedBorderColor"),
+                           QStringLiteral("#000000"));
+
+  this->readStyle_SetTable(m_txtColor, pStyleSet, 11,
+                           QStringLiteral("TextColor"),
+                           QStringLiteral("#000000"));
+
+  this->readStyle_SetTable(m_txtHighColor, pStyleSet, 12,
+                           QStringLiteral("TextHighlightColor"),
+                           QStringLiteral("#FF0000"));
   pStyleSet->endGroup();
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void Settings::readStyle_SetTable(QColor &color, QSettings *pSet,
+                                  const int nRow, const QString &sKey,
+                                  const QString &sFallback) {
+  color = this->readColor(pSet, sKey, sFallback);
+  m_pUi->tableBoardStyle->item(nRow, 0)->setText(color.name());
+  m_pUi->tableBoardStyle->item(nRow, 0)->setBackground(QBrush(color));
 }
 
 // ----------------------------------------------------------------------------
@@ -477,87 +467,57 @@ void Settings::saveBoardStyle(const QString &sStyleFile) {
 
   pStyleSet->beginGroup(QStringLiteral("Colors"));
 
-  QColor sTmp = m_bgColor;
-  m_bgColor.setNamedColor(m_pUi->tableBoardStyle->item(0, 0)->text());
-  if (sTmp != m_bgColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("BgColor"), m_bgColor.name());
+  this->saveColor(m_bgColor, pStyleSet, 0,
+                  QStringLiteral("BgColor"));
 
-  sTmp = m_bgBoardColor;
-  m_bgBoardColor.setNamedColor(m_pUi->tableBoardStyle->item(1, 0)->text());
-  if (sTmp != m_bgBoardColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("BgBoardColor"),
-                      m_bgBoardColor.name());
+  this->saveColor(m_bgBoardColor, pStyleSet, 1,
+                  QStringLiteral("BgBoardColor"));
 
-  sTmp = m_gridBoardColor;
-  m_gridBoardColor.setNamedColor(m_pUi->tableBoardStyle->item(2, 0)->text());
-  if (sTmp != m_gridBoardColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("GridBoardColor"),
-                      m_gridBoardColor.name());
+  this->saveColor(m_gridBoardColor, pStyleSet, 2,
+                  QStringLiteral("GridBoardColor"));
 
-  sTmp = m_animateColor;
-  m_animateColor.setNamedColor(m_pUi->tableBoardStyle->item(3, 0)->text());
-  if (sTmp != m_animateColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("AnimateColor"),
-                      m_animateColor.name());
+  this->saveColor(m_animateColor, pStyleSet, 3,
+                  QStringLiteral("AnimateColor"));
 
-  sTmp = m_animateBorderColor;
-  m_animateBorderColor.setNamedColor(
-        m_pUi->tableBoardStyle->item(4, 0)->text());
-  if (sTmp != m_animateBorderColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("AnimateBorderColor"),
-                      m_animateBorderColor.name());
+  this->saveColor(m_animateBorderColor, pStyleSet, 4,
+                  QStringLiteral("AnimateBorderColor"));
 
-  sTmp = m_highlightColor;
-  m_highlightColor.setNamedColor(m_pUi->tableBoardStyle->item(5, 0)->text());
-  if (sTmp != m_highlightColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("HighlightColor"),
-                      m_highlightColor.name());
+  this->saveColor(m_highlightColor, pStyleSet, 5,
+                  QStringLiteral("HighlightColor"));
 
-  sTmp = m_highlightBorderColor;
-  m_highlightBorderColor.setNamedColor(
-        m_pUi->tableBoardStyle->item(6, 0)->text());
-  if (sTmp != m_highlightBorderColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("HighlightBorderColor"),
-                      m_highlightBorderColor.name());
+  this->saveColor(m_highlightBorderColor, pStyleSet, 6,
+                  QStringLiteral("HighlightBorderColor"));
 
-  sTmp = m_neighboursColor;
-  m_neighboursColor.setNamedColor(m_pUi->tableBoardStyle->item(7, 0)->text());
-  if (sTmp != m_neighboursColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("NeighboursColor"),
-                      m_neighboursColor.name());
+  this->saveColor(m_neighboursColor, pStyleSet, 7,
+                  QStringLiteral("NeighboursColor"));
 
-  sTmp = m_neighboursBorderColor;
-  m_neighboursBorderColor.setNamedColor(
-        m_pUi->tableBoardStyle->item(8, 0)->text());
-  if (sTmp != m_neighboursBorderColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("NeighboursBorderColor"),
-                      m_neighboursBorderColor.name());
+  this->saveColor(m_neighboursBorderColor, pStyleSet, 8,
+                  QStringLiteral("NeighboursBorderColor"));
 
-  sTmp = m_selectedColor;
-  m_selectedColor.setNamedColor(m_pUi->tableBoardStyle->item(9, 0)->text());
-  if (sTmp != m_selectedColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("SelectedColor"),
-                      m_selectedColor.name());
+  this->saveColor(m_selectedColor, pStyleSet, 9,
+                  QStringLiteral("SelectedColor"));
 
-  sTmp = m_selectedBorderColor;
-  m_selectedBorderColor.setNamedColor(
-        m_pUi->tableBoardStyle->item(10, 0)->text());
-  if (sTmp != m_selectedBorderColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("SelectedBorderColor"),
-                      m_selectedBorderColor.name());
+  this->saveColor(m_selectedBorderColor, pStyleSet, 10,
+                  QStringLiteral("SelectedBorderColor"));
 
-  sTmp = m_txtColor;
-  m_txtColor.setNamedColor(m_pUi->tableBoardStyle->item(11, 0)->text());
-  if (sTmp != m_txtColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("TextColor"), m_txtColor.name());
+  this->saveColor(m_txtColor, pStyleSet, 11,
+                  QStringLiteral("TextColor"));
 
-  sTmp = m_txtHighColor;
-  m_txtHighColor.setNamedColor(m_pUi->tableBoardStyle->item(12, 0)->text());
-  if (sTmp != m_txtHighColor) this->changedSettings();
-  pStyleSet->setValue(QStringLiteral("TextHighlightColor"),
-                      m_txtHighColor.name());
+  this->saveColor(m_txtHighColor, pStyleSet, 12,
+                  QStringLiteral("TextHighlightColor"));
 
   pStyleSet->endGroup();
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void Settings::saveColor(QColor &color, QSettings *pSet,
+                         const int nRow, const QString &sKey) {
+  QColor cTmp = color;
+  color.setNamedColor(m_pUi->tableBoardStyle->item(nRow, 0)->text());
+  if (cTmp != color) this->changedSettings();
+  pSet->setValue(sKey, color.name());
 }
 
 // ----------------------------------------------------------------------------

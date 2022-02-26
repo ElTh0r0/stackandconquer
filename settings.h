@@ -108,7 +108,11 @@ class Settings : public QDialog {
     void searchCpuScripts(const QString &userDataDir);
     void searchBoardStyles(const QString &sStyleDir);
     void loadBoardStyle(const QString &sStyleFile);
+    void readStyle_SetTable(QColor &color, QSettings *pSet, const int nRow,
+                            const QString &sKey, const QString &sFallback);
     void saveBoardStyle(const QString &sStyleFile);
+    void saveColor(QColor &color, QSettings *pSet,
+                   const int nRow, const QString &sKey);
     void searchBoards(const QString &userDataDir);
     void updateStartCombo();
 
