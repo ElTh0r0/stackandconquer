@@ -39,9 +39,12 @@
 #include "ui_settings.h"
 
 Settings::Settings(const QString &sSharePath, const QString &userDataDir,
-                   const quint8 nMaxPlayers, QWidget *pParent)
+                   const QString &sBoardExtension, const quint8 nMaxPlayers,
+                   QWidget *pParent)
   : m_pUi(new Ui::SettingsDialog()),
     m_sSharePath(sSharePath),
+    m_sBoardExtension(sBoardExtension),
+    m_sCpuExtension(QStringLiteral(".js")),
     m_nDefaultGrid(70),  // Default stone SVG size fits to grid size of 70!
     m_nMaxGrid(200),
     m_nMaxPlayers(nMaxPlayers),
@@ -240,7 +243,7 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
       sIcon = QStringLiteral(":/img/computer2.png");
     }
     for (const auto &file : listFiles) {
-      if ("js" == file.suffix().toLower()) {
+      if (m_sCpuExtension == "." + file.suffix().toLower()) {
         m_sListCPUs << file.absoluteFilePath();
         for (int i = 0; i < m_listPlayerCombo.size(); i++) {
           m_listPlayerCombo[i]->addItem(QIcon(sIcon), file.baseName());
@@ -258,7 +261,7 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
       sIcon = QStringLiteral(":/img/code2.png");
     }
     for (const auto &file : listFiles) {
-      if ("js" == file.suffix().toLower()) {
+      if (m_sCpuExtension == "." + file.suffix().toLower()) {
         if (-1 != m_listPlayerCombo[0]->findText(file.baseName())) {
           qWarning() << "Duplicate CPU script name found, skipping script" <<
                         file.absoluteFilePath();
@@ -285,7 +288,7 @@ void Settings::searchBoards(const QString &userDataDir) {
   if (boardsDir.cd(QStringLiteral("boards"))) {
     const QFileInfoList listFiles(boardsDir.entryInfoList(QDir::Files));
     for (const auto &file : listFiles) {
-      if ("stackboard" == file.suffix().toLower()) {
+      if (m_sBoardExtension == "." + file.suffix().toLower()) {
         m_sListBoards << file.absoluteFilePath();
         m_pUi->cbBoard->addItem(file.baseName());
       }
@@ -301,7 +304,7 @@ void Settings::searchBoards(const QString &userDataDir) {
       sIcon = QStringLiteral(":/img/code2.png");
     }
     for (const auto &file : listFiles) {
-      if ("stackboard" == file.suffix().toLower()) {
+      if (m_sBoardExtension == "." + file.suffix().toLower()) {
         if (-1 != m_pUi->cbBoard->findText(file.baseName())) {
           qWarning() << "Duplicate baord name found, skipping board" <<
                         file.absoluteFilePath();
@@ -713,7 +716,8 @@ void Settings::readSettings() {
                                 true).toBool();
   m_pUi->checkShowPossibleMoves->setChecked(m_bShowPossibleMoveTowers);
 
-  const QString sDefaultBoard(m_sSharePath + "/boards/Square_5x5.stackboard");
+  const QString sDefaultBoard(
+        m_sSharePath + "/boards/Square_5x5" + m_sBoardExtension);
   m_sBoard = m_pSettings->value(QStringLiteral("Board"),
                                 sDefaultBoard).toString();
   if (m_sListBoards.contains(m_sBoard)) {
@@ -722,8 +726,15 @@ void Settings::readSettings() {
     if (m_sListBoards.contains(sDefaultBoard)) {
       m_pUi->cbBoard->setCurrentIndex(m_sListBoards.indexOf(sDefaultBoard));
     } else {
-      m_sBoard = m_sListBoards.at(0);
-      m_pUi->cbBoard->setCurrentIndex(0);
+      if (!m_sListBoards.isEmpty()) {
+        m_sBoard = m_sListBoards.at(0);
+        m_pUi->cbBoard->setCurrentIndex(0);
+      } else {
+        QMessageBox::warning(nullptr, tr("Error"),
+                             tr("Boards folder seems empty!"));
+        qWarning() << "Boards folder(s) empty (share folder and user folder)!";
+        return;
+      }
     }
   }
 }

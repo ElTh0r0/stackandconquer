@@ -48,7 +48,8 @@ class Settings : public QDialog {
 
  public:
     explicit Settings(const QString &sSharePath, const QString &userDataDir,
-                      const quint8 nMaxPlayers, QWidget *pParent = nullptr);
+                      const QString &sBoardExtension, const quint8 nMaxPlayers,
+                      QWidget *pParent = nullptr);
     virtual ~Settings();
 
     auto getBoardFile() const -> QString;
@@ -119,7 +120,9 @@ class Settings : public QDialog {
     Ui::SettingsDialog *m_pUi;
     QSettings *m_pSettings;
     QList<QMap<QString, QString>> m_Players;
-    QString m_sSharePath;
+    const QString m_sSharePath;
+    const QString m_sBoardExtension;
+    const QString m_sCpuExtension;
     QString m_sGuiLanguage;
 
     QList<QLabel*> m_listColorLbls;

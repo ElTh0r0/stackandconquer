@@ -47,12 +47,15 @@
 
 StackAndConquer::StackAndConquer(const QDir &sharePath,
                                  const QDir &userDataPath,
+                                 const QString &sSaveExtension,
+                                 const QString &sBoardExtension,
                                  const QStringList &sListArgs,
                                  QWidget *pParent)
   : QMainWindow(pParent),
     m_pUi(new Ui::StackAndConquer),
     m_userDataDir(userDataPath),
     m_sSharePath(sharePath.absolutePath()),
+    m_sSaveExtension(sSaveExtension),
     m_nMaxPlayers(2),
     m_sCurrLang(QString()),
     m_pGame(nullptr),
@@ -61,7 +64,7 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
   m_pUi->setupUi(this);
 
   m_pSettings = new Settings(m_sSharePath, m_userDataDir.absolutePath(),
-                             m_nMaxPlayers, this);
+                             sBoardExtension, m_nMaxPlayers, this);
   connect(m_pSettings, &Settings::newGame,
           this, &StackAndConquer::startNewGame);
   connect(m_pSettings, &Settings::changeLang,
@@ -85,8 +88,7 @@ void StackAndConquer::checkCmdArgs(const QStringList &sListArgs) {
   QString sSavegame(QLatin1String(""));
   if (!sListArgs.isEmpty()) {
     // Load save game
-    if (sListArgs.at(0).endsWith(QStringLiteral(".stacksav"),
-                                 Qt::CaseInsensitive)) {
+    if (sListArgs.at(0).endsWith(m_sSaveExtension, Qt::CaseInsensitive)) {
       if (QFile::exists(sListArgs.at(0))) {
         sSavegame = sListArgs.at(0);
       } else {
@@ -324,9 +326,9 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
 void StackAndConquer::loadGame() {
   QString sFile = QFileDialog::getOpenFileName(
                     this, tr("Load game"), m_userDataDir.absolutePath(),
-                    tr("Save games") + "(*.stacksav)");
+                    tr("Save games") + "(*" + m_sSaveExtension +")");
   if (!sFile.isEmpty()) {
-    if (!sFile.endsWith(QStringLiteral(".stacksav"), Qt::CaseInsensitive)) {
+    if (!sFile.endsWith(m_sSaveExtension, Qt::CaseInsensitive)) {
       QMessageBox::warning(this, tr("Warning"), tr("Invalid save game file."));
     } else {
       this->startNewGame(sFile);
@@ -340,10 +342,10 @@ void StackAndConquer::loadGame() {
 void StackAndConquer::saveGame() {
   QString sFile = QFileDialog::getSaveFileName(
                     this, tr("Save game"), m_userDataDir.absolutePath(),
-                    tr("Save games") + "(*.stacksav)");
+                    tr("Save games") + "(*" + m_sSaveExtension +")");
   if (!sFile.isEmpty()) {
-    if (!sFile.endsWith(QStringLiteral(".stacksav"), Qt::CaseInsensitive)) {
-      sFile += QStringLiteral(".stacksav");
+    if (!sFile.endsWith(m_sSaveExtension, Qt::CaseInsensitive)) {
+      sFile += m_sSaveExtension;
     }
     if (!m_pGame->saveGame(sFile)) {
       QMessageBox::warning(this, tr("Warning"), tr("Game could not be saved."));

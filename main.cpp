@@ -64,6 +64,9 @@ auto main(int argc, char *argv[]) -> int {
 #endif
 #endif
 
+  static const QString FILEEXTSAVE(QStringLiteral(".stacksav"));
+  static const QString FILEEXTBOARD(QStringLiteral(".stackboard"));
+
   QCommandLineParser cmdparser;
   cmdparser.setApplicationDescription(QStringLiteral(APP_DESC));
   cmdparser.addHelpOption();
@@ -73,7 +76,7 @@ auto main(int argc, char *argv[]) -> int {
   cmdparser.addOption(enableDebug);
   cmdparser.addPositionalArgument(
         QStringLiteral("savegame"),
-        QStringLiteral("Savegame file to be opened (*.stacksav)"));
+        QStringLiteral("Savegame file to be opened (*%1)").arg(FILEEXTSAVE));
   cmdparser.process(app);
 
   // Default share data path (Windows and debugging)
@@ -111,6 +114,8 @@ auto main(int argc, char *argv[]) -> int {
   }
 
   StackAndConquer myStackAndConquer(sSharePath, userDataDir,
+                                    FILEEXTSAVE.toLower(),
+                                    FILEEXTBOARD.toLower(),
                                     cmdparser.positionalArguments());
   myStackAndConquer.show();
   int nRet = app.exec();

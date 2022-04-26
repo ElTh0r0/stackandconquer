@@ -64,8 +64,7 @@ Game::Game(Settings *pSettings, const QString &sSavegame, QObject *pParent)
   QJsonArray StonesLeft;
   QJsonArray CpuScript;
 
-  if (!sSavegame.isEmpty() &&  // Savegame
-      sSavegame.endsWith(QStringLiteral(".stacksav"), Qt::CaseInsensitive)) {
+  if (!sSavegame.isEmpty()) {  // Savegame
       QJsonObject jsonObj(Game::loadGame(sSavegame));
       if (jsonObj.isEmpty()) {
         qWarning() << "Save file is empty!";
