@@ -49,6 +49,7 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
                                  const QDir &userDataPath,
                                  const QString &sSaveExtension,
                                  const QString &sBoardExtension,
+                                 const QString &sIN, const QString &sOUT,
                                  const QStringList &sListArgs,
                                  QWidget *pParent)
   : QMainWindow(pParent),
@@ -56,6 +57,8 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
     m_userDataDir(userDataPath),
     m_sSharePath(sharePath.absolutePath()),
     m_sSaveExtension(sSaveExtension),
+    m_sIN(sIN),
+    m_sOUT(sOUT),
     m_nMaxPlayers(2),
     m_sCurrLang(QString()),
     m_pGame(nullptr),
@@ -284,7 +287,7 @@ void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
 void StackAndConquer::startNewGame(const QString &sSavegame) {
   this->recolor();
   delete m_pGame;
-  m_pGame = new Game(m_pSettings, sSavegame);
+  m_pGame = new Game(m_pSettings, m_sIN, m_sOUT, sSavegame);
 
   connect(m_pGame, &Game::updateNames, this, &StackAndConquer::updateNames);
   connect(m_pGame, &Game::drawIcon, this, &StackAndConquer::drawPlayerIcon);

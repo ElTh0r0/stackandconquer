@@ -42,7 +42,7 @@ class Game : public QObject {
   Q_OBJECT
 
  public:
-    explicit Game(Settings *pSettings,
+    explicit Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
                   const QString &sSavegame = QLatin1String(""),
                   QObject *pParent = nullptr);
     ~Game();

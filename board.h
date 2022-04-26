@@ -47,7 +47,8 @@ class Board : public QGraphicsScene {
 
  public:
     Board(const QString &sBoard, const quint8 nMaxTower, quint8 NumOfPlayers,
-          Settings *pSettings, QObject *pParent = nullptr);
+          const QString &sIN, const QString &sOUT, Settings *pSettings,
+          QObject *pParent = nullptr);
 
     auto setupSavegame(const QJsonArray &jsBoard) -> bool;
     void addStone(const int nIndex, const quint8 nStone,
@@ -97,9 +98,9 @@ class Board : public QGraphicsScene {
     auto getIndexFromField(const int nField) const -> int;
     auto getFieldFromIndex(const int nIndex) const -> int;
 
-    const QString sIN;
-    const QString sOUT;
-    const QString sPAD;
+    const QString m_sIN;
+    const QString m_sOUT;
+    const QString m_sPAD;
     QPoint m_BoardDimensions;
     QJsonArray m_jsBoard;
 

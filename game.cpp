@@ -46,7 +46,8 @@
 #include "./player.h"
 #include "./settings.h"
 
-Game::Game(Settings *pSettings, const QString &sSavegame, QObject *pParent)
+Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
+           const QString &sSavegame, QObject *pParent)
   : m_pSettings(pSettings),
     m_pBoard(nullptr),
     m_nMaxTowerHeight(5),
@@ -133,7 +134,7 @@ Game::Game(Settings *pSettings, const QString &sSavegame, QObject *pParent)
 
       QJsonArray jsBoard = jsonObj[QStringLiteral("Board")].toArray();
       m_pBoard = new Board(m_sBoardFile, m_nMaxTowerHeight, m_nNumOfPlayers,
-                           m_pSettings);
+                           sIN, sOUT, m_pSettings);
       if (!m_pBoard->setupSavegame(jsBoard)) {
         qWarning() << "Save game contains invalid data!";
         QMessageBox::warning(nullptr, qApp->applicationName(),
@@ -145,7 +146,7 @@ Game::Game(Settings *pSettings, const QString &sSavegame, QObject *pParent)
   // No save game: Start empty board with default values
   if (nullptr == m_pBoard) {
     m_pBoard = new Board(m_sBoardFile, m_nMaxTowerHeight, m_nNumOfPlayers,
-                         m_pSettings);
+                         sIN, sOUT, m_pSettings);
     for (int i = 1; i <= m_nNumOfPlayers; i++) {
       Won << 0;
       StonesLeft << m_pBoard->getMaxPlayerStones();

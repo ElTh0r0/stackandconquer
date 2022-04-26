@@ -42,10 +42,11 @@
 #include "./settings.h"
 
 Board::Board(const QString &sBoard, const quint8 nMaxTower, quint8 NumOfPlayers,
-             Settings *pSettings, QObject *pParent)
-  : sIN(QStringLiteral("0")),
-    sOUT(QStringLiteral("#")),
-    sPAD(QStringLiteral("-")),
+             const QString &sIN, const QString &sOUT, Settings *pSettings,
+             QObject *pParent)
+  : m_sIN(sIN),
+    m_sOUT(sOUT),
+    m_sPAD(QStringLiteral("-")),
     m_pSettings(pSettings),
     m_nGridSize(m_pSettings->getGridSize()),
     m_nScale(m_pSettings->getGridSize() / m_pSettings->getDefaultGrid()),
@@ -156,7 +157,9 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
   const QJsonArray jsBoard(jso.value(QStringLiteral("Board")).toArray());
   for (const auto &js : jsBoard) {
     QString s = js.toString();
-    if (js.isNull() || s.isEmpty() || (sOUT != s && sIN != s && sPAD != s)) {
+    if (js.isNull() ||
+        s.isEmpty() ||
+        (m_sOUT != s && m_sIN != s && m_sPAD != s)) {
       qWarning() << "Board array contains invalid data:" << s;
       qWarning() << "Board:" << sBoard;
       QMessageBox::critical(nullptr, tr("Warning"),
@@ -180,7 +183,7 @@ void Board::addBoardPadding(const QList<QString> &tmpBoard,
   // Top padding
   for (int i = 0; i < nMaxTower; i++) {
     for (int j = 0; j < (nMaxTower*2 + m_BoardDimensions.x()); j++) {
-      m_jsBoard << sPAD;
+      m_jsBoard << m_sPAD;
     }
   }
 
@@ -188,23 +191,23 @@ void Board::addBoardPadding(const QList<QString> &tmpBoard,
   for (int i = 0; i < tmpBoard.size(); i++) {
     if (0 == i) {  // First item of first line, padding left
       for (int j = 0; j < nMaxTower; j++) {
-        m_jsBoard << sPAD;
+        m_jsBoard << m_sPAD;
       }
     } else if (0 == i % m_BoardDimensions.x()) {  // First item in row:
       for (int j = 0; j < (nMaxTower*2); j++) {  // Add padding end of previous
-        m_jsBoard << sPAD;                       // & beginning of current line
+        m_jsBoard << m_sPAD;                     // & beginning of current line
       }
     }
 
-    if (sIN == tmpBoard[i]) {
+    if (m_sIN == tmpBoard[i]) {
       m_jsBoard << QString();
     } else {
-      m_jsBoard << sOUT;
+      m_jsBoard << m_sOUT;
     }
 
     if (tmpBoard.size()-1 == i) {  // Last item of last line, padding right
       for (int j = 0; j < nMaxTower; j++) {
-        m_jsBoard << sPAD;
+        m_jsBoard << m_sPAD;
       }
     }
   }
@@ -212,7 +215,7 @@ void Board::addBoardPadding(const QList<QString> &tmpBoard,
   // Bottom padding
   for (int i = 0; i < nMaxTower; i++) {
     for (int j = 0; j < (nMaxTower*2 + m_BoardDimensions.x()); j++) {
-      m_jsBoard << sPAD;
+      m_jsBoard << m_sPAD;
     }
   }
 }
@@ -237,7 +240,7 @@ void Board::drawBoard(const QList<QString> &tmpBoard) {
       x += m_nGridSize;
       col++;
     }
-    if (sOUT == tmpBoard[i]) {
+    if (m_sOUT == tmpBoard[i]) {
       m_listFields << new QGraphicsRectItem();
       // Rect is not visible anyway, but isVisible property is used during zoom
       m_listFields.last()->setVisible(false);
@@ -442,11 +445,11 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
 
   for (int i = 0; i < jsBoard.size(); i++) {
     const QString s = jsBoard.at(i).toString();
-    if (!s.isEmpty() && sPAD != s && sOUT != s) {
+    if (!s.isEmpty() && m_sPAD != s && m_sOUT != s) {
       for (const auto &ch : s) {
         if (-1 != ch.digitValue() &&
-            sPAD != m_jsBoard.at(i).toString() &&
-            sOUT != m_jsBoard.at(i).toString()) {
+            m_sPAD != m_jsBoard.at(i).toString() &&
+            m_sOUT != m_jsBoard.at(i).toString()) {
           this->addStone(i, ch.digitValue());
         } else {
           qWarning() << "Save game data invalid stone at index" << i;
@@ -725,11 +728,11 @@ auto Board::getMaxPlayerStones() const -> quint8 {
 }
 
 auto Board::getOut() const -> QString {
-  return sOUT;
+  return m_sOUT;
 }
 
 auto Board::getPad() const -> QString {
-  return sPAD;
+  return m_sPAD;
 }
 
 // ---------------------------------------------------------------------------
@@ -864,7 +867,7 @@ auto Board::getLegalMoves(const QString &sID, const bool bStonesLeft,
       nField++;
       nTo = this->getIndexFromField(nField);
       s = m_jsBoard.at(nTo).toString();
-      if (sOUT != s && sPAD != s) {
+      if (m_sOUT != s && m_sPAD != s) {
         if (s.isEmpty() && bStonesLeft) {  // Set stone on empty field
           varMove.clear();
           varMove << -1 << 1 << nTo;
@@ -932,7 +935,7 @@ void Board::printDebugFields() const {
     for (int nCol = 0; nCol < m_BoardDimensions.x(); nCol++) {
       nField++;
       s = "(" + m_jsBoard.at(this->getIndexFromField(nField)).toString() + ")";
-      if (QString("(" + sOUT + ")") == s) { s = sOUT + sOUT; }
+      if (QString("(" + m_sOUT + ")") == s) { s = m_sOUT + m_sOUT; }
       sLine += s;
       if (nCol < m_BoardDimensions.x()-1) {
         sLine += QLatin1String(" ");

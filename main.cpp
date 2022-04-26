@@ -66,6 +66,8 @@ auto main(int argc, char *argv[]) -> int {
 
   static const QString FILEEXTSAVE(QStringLiteral(".stacksav"));
   static const QString FILEEXTBOARD(QStringLiteral(".stackboard"));
+  static const QString FIELD_IN(QStringLiteral("0"));
+  static const QString FIELD_OUT(QStringLiteral("#"));
 
   QCommandLineParser cmdparser;
   cmdparser.setApplicationDescription(QStringLiteral(APP_DESC));
@@ -116,6 +118,7 @@ auto main(int argc, char *argv[]) -> int {
   StackAndConquer myStackAndConquer(sSharePath, userDataDir,
                                     FILEEXTSAVE.toLower(),
                                     FILEEXTBOARD.toLower(),
+                                    FIELD_IN, FIELD_OUT,
                                     cmdparser.positionalArguments());
   myStackAndConquer.show();
   int nRet = app.exec();

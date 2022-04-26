@@ -56,6 +56,7 @@ class StackAndConquer : public QMainWindow {
                              const QDir &userDataPath,
                              const QString &sSaveExtension,
                              const QString &sBoardExtension,
+                             const QString &sIN, const QString &sOUT,
                              const QStringList &sListArgs = QStringList(),
                              QWidget *pParent = nullptr);
     ~StackAndConquer();
@@ -96,6 +97,8 @@ class StackAndConquer : public QMainWindow {
     const QDir m_userDataDir;
     const QString m_sSharePath;
     const QString m_sSaveExtension;
+    const QString m_sIN;
+    const QString m_sOUT;
     const quint8 m_nMaxPlayers;
     QTranslator m_translator;    // App translations
     QTranslator m_translatorQt;  // Qt translations
