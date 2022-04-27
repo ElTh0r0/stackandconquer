@@ -38,6 +38,7 @@
 #include <QTime>
 
 #include "./stackandconquer.h"
+#include "./generateboard.h"
 
 static QFile logfile;
 static QTextStream out(&logfile);
@@ -66,6 +67,7 @@ auto main(int argc, char *argv[]) -> int {
 
   static const QString FILEEXTSAVE(QStringLiteral(".stacksav"));
   static const QString FILEEXTBOARD(QStringLiteral(".stackboard"));
+  static const QString FILEEXTBORDIN(QStringLiteral(".in"));
   static const QString FIELD_IN(QStringLiteral("0"));
   static const QString FIELD_OUT(QStringLiteral("#"));
 
@@ -76,10 +78,33 @@ auto main(int argc, char *argv[]) -> int {
   QCommandLineOption enableDebug(QStringLiteral("debug"),
                                  QStringLiteral("Enable debug mode"));
   cmdparser.addOption(enableDebug);
+  QCommandLineOption generateBoard(
+        QStringLiteral("genboard"),
+        QStringLiteral("Generate %1 from input file(s)").arg(FILEEXTBOARD));
+  cmdparser.addOption(generateBoard);
+
   cmdparser.addPositionalArgument(
         QStringLiteral("savegame"),
         QStringLiteral("Savegame file to be opened (*%1)").arg(FILEEXTSAVE));
+  cmdparser.addPositionalArgument(
+        QStringLiteral("board_in"),
+        QStringLiteral("Input file (*%1) or folder to be converted to "
+                       "stackboard; only to be used with option --%2")
+        .arg(FILEEXTBORDIN, generateBoard.names().at(0)));
+  cmdparser.addPositionalArgument(
+        QStringLiteral("board_out"),
+        QStringLiteral("Optional folder in which generated board files shall "
+                       "be put; only to be used with option --%1")
+        .arg(generateBoard.names().at(0)));
   cmdparser.process(app);
+
+  if (cmdparser.isSet(generateBoard)) {
+    GenerateBoard::startGeneration(cmdparser.positionalArguments(),
+                                   FILEEXTBORDIN.toLower(),
+                                   FILEEXTBOARD.toLower(),
+                                   FIELD_IN, FIELD_OUT);
+    exit(0);
+  }
 
   // Default share data path (Windows and debugging)
   QString sSharePath = app.applicationDirPath();

@@ -14,7 +14,7 @@
 .SH NAME
 StackAndConquer \- Tower conquest board game
 .SH SYNOPSIS
-\fBstackandconquer\fP [\fIOption\fP] or [\fIFile\fP]
+\fBstackandconquer\fP [\fIOption\fP] or/and [\fIFile/Folder\fP]
 .SH DESCRIPTION
 StackAndConquer is a challenging tower conquest board game.
 .SH Options
@@ -22,12 +22,19 @@ StackAndConquer is a challenging tower conquest board game.
 \fB\-\-debug\fP
 Start debug mode.
 .TP
-\fBFile\fP
-Load save game (.stacksav).
+\fB\-\-genboard\fP
+Convert *.in file into *.stackboard game board file.
+.TP
+\fBFile/Folder\fP
+Load save game (.stacksav) or if option \-\-genboard is used together with
+input file/folder and optional output folder generate a board file.
 .SH FILES
 .TP
 .I /usr/share/stackandconquer/cpu
 CPU scripts
+.TP
+.I /usr/share/stackandconquer/boards
+Game boards
 .SH BUGS
 GitHub bug tracker:
 

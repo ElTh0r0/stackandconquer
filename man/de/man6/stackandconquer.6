@@ -14,7 +14,7 @@
 .SH NAME
 StackAndConquer \- Tower Conquest Brettspiel
 .SH SYNOPSIS
-\fBstackandconquer\fP [\fIOption\fP] oder [\fIDatei\fP]
+\fBstackandconquer\fP [\fIOption\fP] oder/und [\fIDatei/Verzeichnis\fP]
 .SH BESCHREIBUNG
 StackAndConquer ist ein anspruchsvolles Tower Conquest Brettspiel.
 .SH Optionen
@@ -22,12 +22,19 @@ StackAndConquer ist ein anspruchsvolles Tower Conquest Brettspiel.
 \fB\-\-debug\fP
 Debug-Modus starten.
 .TP
-\fBDatei\fP
-Gespeichertes Spiel (.stacksav) laden.
+\fB\-\-genboard\fP
+Konvertierung einer *.in Datei in *.stackboard Spielfelddatei.
+.TP
+\fBDatei/Verzeichnis\fP
+Gespeichertes Spiel (.stacksav) laden oder zusammen mit \-\-genboard und
+Eingabedatei/-verzeichnis und optionalen Ausgabeverzeichnis Spielfeld generieren.
 .SH DATEIEN
 .TP
 .I /usr/share/stackandconquer/cpu
 CPU Skripts
+.TP
+.I /usr/share/stackandconquer/boards
+Spielfelder
 .SH FEHLER
 GitHub Bugtracker:
 

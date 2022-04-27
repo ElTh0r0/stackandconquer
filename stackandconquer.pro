@@ -59,14 +59,16 @@ SOURCES      += main.cpp\
                 board.cpp \
                 player.cpp \
                 settings.cpp \
-                opponentjs.cpp
+                opponentjs.cpp \
+                generateboard.cpp
 
 HEADERS      += stackandconquer.h \
                 game.h \
                 board.h \
                 player.h \
                 settings.h \
-                opponentjs.h
+                opponentjs.h \
+                generateboard.h
 
 FORMS        += stackandconquer.ui \
                 settings.ui
