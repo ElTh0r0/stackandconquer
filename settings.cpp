@@ -344,19 +344,6 @@ void Settings::searchBoardStyles(const QString &sStyleDir) {
   connect(m_pUi->tableBoardStyle, &QTableWidget::cellDoubleClicked,
           this, &Settings::clickedStyleCell);
 
-  QStringList sListHeader;
-  sListHeader << tr("Color");
-  m_pUi->tableBoardStyle->setHorizontalHeaderLabels(sListHeader);
-  sListHeader.clear();
-  sListHeader << tr("Main background") << tr("Board background")
-              << tr("Grid color") << tr("Animate color")
-              << tr("Animate border color") << tr("Highlight color")
-              << tr("Highlight border color") << tr("Neighbours color")
-              << tr("Neighbours border color") << tr("Selected color")
-              << tr("Selected border color") << tr("Text color")
-              << tr("Text highlight color");
-  m_pUi->tableBoardStyle->setVerticalHeaderLabels(sListHeader);
-
   this->loadBoardStyle(m_sBoardStyleFile);
 }
 
@@ -864,6 +851,19 @@ void Settings::updateUiLang() {
     m_listHumCpuLbls[i]->setText(
           tr("Player %1 Human/CPU").arg(QString::number(i+1)));
   }
+
+  QStringList sListHeader;
+  sListHeader << tr("Color");
+  m_pUi->tableBoardStyle->setHorizontalHeaderLabels(sListHeader);
+  sListHeader.clear();
+  sListHeader << tr("Main background") << tr("Board background")
+              << tr("Grid color") << tr("Animate color")
+              << tr("Animate border color") << tr("Highlight color")
+              << tr("Highlight border color") << tr("Neighbours color")
+              << tr("Neighbours border color") << tr("Selected color")
+              << tr("Selected border color") << tr("Text color")
+              << tr("Text highlight color");
+  m_pUi->tableBoardStyle->setVerticalHeaderLabels(sListHeader);
 
   this->updateStartCombo();
 }
