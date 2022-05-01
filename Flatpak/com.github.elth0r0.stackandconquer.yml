@@ -1,0 +1,23 @@
+app-id: com.github.elth0r0.stackandconquer
+runtime: org.kde.Platform
+runtime-version: '5.15-21.08'
+sdk: org.kde.Sdk
+command: stackandconquer
+separate-locales: false
+rename-icon: stackandconquer
+finish-args:
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --device=dri
+modules:
+  - name: stackandconquer
+    buildsystem: qmake
+    no-autogen: true
+    no-make-install: false
+    no-parallel-make: false
+    sources:
+      - type: git
+        url: https://github.com/ElTh0r0/stackandconquer.git
+        tag: v0.10.0
+        commit: 2e102517dfe345a9d4cda2fdc19af0b69ede824d

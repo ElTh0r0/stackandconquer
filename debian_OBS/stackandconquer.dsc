@@ -1,10 +1,10 @@
 Format: 1.0
 Source: stackandconquer
 Binary: stackandconquer
-Version: 0.9.0-0
+Version: 0.10.0-0
 Maintainer: Thorsten Roth <elthoro@gmx.de>
 Architecture: any
 Build-Depends: debhelper (>= 9), qtbase5-dev, qt5-qmake, libqt5svg5-dev, qtdeclarative5-dev, pkg-config
 Files:
- 91784006aa053901668d18f2a9b3410b 226010 stackandconquer-0.9.0.tar.gz
- 324a4b167f60feb11e5a3e802ae30613 2213 debian.tar.gz
+ e83b54b4c13724e8b2da287466facadb 234871 stackandconquer-0.10.0.tar.gz
+ cbcbbfdc5e14b35f29631599ff6c7a55 2302 debian.tar.gz
