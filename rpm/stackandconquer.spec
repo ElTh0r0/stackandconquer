@@ -1,7 +1,7 @@
 #
 # spec file for stackandconquer
 #
-# Copyright (C) 2015-2021 Thorsten Roth
+# Copyright (C) 2015-2022 Thorsten Roth
 #
 # StackAndConquer is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 Name:           stackandconquer
 Summary:        Challenging tower conquest board game
-Version:        0.9.0
+Version:        0.10.0
 Release:        1
 License:        GPL-3.0+
 URL:            https://github.com/ElTh0r0/stackandconquer

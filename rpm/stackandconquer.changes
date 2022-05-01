@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Sun May 04 14:29:00 UTC 2022 - elthoro@gmx.de 0.10.0
+
+- Add board settings dialog
+- Updated Italian translation - thanks to davi92
+- Add txt to json board file converter
+- Fix for loading user CPU scripts
+- ESLint, Prettier JS code
+
+-------------------------------------------------------------------
 Sat Jun 27 15:27:00 UTC 2021 - elthoro@gmx.de 0.9.0
 
 - Improve CPU opponent
