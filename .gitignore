@@ -1,2 +1,4 @@
 stackandconquer.pro.user*
 !.gitignore
+.vscode/
+.eslintrc.json

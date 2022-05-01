@@ -46,7 +46,7 @@ after_build:
   - copy COPYING StackAndConquer\
   - curl -fsSL -o ReadMe.txt https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/ReadMe.txt
   - copy ReadMe.txt StackAndConquer\
-  - xcopy /i /e /s data\cpu\* StackAndConquer\cpu\
+  - xcopy /i /e /s data\cpu\*.js StackAndConquer\cpu\
   - xcopy /i /e /s data\boards\* StackAndConquer\boards\
   - 7z a StackAndConquer-%APPVEYOR_BUILD_VERSION%-Windows_%BUILD%.zip .\StackAndConquer\
   - curl -fsSL -o stackandconquer.nsi https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.nsi
