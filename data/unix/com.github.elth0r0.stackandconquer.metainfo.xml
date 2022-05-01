@@ -35,12 +35,13 @@
   <content_rating type="oars-1.0" />
 
   <releases>
-    <release version="0.10.0" date="2022-02-13">
+    <release version="0.10.0" date="2022-05-01">
       <description>
         <p>Main changes:</p>
         <ul>
           <li>Add board settings dialog</li>
           <li>Updated Italian translation - thanks to davi92!</li>
+          <li>Add txt to json board file converter</li>
           <li>Fix for loading user CPU scripts</li>
           <li>ESLint, Prettier JS code</li>
         </ul>
