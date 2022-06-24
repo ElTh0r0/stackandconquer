@@ -307,7 +307,7 @@ auto Game::checkMoveIsValid(const QJsonDocument &legalMoves,
 // ---------------------------------------------------------------------------
 
 void Game::setStone(const int nIndex, const bool bDebug) {
-  // Below checks never should fail, due to comparisson with legal moves list...
+  // Below checks never should fail, due to comparison with legal moves list...
   if (m_pBoard->getField(nIndex).isEmpty() || bDebug) {
     if (m_pPlayers.at(activePlayer.ID - 1)->getStonesLeft() > 0) {
       m_pPlayers[activePlayer.ID - 1]->setStonesLeft(
@@ -341,7 +341,7 @@ void Game::moveTower(const int nFrom, const quint8 nStones, const int nTo) {
     listStones.append(ch.digitValue());
   }
 
-  // Below checks never should fail, due to comparisson with legal moves list...
+  // Below checks never should fail, due to comparison with legal moves list...
   if (listStones.contains(-1)) {
     qWarning() << "Tower contains invalid stone!" << listStones;
     QMessageBox::warning(nullptr, tr("Warning"),
@@ -479,7 +479,7 @@ void Game::updatePlayers(bool bInitial, bool bChangeDir) {
         sListPlayers << m_pPlayers.at(i)->getName();
       }
       emit updateNames(sListPlayers);
-    } else {  // Toogle active player
+    } else {  // Toggle active player
       if (bChangeDir) {
         activePlayer.Direction = activePlayer.Direction * (-1);
       }
