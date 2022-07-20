@@ -47,119 +47,119 @@ class Settings : public QDialog {
   Q_OBJECT
 
  public:
-    explicit Settings(const QString &sSharePath, const QString &userDataDir,
-                      const QString &sBoardExtension, const quint8 nMaxPlayers,
-                      QWidget *pParent = nullptr);
-    virtual ~Settings();
+  explicit Settings(const QString &sSharePath, const QString &userDataDir,
+                    const QString &sBoardExtension, const quint8 nMaxPlayers,
+                    QWidget *pParent = nullptr);
+  virtual ~Settings();
 
-    auto getBoardFile() const -> QString;
-    auto getPlayerCpuScript(const quint8 nPlayer) const -> QString;
-    auto getPlayerColor(const quint8 nPlayer) const -> QString;
-    auto getNumOfPlayers() const -> quint8;
-    auto getMaxNumOfPlayers() const -> quint8;
-    auto getStartPlayer() const -> quint8;
-    auto getWinTowers() const -> quint8;
-    auto getShowPossibleMoveTowers() const -> bool;
-    auto getLanguage() -> QString;
+  auto getBoardFile() const -> QString;
+  auto getPlayerCpuScript(const quint8 nPlayer) const -> QString;
+  auto getPlayerColor(const quint8 nPlayer) const -> QString;
+  auto getNumOfPlayers() const -> quint8;
+  auto getMaxNumOfPlayers() const -> quint8;
+  auto getStartPlayer() const -> quint8;
+  auto getWinTowers() const -> quint8;
+  auto getShowPossibleMoveTowers() const -> bool;
+  auto getLanguage() -> QString;
 
-    auto getGridSize() const -> quint16;
-    void setGridSize(const quint16 nNewGrid);
-    auto getDefaultGrid() const -> qreal;
-    auto getMaxGrid() const -> quint16;
+  auto getGridSize() const -> quint16;
+  void setGridSize(const quint16 nNewGrid);
+  auto getDefaultGrid() const -> qreal;
+  auto getMaxGrid() const -> quint16;
 
-    auto getBgColor() const -> QColor;
-    auto getTextColor() const -> QColor;
-    auto getTextHighlightColor() const -> QColor;
-    auto getHighlightColor() const -> QColor;
-    auto getHighlightBorderColor() const -> QColor;
-    auto getSelectedColor() const -> QColor;
-    auto getSelectedBorderColor() const -> QColor;
-    auto getAnimateColor() const -> QColor;
-    auto getAnimateBorderColor() const -> QColor;
-    auto getBgBoardColor() const -> QColor;
-    auto getGridBoardColor() const -> QColor;
-    auto getNeighboursColor() const -> QColor;
-    auto getNeighboursBorderColor() const -> QColor;
+  auto getBgColor() const -> QColor;
+  auto getTextColor() const -> QColor;
+  auto getTextHighlightColor() const -> QColor;
+  auto getHighlightColor() const -> QColor;
+  auto getHighlightBorderColor() const -> QColor;
+  auto getSelectedColor() const -> QColor;
+  auto getSelectedBorderColor() const -> QColor;
+  auto getAnimateColor() const -> QColor;
+  auto getAnimateBorderColor() const -> QColor;
+  auto getBgBoardColor() const -> QColor;
+  auto getGridBoardColor() const -> QColor;
+  auto getNeighboursColor() const -> QColor;
+  auto getNeighboursBorderColor() const -> QColor;
 
  public slots:
-    void accept() override;
-    void reject() override;
-    void updateUiLang();
+  void accept() override;
+  void reject() override;
+  void updateUiLang();
 
  signals:
-    void newGame(const QString &s);
-    void changeLang(const QString &sLang);
+  void newGame(const QString &s);
+  void changeLang(const QString &sLang);
 
  protected:
-    void showEvent(QShowEvent *pEvent) override;
-    bool eventFilter(QObject *pObj, QEvent *pEvent) override;
+  void showEvent(QShowEvent *pEvent) override;
+  bool eventFilter(QObject *pObj, QEvent *pEvent) override;
 
  private slots:
-    void changeNumOfPlayers();
-    void changedSettings();
-    void changedStyle(int nIndex);
-    void clickedStyleCell(int nRow, int nCol);
+  void changeNumOfPlayers();
+  void changedSettings();
+  void changedStyle(int nIndex);
+  void clickedStyleCell(int nRow, int nCol);
 
  private:
-    void copyDefaultStyles();
-    void readSettings();
-    auto readColor(QSettings *pSet, const QString &sKey,
-                   const QString &sFallback) const -> QColor;
-    auto searchTranslations() const -> QStringList;
-    void searchCpuScripts(const QString &userDataDir);
-    void searchBoardStyles(const QString &sStyleDir);
-    void loadBoardStyle(const QString &sStyleFile);
-    void readStyle_SetTable(QColor &color, QSettings *pSet, const int nRow,
-                            const QString &sKey, const QString &sFallback);
-    void saveBoardStyle(const QString &sStyleFile);
-    void saveColor(QColor &color, QSettings *pSet,
-                   const int nRow, const QString &sKey);
-    void searchBoards(const QString &userDataDir);
-    void updateStartCombo();
+  void copyDefaultStyles();
+  void readSettings();
+  auto readColor(QSettings *pSet, const QString &sKey,
+                 const QString &sFallback) const -> QColor;
+  auto searchTranslations() const -> QStringList;
+  void searchCpuScripts(const QString &userDataDir);
+  void searchBoardStyles(const QString &sStyleDir);
+  void loadBoardStyle(const QString &sStyleFile);
+  void readStyle_SetTable(QColor &color, QSettings *pSet, const int nRow,
+                          const QString &sKey, const QString &sFallback);
+  void saveBoardStyle(const QString &sStyleFile);
+  void saveColor(QColor &color, QSettings *pSet, const int nRow,
+                 const QString &sKey);
+  void searchBoards(const QString &userDataDir);
+  void updateStartCombo();
 
-    Ui::SettingsDialog *m_pUi;
-    QSettings *m_pSettings;
-    QList<QMap<QString, QString>> m_Players;
-    const QString m_sSharePath;
-    const QString m_sBoardExtension;
-    const QString m_sCpuExtension;
-    QString m_sGuiLanguage;
+  Ui::SettingsDialog *m_pUi;
+  QSettings *m_pSettings;
+  QList<QMap<QString, QString>> m_Players;
+  const QString m_sSharePath;
+  const QString m_sBoardExtension;
+  const QString m_sCpuExtension;
+  QString m_sGuiLanguage;
 
-    QList<QLabel*> m_listColorLbls;
-    QList<QLabel*> m_listHumCpuLbls;
-    QList<QLineEdit*> m_listColorEdit;
-    QList<QComboBox*> m_listPlayerCombo;
+  QList<QLabel *> m_listColorLbls;
+  QList<QLabel *> m_listHumCpuLbls;
+  QList<QLineEdit *> m_listColorEdit;
+  QList<QComboBox *> m_listPlayerCombo;
 
-    QStringList m_sListCPUs;
-    QStringList m_sListBoards;
-    QString m_sBoard;
-    int m_nNumOfPlayers{};
-    int m_nStartPlayer{};
-    int m_nWinTowers{};
-    bool m_bShowPossibleMoveTowers{};
-    bool m_bSettingChanged{};
+  QStringList m_sListCPUs;
+  QStringList m_sListBoards;
+  QString m_sBoard;
+  int m_nNumOfPlayers{};
+  int m_nStartPlayer{};
+  int m_nWinTowers{};
+  bool m_bShowPossibleMoveTowers{};
+  bool m_bSettingChanged{};
 
-    QString m_sBoardStyleFile;
-    QString m_sExt;
-    QColor m_bgColor;
-    QColor m_txtColor;
-    QColor m_txtHighColor;
-    QColor m_highlightColor;
-    QColor m_highlightBorderColor;
-    QColor m_selectedColor;
-    QColor m_selectedBorderColor;
-    QColor m_animateColor;
-    QColor m_animateBorderColor;
-    QColor m_bgBoardColor;
-    QColor m_gridBoardColor;
-    QColor m_neighboursColor;
-    QColor m_neighboursBorderColor;
+  QString m_sBoardStyleFile;
+  QString m_sExt;
+  QColor m_bgColor;
+  QColor m_txtColor;
+  QColor m_txtHighColor;
+  QColor m_highlightColor;
+  QColor m_highlightBorderColor;
+  QColor m_selectedColor;
+  QColor m_selectedBorderColor;
+  QColor m_animateColor;
+  QColor m_animateBorderColor;
+  QColor m_bgBoardColor;
+  QColor m_gridBoardColor;
+  QColor m_neighboursColor;
+  QColor m_neighboursBorderColor;
 
-    quint16 m_nGridSize;
-    const qreal m_nDefaultGrid;
-    const quint16 m_nMaxGrid;
-    const quint8 m_nMaxPlayers;
-    const QStringList m_DefaultPlayerColors;
+  quint16 m_nGridSize;
+  const qreal m_nDefaultGrid;
+  const quint16 m_nMaxGrid;
+  const quint8 m_nMaxPlayers;
+  const QStringList m_DefaultPlayerColors;
 };
 
 #endif  // SETTINGS_H_

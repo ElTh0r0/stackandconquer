@@ -28,22 +28,22 @@
 
 #include <QDebug>
 #include <QFile>
-#include <QMessageBox>
+#include <QJSEngine>
 #include <QJsonArray>
 #include <QJsonDocument>
-#include <QJSEngine>
+#include <QMessageBox>
 
 OpponentJS::OpponentJS(const quint8 nID, const QPoint BoardDimensions,
                        const quint8 nHeightTowerWin, const quint8 nNumOfPlayers,
                        const QString &sOut, const QString &sPad,
                        QObject *pParent)
-  : m_nID(nID),
-    m_BoardDimensions(BoardDimensions),
-    m_nHeightTowerWin(nHeightTowerWin),
-    m_nNumOfPlayers(nNumOfPlayers),
-    m_sOut(sOut),
-    m_sPad(sPad),
-    m_jsEngine(new QJSEngine(pParent)) {
+    : m_nID(nID),
+      m_BoardDimensions(BoardDimensions),
+      m_nHeightTowerWin(nHeightTowerWin),
+      m_nNumOfPlayers(nNumOfPlayers),
+      m_sOut(sOut),
+      m_sPad(sPad),
+      m_jsEngine(new QJSEngine(pParent)) {
   m_obj = m_jsEngine->globalObject();
   m_obj.setProperty(QStringLiteral("game"), m_jsEngine->newQObject(this));
 }
@@ -63,11 +63,10 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
 
   QJSValue result(m_jsEngine->evaluate(source, sFilepath));
   if (result.isError()) {
-    qCritical().noquote() << "Error in CPU P" + QString::number(m_nID) +
-                             "script at line " +
-                             result.property(
-                               QStringLiteral("lineNumber")).toString() +
-                             "\n         " + result.toString();
+    qCritical().noquote()
+        << "Error in CPU P" + QString::number(m_nID) + "script at line " +
+               result.property(QStringLiteral("lineNumber")).toString() +
+               "\n         " + result.toString();
     emit scriptError();
     return false;
   }
@@ -76,7 +75,7 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
   if (!m_obj.hasProperty(QStringLiteral("callCPU")) ||
       !m_obj.property(QStringLiteral("callCPU")).isCallable()) {
     qCritical() << "Error in CPU P" + QString::number(m_nID) +
-                   "script - function callCPU() not found or not callable!";
+                       "script - function callCPU() not found or not callable!";
     emit scriptError();
     return false;
   }
@@ -86,11 +85,11 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
       m_obj.property(QStringLiteral("initCPU")).isCallable()) {
     result = m_obj.property(QStringLiteral("initCPU")).call();
     if (result.isError()) {
-      qCritical().noquote() << "CPU P" + QString::number(m_nID) +
-                               "- Error calling \"initCPU\" function at line: " +
-                               result.property(
-                                 QStringLiteral("lineNumber")).toString() +
-                               "\n         " + result.toString();
+      qCritical().noquote()
+          << "CPU P" + QString::number(m_nID) +
+                 "- Error calling \"initCPU\" function at line: " +
+                 result.property(QStringLiteral("lineNumber")).toString() +
+                 "\n         " + result.toString();
       QMessageBox::warning(nullptr, tr("Warning"),
                            tr("CPU script execution error! "
                               "Please check the debug log."));
@@ -109,20 +108,19 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
                            const QJsonDocument &legalMoves,
                            const qint8 nDirection) {
   QJsonDocument jsdoc(board);
-  QString sJsonBoard(
-        QString::fromLatin1(jsdoc.toJson(QJsonDocument::Compact)));
+  QString sJsonBoard(QString::fromLatin1(jsdoc.toJson(QJsonDocument::Compact)));
   QString sJsonMoves(
-        QString::fromLatin1(legalMoves.toJson(QJsonDocument::Compact)));
+      QString::fromLatin1(legalMoves.toJson(QJsonDocument::Compact)));
   QJSValueList args;
   args << sJsonBoard << sJsonMoves << nDirection;
 
   QJSValue result = m_obj.property(QStringLiteral("callCPU")).call(args);
   if (result.isError()) {
-    qCritical().noquote() << "CPU P" + QString::number(m_nID) +
-                             "- Error calling \"callCPU\" function at line: " +
-                             result.property(
-                               QStringLiteral("lineNumber")).toString() +
-                             "\n         " + result.toString();
+    qCritical().noquote()
+        << "CPU P" + QString::number(m_nID) +
+               "- Error calling \"callCPU\" function at line: " +
+               result.property(QStringLiteral("lineNumber")).toString() +
+               "\n         " + result.toString();
     QMessageBox::warning(nullptr, tr("Warning"),
                          tr("CPU script execution error! "
                             "Please check the debug log."));
@@ -137,12 +135,11 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
       if (result.property(0).isNumber() &&  // From (-1 --> set stone at "To")
           result.property(1).isNumber() &&  // Number of stones
           result.property(2).isNumber()) {  // To
-        move << result.property(0).toInt() <<
-                result.property(1).toInt() <<
-                result.property(2).toInt();
+        move << result.property(0).toInt() << result.property(1).toInt()
+             << result.property(2).toInt();
         if (move.at(0).toInt() >= -1 && move.at(0).toInt() < board.size() &&
-            move.at(1).toInt() > 0 &&
-            move.at(2).toInt() >= 0 && move.at(2).toInt() < board.size()) {
+            move.at(1).toInt() > 0 && move.at(2).toInt() >= 0 &&
+            move.at(2).toInt() < board.size()) {
           emit actionCPU(move);
           return;
         }
@@ -151,7 +148,8 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
   }
 
   qCritical() << "CPU P" + QString::number(m_nID) +
-                 "script invalid return from callCPU(): " + result.toString();
+                     "script invalid return from callCPU(): " +
+                     result.toString();
   QMessageBox::warning(nullptr, tr("Warning"),
                        tr("CPU script execution error! "
                           "Please check the debug log."));
@@ -162,31 +160,17 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
 // ---------------------------------------------------------------------------
 // Functions accessible by external JavaScript
 
-auto OpponentJS::getID() -> quint8 {
-  return m_nID;
-}
+auto OpponentJS::getID() -> quint8 { return m_nID; }
 
-auto OpponentJS::getNumOfPlayers() -> quint8 {
-  return m_nNumOfPlayers;
-}
+auto OpponentJS::getNumOfPlayers() -> quint8 { return m_nNumOfPlayers; }
 
-auto OpponentJS::getHeightToWin() -> quint8 {
-  return m_nHeightTowerWin;
-}
+auto OpponentJS::getHeightToWin() -> quint8 { return m_nHeightTowerWin; }
 
-auto OpponentJS::getBoardDimensionX() -> int {
-  return m_BoardDimensions.x();
-}
-auto OpponentJS::getBoardDimensionY() -> int {
-  return m_BoardDimensions.y();
-}
+auto OpponentJS::getBoardDimensionX() -> int { return m_BoardDimensions.x(); }
+auto OpponentJS::getBoardDimensionY() -> int { return m_BoardDimensions.y(); }
 
-auto OpponentJS::getOutside() -> QString {
-  return m_sOut;
-}
-auto OpponentJS::getPadding() -> QString {
-  return m_sPad;
-}
+auto OpponentJS::getOutside() -> QString { return m_sOut; }
+auto OpponentJS::getPadding() -> QString { return m_sPad; }
 
 void OpponentJS::log(const QString &sMsg) {
   qDebug() << "CPU P" + QString::number(m_nID) + " - " + sMsg;

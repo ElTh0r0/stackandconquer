@@ -36,19 +36,18 @@ class GenerateBoard {
  public:
   static void startGeneration(const QStringList &cmdArgs,
                               const QString &sBoardInExt,
-                              const QString &sBoardOutExt,
-                              const QString &sIN, const QString &sOUT);
+                              const QString &sBoardOutExt, const QString &sIN,
+                              const QString &sOUT);
 
  private:
-  static auto checkCmdArgs(
-      const QStringList &cmdArgs,
-      const QString &sBoardInExt) -> QPair<QFileInfo, QFileInfo>;
+  static auto checkCmdArgs(const QStringList &cmdArgs,
+                           const QString &sBoardInExt)
+      -> QPair<QFileInfo, QFileInfo>;
   static void loopFiles(const QPair<QFileInfo, QFileInfo> &fiInOut,
-                        const QString &sBoardInExt,
-                        const QString &sBoardOutExt,
+                        const QString &sBoardInExt, const QString &sBoardOutExt,
                         const QString &sIN, const QString &sOUT);
-  static auto generateBoard(QFile *pInput, QFile *pOutput,
-                            const QString &sIN, const QString &sOUT) -> bool;
+  static auto generateBoard(QFile *pInput, QFile *pOutput, const QString &sIN,
+                            const QString &sOUT) -> bool;
 };
 
 #endif  // GENERATEBOARD_H_

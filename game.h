@@ -42,56 +42,56 @@ class Game : public QObject {
   Q_OBJECT
 
  public:
-    explicit Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
-                  const QString &sSavegame = QLatin1String(""),
-                  QObject *pParent = nullptr);
-    ~Game();
-    auto getScene() const -> QGraphicsScene*;
-    auto saveGame(const QString &sFile) -> bool;
-    void updatePlayers(bool bInitial = false, bool bChangeDir = false);
-    auto initCpu() -> bool;
+  explicit Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
+                const QString &sSavegame = QLatin1String(""),
+                QObject *pParent = nullptr);
+  ~Game();
+  auto getScene() const -> QGraphicsScene *;
+  auto saveGame(const QString &sFile) -> bool;
+  void updatePlayers(bool bInitial = false, bool bChangeDir = false);
+  auto initCpu() -> bool;
 
  signals:
-    void updateNames(const QStringList &sListName);
-    void updateStones(const quint8 nID, const QString &sStones);
-    void updateWon(const quint8 nID, const QString &sWon);
-    void drawIcon(const quint8 nID);
-    void setInteractive(bool bEnabled);
-    void highlightActivePlayer(quint8 nActivePlayer, quint8 nPlayerWon = 0);
-    void changeZoom();
+  void updateNames(const QStringList &sListName);
+  void updateStones(const quint8 nID, const QString &sStones);
+  void updateWon(const quint8 nID, const QString &sWon);
+  void drawIcon(const quint8 nID);
+  void setInteractive(bool bEnabled);
+  void highlightActivePlayer(quint8 nActivePlayer, quint8 nPlayerWon = 0);
+  void changeZoom();
 
  private slots:
-    void makeMove(QJsonArray move);
-    void delayCpu();
-    void caughtScriptError();
+  void makeMove(QJsonArray move);
+  void delayCpu();
+  void caughtScriptError();
 
  private:
-    void setStone(const int nIndex, const bool bDebug);
-    void moveTower(const int nFrom, const quint8 nStones, const int nTo);
-    static auto loadGame(const QString &sFile) -> QJsonObject;
-    auto checkPossibleMoves() -> bool;
-    auto checkMoveIsValid(const QJsonDocument &legalMoves,
-                          const QJsonArray &move) -> bool;
-    void checkTowerWin(const int nIndex);
-    void returnStones(const int nIndex);
+  void setStone(const int nIndex, const bool bDebug);
+  void moveTower(const int nFrom, const quint8 nStones, const int nTo);
+  static auto loadGame(const QString &sFile) -> QJsonObject;
+  auto checkPossibleMoves() -> bool;
+  auto checkMoveIsValid(const QJsonDocument &legalMoves, const QJsonArray &move)
+      -> bool;
+  void checkTowerWin(const int nIndex);
+  void returnStones(const int nIndex);
 
-    Settings *m_pSettings;
-    Board *m_pBoard;
-    QString m_sBoardFile;
-    quint8 m_nNumOfPlayers;
-    QList<Player *> m_pPlayers;
+  Settings *m_pSettings;
+  Board *m_pBoard;
+  QString m_sBoardFile;
+  quint8 m_nNumOfPlayers;
+  QList<Player *> m_pPlayers;
 
-    const quint8 m_nMaxTowerHeight;
-    quint8 m_nWinTowers;
+  const quint8 m_nMaxTowerHeight;
+  quint8 m_nWinTowers;
 
-    bool m_bScriptError;
-    QList<int> m_previousMove;
+  bool m_bScriptError;
+  QList<int> m_previousMove;
 
-    struct currentPlayer {
-        quint8 ID;
-        bool isHuman;
-        qint8 Direction;  // 1 = clockwiese / -1 = anti-clockwise
-    } activePlayer;
+  struct currentPlayer {
+    quint8 ID;
+    bool isHuman;
+    qint8 Direction;  // 1 = clockwise / -1 = anti-clockwise
+  } activePlayer;
 };
 
 #endif  // GAME_H_

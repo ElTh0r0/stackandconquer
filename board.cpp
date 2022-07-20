@@ -44,15 +44,15 @@
 Board::Board(const QString &sBoard, const quint8 nMaxTower, quint8 NumOfPlayers,
              const QString &sIN, const QString &sOUT, Settings *pSettings,
              QObject *pParent)
-  : m_sIN(sIN),
-    m_sOUT(sOUT),
-    m_sPAD(QStringLiteral("-")),
-    m_pSettings(pSettings),
-    m_nGridSize(m_pSettings->getGridSize()),
-    m_nScale(m_pSettings->getGridSize() / m_pSettings->getDefaultGrid()),
-    m_nMaxPlayerStones(0),
-    m_nMaxTower(nMaxTower),
-    m_NumOfPlayers(NumOfPlayers) {
+    : m_sIN(sIN),
+      m_sOUT(sOUT),
+      m_sPAD(QStringLiteral("-")),
+      m_pSettings(pSettings),
+      m_nGridSize(m_pSettings->getGridSize()),
+      m_nScale(m_pSettings->getGridSize() / m_pSettings->getDefaultGrid()),
+      m_nMaxPlayerStones(0),
+      m_nMaxTower(nMaxTower),
+      m_NumOfPlayers(NumOfPlayers) {
   Q_UNUSED(pParent)
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
 
@@ -74,10 +74,10 @@ Board::Board(const QString &sBoard, const quint8 nMaxTower, quint8 NumOfPlayers,
   m_DIRS << -(2 * nMaxTower + m_BoardDimensions.x() + 1);  // -16
   m_DIRS << -(2 * nMaxTower + m_BoardDimensions.x());      // -15
   m_DIRS << -(2 * nMaxTower + m_BoardDimensions.x() - 1);  // -14
-  m_DIRS << -1 << 1;          // -1, 1
-  m_DIRS << -(m_DIRS.at(2));  // 14
-  m_DIRS << -(m_DIRS.at(1));  // 15
-  m_DIRS << -(m_DIRS.at(0));  // 16
+  m_DIRS << -1 << 1;                                       // -1, 1
+  m_DIRS << -(m_DIRS.at(2));                               // 14
+  m_DIRS << -(m_DIRS.at(1));                               // 15
+  m_DIRS << -(m_DIRS.at(0));                               // 16
 
   m_FieldStones.clear();
   m_FieldStones.reserve(m_jsBoard.size());
@@ -95,22 +95,21 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
   if (!fBoard.exists()) {
     qWarning() << "Board cannot be loaded:" << sBoard;
     QMessageBox::critical(nullptr, tr("Warning"),
-                         tr("Error while opening board file!"));
+                          tr("Error while opening board file!"));
     return;
   }
 
   if (!fBoard.open(QIODevice::ReadOnly)) {
     qWarning() << "Couldn't open open board file:" << sBoard;
     QMessageBox::critical(nullptr, tr("Warning"),
-                         tr("Error while opening board file!"));
+                          tr("Error while opening board file!"));
     return;
   }
 
   QByteArray boardData = fBoard.readAll();
   QJsonDocument loadDoc(QJsonDocument::fromJson(boardData));
   QJsonObject jso = loadDoc.object();
-  if (loadDoc.isEmpty() ||
-      jso.value(QStringLiteral("Board")).isUndefined() ||
+  if (loadDoc.isEmpty() || jso.value(QStringLiteral("Board")).isUndefined() ||
       !jso.value(QStringLiteral("Board")).isArray() ||
       jso.value(QStringLiteral("Columns")).isUndefined() ||
       !jso.value(QStringLiteral("Columns")).isDouble() ||
@@ -121,18 +120,18 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
     qWarning() << "Board file doesn't contain all required keys:" << sBoard;
     qWarning() << "Found json keys:" << jso.keys();
     QMessageBox::critical(nullptr, tr("Warning"),
-                         tr("Error while opening board file!"));
+                          tr("Error while opening board file!"));
     return;
   }
 
   m_BoardDimensions.setX(jso.value(QStringLiteral("Columns")).toInt());
   m_BoardDimensions.setY(jso.value(QStringLiteral("Rows")).toInt());
   if (0 == m_BoardDimensions.x() || 0 == m_BoardDimensions.y()) {
-    qWarning() << "Board file contains invalid dimensions:" <<
-                  m_BoardDimensions;
+    qWarning() << "Board file contains invalid dimensions:"
+               << m_BoardDimensions;
     qWarning() << "Board:" << sBoard;
     QMessageBox::critical(nullptr, tr("Warning"),
-                         tr("Error while opening board file!"));
+                          tr("Error while opening board file!"));
     return;
   }
 
@@ -141,15 +140,15 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
     // Use last value as fallback, if number of stones
     // not specified for number of players
     m_nMaxPlayerStones = stones.last().toInt();
-    qWarning() << "Player stones not specified for" << m_NumOfPlayers <<
-                  "players. Using fallback:" << m_nMaxPlayerStones;
+    qWarning() << "Player stones not specified for" << m_NumOfPlayers
+               << "players. Using fallback:" << m_nMaxPlayerStones;
   } else {
     m_nMaxPlayerStones = stones.at(m_NumOfPlayers - 2).toInt();
   }
   if (0 == m_nMaxPlayerStones) {
     qWarning() << "Number of player stone is 0!";
     QMessageBox::critical(nullptr, tr("Warning"),
-                         tr("Error while opening board file!"));
+                          tr("Error while opening board file!"));
     return;
   }
 
@@ -157,13 +156,12 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
   const QJsonArray jsBoard(jso.value(QStringLiteral("Board")).toArray());
   for (const auto &js : jsBoard) {
     QString s = js.toString();
-    if (js.isNull() ||
-        s.isEmpty() ||
+    if (js.isNull() || s.isEmpty() ||
         (m_sOUT != s && m_sIN != s && m_sPAD != s)) {
       qWarning() << "Board array contains invalid data:" << s;
       qWarning() << "Board:" << sBoard;
       QMessageBox::critical(nullptr, tr("Warning"),
-                           tr("Error while opening board file!"));
+                            tr("Error while opening board file!"));
       return;
     }
     tmpBoard << s;
@@ -182,7 +180,7 @@ void Board::addBoardPadding(const QList<QString> &tmpBoard,
   // Generate field array
   // Top padding
   for (int i = 0; i < nMaxTower; i++) {
-    for (int j = 0; j < (nMaxTower*2 + m_BoardDimensions.x()); j++) {
+    for (int j = 0; j < (nMaxTower * 2 + m_BoardDimensions.x()); j++) {
       m_jsBoard << m_sPAD;
     }
   }
@@ -194,8 +192,9 @@ void Board::addBoardPadding(const QList<QString> &tmpBoard,
         m_jsBoard << m_sPAD;
       }
     } else if (0 == i % m_BoardDimensions.x()) {  // First item in row:
-      for (int j = 0; j < (nMaxTower*2); j++) {  // Add padding end of previous
-        m_jsBoard << m_sPAD;                     // & beginning of current line
+      for (int j = 0; j < (nMaxTower * 2);
+           j++) {             // Add padding end of previous
+        m_jsBoard << m_sPAD;  // & beginning of current line
       }
     }
 
@@ -205,7 +204,7 @@ void Board::addBoardPadding(const QList<QString> &tmpBoard,
       m_jsBoard << m_sOUT;
     }
 
-    if (tmpBoard.size()-1 == i) {  // Last item of last line, padding right
+    if (tmpBoard.size() - 1 == i) {  // Last item of last line, padding right
       for (int j = 0; j < nMaxTower; j++) {
         m_jsBoard << m_sPAD;
       }
@@ -214,7 +213,7 @@ void Board::addBoardPadding(const QList<QString> &tmpBoard,
 
   // Bottom padding
   for (int i = 0; i < nMaxTower; i++) {
-    for (int j = 0; j < (nMaxTower*2 + m_BoardDimensions.x()); j++) {
+    for (int j = 0; j < (nMaxTower * 2 + m_BoardDimensions.x()); j++) {
       m_jsBoard << m_sPAD;
     }
   }
@@ -254,10 +253,11 @@ void Board::drawBoard(const QList<QString> &tmpBoard) {
     this->addItem(m_listFields.last());
     // Field captions for debugging
     if (qApp->arguments().contains(QStringLiteral("--debug"))) {
-      m_Captions << this->addSimpleText(
-                      QString(static_cast<char>(col)) + QString::number(row));
-      m_Captions.last()->setPos(x+2, y + m_nGridSize - m_nGridSize/3);
-      m_Captions.last()->setFont(QFont(QStringLiteral("Arial"), m_nGridSize/5));
+      m_Captions << this->addSimpleText(QString(static_cast<char>(col)) +
+                                        QString::number(row));
+      m_Captions.last()->setPos(x + 2, y + m_nGridSize - m_nGridSize / 3);
+      m_Captions.last()->setFont(
+          QFont(QStringLiteral("Arial"), m_nGridSize / 5));
     }
   }
 
@@ -307,9 +307,9 @@ void Board::createStones() {
   QFile fStone(QStringLiteral(":/img/stone.svg"));
   if (!fStone.open(QFile::ReadOnly | QFile::Text)) {
     qDebug() << "Could not open stone.svg";
-    QMessageBox::critical(nullptr, tr("Warning"),
-                          tr("Could not open %1!").arg(
-                            QStringLiteral("stone.svg")));
+    QMessageBox::critical(
+        nullptr, tr("Warning"),
+        tr("Could not open %1!").arg(QStringLiteral("stone.svg")));
     return;
   }
   QTextStream in(&fStone);
@@ -322,9 +322,10 @@ void Board::createStones() {
   for (int nPlayers = 0; nPlayers < m_NumOfPlayers; nPlayers++) {
     // stone.svg HAS to be filled with #ff0000, so that below replace can work.
     QString sTmpSvg = sSvg;
-    QByteArray aSvg(sTmpSvg.replace(
-                      QLatin1String("#ff0000"),
-                      m_pSettings->getPlayerColor(nPlayers)).toUtf8());
+    QByteArray aSvg(sTmpSvg
+                        .replace(QLatin1String("#ff0000"),
+                                 m_pSettings->getPlayerColor(nPlayers))
+                        .toUtf8());
     auto *pSvgRenderer = new QSvgRenderer(aSvg);
     tmpSvgList.clear();
 
@@ -387,10 +388,11 @@ void Board::changeZoom() {
     m_boardPath.addRect(m_listFields[i]->rect());
     // Field captions for debugging
     if (qApp->arguments().contains(QStringLiteral("--debug"))) {
-      m_Captions << this->addSimpleText(
-                      QString(static_cast<char>(col)) + QString::number(row));
-      m_Captions.last()->setPos(x+2, y + m_nGridSize - m_nGridSize/3);
-      m_Captions.last()->setFont(QFont(QStringLiteral("Arial"), m_nGridSize/5));
+      m_Captions << this->addSimpleText(QString(static_cast<char>(col)) +
+                                        QString::number(row));
+      m_Captions.last()->setPos(x + 2, y + m_nGridSize - m_nGridSize / 3);
+      m_Captions.last()->setFont(
+          QFont(QStringLiteral("Arial"), m_nGridSize / 5));
     }
   }
 
@@ -414,19 +416,19 @@ void Board::changeZoom() {
 
       // Adjust position
       QRectF rect(m_FieldStones[nIndex][nNum]->boundingRect());
+      m_FieldStones[nIndex][nNum]->setPos(this->getCoordinateFromIndex(nIndex) *
+                                          m_nGridSize);
       m_FieldStones[nIndex][nNum]->setPos(
-            this->getCoordinateFromIndex(nIndex) * m_nGridSize);
-      m_FieldStones[nIndex][nNum]->setPos(
-            m_FieldStones[nIndex][nNum]->x() -
-            (rect.width()/4 * m_nScale - 3*m_nScale) * nNum,
-            m_FieldStones[nIndex][nNum]->y() -
-            (rect.height()/4 * m_nScale - 3*m_nScale) * nNum);
+          m_FieldStones[nIndex][nNum]->x() -
+              (rect.width() / 4 * m_nScale - 3 * m_nScale) * nNum,
+          m_FieldStones[nIndex][nNum]->y() -
+              (rect.height() / 4 * m_nScale - 3 * m_nScale) * nNum);
     }
   }
 
   // Redraw board
-  this->update(QRectF(0, 0, m_BoardDimensions.x() * m_nGridSize-1,
-                      m_BoardDimensions.y() * m_nGridSize-1));
+  this->update(QRectF(0, 0, m_BoardDimensions.x() * m_nGridSize - 1,
+                      m_BoardDimensions.y() * m_nGridSize - 1));
 
   // TODO(x): Might need adjustments for non rectangular shapes!
   this->setSceneRect(m_boardPath.boundingRect());
@@ -438,8 +440,7 @@ void Board::changeZoom() {
 auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
   if (jsBoard.size() != m_jsBoard.size()) {
     qWarning() << "jsBoard.size() != m_jsBoard.size()";
-    QMessageBox::warning(nullptr, tr("Warning"),
-                         tr("Something went wrong!"));
+    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
     return false;
   }
 
@@ -447,8 +448,7 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
     const QString s = jsBoard.at(i).toString();
     if (!s.isEmpty() && m_sPAD != s && m_sOUT != s) {
       for (const auto &ch : s) {
-        if (-1 != ch.digitValue() &&
-            m_sPAD != m_jsBoard.at(i).toString() &&
+        if (-1 != ch.digitValue() && m_sPAD != m_jsBoard.at(i).toString() &&
             m_sOUT != m_jsBoard.at(i).toString()) {
           this->addStone(i, ch.digitValue());
         } else {
@@ -464,8 +464,8 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
     } else {  // Should be Padding or Out
       if (jsBoard.at(i) != m_jsBoard.at(i)) {
         qWarning() << "Save game data != board array at index" << i;
-        qWarning() << "Save game:" << jsBoard.at(i) <<
-                      "- board:" << m_jsBoard.at(i);
+        qWarning() << "Save game:" << jsBoard.at(i)
+                   << "- board:" << m_jsBoard.at(i);
         QMessageBox::warning(nullptr, tr("Warning"),
                              tr("Something went wrong!"));
         return false;
@@ -474,8 +474,8 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
   }
 
   // Redraw board
-  this->update(QRectF(0, 0, m_BoardDimensions.x() * m_nGridSize-1,
-                      m_BoardDimensions.y() * m_nGridSize-1));
+  this->update(QRectF(0, 0, m_BoardDimensions.x() * m_nGridSize - 1,
+                      m_BoardDimensions.y() * m_nGridSize - 1));
   return true;
 }
 
@@ -487,8 +487,8 @@ void Board::mousePressEvent(QGraphicsSceneMouseEvent *p_Event) {
     const QList<QGraphicsItem *> items = this->items(p_Event->scenePos());
     QJsonArray move;
     for (const auto &item : items) {
-      int field = m_listFields.indexOf(
-                    qgraphicsitem_cast<QGraphicsRectItem *>(item));
+      int field =
+          m_listFields.indexOf(qgraphicsitem_cast<QGraphicsRectItem *>(item));
       if (field > -1) {
         /*
         qDebug() << "Clicked field:" << field;
@@ -533,7 +533,7 @@ void Board::mouseMoveEvent(QGraphicsSceneMouseEvent *p_Event) {
   if (m_boardPath.contains(p_Event->scenePos())) {
     m_pHighlightRect->setVisible(true);
     point = p_Event->scenePos();
-    point = QPointF(point.x() - m_nGridSize/2, point.y() - m_nGridSize/2);
+    point = QPointF(point.x() - m_nGridSize / 2, point.y() - m_nGridSize / 2);
     m_pHighlightRect->setPos(this->snapToGrid(point));
   } else {
     m_pHighlightRect->setVisible(false);
@@ -554,19 +554,20 @@ auto Board::snapToGrid(const QPointF point) const -> QPointF {
 // ---------------------------------------------------------------------------
 
 auto Board::getIndexFromField(const int nField) const -> int {
-  const int nTop = m_nMaxTower * (2*m_nMaxTower + m_BoardDimensions.x());
+  const int nTop = m_nMaxTower * (2 * m_nMaxTower + m_BoardDimensions.x());
   const int nFirst = nTop + m_nMaxTower;
-  int nLeftRight = 2*m_nMaxTower * (nField / m_BoardDimensions.x());
+  int nLeftRight = 2 * m_nMaxTower * (nField / m_BoardDimensions.x());
   int nCol = nField % m_BoardDimensions.x();
   int nRow = (nField / m_BoardDimensions.x()) * m_BoardDimensions.x();
   return nFirst + nLeftRight + nCol + nRow;
 }
 
 auto Board::getFieldFromIndex(const int nIndex) const -> int {
-  const int nTop = m_nMaxTower * (2*m_nMaxTower + m_BoardDimensions.x());
+  const int nTop = m_nMaxTower * (2 * m_nMaxTower + m_BoardDimensions.x());
   const int nFirst = nTop + m_nMaxTower;
-  int nLeftRight = 2*m_nMaxTower *
-                   ((nIndex/(m_BoardDimensions.x()+2*m_nMaxTower))-m_nMaxTower);
+  int nLeftRight =
+      2 * m_nMaxTower *
+      ((nIndex / (m_BoardDimensions.x() + 2 * m_nMaxTower)) - m_nMaxTower);
   return nIndex - nFirst - nLeftRight;
 }
 
@@ -610,32 +611,32 @@ void Board::addStone(const int nIndex, const quint8 nStone, const bool bAnim) {
 
   m_jsBoard[nIndex] = m_jsBoard.at(nIndex).toString() + QString::number(nStone);
 
-  m_FieldStones[nIndex].append(m_listPlayerStones.at(nStone-1).last());
-  m_listPlayerStones[nStone-1].removeLast();
+  m_FieldStones[nIndex].append(m_listPlayerStones.at(nStone - 1).last());
+  m_listPlayerStones[nStone - 1].removeLast();
 
   if (bAnim) {
     this->startAnimation(this->getCoordinateFromIndex(nIndex));
   }
 
   QRectF rect(m_FieldStones[nIndex].last()->boundingRect());
+  m_FieldStones[nIndex].last()->setPos(this->getCoordinateFromIndex(nIndex) *
+                                       m_nGridSize);
   m_FieldStones[nIndex].last()->setPos(
-        this->getCoordinateFromIndex(nIndex) * m_nGridSize);
-  m_FieldStones[nIndex].last()->setPos(
-        m_FieldStones[nIndex].last()->x() -
-        (rect.width()/4 * m_nScale - 3*m_nScale) * nExisting,
-        m_FieldStones[nIndex].last()->y() -
-        (rect.height()/4 * m_nScale - 3*m_nScale) * nExisting);
+      m_FieldStones[nIndex].last()->x() -
+          (rect.width() / 4 * m_nScale - 3 * m_nScale) * nExisting,
+      m_FieldStones[nIndex].last()->y() -
+          (rect.height() / 4 * m_nScale - 3 * m_nScale) * nExisting);
 
   m_FieldStones[nIndex].last()->setVisible(true);
 
   for (int z = 0; z < m_FieldStones.at(nIndex).size(); z++) {
-    m_FieldStones[nIndex][z] ->setZValue(6 + z);
+    m_FieldStones[nIndex][z]->setZValue(6 + z);
   }
 
   if (bAnim) {
     // Redraw board
-    this->update(QRectF(0, 0, m_BoardDimensions.x() * m_nGridSize-1,
-                        m_BoardDimensions.y() * m_nGridSize-1));
+    this->update(QRectF(0, 0, m_BoardDimensions.x() * m_nGridSize - 1,
+                        m_BoardDimensions.y() * m_nGridSize - 1));
   }
 }
 
@@ -643,29 +644,25 @@ void Board::addStone(const int nIndex, const quint8 nStone, const bool bAnim) {
 // ---------------------------------------------------------------------------
 
 void Board::startAnimation(const QPoint field) {
-  m_pAnimateField->setPos(this->snapToGrid(field*m_nGridSize));
+  m_pAnimateField->setPos(this->snapToGrid(field * m_nGridSize));
   m_pAnimateField->setVisible(true);
   m_pHighlightRect->setVisible(false);
   QTimer::singleShot(500, this, &Board::resetAnimation);
 }
 
-void Board::resetAnimation() {
-  m_pAnimateField->setVisible(false);
-}
+void Board::resetAnimation() { m_pAnimateField->setVisible(false); }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
 void Board::startAnimation2(const QPoint field) {
-  m_pAnimateField2->setPos(this->snapToGrid(field*m_nGridSize));
+  m_pAnimateField2->setPos(this->snapToGrid(field * m_nGridSize));
   m_pAnimateField2->setVisible(true);
   m_pHighlightRect->setVisible(false);
   QTimer::singleShot(500, this, &Board::resetAnimation2);
 }
 
-void Board::resetAnimation2() {
-  m_pAnimateField2->setVisible(false);
-}
+void Board::resetAnimation2() { m_pAnimateField2->setVisible(false); }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -681,8 +678,8 @@ void Board::removeStone(const int nIndex, const bool bAll) {
     const QString s(this->getField(nIndex));
     for (const auto &ch : s) {
       // For starts at the beginning of the list
-      m_listPlayerStones[ch.digitValue()-1].append(
-            m_FieldStones[nIndex].first());
+      m_listPlayerStones[ch.digitValue() - 1].append(
+          m_FieldStones[nIndex].first());
       m_FieldStones[nIndex].first()->setVisible(false);
       m_FieldStones[nIndex].removeFirst();
     }
@@ -690,12 +687,11 @@ void Board::removeStone(const int nIndex, const bool bAll) {
   } else {  // Remove only one
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     int nPlayer(
-          QString(
-            QStringView{m_jsBoard.at(nIndex).toString()}.last()).toInt());
+        QString(QStringView{m_jsBoard.at(nIndex).toString()}.last()).toInt());
 #else
     int nPlayer(m_jsBoard.at(nIndex).toString().rightRef(1).toInt());
 #endif
-    m_listPlayerStones[nPlayer-1].append(m_FieldStones[nIndex].last());
+    m_listPlayerStones[nPlayer - 1].append(m_FieldStones[nIndex].last());
     m_FieldStones[nIndex].last()->setVisible(false);
     m_FieldStones[nIndex].removeLast();
 
@@ -704,8 +700,8 @@ void Board::removeStone(const int nIndex, const bool bAll) {
     m_jsBoard[nIndex] = s;
   }
   // Redraw board
-  this->update(QRectF(0, 0, m_BoardDimensions.x() * m_nGridSize-1,
-                      m_BoardDimensions.y() * m_nGridSize-1));
+  this->update(QRectF(0, 0, m_BoardDimensions.x() * m_nGridSize - 1,
+                      m_BoardDimensions.y() * m_nGridSize - 1));
 }
 
 // ---------------------------------------------------------------------------
@@ -715,25 +711,15 @@ auto Board::getField(const int index) const -> QString {
   return m_jsBoard.at(index).toString();
 }
 
-auto Board::getBoard() const -> QJsonArray {
-  return m_jsBoard;
-}
+auto Board::getBoard() const -> QJsonArray { return m_jsBoard; }
 
-auto Board::getBoadDimensions() const -> QPoint {
-  return m_BoardDimensions;
-}
+auto Board::getBoadDimensions() const -> QPoint { return m_BoardDimensions; }
 
-auto Board::getMaxPlayerStones() const -> quint8 {
-  return m_nMaxPlayerStones;
-}
+auto Board::getMaxPlayerStones() const -> quint8 { return m_nMaxPlayerStones; }
 
-auto Board::getOut() const -> QString {
-  return m_sOUT;
-}
+auto Board::getOut() const -> QString { return m_sOUT; }
 
-auto Board::getPad() const -> QString {
-  return m_sPAD;
-}
+auto Board::getPad() const -> QString { return m_sPAD; }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -770,9 +756,8 @@ void Board::selectIndexField(const int nIndex) {
     if (m_jsBoard.at(nIndex).toString().length() > 1) {
       bool ok;
       nStonesToMove = QInputDialog::getInt(
-                        nullptr, tr("Move tower"),
-                        tr("How many stones shall be moved:"),
-                        1, 1, m_jsBoard.at(nIndex).toString().length(), 1, &ok);
+          nullptr, tr("Move tower"), tr("How many stones shall be moved:"), 1,
+          1, m_jsBoard.at(nIndex).toString().length(), 1, &ok);
       if (!ok) {
         return;
       }
@@ -784,11 +769,10 @@ void Board::selectIndexField(const int nIndex) {
   } else {  // Select
     currentIndex = nIndex;
     m_pSelectedField->setVisible(true);
-    m_pSelectedField->setRect(m_listFields.at(
-                                this->getFieldFromIndex(nIndex))->rect());
+    m_pSelectedField->setRect(
+        m_listFields.at(this->getFieldFromIndex(nIndex))->rect());
     if (m_pSettings->getShowPossibleMoveTowers()) {
-      this->highlightNeighbourhood(
-            this->checkNeighbourhood(currentIndex));
+      this->highlightNeighbourhood(this->checkNeighbourhood(currentIndex));
     }
   }
 }
@@ -808,13 +792,13 @@ auto Board::checkNeighbourhood(const int nIndex) const -> QList<int> {
   QString sField;
   for (int dir = 0; dir < m_DIRS.size(); dir++) {
     for (int range = 1; range <= nMoves; range++) {
-      sField = m_jsBoard.at(nIndex + m_DIRS.at(dir)*range).toString();
+      sField = m_jsBoard.at(nIndex + m_DIRS.at(dir) * range).toString();
       if (!sField.isEmpty() && range < nMoves) {
         // qDebug() << "Route blocked";
         break;
       }
       if (0 != sField.toInt() && range == nMoves) {
-        neighbours.append(nIndex + m_DIRS.at(dir)*range);
+        neighbours.append(nIndex + m_DIRS.at(dir) * range);
       }
     }
   }
@@ -837,14 +821,13 @@ void Board::highlightNeighbourhood(const QList<int> &neighbours) {
   listPossibleMoves.reserve(neighbours.size());
   for (auto nIndex : neighbours) {
     QPoint point(this->getCoordinateFromIndex(nIndex));
-    listPossibleMoves << new QGraphicsRectItem(point.x()*m_nGridSize,
-                                               point.y()*m_nGridSize,
-                                               m_nGridSize,
-                                               m_nGridSize);
+    listPossibleMoves << new QGraphicsRectItem(point.x() * m_nGridSize,
+                                               point.y() * m_nGridSize,
+                                               m_nGridSize, m_nGridSize);
     listPossibleMoves.last()->setBrush(
-          QBrush(m_pSettings->getNeighboursColor()));
+        QBrush(m_pSettings->getNeighboursColor()));
     listPossibleMoves.last()->setPen(
-          QPen(m_pSettings->getNeighboursBorderColor()));
+        QPen(m_pSettings->getNeighboursBorderColor()));
     listPossibleMoves.last()->setVisible(true);
     this->addItem(listPossibleMoves.last());
   }
@@ -881,8 +864,7 @@ auto Board::getLegalMoves(const QString &sID, const bool bStonesLeft,
           for (const auto nFrom : neighbours) {
             const QString sTower = m_jsBoard.at(nFrom).toString();
             for (int nStones = 1;
-                 nStones <= m_jsBoard.at(nFrom).toString().size();
-                 nStones++) {
+                 nStones <= m_jsBoard.at(nFrom).toString().size(); nStones++) {
               // Skip suicide moves (opponent wins)
               if ((m_jsBoard.at(nTo).toString().size() + nStones >= m_nMaxTower)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
@@ -935,9 +917,11 @@ void Board::printDebugFields() const {
     for (int nCol = 0; nCol < m_BoardDimensions.x(); nCol++) {
       nField++;
       s = "(" + m_jsBoard.at(this->getIndexFromField(nField)).toString() + ")";
-      if (QString("(" + m_sOUT + ")") == s) { s = m_sOUT + m_sOUT; }
+      if (QString("(" + m_sOUT + ")") == s) {
+        s = m_sOUT + m_sOUT;
+      }
       sLine += s;
-      if (nCol < m_BoardDimensions.x()-1) {
+      if (nCol < m_BoardDimensions.x() - 1) {
         sLine += QLatin1String(" ");
       }
     }

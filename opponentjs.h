@@ -27,8 +27,8 @@
 #ifndef OPPONENTJS_H_
 #define OPPONENTJS_H_
 
-#include <QJsonArray>
 #include <QJSValue>
+#include <QJsonArray>
 #include <QObject>
 #include <QPoint>
 #include <QVector>
@@ -39,40 +39,37 @@ class OpponentJS : public QObject {
   Q_OBJECT
 
  public:
-    explicit OpponentJS(const quint8 nID,
-                        const QPoint BoardDimensions,
-                        const quint8 nHeightTowerWin,
-                        const quint8 nNumOfPlayers,
-                        const QString &sOut,
-                        const QString &sPad,
-                        QObject *pParent = nullptr);
-    auto loadAndEvalCpuScript(const QString &sFilepath) -> bool;
-    void callJsCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
-                   const qint8 nDirection);
+  explicit OpponentJS(const quint8 nID, const QPoint BoardDimensions,
+                      const quint8 nHeightTowerWin, const quint8 nNumOfPlayers,
+                      const QString &sOut, const QString &sPad,
+                      QObject *pParent = nullptr);
+  auto loadAndEvalCpuScript(const QString &sFilepath) -> bool;
+  void callJsCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
+                 const qint8 nDirection);
 
  public slots:
-    void log(const QString &sMsg);
-    quint8 getID();
-    quint8 getNumOfPlayers();
-    quint8 getHeightToWin();
-    int getBoardDimensionX();
-    int getBoardDimensionY();
-    QString getOutside();
-    QString getPadding();
+  void log(const QString &sMsg);
+  quint8 getID();
+  quint8 getNumOfPlayers();
+  quint8 getHeightToWin();
+  int getBoardDimensionX();
+  int getBoardDimensionY();
+  QString getOutside();
+  QString getPadding();
 
  signals:
-    void actionCPU(QJsonArray move);
-    void scriptError();
+  void actionCPU(QJsonArray move);
+  void scriptError();
 
  private:
-    const quint8 m_nID;
-    const QPoint m_BoardDimensions;
-    const quint8 m_nHeightTowerWin;
-    const quint8 m_nNumOfPlayers;
-    const QString m_sOut;
-    const QString m_sPad;
-    QJSEngine *m_jsEngine;
-    QJSValue m_obj;
+  const quint8 m_nID;
+  const QPoint m_BoardDimensions;
+  const quint8 m_nHeightTowerWin;
+  const quint8 m_nNumOfPlayers;
+  const QString m_sOut;
+  const QString m_sPad;
+  QJSEngine *m_jsEngine;
+  QJSValue m_obj;
 };
 
 #endif  // OPPONENTJS_H_

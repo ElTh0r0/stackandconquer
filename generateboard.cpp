@@ -37,20 +37,20 @@ void GenerateBoard::startGeneration(const QStringList &cmdArgs,
                                     const QString &sBoardInExt,
                                     const QString &sBoardOutExt,
                                     const QString &sIN, const QString &sOUT) {
-  GenerateBoard::loopFiles(
-        GenerateBoard::checkCmdArgs(cmdArgs, sBoardInExt),
-        sBoardInExt, sBoardOutExt, sIN, sOUT);
+  GenerateBoard::loopFiles(GenerateBoard::checkCmdArgs(cmdArgs, sBoardInExt),
+                           sBoardInExt, sBoardOutExt, sIN, sOUT);
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-auto GenerateBoard::checkCmdArgs(
-    const QStringList &cmdArgs,
-    const QString &sBoardInExt) -> QPair<QFileInfo, QFileInfo> {
+auto GenerateBoard::checkCmdArgs(const QStringList &cmdArgs,
+                                 const QString &sBoardInExt)
+    -> QPair<QFileInfo, QFileInfo> {
   if (cmdArgs.isEmpty()) {
-    qWarning() << "Please specify input (can be file *" + sBoardInExt + " or "
-                  "folder) and optional the destination folder:";
+    qWarning() << "Please specify input (can be file *" + sBoardInExt +
+                      " or "
+                      "folder) and optional the destination folder:";
     qWarning() << "./stackandconquer INPUT [DESTINATION]\n";
     exit(-1);
   }
@@ -82,8 +82,8 @@ auto GenerateBoard::checkCmdArgs(
 
 void GenerateBoard::loopFiles(const QPair<QFileInfo, QFileInfo> &fiInOut,
                               const QString &sBoardInExt,
-                              const QString &sBoardOutExt,
-                              const QString &sIN, const QString &sOUT) {
+                              const QString &sBoardOutExt, const QString &sIN,
+                              const QString &sOUT) {
   QFile input;
   QFile output;
   if (fiInOut.first.isFile()) {
@@ -133,10 +133,9 @@ void GenerateBoard::loopFiles(const QPair<QFileInfo, QFileInfo> &fiInOut,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-auto GenerateBoard::generateBoard(QFile *pInput,
-                                  QFile *pOutput,
-                                  const QString &sIN,
-                                  const QString &sOUT) -> bool {
+auto GenerateBoard::generateBoard(QFile *pInput, QFile *pOutput,
+                                  const QString &sIN, const QString &sOUT)
+    -> bool {
   if (!pInput->open(QIODevice::ReadOnly | QIODevice::Text)) {
     qWarning() << "Couldn't open input file for board generation:"
                << pInput->fileName() << "\n";
@@ -170,7 +169,7 @@ auto GenerateBoard::generateBoard(QFile *pInput,
     const QStringList sList(sLine.split(',', Qt::SkipEmptyParts));
 #endif
     if (sList.isEmpty()) {
-      qWarning() << "Invalid line:" << nRows+1;
+      qWarning() << "Invalid line:" << nRows + 1;
       return false;
     }
 
@@ -203,11 +202,10 @@ auto GenerateBoard::generateBoard(QFile *pInput,
       nCountAllFields++;
       nTempCol++;
       listBoard << s.trimmed();
-      if (sIN != listBoard.last() &&
-          sOUT != listBoard.last()) {
+      if (sIN != listBoard.last() && sOUT != listBoard.last()) {
         qWarning() << "ERROR: Board files contains invalid data (neither " +
-                      sIN + " nor " + sOUT + ") in line"
-                   << nRows+1 << "at field:" << nTempCol;
+                          sIN + " nor " + sOUT + ") in line"
+                   << nRows + 1 << "at field:" << nTempCol;
         return false;
       }
     }
@@ -217,8 +215,10 @@ auto GenerateBoard::generateBoard(QFile *pInput,
 
     // Check if all columns have the same length
     if (nColumns != nTempCol) {
-      qWarning() << "ERROR: Line" << nRows+1 << "has invalid length. "
-                    "Expected length:" << nColumns;
+      qWarning() << "ERROR: Line" << nRows + 1
+                 << "has invalid length. "
+                    "Expected length:"
+                 << nColumns;
       return false;
     }
   }
@@ -227,15 +227,16 @@ auto GenerateBoard::generateBoard(QFile *pInput,
   // CHECKS -------------------------------------------------------------------
   if (nRows * nColumns != nCountAllFields) {
     qWarning() << "ERROR: Invalid number of ALL fields:\n"
-                  "Rows x cols =" << nRows * nColumns <<
-                  "\nAll counted fields =" << nCountAllFields;
+                  "Rows x cols ="
+               << nRows * nColumns
+               << "\nAll counted fields =" << nCountAllFields;
     return false;
   }
 
   // WRITE BOARD --------------------------------------------------------------
   if (!pOutput->open(QIODevice::WriteOnly)) {
-    qWarning() << "ERROR: Couldn't open/write board file:" <<
-                  pOutput->fileName();
+    qWarning() << "ERROR: Couldn't open/write board file:"
+               << pOutput->fileName();
     return false;
   }
   qDebug() << "Output:\t" << pOutput->fileName();

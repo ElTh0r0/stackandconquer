@@ -34,13 +34,13 @@
 
 Player::Player(const quint8 nID, const quint8 nMaxStones,
                const QString &sCpuScript, QObject *pParent)
-  : m_nID(nID),
-    m_pJsCpu(nullptr),
-    m_sName(tr("Player") + " " + QString::number(m_nID)),
-    m_sCpuScript(sCpuScript),
-    m_nMaxStones(nMaxStones),
-    m_nStonesLeft(nMaxStones),
-    m_nWonTowers(0) {
+    : m_nID(nID),
+      m_pJsCpu(nullptr),
+      m_sName(tr("Player") + " " + QString::number(m_nID)),
+      m_sCpuScript(sCpuScript),
+      m_nMaxStones(nMaxStones),
+      m_nStonesLeft(nMaxStones),
+      m_nWonTowers(0) {
   Q_UNUSED(pParent)
   if (!m_sCpuScript.isEmpty()) {
     QFileInfo fi(m_sCpuScript);
@@ -80,21 +80,13 @@ void Player::callCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-auto Player::isHuman() const -> bool {
-  return m_sCpuScript.isEmpty();
-}
+auto Player::isHuman() const -> bool { return m_sCpuScript.isEmpty(); }
 
-auto Player::getName() const -> QString {
-  return m_sName;
-}
+auto Player::getName() const -> QString { return m_sName; }
 
-auto Player::getCpuScript() const -> QString {
-  return m_sCpuScript;
-}
+auto Player::getCpuScript() const -> QString { return m_sCpuScript; }
 
-auto Player::getID() const -> QString {
-  return QString::number(m_nID);
-}
+auto Player::getID() const -> QString { return QString::number(m_nID); }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -103,13 +95,9 @@ void Player::setLegalMoves(const QJsonDocument &legalMoves) {
   m_LegalMoves = legalMoves;
 }
 
-auto Player::getLegalMoves() const -> QJsonDocument {
-  return m_LegalMoves;
-}
+auto Player::getLegalMoves() const -> QJsonDocument { return m_LegalMoves; }
 
-auto Player::canMove() const -> bool {
-  return !m_LegalMoves.isEmpty();
-}
+auto Player::canMove() const -> bool { return !m_LegalMoves.isEmpty(); }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -125,9 +113,7 @@ void Player::setStonesLeft(const quint8 nStones) {
   }
 }
 
-auto Player::getStonesLeft() const -> quint8 {
-  return m_nStonesLeft;
-}
+auto Player::getStonesLeft() const -> quint8 { return m_nStonesLeft; }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -136,6 +122,4 @@ void Player::setWonTowers(const quint8 nWonTowers) {
   m_nWonTowers = nWonTowers;
 }
 
-auto Player::getWonTowers() const -> quint8 {
-  return m_nWonTowers;
-}
+auto Player::getWonTowers() const -> quint8 { return m_nWonTowers; }

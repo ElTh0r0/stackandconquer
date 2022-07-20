@@ -21,7 +21,7 @@
  * along with StackAndConquer.  If not, see <https://www.gnu.org/licenses/>.
  *
  * \section DESCRIPTION
- * Main application generation (gui)
+ * Main application generation (GUI)
  */
 
 #include "./stackandconquer.h"
@@ -36,13 +36,12 @@
 #include <QLibraryInfo>
 #include <QMessageBox>
 #include <QResizeEvent>
+#include <QSlider>
 #include <QTabWidget>
 #include <QTextEdit>
-#include <QSlider>
 
 #include "./game.h"
 #include "./settings.h"
-
 #include "ui_stackandconquer.h"
 
 StackAndConquer::StackAndConquer(const QDir &sharePath,
@@ -50,30 +49,29 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
                                  const QString &sSaveExtension,
                                  const QString &sBoardExtension,
                                  const QString &sIN, const QString &sOUT,
-                                 const QStringList &sListArgs,
-                                 QWidget *pParent)
-  : QMainWindow(pParent),
-    m_pUi(new Ui::StackAndConquer),
-    m_userDataDir(userDataPath),
-    m_sSharePath(sharePath.absolutePath()),
-    m_sSaveExtension(sSaveExtension),
-    m_sIN(sIN),
-    m_sOUT(sOUT),
-    m_nMaxPlayers(2),
-    m_sCurrLang(QString()),
-    m_pGame(nullptr),
-    // Size is based on default grid size of 70!
-    m_DefaultSize(600, 480) {
+                                 const QStringList &sListArgs, QWidget *pParent)
+    : QMainWindow(pParent),
+      m_pUi(new Ui::StackAndConquer),
+      m_userDataDir(userDataPath),
+      m_sSharePath(sharePath.absolutePath()),
+      m_sSaveExtension(sSaveExtension),
+      m_sIN(sIN),
+      m_sOUT(sOUT),
+      m_nMaxPlayers(2),
+      m_sCurrLang(QString()),
+      m_pGame(nullptr),
+      // Size is based on default grid size of 70!
+      m_DefaultSize(600, 480) {
   m_pUi->setupUi(this);
 
   m_pSettings = new Settings(m_sSharePath, m_userDataDir.absolutePath(),
                              sBoardExtension, m_nMaxPlayers, this);
-  connect(m_pSettings, &Settings::newGame,
-          this, &StackAndConquer::startNewGame);
-  connect(m_pSettings, &Settings::changeLang,
-          this, &StackAndConquer::loadLanguage);
-  connect(this, &StackAndConquer::updateUiLang,
-          m_pSettings, &Settings::updateUiLang);
+  connect(m_pSettings, &Settings::newGame, this,
+          &StackAndConquer::startNewGame);
+  connect(m_pSettings, &Settings::changeLang, this,
+          &StackAndConquer::loadLanguage);
+  connect(this, &StackAndConquer::updateUiLang, m_pSettings,
+          &Settings::updateUiLang);
   this->loadLanguage(m_pSettings->getLanguage());
 
   this->setupMenu();
@@ -96,9 +94,9 @@ void StackAndConquer::checkCmdArgs(const QStringList &sListArgs) {
         sSavegame = sListArgs.at(0);
       } else {
         qWarning() << "Specified savegame not found:" << sListArgs.at(0);
-        QMessageBox::warning(this, tr("Warning"),
-                             tr("Specified file not found:") + "\n" +
-                             sListArgs.at(0));
+        QMessageBox::warning(
+            this, tr("Warning"),
+            tr("Specified file not found:") + "\n" + sListArgs.at(0));
       }
     }
   }
@@ -111,27 +109,27 @@ void StackAndConquer::checkCmdArgs(const QStringList &sListArgs) {
 void StackAndConquer::setupMenu() {
   // Game menu
   m_pUi->action_NewGame->setShortcut(QKeySequence::New);
-  connect(m_pUi->action_NewGame, &QAction::triggered,
-          this, [this]() { this->startNewGame(QString()); });
+  connect(m_pUi->action_NewGame, &QAction::triggered, this,
+          [this]() { this->startNewGame(QString()); });
   m_pUi->action_LoadGame->setShortcut(QKeySequence::Open);
-  connect(m_pUi->action_LoadGame, &QAction::triggered,
-          this, &StackAndConquer::loadGame);
+  connect(m_pUi->action_LoadGame, &QAction::triggered, this,
+          &StackAndConquer::loadGame);
   m_pUi->action_SaveGame->setShortcut(QKeySequence::Save);
-  connect(m_pUi->action_SaveGame, &QAction::triggered,
-          this, &StackAndConquer::saveGame);
-  connect(m_pUi->action_Preferences, &QAction::triggered,
-          m_pSettings, &Settings::show);
+  connect(m_pUi->action_SaveGame, &QAction::triggered, this,
+          &StackAndConquer::saveGame);
+  connect(m_pUi->action_Preferences, &QAction::triggered, m_pSettings,
+          &Settings::show);
   m_pUi->action_Quit->setShortcut(QKeySequence::Quit);
-  connect(m_pUi->action_Quit, &QAction::triggered,
-          this, &StackAndConquer::close);
+  connect(m_pUi->action_Quit, &QAction::triggered, this,
+          &StackAndConquer::close);
 
   // Help menu
-  connect(m_pUi->action_Rules, &QAction::triggered,
-          this, &StackAndConquer::showRules);
-  connect(m_pUi->action_ReportBug, &QAction::triggered,
-          this, &StackAndConquer::reportBug);
-  connect(m_pUi->action_Info, &QAction::triggered,
-          this, &StackAndConquer::showInfoBox);
+  connect(m_pUi->action_Rules, &QAction::triggered, this,
+          &StackAndConquer::showRules);
+  connect(m_pUi->action_ReportBug, &QAction::triggered, this,
+          &StackAndConquer::reportBug);
+  connect(m_pUi->action_Info, &QAction::triggered, this,
+          &StackAndConquer::showInfoBox);
 
   m_pZoomSlider = new QSlider(Qt::Orientation::Horizontal, this);
   m_pZoomSlider->setMinimum(m_pSettings->getDefaultGrid());
@@ -142,8 +140,8 @@ void StackAndConquer::setupMenu() {
   m_pZoomSlider->setMaximumWidth(200);
   m_pZoomSlider->setValue(m_pSettings->getGridSize());
   m_pUi->statusBar->addPermanentWidget(m_pZoomSlider);
-  connect(m_pZoomSlider, &QSlider::valueChanged,
-          this, &StackAndConquer::zoomChanged);
+  connect(m_pZoomSlider, &QSlider::valueChanged, this,
+          &StackAndConquer::zoomChanged);
 }
 
 // ---------------------------------------------------------------------------
@@ -197,17 +195,24 @@ void StackAndConquer::setupGraphView() {
 
     if (0 == i % 2) {
       // addWidget(*widget, row, column, rowspan, colspan)
-      m_pLayout->addWidget(m_pLblsPlayerName.last(), i + ((i/2)*4), 0, 1, 2);
-      m_pLayout->addWidget(m_pLblsStoneIcon.last(), i+1 + ((i/2)*4), 0, 1, 1);
-      m_pLayout->addWidget(m_pLblsStonesLeft.last(), i+1 + ((i/2)*4), 1, 1, 1);
-      m_pLayout->addWidget(m_pLblsWinIcon.last(), i+2 + ((i/2)*4), 0, 1, 1);
-      m_pLayout->addWidget(m_pLblsWon.last(), i+2 + ((i/2)*4), 1, 1, 1);
+      m_pLayout->addWidget(m_pLblsPlayerName.last(), i + ((i / 2) * 4), 0, 1,
+                           2);
+      m_pLayout->addWidget(m_pLblsStoneIcon.last(), i + 1 + ((i / 2) * 4), 0, 1,
+                           1);
+      m_pLayout->addWidget(m_pLblsStonesLeft.last(), i + 1 + ((i / 2) * 4), 1,
+                           1, 1);
+      m_pLayout->addWidget(m_pLblsWinIcon.last(), i + 2 + ((i / 2) * 4), 0, 1,
+                           1);
+      m_pLayout->addWidget(m_pLblsWon.last(), i + 2 + ((i / 2) * 4), 1, 1, 1);
     } else {
-      m_pLayout->addWidget(m_pLblsPlayerName.last(), i-1 + ((i/2)*4), 2, 1, 2);
-      m_pLayout->addWidget(m_pLblsStonesLeft.last(), i + ((i/2)*4), 2, 1, 1);
-      m_pLayout->addWidget(m_pLblsStoneIcon.last(), i + ((i/2)*4), 3, 1, 1);
-      m_pLayout->addWidget(m_pLblsWon.last(), i+1 + ((i/2)*4), 2, 1, 1);
-      m_pLayout->addWidget(m_pLblsWinIcon.last(), i+1 + ((i/2)*4), 3, 1, 1);
+      m_pLayout->addWidget(m_pLblsPlayerName.last(), i - 1 + ((i / 2) * 4), 2,
+                           1, 2);
+      m_pLayout->addWidget(m_pLblsStonesLeft.last(), i + ((i / 2) * 4), 2, 1,
+                           1);
+      m_pLayout->addWidget(m_pLblsStoneIcon.last(), i + ((i / 2) * 4), 3, 1, 1);
+      m_pLayout->addWidget(m_pLblsWon.last(), i + 1 + ((i / 2) * 4), 2, 1, 1);
+      m_pLayout->addWidget(m_pLblsWinIcon.last(), i + 1 + ((i / 2) * 4), 3, 1,
+                           1);
 
       m_pLblsPlayerName.last()->setAlignment(Qt::AlignRight);
       m_pLblsStonesLeft.last()->setAlignment(Qt::AlignRight);
@@ -266,8 +271,8 @@ void StackAndConquer::zoomChanged(const int nNewGrid) {
 
   if (m_pSettings->getGridSize() != nNewGrid || bInitial) {
     m_pSettings->setGridSize(nNewGrid);
-    this->resize(
-          m_DefaultSize * m_pSettings->getGridSize() / m_pSettings->getDefaultGrid());
+    this->resize(m_DefaultSize * m_pSettings->getGridSize() /
+                 m_pSettings->getDefaultGrid());
     m_pFrame->setFixedWidth(this->width());
     emit changeZoom();
     bInitial = false;
@@ -291,21 +296,20 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
 
   connect(m_pGame, &Game::updateNames, this, &StackAndConquer::updateNames);
   connect(m_pGame, &Game::drawIcon, this, &StackAndConquer::drawPlayerIcon);
-  connect(m_pGame, &Game::updateStones,
-          this, [this](const quint8 nID, const QString &sStones) {
-    m_pLblsStonesLeft[nID]->setText(sStones);
-  });
-  connect(m_pGame, &Game::updateWon,
-          this, [this](const quint8 nID, const QString &sWon) {
-    m_pLblsWon[nID]->setText(sWon);
-  });
+  connect(m_pGame, &Game::updateStones, this,
+          [this](const quint8 nID, const QString &sStones) {
+            m_pLblsStonesLeft[nID]->setText(sStones);
+          });
+  connect(m_pGame, &Game::updateWon, this,
+          [this](const quint8 nID, const QString &sWon) {
+            m_pLblsWon[nID]->setText(sWon);
+          });
 
-  connect(m_pGame, &Game::setInteractive,
-          this, &StackAndConquer::setViewInteractive);
-  connect(m_pGame, &Game::highlightActivePlayer,
-          this, &StackAndConquer::highlightActivePlayer);
-  connect(this, &StackAndConquer::changeZoom,
-          m_pGame, &Game::changeZoom);
+  connect(m_pGame, &Game::setInteractive, this,
+          &StackAndConquer::setViewInteractive);
+  connect(m_pGame, &Game::highlightActivePlayer, this,
+          &StackAndConquer::highlightActivePlayer);
+  connect(this, &StackAndConquer::changeZoom, m_pGame, &Game::changeZoom);
 
   m_pGraphView->setScene(m_pGame->getScene());
   m_pGraphView->updateSceneRect(m_pGame->getScene()->sceneRect());
@@ -328,8 +332,8 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
 
 void StackAndConquer::loadGame() {
   QString sFile = QFileDialog::getOpenFileName(
-                    this, tr("Load game"), m_userDataDir.absolutePath(),
-                    tr("Save games") + "(*" + m_sSaveExtension +")");
+      this, tr("Load game"), m_userDataDir.absolutePath(),
+      tr("Save games") + "(*" + m_sSaveExtension + ")");
   if (!sFile.isEmpty()) {
     if (!sFile.endsWith(m_sSaveExtension, Qt::CaseInsensitive)) {
       QMessageBox::warning(this, tr("Warning"), tr("Invalid save game file."));
@@ -344,8 +348,8 @@ void StackAndConquer::loadGame() {
 
 void StackAndConquer::saveGame() {
   QString sFile = QFileDialog::getSaveFileName(
-                    this, tr("Save game"), m_userDataDir.absolutePath(),
-                    tr("Save games") + "(*" + m_sSaveExtension +")");
+      this, tr("Save game"), m_userDataDir.absolutePath(),
+      tr("Save games") + "(*" + m_sSaveExtension + ")");
   if (!sFile.isEmpty()) {
     if (!sFile.endsWith(m_sSaveExtension, Qt::CaseInsensitive)) {
       sFile += m_sSaveExtension;
@@ -371,22 +375,21 @@ void StackAndConquer::highlightActivePlayer(const quint8 nActivePlayer,
                                             const quint8 nPlayerWon) {
   if (nPlayerWon > 0) {
     m_pUi->statusBar->showMessage(
-          tr("%1 won the game!").arg(
-            m_pLblsPlayerName.at(nPlayerWon - 1)->text()));
+        tr("%1 won the game!")
+            .arg(m_pLblsPlayerName.at(nPlayerWon - 1)->text()));
     return;
   }
 
   for (int i = 0; i < m_pLblsPlayerName.size(); i++) {
     if ((nActivePlayer - 1) == i) {
       m_pLblsPlayerName[i]->setStyleSheet(
-            QStringLiteral("color: ") +
-            m_pSettings->getTextHighlightColor().name());
+          QStringLiteral("color: ") +
+          m_pSettings->getTextHighlightColor().name());
       m_pUi->statusBar->showMessage(
-            tr("%1's turn").arg(m_pLblsPlayerName.at(i)->text()));
+          tr("%1's turn").arg(m_pLblsPlayerName.at(i)->text()));
     } else {
-      m_pLblsPlayerName[i]->setStyleSheet(
-            QStringLiteral("color: ") +
-            m_pSettings->getTextColor().name());
+      m_pLblsPlayerName[i]->setStyleSheet(QStringLiteral("color: ") +
+                                          m_pSettings->getTextColor().name());
     }
   }
 }
@@ -397,22 +400,23 @@ void StackAndConquer::highlightActivePlayer(const quint8 nActivePlayer,
 void StackAndConquer::loadLanguage(const QString &sLang) {
   if (m_sCurrLang != sLang) {
     m_sCurrLang = sLang;
-    if (!StackAndConquer::switchTranslator(&m_translatorQt, "qt_" + sLang,
+    if (!StackAndConquer::switchTranslator(
+            &m_translatorQt, "qt_" + sLang,
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-                                           QLibraryInfo::path(
+            QLibraryInfo::path(
 #else
-                                           QLibraryInfo::location(
+            QLibraryInfo::location(
 #endif
-                                             QLibraryInfo::TranslationsPath))) {
+                QLibraryInfo::TranslationsPath))) {
       StackAndConquer::switchTranslator(&m_translatorQt, "qt_" + sLang,
                                         m_sSharePath + "/lang");
     }
     if (!StackAndConquer::switchTranslator(
-          &m_translator,
-           ":/" + qApp->applicationName().toLower() + "_" + sLang + ".qm")) {
+            &m_translator,
+            ":/" + qApp->applicationName().toLower() + "_" + sLang + ".qm")) {
       StackAndConquer::switchTranslator(
-            &m_translator, qApp->applicationName().toLower() + "_" + sLang,
-            m_sSharePath + "/lang");
+          &m_translator, qApp->applicationName().toLower() + "_" + sLang,
+          m_sSharePath + "/lang");
     }
   }
   m_pUi->retranslateUi(this);
@@ -438,8 +442,8 @@ auto StackAndConquer::switchTranslator(QTranslator *translator,
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::showRules() {
-  auto *pDialog = new QDialog(this, this->windowFlags()
-                             & ~Qt::WindowContextHelpButtonHint);
+  auto *pDialog =
+      new QDialog(this, this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
   auto *pLayout = new QGridLayout(pDialog);
   pDialog->setWindowTitle(tr("Rules"));
   pDialog->setMinimumSize(700, 450);
@@ -502,12 +506,13 @@ void StackAndConquer::showRules() {
   rules.close();
 
   pCredits->setText(
-        "<p>" + tr("These rules are licensed under Creative Commons "
-                   "<a href=\"https://creativecommons.org/licenses/by-nc/"
-                   "4.0/\">Attribution-Noncommercial 4.0 International</a> "
-                   "license.") +
-        "<br />Designer: Dieter Stein, <a href=\"https://spielstein.com/games/"
-        "mixtour/rules\">spielstein.com</a></p>");
+      "<p>" +
+      tr("These rules are licensed under Creative Commons "
+         "<a href=\"https://creativecommons.org/licenses/by-nc/"
+         "4.0/\">Attribution-Noncommercial 4.0 International</a> "
+         "license.") +
+      "<br />Designer: Dieter Stein, <a href=\"https://spielstein.com/games/"
+      "mixtour/rules\">spielstein.com</a></p>");
 
   pDialog->show();
 }
@@ -516,9 +521,8 @@ void StackAndConquer::showRules() {
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::reportBug() {
-  QDesktopServices::openUrl(
-        QUrl(
-          QStringLiteral("https://github.com/ElTh0r0/stackandconquer/issues")));
+  QDesktopServices::openUrl(QUrl(
+      QStringLiteral("https://github.com/ElTh0r0/stackandconquer/issues")));
 }
 
 // ----------------------------------------------------------------------------
@@ -526,36 +530,35 @@ void StackAndConquer::reportBug() {
 
 void StackAndConquer::showInfoBox() {
   QMessageBox::about(
-        this, tr("About"),
-        QString::fromLatin1("<center>"
-                "<big><b>%1 %2</b></big><br/>"
-                "%3<br/>"
-                "<small>%4</small><br/><br/>"
-                "%5<br/>"
-                "%6<br/>"
-                "<small>%7</small>"
-                "</center><br/>"
-                "%8")
-        .arg(qApp->applicationName(),
-             qApp->applicationVersion(),
-             QStringLiteral(APP_DESC),
-             QStringLiteral(APP_COPY),
-             "URL: <a href=\"https://github.com/ElTh0r0/stackandconquer\">"
-             "https://github.com/ElTh0r0/stackandconquer</a>",
-             tr("License") +
-             ": <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">"
-             "GNU General Public License Version 3</a>",
-             tr("This application uses icons from "
-                "<a href=\"http://tango.freedesktop.org\">"
-                "Tango project</a>.") + "<br/>" +
-             tr("The game is based on "
-                "<a href=\"https://spielstein.com/games/mixtour\">"
-                "Mixtour</a> by Dieter Stein."),
-             "<i>" + tr("Translations") +
-             "</i><br />"
-             "&nbsp;&nbsp;- Dutch: Vistaus, Elbert Pol<br />"
-             "&nbsp;&nbsp;- German: ElThoro<br />"
-             "&nbsp;&nbsp;- Italian: davi92"));
+      this, tr("About"),
+      QString::fromLatin1("<center>"
+                          "<big><b>%1 %2</b></big><br/>"
+                          "%3<br/>"
+                          "<small>%4</small><br/><br/>"
+                          "%5<br/>"
+                          "%6<br/>"
+                          "<small>%7</small>"
+                          "</center><br/>"
+                          "%8")
+          .arg(qApp->applicationName(), qApp->applicationVersion(),
+               QStringLiteral(APP_DESC), QStringLiteral(APP_COPY),
+               "URL: <a href=\"https://github.com/ElTh0r0/stackandconquer\">"
+               "https://github.com/ElTh0r0/stackandconquer</a>",
+               tr("License") +
+                   ": <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">"
+                   "GNU General Public License Version 3</a>",
+               tr("This application uses icons from "
+                  "<a href=\"http://tango.freedesktop.org\">"
+                  "Tango project</a>.") +
+                   "<br/>" +
+                   tr("The game is based on "
+                      "<a href=\"https://spielstein.com/games/mixtour\">"
+                      "Mixtour</a> by Dieter Stein."),
+               "<i>" + tr("Translations") +
+                   "</i><br />"
+                   "&nbsp;&nbsp;- Dutch: Vistaus, Elbert Pol<br />"
+                   "&nbsp;&nbsp;- German: ElThoro<br />"
+                   "&nbsp;&nbsp;- Italian: davi92"));
 }
 
 // ---------------------------------------------------------------------------

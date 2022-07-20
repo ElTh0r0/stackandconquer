@@ -42,41 +42,41 @@ class Player : public QObject {
   Q_OBJECT
 
  public:
-    Player(const quint8 nID, const quint8 nMaxStones,
-           const QString &sCpuScript = QLatin1String(""),
-           QObject *pParent = nullptr);
-    ~Player();
+  Player(const quint8 nID, const quint8 nMaxStones,
+         const QString &sCpuScript = QLatin1String(""),
+         QObject *pParent = nullptr);
+  ~Player();
 
-    auto initCPU(const QPoint BoadDimensions, const quint8 nMaxTowerHeight,
-                 const quint8 nNumOfPlayers, const QString &sOut,
-                 const QString &sPad) -> bool;
-    auto isHuman() const -> bool;
-    auto getName() const -> QString;
-    auto getCpuScript() const -> QString;
-    auto getID() const -> QString;
-    void setStonesLeft(const quint8 nStones);
-    auto getStonesLeft() const -> quint8;
-    void setWonTowers(const quint8 nWonTowers);
-    auto getWonTowers() const -> quint8;
-    void setLegalMoves(const QJsonDocument &legalMoves);
-    auto getLegalMoves() const -> QJsonDocument;
-    auto canMove() const -> bool;
-    void callCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
-                 const qint8 nDirection);
+  auto initCPU(const QPoint BoadDimensions, const quint8 nMaxTowerHeight,
+               const quint8 nNumOfPlayers, const QString &sOut,
+               const QString &sPad) -> bool;
+  auto isHuman() const -> bool;
+  auto getName() const -> QString;
+  auto getCpuScript() const -> QString;
+  auto getID() const -> QString;
+  void setStonesLeft(const quint8 nStones);
+  auto getStonesLeft() const -> quint8;
+  void setWonTowers(const quint8 nWonTowers);
+  auto getWonTowers() const -> quint8;
+  void setLegalMoves(const QJsonDocument &legalMoves);
+  auto getLegalMoves() const -> QJsonDocument;
+  auto canMove() const -> bool;
+  void callCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
+               const qint8 nDirection);
 
  signals:
-    void actionCPU(QJsonArray move);
-    void scriptError();
+  void actionCPU(QJsonArray move);
+  void scriptError();
 
  private:
-    const quint8 m_nID;
-    OpponentJS *m_pJsCpu;
-    QString m_sName;
-    const QString m_sCpuScript;
-    const quint8 m_nMaxStones;
-    quint8 m_nStonesLeft;
-    quint8 m_nWonTowers;
-    QJsonDocument m_LegalMoves;
+  const quint8 m_nID;
+  OpponentJS *m_pJsCpu;
+  QString m_sName;
+  const QString m_sCpuScript;
+  const quint8 m_nMaxStones;
+  quint8 m_nStonesLeft;
+  quint8 m_nWonTowers;
+  QJsonDocument m_LegalMoves;
 };
 
 #endif  // PLAYER_H_

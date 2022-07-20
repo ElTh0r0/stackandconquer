@@ -26,8 +26,8 @@
 
 /** \mainpage
  * \section Introduction
- * StackAndConquer is a challenging tower conquest board game. Inspired by Mixtour.<br />
- * GitHub: https://github.com/ElTh0r0/stackandconquer
+ * StackAndConquer is a challenging tower conquest board game. Inspired by
+ * Mixtour.<br /> GitHub: https://github.com/ElTh0r0/stackandconquer
  */
 
 #include <QApplication>
@@ -37,18 +37,16 @@
 #include <QTextStream>
 #include <QTime>
 
-#include "./stackandconquer.h"
 #include "./generateboard.h"
+#include "./stackandconquer.h"
 
 static QFile logfile;
 static QTextStream out(&logfile);
 
-void setupLogger(const QString &sDebugFilePath,
-                 const QString &sAppName,
+void setupLogger(const QString &sDebugFilePath, const QString &sAppName,
                  const QString &sVersion);
 
-void LoggingHandler(QtMsgType type,
-                    const QMessageLogContext &context,
+void LoggingHandler(QtMsgType type, const QMessageLogContext &context,
                     const QString &sMsg);
 
 auto main(int argc, char *argv[]) -> int {
@@ -58,8 +56,8 @@ auto main(int argc, char *argv[]) -> int {
   app.setApplicationDisplayName(QStringLiteral(APP_NAME));
 #if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
   app.setWindowIcon(
-        QIcon::fromTheme(QStringLiteral("stackandconquer"),
-                         QIcon(QStringLiteral(":/stackandconquer.png"))));
+      QIcon::fromTheme(QStringLiteral("stackandconquer"),
+                       QIcon(QStringLiteral(":/stackandconquer.png"))));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
   app.setDesktopFileName(QStringLiteral("com.github.elth0r0.stackandconquer"));
 #endif
@@ -79,48 +77,47 @@ auto main(int argc, char *argv[]) -> int {
                                  QStringLiteral("Enable debug mode"));
   cmdparser.addOption(enableDebug);
   QCommandLineOption generateBoard(
-        QStringLiteral("genboard"),
-        QStringLiteral("Generate %1 from input file(s)").arg(FILEEXTBOARD));
+      QStringLiteral("genboard"),
+      QStringLiteral("Generate %1 from input file(s)").arg(FILEEXTBOARD));
   cmdparser.addOption(generateBoard);
 
   cmdparser.addPositionalArgument(
-        QStringLiteral("savegame"),
-        QStringLiteral("Savegame file to be opened (*%1)").arg(FILEEXTSAVE));
+      QStringLiteral("savegame"),
+      QStringLiteral("Savegame file to be opened (*%1)").arg(FILEEXTSAVE));
   cmdparser.addPositionalArgument(
-        QStringLiteral("board_in"),
-        QStringLiteral("Input file (*%1) or folder to be converted to "
-                       "stackboard; only to be used with option --%2")
-        .arg(FILEEXTBORDIN, generateBoard.names().at(0)));
+      QStringLiteral("board_in"),
+      QStringLiteral("Input file (*%1) or folder to be converted to "
+                     "stackboard; only to be used with option --%2")
+          .arg(FILEEXTBORDIN, generateBoard.names().at(0)));
   cmdparser.addPositionalArgument(
-        QStringLiteral("board_out"),
-        QStringLiteral("Optional folder in which generated board files shall "
-                       "be put; only to be used with option --%1")
-        .arg(generateBoard.names().at(0)));
+      QStringLiteral("board_out"),
+      QStringLiteral("Optional folder in which generated board files shall "
+                     "be put; only to be used with option --%1")
+          .arg(generateBoard.names().at(0)));
   cmdparser.process(app);
 
   if (cmdparser.isSet(generateBoard)) {
     GenerateBoard::startGeneration(cmdparser.positionalArguments(),
                                    FILEEXTBORDIN.toLower(),
-                                   FILEEXTBOARD.toLower(),
-                                   FIELD_IN, FIELD_OUT);
+                                   FILEEXTBOARD.toLower(), FIELD_IN, FIELD_OUT);
     exit(0);
   }
 
   // Default share data path (Windows and debugging)
   QString sSharePath = app.applicationDirPath();
   // Standard installation path (Linux)
-  QDir tmpDir(app.applicationDirPath() + "/../share/"
-              + app.applicationName().toLower());
+  QDir tmpDir(app.applicationDirPath() + "/../share/" +
+              app.applicationName().toLower());
   if (!cmdparser.isSet(enableDebug) && tmpDir.exists()) {
-    sSharePath = app.applicationDirPath() + "/../share/"
-                 + app.applicationName().toLower();
+    sSharePath = app.applicationDirPath() + "/../share/" +
+                 app.applicationName().toLower();
   }
 #if defined(Q_OS_OSX)
   sSharePath = app.applicationDirPath() + "/../Resources/";
 #endif
 
-  QStringList sListPaths = QStandardPaths::standardLocations(
-                             QStandardPaths::AppLocalDataLocation);
+  QStringList sListPaths =
+      QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation);
   if (sListPaths.isEmpty()) {
     qCritical() << "Error while getting data standard path.";
     sListPaths << app.applicationDirPath();
@@ -140,11 +137,9 @@ auto main(int argc, char *argv[]) -> int {
     qWarning() << "DEBUG mode enabled!";
   }
 
-  StackAndConquer myStackAndConquer(sSharePath, userDataDir,
-                                    FILEEXTSAVE.toLower(),
-                                    FILEEXTBOARD.toLower(),
-                                    FIELD_IN, FIELD_OUT,
-                                    cmdparser.positionalArguments());
+  StackAndConquer myStackAndConquer(
+      sSharePath, userDataDir, FILEEXTSAVE.toLower(), FILEEXTBOARD.toLower(),
+      FIELD_IN, FIELD_OUT, cmdparser.positionalArguments());
   myStackAndConquer.show();
   int nRet = app.exec();
 
@@ -155,8 +150,7 @@ auto main(int argc, char *argv[]) -> int {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void setupLogger(const QString &sDebugFilePath,
-                 const QString &sAppName,
+void setupLogger(const QString &sDebugFilePath, const QString &sAppName,
                  const QString &sVersion) {
   // Remove old debug file
   if (QFile(sDebugFilePath).exists()) {
@@ -173,17 +167,15 @@ void setupLogger(const QString &sDebugFilePath,
 
   qDebug() << sAppName + " v" + sVersion;
   qDebug() << "Compiled with Qt" << QT_VERSION_STR;
-  qDebug() << "Qt runtime" <<  qVersion();
+  qDebug() << "Qt runtime" << qVersion();
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void LoggingHandler(QtMsgType type,
-                    const QMessageLogContext &context,
+void LoggingHandler(QtMsgType type, const QMessageLogContext &context,
                     const QString &sMsg) {
-  QString sContext = sMsg + " (" +
-                     QString::fromLatin1(context.file) + ":" +
+  QString sContext = sMsg + " (" + QString::fromLatin1(context.file) + ":" +
                      QString::number(context.line) + ", " +
                      QString::fromLatin1(context.function) + ")";
   QString sTime(QTime::currentTime().toString());
