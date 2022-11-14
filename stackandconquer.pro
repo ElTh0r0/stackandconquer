@@ -46,11 +46,11 @@ lessThan(QT_MAJOR_VERSION, 6) {
   QT         += svgwidgets
 }
 CONFIG       += c++11
+DEFINES      += QT_NO_FOREACH
 
 CONFIG(debug, debug|release) {
   CONFIG     += warn_on
-  DEFINES    += QT_DEPRECATED_WARNINGS
-  DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x060000
+  DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x060400
 }
 
 SOURCES      += main.cpp\
