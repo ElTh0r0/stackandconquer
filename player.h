@@ -3,7 +3,7 @@
  *
  * \section LICENSE
  *
- * Copyright (C) 2015-2022 Thorsten Roth
+ * Copyright (C) 2015-present Thorsten Roth
  *
  * This file is part of StackAndConquer.
  *
