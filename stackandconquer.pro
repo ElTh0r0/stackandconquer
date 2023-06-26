@@ -22,8 +22,8 @@ unix: !macx {
        TARGET = StackAndConquer
 }
 
-win32:VERSION  = 0.10.0.0
-else:VERSION   = 0.10.0
+win32:VERSION  = 0.10.1.0
+else:VERSION   = 0.10.1
 
 QMAKE_TARGET_PRODUCT     = "StackAndConquer"
 QMAKE_TARGET_DESCRIPTION = "Challenging tower conquest board game"
@@ -50,7 +50,7 @@ DEFINES      += QT_NO_FOREACH
 
 CONFIG(debug, debug|release) {
   CONFIG     += warn_on
-  DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x060400
+  DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x060500
 }
 
 SOURCES      += main.cpp\
