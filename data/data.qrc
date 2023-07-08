@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="stackandconquer.png">../icons/hicolor/64x64/apps/stackandconquer.png</file>
+        <file alias="stackandconquer.png">../icons/hicolor/64x64/apps/com.github.elth0r0.stackandconquer.png</file>
         <file>menu/document-new.png</file>
         <file>menu/document-open.png</file>
         <file>menu/document-save.png</file>
