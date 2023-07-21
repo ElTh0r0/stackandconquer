@@ -697,6 +697,11 @@ void Settings::readSettings() {
                               m_sBoardExtension);
   m_sBoard =
       m_pSettings->value(QStringLiteral("Board"), sDefaultBoard).toString();
+  if (!QFile::exists(m_sBoard)) {
+    qWarning() << "Board from conf file not found:" << m_sBoard;
+    qWarning() << "Switching to default board!";
+    m_sBoard = sDefaultBoard;
+  }
   if (m_sListBoards.contains(m_sBoard)) {
     m_pUi->cbBoard->setCurrentIndex(m_sListBoards.indexOf(m_sBoard));
   } else {
