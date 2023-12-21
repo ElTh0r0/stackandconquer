@@ -35,11 +35,12 @@
   <content_rating type="oars-1.0" />
 
   <releases>
-    <release version="0.10.1" date="2023-06-26">
+    <release version="0.10.1" date="2023-12-21">
       <description>
         <p>Main changes:</p>
         <ul>
           <li>Add support for dark scheme on Windows with Qt 6.5</li>
+          <li>Add Japanese and Polish rules</li>
         </ul>
       </description>
     </release>

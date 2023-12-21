@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<TS version="2.1">
 <context>
     <name>Board</name>
     <message>
@@ -206,6 +206,43 @@ Game ends in a tie!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../settings.cpp" line="529"/>
+        <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="715"/>
+        <location filename="../settings.cpp" line="755"/>
+        <location filename="../settings.cpp" line="765"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="716"/>
+        <source>Boards folder seems empty!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="736"/>
+        <source>New style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="737"/>
+        <source>Please insert name of new style file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="755"/>
+        <source>File already exists.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="766"/>
+        <source>Could not create new style.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../settings.cpp" line="849"/>
         <source>Color</source>
         <translation type="unfinished"></translation>
@@ -276,43 +313,6 @@ Game ends in a tie!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="529"/>
-        <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../settings.cpp" line="716"/>
-        <source>Boards folder seems empty!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../settings.cpp" line="736"/>
-        <source>New style</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../settings.cpp" line="737"/>
-        <source>Please insert name of new style file:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../settings.cpp" line="715"/>
-        <location filename="../settings.cpp" line="755"/>
-        <location filename="../settings.cpp" line="765"/>
-        <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../settings.cpp" line="755"/>
-        <source>File already exists.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../settings.cpp" line="766"/>
-        <source>Could not create new style.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../settings.cpp" line="915"/>
         <source>Random</source>
         <translation type="unfinished"></translation>
@@ -361,6 +361,11 @@ Game ends in a tie!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../settings.ui" line="110"/>
+        <source>Board</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../settings.ui" line="117"/>
         <source>Towers needed to win</source>
         <translation type="unfinished"></translation>
@@ -388,11 +393,6 @@ Game ends in a tie!</source>
     <message>
         <location filename="../settings.ui" line="175"/>
         <source>Style</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../settings.ui" line="110"/>
-        <source>Board</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
