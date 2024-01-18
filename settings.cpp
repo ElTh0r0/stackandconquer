@@ -495,7 +495,11 @@ void Settings::saveBoardStyle(const QString &sStyleFile) {
 void Settings::saveColor(QColor &color, QSettings *pSet, const int nRow,
                          const QString &sKey) {
   QColor cTmp = color;
+#if QT_VERSION < QT_VERSION_CHECK(6, 4, 0)
   color.setNamedColor(m_pUi->tableBoardStyle->item(nRow, 0)->text());
+#else
+  color = QColor::fromString(m_pUi->tableBoardStyle->item(nRow, 0)->text());
+#endif
   if (cTmp != color) this->changedSettings();
   pSet->setValue(sKey, color.name());
 }
@@ -563,10 +567,18 @@ void Settings::accept() {
       qWarning() << "User chose invalid stone color:"
                  << m_listColorEdit[i]->text();
       if (i < m_DefaultPlayerColors.size()) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 4, 0)
         color.setNamedColor(m_DefaultPlayerColors[i]);
+#else
+        color = QColor::fromString(m_DefaultPlayerColors[i]);
+#endif
       } else {
-        qWarning() << "Fallback player color missing!";
+   qWarning() << "Fallback player color missing!";
+#if QT_VERSION < QT_VERSION_CHECK(6, 4, 0)
         color.setNamedColor(m_DefaultPlayerColors[0]);
+#else
+        color = QColor::fromString(m_DefaultPlayerColors[0]);
+#endif
       }
     }
     tmpMap[QStringLiteral("Color")] = color.name();
@@ -823,10 +835,18 @@ auto Settings::readColor(QSettings *pSet, const QString &sKey,
   QString sValue = pSet->value(sKey, sFallback).toString();
   QColor color(sFallback);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 4, 0)
   color.setNamedColor(sValue);
+#else
+  color = QColor::fromString(sValue);
+#endif
   if (!color.isValid()) {
-    color.setNamedColor(sFallback);
     qWarning() << "Found invalid color for key" << sKey;
+#if QT_VERSION < QT_VERSION_CHECK(6, 4, 0)
+    color.setNamedColor(sFallback);
+#else
+    color = QColor::fromString(sFallback);
+#endif
   }
   return color;
 }
