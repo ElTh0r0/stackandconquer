@@ -573,7 +573,7 @@ void Settings::accept() {
         color = QColor::fromString(m_DefaultPlayerColors[i]);
 #endif
       } else {
-   qWarning() << "Fallback player color missing!";
+        qWarning() << "Fallback player color missing!";
 #if QT_VERSION < QT_VERSION_CHECK(6, 4, 0)
         color.setNamedColor(m_DefaultPlayerColors[0]);
 #else
