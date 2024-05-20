@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon May 20 14:57:00 UTC 2024 - elthoro@gmx.de 0.10.1
+
+- Add support for dark scheme on Windows with Qt 6.5
+- Add Japanese and Polish rules
+
+-------------------------------------------------------------------
 Sun May 01 14:29:00 UTC 2022 - elthoro@gmx.de 0.10.0
 
 - Add board settings dialog

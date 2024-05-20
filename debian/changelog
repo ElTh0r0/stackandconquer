@@ -1,3 +1,11 @@
+stackandconquer (0.10.1-0) jammy; urgency=low
+
+  [ Thorsten Roth ]
+  * Add support for dark scheme on Windows with Qt 6.5
+  * Add Japanese and Polish rules
+
+ -- Thorsten Roth <elthoro@gmx.de>  Mon, 20 May 2024 14:57:00 +0200
+
 stackandconquer (0.10.0-0) focal; urgency=low
 
   [ Thorsten Roth ]

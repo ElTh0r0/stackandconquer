@@ -4,7 +4,7 @@
   !define DESCRIPTION "Challenging tower conquest board game"
   !define VERSIONMAJOR 0
   !define VERSIONMINOR 10
-  !define VERSIONPATCH 0
+  !define VERSIONPATCH 1
   !define APPVERSION "${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONPATCH}.0"
   !define ABOUTURL "https://github.com/ElTh0r0/stackandconquer"
 
