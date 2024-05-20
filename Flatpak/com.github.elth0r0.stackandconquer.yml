@@ -1,6 +1,6 @@
 app-id: com.github.elth0r0.stackandconquer
 runtime: org.kde.Platform
-runtime-version: '5.15-21.08'
+runtime-version: '5.15-23.08'
 sdk: org.kde.Sdk
 command: stackandconquer
 separate-locales: false
@@ -18,5 +18,5 @@ modules:
     sources:
       - type: git
         url: https://github.com/ElTh0r0/stackandconquer.git
-        tag: v0.10.0
-        commit: 2e102517dfe345a9d4cda2fdc19af0b69ede824d
+        tag: v0.10.1
+        commit: 3358cf80bc7e8af4a38ad6666ec06851ddd1af1e

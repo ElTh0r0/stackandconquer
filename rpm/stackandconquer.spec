@@ -76,9 +76,6 @@ make %{?_smp_mflags}
 make install INSTALL_ROOT=%{buildroot}
 desktop-file-validate %{buildroot}/%{_datadir}/applications/com.github.elth0r0.stackandconquer.desktop || :
 
-%clean
-rm -rf %{buildroot}
-
 %post
 update-desktop-database &> /dev/null || :
 
@@ -102,9 +99,6 @@ make %{?_smp_mflags}
 make INSTALL_ROOT=%{buildroot} install
 %suse_update_desktop_file com.github.elth0r0.stackandconquer
 
-%clean
-rm -rf %{buildroot}
-
 %if 0%{?suse_version} >= 1140
 %post
 %desktop_database_post
@@ -124,7 +118,7 @@ rm -rf %{buildroot}
 %{_bindir}/%{name}
 %{_datadir}/%{name}
 %{_datadir}/applications/com.github.elth0r0.stackandconquer.desktop
-%{_datadir}/icons/hicolor/*/apps/%{name}.*g
+%{_datadir}/icons/hicolor/*/apps/com.github.elth0r0.stackandconquer.*g
 %{_datadir}/metainfo/com.github.elth0r0.stackandconquer.metainfo.xml
 %doc COPYING
 %{_mandir}/*/*
