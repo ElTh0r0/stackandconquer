@@ -50,7 +50,7 @@ DEFINES      += QT_NO_FOREACH
 
 CONFIG(debug, debug|release) {
   CONFIG     += warn_on
-  DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x060600
+  DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x060700
 }
 
 SOURCES      += main.cpp\
@@ -103,28 +103,31 @@ unix: !macx {
     BINDIR = bin
   }
 
-  target.path     = $$PREFIX/$$BINDIR/
+  target.path    = $$PREFIX/$$BINDIR/
 
-  data.path       = $$PREFIX/share/stackandconquer
-  data.files     += data/cpu
-  data.files     += data/boards
+  data.path      = $$PREFIX/share/stackandconquer
+  data.files    += data/cpu
+  data.files    += data/boards
 
-  desktop.path    = $$PREFIX/share/applications
-  desktop.files  += data/unix/com.github.elth0r0.stackandconquer.desktop
+  desktop.path   = $$PREFIX/share/applications
+  desktop.files += data/unix/com.github.elth0r0.stackandconquer.desktop
 
-  icons.path      = $$PREFIX/share/icons
-  icons.files    += icons/hicolor
+  icons.path     = $$PREFIX/share/icons
+  icons.files   += icons/hicolor
 
-  man.path        = $$PREFIX/share
-  man.files      += man
+  man.path       = $$PREFIX/share/man
+  # Specify each subfolder - otherwise CMakeLists.txt will be installed
+  man.files     += man/man6
+  man.files     += man/de
+  man.files     += man/it
 
-  meta.path       = $$PREFIX/share/metainfo
-  meta.files     += data/unix/com.github.elth0r0.stackandconquer.metainfo.xml
+  meta.path      = $$PREFIX/share/metainfo
+  meta.files    += data/unix/com.github.elth0r0.stackandconquer.metainfo.xml
 
-  INSTALLS       += target \
-                    data \
-                    desktop \
-                    icons \
-                    man \
-                    meta
+  INSTALLS      += target \
+                   data \
+                   desktop \
+                   icons \
+                   man \
+                   meta
 }

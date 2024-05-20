@@ -134,6 +134,22 @@ function initCPU() {
   DIRS.push(-DIRS[2]); // 14
   DIRS.push(-DIRS[1]); // 15
   DIRS.push(-DIRS[0]); // 16
+
+  // "Scores" to be used finding the best move
+  SET_NO_OWN_NEIGHBOUR = 1; // Place a stone on a field which has foreign neighbour(s)
+  MOVE_NO_OWN_TOWER = 2; // Move a foreign tower
+  SET_NO_NEIGHBOUR = 3; // Place a stone on a field without any neighbour
+  SET_OWN_NEIGHBOUR = 5; // Place a stone on a field with own neighbour
+  MOVE_TOWER_TOP2 = 10; // Build a tower of 2 with own top
+  MOVE_TOWER_TOP3 = 20; // Build a tower of 3 with own top
+  MOVE_TOWER_TOP4 = 50; // Build a tower of 4 with own top
+  COULD_WIN_NEXT_ROUND_OPP_NEIGHBOUR = 90; // Possibility to win next round, but has foreign neighbour(s)
+  COULD_WIN_NEXT_ROUND = 100; // Possibility to win next round and no foreign neighbour(s)
+
+  DESTROY_OPP_TOWER3 = 30; // Destroy tower of 3 with foreign top, remaining tower has foreign top
+  DESTROY_OPP_TOWER3_NEWTOP = 40; // Destroy tower of 3 with foreign top, remaining tower has own top
+  DESTROY_OPP_TOWER4 = 150; // Destroy tower of 4 with foreign top
+  DESTROY_OPP_TOWER4_NEWTOP = 200; // Destroy tower of 4 with foreign top, remaining tower has own top
 }
 
 // ---------------------------------------------------------------------------
@@ -180,22 +196,6 @@ function shuffleArray(array) {
 function chooseMove(currBoard, legalMoves) {
   var nNumOfPlayers = game.getNumOfPlayers();
   var nHeightTowerWin = game.getHeightToWin();
-
-  var SET_NO_OWN_NEIGHBOUR = 1;
-  var MOVE_NO_OWN_TOWER = 2;
-  var SET_NO_NEIGHBOUR = 3;
-  var SET_OWN_NEIGHBOUR = 5;
-  var MOVE_TOWER_TOP2 = 10;
-  var MOVE_TOWER_TOP3 = 20;
-  var MOVE_TOWER_TOP4 = 50;
-  var COULD_WIN_NEXT_ROUND_OPP_NEIGHBOUR = 90;
-  var COULD_WIN_NEXT_ROUND = 100;
-
-  var DESTROY_OPP_TOWER3 = 30;
-  var DESTROY_OPP_TOWER3_NEWTOP = 40;
-  var DESTROY_OPP_TOWER4 = 150;
-  var DESTROY_OPP_TOWER4_NEWTOP = 200;
-
   var nScore = -9999;
   var bestmove = [-1, -1, -1];
 
@@ -208,36 +208,14 @@ function chooseMove(currBoard, legalMoves) {
     }
   }
 
-  // Check if opponent could win on current board
-  skipMe: for (var opponentID = 1; opponentID <= nNumOfPlayers; opponentID++) {
-    if (opponentID === MY_ID) {
-      // Skip loop for myself (was already checked in previous loop)
-      continue skipMe;
-    }
-
-    var oppWinningMoves = canWin(currBoard, opponentID, nHeightTowerWin);
-    if (0 !== oppWinningMoves.length) {
-      for (var k = 0; k < oppWinningMoves.length; k++) {
-        game.log(
-          "Opponent #" +
-            opponentID +
-            " could win: " +
-            getMoveString(oppWinningMoves[k])
-        );
-        var prevWin = preventWin(
-          currBoard,
-          oppWinningMoves[k],
-          legalMoves,
-          nHeightTowerWin
-        );
-        if (0 !== prevWin.length) {
-          game.log("Found preventive move");
-          return prevWin;
-        }
-      }
-
-      game.log("No move found to prevent opponent to win!!");
-    }
+  // Check if opponent could win on current board and try to prevent
+  var prevWin = checkOpponentWinAndPrevent(
+    currBoard,
+    legalMoves,
+    nHeightTowerWin
+  );
+  if (0 !== prevWin.length) {
+    return prevWin;
   }
 
   // Store current winning moves to be compared with new board winning moves later
@@ -448,7 +426,7 @@ function chooseMove(currBoard, legalMoves) {
           // Destroy opponent tower with height 3 and new tower is not height 3 or heigher!
           if ("" !== sNewFrom) {
             if (MY_ID !== parseInt(sNewFrom[sNewFrom.length - 1], 10)) {
-              // On from remains opponent stone on top
+              // Opponent stone remains on top
               if (DESTROY_OPP_TOWER3 > nScore) {
                 nScore = DESTROY_OPP_TOWER3;
                 bestmove = legalMoves[i].slice();
@@ -460,7 +438,7 @@ function chooseMove(currBoard, legalMoves) {
                 );
               }
             } else {
-              // On from remains own stone on top
+              // Own stone remains on top
               if (DESTROY_OPP_TOWER3_NEWTOP > nScore) {
                 nScore = DESTROY_OPP_TOWER3_NEWTOP;
                 bestmove = legalMoves[i].slice();
@@ -502,6 +480,49 @@ function chooseMove(currBoard, legalMoves) {
   }
 
   return bestmove;
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+function checkOpponentWinAndPrevent(currBoard, legalMoves, nHeightTowerWin) {
+  var prevWin = [];
+
+  skipMe: for (
+    var opponentID = 1;
+    opponentID <= game.getNumOfPlayers();
+    opponentID++
+  ) {
+    if (opponentID === MY_ID) {
+      // Skip loop for myself (was already checked before this function was called)
+      continue skipMe;
+    }
+
+    var oppWinningMoves = canWin(currBoard, opponentID, nHeightTowerWin);
+    if (0 !== oppWinningMoves.length) {
+      for (var k = 0; k < oppWinningMoves.length; k++) {
+        game.log(
+          "Opponent #" +
+            opponentID +
+            " could win: " +
+            getMoveString(oppWinningMoves[k])
+        );
+        prevWin = preventWin(
+          currBoard,
+          oppWinningMoves[k],
+          legalMoves,
+          nHeightTowerWin
+        );
+        if (0 !== prevWin.length) {
+          game.log("Found preventive move");
+          return prevWin;
+        }
+      }
+
+      game.log("No move found to prevent opponent to win!!");
+    }
+  }
+  return prevWin;
 }
 
 // ---------------------------------------------------------------------------

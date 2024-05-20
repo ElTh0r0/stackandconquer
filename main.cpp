@@ -58,7 +58,7 @@ auto main(int argc, char *argv[]) -> int {
   app.setApplicationName(QStringLiteral(APP_NAME));
   app.setApplicationVersion(QStringLiteral(APP_VERSION));
   app.setApplicationDisplayName(QStringLiteral(APP_NAME));
-#if !defined(Q_OS_WIN) && !defined(Q_OS_MAC)
+#if !defined(Q_OS_WIN) && !defined(Q_OS_MACOS)
   app.setWindowIcon(
       QIcon::fromTheme(QStringLiteral("stackandconquer"),
                        QIcon(QStringLiteral(":/stackandconquer.png"))));
