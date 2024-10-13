@@ -865,14 +865,17 @@ auto Board::getLegalMoves(const QString &sID, const bool bStonesLeft,
             const QString sTower = m_jsBoard.at(nFrom).toString();
             for (int nStones = 1;
                  nStones <= m_jsBoard.at(nFrom).toString().size(); nStones++) {
-              // Skip suicide moves (opponent wins)
-              if ((m_jsBoard.at(nTo).toString().size() + nStones >= m_nMaxTower)
+              // Skip suicide moves (opponent wins) for > 2 players
+              if (m_NumOfPlayers > 2) {
+                if ((m_jsBoard.at(nTo).toString().size() + nStones >=
+                     m_nMaxTower)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
-                  && QString(QStringView{sTower}.last()) != sID) {
+                    && QString(QStringView{sTower}.last()) != sID) {
 #else
-                  && sTower.rightRef(1).toString() != sID) {
+                    && sTower.rightRef(1).toString() != sID) {
 #endif
-                continue;
+                  continue;
+                }
               }
 
               varMove.clear();
