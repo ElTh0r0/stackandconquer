@@ -51,7 +51,7 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
     : m_pSettings(pSettings),
       m_pBoard(nullptr),
       m_nMaxTowerHeight(5),
-      m_nWinTowers(pSettings->getWinTowers()),
+      m_nTowersToWin(pSettings->getTowersToWin()),
       m_bScriptError(false) {
   Q_UNUSED(pParent)
   qDebug() << "Starting new game" << sSavegame;
@@ -78,9 +78,9 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
         static_cast<quint8>(jsonObj[QStringLiteral("Current")].toInt());
     nDirection =
         static_cast<qint8>(jsonObj[QStringLiteral("Direction")].toInt());
-    m_nWinTowers =
+    m_nTowersToWin =
         static_cast<quint8>(jsonObj[QStringLiteral("WinTowers")].toInt());
-    if (0 == nStartPlayer || 0 == m_nWinTowers ||
+    if (0 == nStartPlayer || 0 == m_nTowersToWin ||
         (-1 != nDirection && 1 != nDirection)) {
       qWarning() << "Save game contains invalid data:"
                  << "nStartPlayer / m_nWinTowers empty or direction != 1/-1";
@@ -204,9 +204,9 @@ Game::~Game() {
 auto Game::initCpu() -> bool {
   for (int i = 0; i < m_nNumOfPlayers; i++) {
     if (!m_pPlayers.at(i)->isHuman()) {
-      if (!m_pPlayers.at(i)->initCPU(m_pBoard->getBoadDimensions(),
-                                     m_nMaxTowerHeight, m_nNumOfPlayers,
-                                     m_pBoard->getOut(), m_pBoard->getPad())) {
+      if (!m_pPlayers.at(i)->initCPU(
+              m_pBoard->getBoadDimensions(), m_nMaxTowerHeight, m_nTowersToWin,
+              m_nNumOfPlayers, m_pBoard->getOut(), m_pBoard->getPad())) {
         return false;
       }
     }
@@ -403,7 +403,7 @@ void Game::checkTowerWin(const int nIndex) {
     qDebug() << "Player " + m_pPlayers.at(nWinner)->getID() +
                     " conquered tower " +
                     m_pBoard->getStringCoordFromIndex(nIndex);
-    if (m_nWinTowers != m_pPlayers.at(nWinner)->getWonTowers()) {
+    if (m_nTowersToWin != m_pPlayers.at(nWinner)->getWonTowers()) {
       QMessageBox::information(
           nullptr, tr("Information"),
           tr("%1 conquered a tower!").arg(m_pPlayers.at(nWinner)->getName()));
@@ -436,14 +436,16 @@ void Game::updatePlayers(bool bInitial, bool bChangeDir) {
     return;
   }
 
+  m_PlayerScores = QJsonArray();  // Clear array
   for (int i = 0; i < m_nNumOfPlayers; i++) {
     emit updateStones(i, QString::number(m_pPlayers.at(i)->getStonesLeft()));
     emit updateWon(i, QString::number(m_pPlayers.at(i)->getWonTowers()));
+    m_PlayerScores << m_pPlayers.at(i)->getWonTowers();
   }
 
   bool bWon(false);
   for (int i = 0; i < m_nNumOfPlayers; i++) {
-    if (m_nWinTowers == m_pPlayers.at(i)->getWonTowers()) {
+    if (m_nTowersToWin == m_pPlayers.at(i)->getWonTowers()) {
       bWon = true;
       qDebug() << "PLAYER " + m_pPlayers.at(i)->getID() + " WON!";
       emit setInteractive(false);
@@ -501,7 +503,7 @@ void Game::delayCpu() {
   m_pPlayers.at(activePlayer.ID - 1)
       ->callCpu(m_pBoard->getBoard(),
                 m_pPlayers.at(activePlayer.ID - 1)->getLegalMoves(),
-                activePlayer.Direction);
+                activePlayer.Direction, m_PlayerScores);
 }
 
 // ---------------------------------------------------------------------------
@@ -603,7 +605,7 @@ auto Game::saveGame(const QString &sFile) -> bool {
   jsonObj[QStringLiteral("Board")] = jsBoard;
   jsonObj[QStringLiteral("BoardFile")] = m_sBoardFile;
   jsonObj[QStringLiteral("BoardFileRelative")] = sRelativeDir;
-  jsonObj[QStringLiteral("WinTowers")] = m_nWinTowers;
+  jsonObj[QStringLiteral("WinTowers")] = m_nTowersToWin;
   jsonObj[QStringLiteral("Current")] = activePlayer.ID;
   jsonObj[QStringLiteral("Direction")] = activePlayer.Direction;
   jsonObj[QStringLiteral("NumOfPlayers")] = m_nNumOfPlayers;

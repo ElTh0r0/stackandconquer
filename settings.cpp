@@ -82,7 +82,7 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
     m_pUi->lblNumOfPlayers->setVisible(false);
   }
 
-  connect(m_pUi->spinNumToWin,
+  connect(m_pUi->spinTowersToWin,
           static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
           &Settings::changedSettings);
   connect(m_pUi->cbStartPlayer, &QComboBox::currentTextChanged, this,
@@ -547,8 +547,8 @@ void Settings::accept() {
   m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
   m_pSettings->setValue(QStringLiteral("StartPlayer"), m_nStartPlayer);
 
-  m_nWinTowers = m_pUi->spinNumToWin->value();
-  m_pSettings->setValue(QStringLiteral("NumWinTowers"), m_nWinTowers);
+  m_nTowersToWin = m_pUi->spinTowersToWin->value();
+  m_pSettings->setValue(QStringLiteral("NumWinTowers"), m_nTowersToWin);
 
   m_sBoard = m_sListBoards.at(m_pUi->cbBoard->currentIndex());
   m_pSettings->setValue(QStringLiteral("Board"), m_sBoard);
@@ -648,7 +648,7 @@ void Settings::readSettings() {
   if (m_nNumOfPlayers > m_nMaxPlayers) {
     m_nNumOfPlayers = m_nMaxPlayers;
   }
-  m_pUi->spinNumToWin->setValue(m_nNumOfPlayers);
+  m_pUi->spinTowersToWin->setValue(m_nNumOfPlayers);
   this->changeNumOfPlayers();
 
   for (int i = 0; i < m_Players.size(); i++) {
@@ -697,8 +697,9 @@ void Settings::readSettings() {
   this->updateStartCombo();
   m_nStartPlayer = m_pUi->cbStartPlayer->currentIndex();
 
-  m_nWinTowers = m_pSettings->value(QStringLiteral("NumWinTowers"), 1).toInt();
-  m_pUi->spinNumToWin->setValue(m_nWinTowers);
+  m_nTowersToWin =
+      m_pSettings->value(QStringLiteral("NumWinTowers"), 1).toInt();
+  m_pUi->spinTowersToWin->setValue(m_nTowersToWin);
 
   m_bShowPossibleMoveTowers =
       m_pSettings->value(QStringLiteral("ShowPossibleMoveTowers"), true)
@@ -1004,8 +1005,8 @@ auto Settings::getBoardFile() const -> QString {
 auto Settings::getStartPlayer() const -> quint8 {
   return static_cast<quint8>(m_nStartPlayer);
 }
-auto Settings::getWinTowers() const -> quint8 {
-  return static_cast<quint8>(m_nWinTowers);
+auto Settings::getTowersToWin() const -> quint8 {
+  return static_cast<quint8>(m_nTowersToWin);
 }
 auto Settings::getShowPossibleMoveTowers() const -> bool {
   return m_bShowPossibleMoveTowers;

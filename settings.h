@@ -58,7 +58,7 @@ class Settings : public QDialog {
   auto getNumOfPlayers() const -> quint8;
   auto getMaxNumOfPlayers() const -> quint8;
   auto getStartPlayer() const -> quint8;
-  auto getWinTowers() const -> quint8;
+  auto getTowersToWin() const -> quint8;
   auto getShowPossibleMoveTowers() const -> bool;
   auto getLanguage() -> QString;
 
@@ -135,7 +135,7 @@ class Settings : public QDialog {
   QString m_sBoard;
   int m_nNumOfPlayers{};
   int m_nStartPlayer{};
-  int m_nWinTowers{};
+  int m_nTowersToWin{};
   bool m_bShowPossibleMoveTowers{};
   bool m_bSettingChanged{};
 

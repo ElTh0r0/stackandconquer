@@ -34,12 +34,13 @@
 #include <QMessageBox>
 
 OpponentJS::OpponentJS(const quint8 nID, const QPoint BoardDimensions,
-                       const quint8 nHeightTowerWin, const quint8 nNumOfPlayers,
-                       const QString &sOut, const QString &sPad,
-                       QObject *pParent)
+                       const quint8 nHeightTowerWin, const quint8 nTowersToWin,
+                       const quint8 nNumOfPlayers, const QString &sOut,
+                       const QString &sPad, QObject *pParent)
     : m_nID(nID),
       m_BoardDimensions(BoardDimensions),
       m_nHeightTowerWin(nHeightTowerWin),
+      m_nTowersToWin(nTowersToWin),
       m_nNumOfPlayers(nNumOfPlayers),
       m_sOut(sOut),
       m_sPad(sPad),
@@ -106,13 +107,14 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
 
 void OpponentJS::callJsCpu(const QJsonArray &board,
                            const QJsonDocument &legalMoves,
-                           const qint8 nDirection) {
+                           const qint8 nDirection, const QJsonArray &scores) {
   QJsonDocument jsdoc(board);
   QString sJsonBoard(QString::fromLatin1(jsdoc.toJson(QJsonDocument::Compact)));
   QString sJsonMoves(
       QString::fromLatin1(legalMoves.toJson(QJsonDocument::Compact)));
   QJSValueList args;
   args << sJsonBoard << sJsonMoves << nDirection;
+  m_Scores = scores;
 
   QJSValue result = m_obj.property(QStringLiteral("callCPU")).call(args);
   if (result.isError()) {
@@ -165,6 +167,10 @@ auto OpponentJS::getID() -> quint8 { return m_nID; }
 auto OpponentJS::getNumOfPlayers() -> quint8 { return m_nNumOfPlayers; }
 
 auto OpponentJS::getHeightToWin() -> quint8 { return m_nHeightTowerWin; }
+
+auto OpponentJS::getTowersToWin() -> quint8 { return m_nTowersToWin; }
+
+auto OpponentJS::getScores() -> QJsonArray { return m_Scores; }
 
 auto OpponentJS::getBoardDimensionX() -> int { return m_BoardDimensions.x(); }
 auto OpponentJS::getBoardDimensionY() -> int { return m_BoardDimensions.y(); }
