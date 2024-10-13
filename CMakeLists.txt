@@ -16,7 +16,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 project(StackAndConquer
-    VERSION 0.10.1
+    VERSION 0.11.0
     DESCRIPTION "Challenging tower conquest board game"
     LANGUAGES C CXX
 )
@@ -71,7 +71,7 @@ target_compile_definitions(stackandconquer
         APP_COPY="${PROJECT_COPYRIGHT}"
         APP_DESC="${PROJECT_DESCRIPTION}"
         QT_NO_FOREACH
-        $<$<CONFIG:DEBUG>:QT_DISABLE_DEPRECATED_BEFORE=0x060700>
+        $<$<CONFIG:DEBUG>:QT_DISABLE_DEPRECATED_BEFORE=0x060800>
 )
    
 target_link_libraries(stackandconquer PRIVATE

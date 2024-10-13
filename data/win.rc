@@ -1,8 +1,8 @@
 IDI_ICON1   ICON    DISCARDABLE    "../icons/stackandconquer.ico"
 
 1 VERSIONINFO
-    FILEVERSION    0,10,1,0
-    PRODUCTVERSION 0,10,1,0
+    FILEVERSION    0,11,0,0
+    PRODUCTVERSION 0,11,0,0
 {
     BLOCK "StringFileInfo"
     {
@@ -13,8 +13,8 @@ IDI_ICON1   ICON    DISCARDABLE    "../icons/stackandconquer.ico"
             VALUE "LegalCopyright",     "(c) 2015-present Thorsten Roth\0"
             VALUE "OriginalFilename",   "StackAndConquer.exe\0"
             VALUE "ProductName",        "StackAndConquer\0"
-            VALUE "ProductVersion",     "0.10.1.0\0"
-            VALUE "FileVersion",        "0.10.1.0\0"
+            VALUE "ProductVersion",     "0.11.0.0\0"
+            VALUE "FileVersion",        "0.11.0.0\0"
         }
     }
     BLOCK "VarFileInfo"
