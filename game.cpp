@@ -439,7 +439,8 @@ void Game::updatePlayers(bool bInitial, bool bChangeDir) {
   m_PlayerScores = QJsonArray();  // Clear array
   for (int i = 0; i < m_nNumOfPlayers; i++) {
     emit updateStones(i, QString::number(m_pPlayers.at(i)->getStonesLeft()));
-    emit updateWon(i, QString::number(m_pPlayers.at(i)->getWonTowers()));
+    emit updateWon(i, QString::number(m_pPlayers.at(i)->getWonTowers()) +
+                          " / " + QString::number(m_nTowersToWin));
     m_PlayerScores << m_pPlayers.at(i)->getWonTowers();
   }
 
