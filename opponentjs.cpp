@@ -117,6 +117,7 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
   m_Scores = scores;
 
   QJSValue result = m_obj.property(QStringLiteral("callCPU")).call(args);
+  // qDebug() << "Result of callCPU(): " + result.toString();
   if (result.isError()) {
     qCritical().noquote()
         << "CPU P" + QString::number(m_nID) +
@@ -127,8 +128,8 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
                          tr("CPU script execution error! "
                             "Please check the debug log."));
     emit scriptError();
+    return;
   }
-  // qDebug() << "Result of callCPU(): " + result.toString();
 
   // CPU has to return an int array with length 3
   QJsonArray move;
