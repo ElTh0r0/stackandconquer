@@ -27,8 +27,7 @@
  *   game.getID();
  *   game.getNumOfPlayers();
  *   game.getHeightToWin();
- *   game.getTowersToWin();
- *   game.getScores();
+ *   game.getTowersNeededToWin();
  *   game.getBoardDimensionX();
  *   game.getBoardDimensionY();
  *   game.getOutside();

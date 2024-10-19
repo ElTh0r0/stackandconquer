@@ -204,9 +204,9 @@ Game::~Game() {
 auto Game::initCpu() -> bool {
   for (int i = 0; i < m_nNumOfPlayers; i++) {
     if (!m_pPlayers.at(i)->isHuman()) {
-      if (!m_pPlayers.at(i)->initCPU(
-              m_pBoard->getBoadDimensions(), m_nMaxTowerHeight, m_nTowersToWin,
-              m_nNumOfPlayers, m_pBoard->getOut(), m_pBoard->getPad())) {
+      if (!m_pPlayers.at(i)->initCPU(m_pBoard->getBoadDimensions(),
+                                     m_nMaxTowerHeight, m_nNumOfPlayers,
+                                     m_pBoard->getOut(), m_pBoard->getPad())) {
         return false;
       }
     }
@@ -436,12 +436,12 @@ void Game::updatePlayers(bool bInitial, bool bChangeDir) {
     return;
   }
 
-  m_PlayerScores = QJsonArray();  // Clear array
+  m_TowersNeededToWin = QJsonArray();  // Clear array
   for (int i = 0; i < m_nNumOfPlayers; i++) {
     emit updateStones(i, QString::number(m_pPlayers.at(i)->getStonesLeft()));
     emit updateWon(i, QString::number(m_pPlayers.at(i)->getWonTowers()) +
                           " / " + QString::number(m_nTowersToWin));
-    m_PlayerScores << m_pPlayers.at(i)->getWonTowers();
+    m_TowersNeededToWin << m_nTowersToWin - m_pPlayers.at(i)->getWonTowers();
   }
 
   bool bWon(false);
@@ -504,7 +504,7 @@ void Game::delayCpu() {
   m_pPlayers.at(activePlayer.ID - 1)
       ->callCpu(m_pBoard->getBoard(),
                 m_pPlayers.at(activePlayer.ID - 1)->getLegalMoves(),
-                activePlayer.Direction, m_PlayerScores);
+                activePlayer.Direction, m_TowersNeededToWin);
 }
 
 // ---------------------------------------------------------------------------

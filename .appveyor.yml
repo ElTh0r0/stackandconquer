@@ -18,12 +18,6 @@ environment:
       PRO_MAKE: nmake
       DEPLOYQT_FLAGS: --release --no-angle
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-    - BUILD: mingw32_reactos
-      QTDIR: C:\Qt\5.6\mingw49_32
-      MINGW_DIR: C:\Qt\Tools\mingw492_32
-      PRO_MAKE: mingw32-make
-      DEPLOYQT_FLAGS: --release --no-angle
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
   
 install:
   - set PATH=%QTDIR%\bin;%MINGW_DIR%\bin;%PATH%

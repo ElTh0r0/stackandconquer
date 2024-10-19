@@ -48,8 +48,8 @@ class Player : public QObject {
   ~Player();
 
   auto initCPU(const QPoint BoadDimensions, const quint8 nMaxTowerHeight,
-               const quint8 nTowersToWin, const quint8 nNumOfPlayers,
-               const QString &sOut, const QString &sPad) -> bool;
+               const quint8 nNumOfPlayers, const QString &sOut,
+               const QString &sPad) -> bool;
   auto isHuman() const -> bool;
   auto getName() const -> QString;
   auto getCpuScript() const -> QString;

@@ -80,7 +80,7 @@ class Game : public QObject {
   QString m_sBoardFile;
   quint8 m_nNumOfPlayers;
   QList<Player *> m_pPlayers;
-  QJsonArray m_PlayerScores;
+  QJsonArray m_TowersNeededToWin;
 
   const quint8 m_nMaxTowerHeight;
   quint8 m_nTowersToWin;
