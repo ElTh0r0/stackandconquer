@@ -503,10 +503,16 @@ void Game::updatePlayers(bool bInitial, bool bChangeDir) {
 // ---------------------------------------------------------------------------
 
 void Game::delayCpu() {
+  QJsonArray prevMove;
+  for (const auto &i : m_previousMove) {
+    prevMove << i;
+  }
+
   m_pPlayers.at(activePlayer.ID - 1)
       ->callCpu(m_pBoard->getBoard(),
                 m_pPlayers.at(activePlayer.ID - 1)->getLegalMoves(),
-                activePlayer.Direction, m_TowersNeededToWin, m_NumberOfStones);
+                activePlayer.Direction, m_TowersNeededToWin, m_NumberOfStones,
+                prevMove);
 }
 
 // ---------------------------------------------------------------------------

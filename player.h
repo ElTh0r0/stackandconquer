@@ -63,7 +63,7 @@ class Player : public QObject {
   auto canMove() const -> bool;
   void callCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
                const qint8 nDirection, const QJsonArray &towersNeededToWin,
-               const QJsonArray &stonesLeft);
+               const QJsonArray &stonesLeft, const QJsonArray &lastMove);
 
  signals:
   void actionCPU(QJsonArray move);

@@ -70,14 +70,14 @@ auto Player::initCPU(const QPoint BoadDimensions, const quint8 nMaxTowerHeight,
 void Player::callCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
                      const qint8 nDirection,
                      const QJsonArray &towersNeededToWin,
-                     const QJsonArray &stonesLeft) {
+                     const QJsonArray &stonesLeft, const QJsonArray &lastMove) {
   if (nullptr == m_pJsCpu) {
     qWarning() << "callCPU called for Human player P" + this->getID();
     QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
     return;
   }
   m_pJsCpu->callJsCpu(board, legalMoves, nDirection, towersNeededToWin,
-                      stonesLeft);
+                      stonesLeft, lastMove);
 }
 
 // ---------------------------------------------------------------------------
