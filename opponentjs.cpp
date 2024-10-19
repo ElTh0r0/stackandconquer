@@ -29,8 +29,6 @@
 #include <QDebug>
 #include <QFile>
 #include <QJSEngine>
-#include <QJsonArray>
-#include <QJsonDocument>
 #include <QMessageBox>
 
 OpponentJS::OpponentJS(const quint8 nID, const QPoint BoardDimensions,
@@ -112,10 +110,9 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
                            const QJsonArray &lastMove) {
   QJsonDocument jsdoc(board);
   QString sJsonBoard(QString::fromLatin1(jsdoc.toJson(QJsonDocument::Compact)));
-  QString sJsonMoves(
-      QString::fromLatin1(legalMoves.toJson(QJsonDocument::Compact)));
   QJSValueList args;
-  args << sJsonBoard << sJsonMoves;
+  args << sJsonBoard;
+  m_legalMoves = legalMoves;
   m_TowersNeededToWin = towersNeededToWin;
   m_StonesLeft = stonesLeft;
   m_LastMove = lastMove;
@@ -183,6 +180,12 @@ auto OpponentJS::getNumberOfStones() -> QJsonArray { return m_StonesLeft; }
 auto OpponentJS::getLastMove() -> QJsonArray { return m_LastMove; }
 
 auto OpponentJS::getDirection() -> qint8 { return m_nDirection; }
+
+auto OpponentJS::getLegalMoves() -> QString {
+  QString sJsonMoves(
+      QString::fromLatin1(m_legalMoves.toJson(QJsonDocument::Compact)));
+  return sJsonMoves;
+}
 
 auto OpponentJS::getBoardDimensionX() -> int { return m_BoardDimensions.x(); }
 auto OpponentJS::getBoardDimensionY() -> int { return m_BoardDimensions.y(); }

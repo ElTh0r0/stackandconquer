@@ -29,6 +29,7 @@
 
 #include <QJSValue>
 #include <QJsonArray>
+#include <QJsonDocument>
 #include <QObject>
 #include <QPoint>
 #include <QVector>
@@ -58,6 +59,7 @@ class OpponentJS : public QObject {
   QJsonArray getNumberOfStones();
   QJsonArray getLastMove();
   qint8 getDirection();
+  QString getLegalMoves();
   int getBoardDimensionX();
   int getBoardDimensionY();
   QString getOutside();
@@ -80,6 +82,7 @@ class OpponentJS : public QObject {
   QJsonArray m_StonesLeft;
   QJsonArray m_LastMove;
   qint8 m_nDirection;
+  QJsonDocument m_legalMoves;
 };
 
 #endif  // OPPONENTJS_H_
