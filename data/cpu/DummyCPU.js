@@ -30,6 +30,7 @@
  *   game.getTowersNeededToWin();
  *   game.getNumberOfStones();
  *   game.getLastMove();
+ *   game.getDirection();
  *   game.getBoardDimensionX();
  *   game.getBoardDimensionY();
  *   game.getOutside();
@@ -49,6 +50,7 @@ var game = {
   _nBoardDimensionY: 5,
   _sOut: "#",
   _sPad: "-",
+  _nDirection: 1,
 
   log: function (sMessage) {
     console.log(sMessage);
@@ -73,6 +75,9 @@ var game = {
   },
   getPadding: function () {
     return this._sPad;
+  },
+  getDirection: function () {
+    return this._nDirection;
   },
 
   _jsboard:
@@ -101,14 +106,12 @@ var game = {
     [-1, 1, 142],
     [-1, 1, 144],
   ]),
-
-  _nDirection: 1,
 };
 
 initCPU();
 console.log(
   "CPU script returned: " +
-    callCPU(game._jsboard, game._jsmoves, game._nDirection)
+    callCPU(game._jsboard, game._jsmoves)
 );
 */
 // ---------------------------------------------------------------------------
@@ -140,7 +143,7 @@ function initCPU() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function callCPU(jsonBoard, jsonMoves, nDirection) {
+function callCPU(jsonBoard, jsonMoves) {
   var board = JSON.parse(jsonBoard);
   // game.log("BOARD: " + jsonBoard);
   var legalMoves = JSON.parse(jsonMoves);
@@ -161,7 +164,7 @@ function callCPU(jsonBoard, jsonMoves, nDirection) {
 
   // Check if next opponent can win depending on playing direction
   var prevWin;
-  if (nDirection > 0) {
+  if (game.getDirection() > 0) {
     if (MY_ID === game.getNumOfPlayers()) {
       moveToWin = canWin(board, 1, game.getHeightToWin());
     } else {

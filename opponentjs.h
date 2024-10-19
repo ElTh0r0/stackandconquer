@@ -48,6 +48,7 @@ class OpponentJS : public QObject {
                  const qint8 nDirection, const QJsonArray &towersNeededToWin,
                  const QJsonArray &stonesLeft, const QJsonArray &lastMove);
 
+  // Methods which are exposed to the CPU script
  public slots:
   void log(const QString &sMsg);
   quint8 getID();
@@ -56,6 +57,7 @@ class OpponentJS : public QObject {
   QJsonArray getTowersNeededToWin();
   QJsonArray getNumberOfStones();
   QJsonArray getLastMove();
+  qint8 getDirection();
   int getBoardDimensionX();
   int getBoardDimensionY();
   QString getOutside();
@@ -77,6 +79,7 @@ class OpponentJS : public QObject {
   QJsonArray m_TowersNeededToWin;
   QJsonArray m_StonesLeft;
   QJsonArray m_LastMove;
+  qint8 m_nDirection;
 };
 
 #endif  // OPPONENTJS_H_
