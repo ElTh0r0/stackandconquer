@@ -107,7 +107,8 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
 void OpponentJS::callJsCpu(const QJsonArray &board,
                            const QJsonDocument &legalMoves,
                            const qint8 nDirection,
-                           const QJsonArray &towersNeededToWin) {
+                           const QJsonArray &towersNeededToWin,
+                           const QJsonArray &stonesLeft) {
   QJsonDocument jsdoc(board);
   QString sJsonBoard(QString::fromLatin1(jsdoc.toJson(QJsonDocument::Compact)));
   QString sJsonMoves(
@@ -115,6 +116,7 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
   QJSValueList args;
   args << sJsonBoard << sJsonMoves << nDirection;
   m_TowersNeededToWin = towersNeededToWin;
+  m_StonesLeft = stonesLeft;
 
   QJSValue result = m_obj.property(QStringLiteral("callCPU")).call(args);
   // qDebug() << "Result of callCPU(): " + result.toString();
@@ -172,6 +174,8 @@ auto OpponentJS::getHeightToWin() -> quint8 { return m_nHeightTowerWin; }
 auto OpponentJS::getTowersNeededToWin() -> QJsonArray {
   return m_TowersNeededToWin;
 }
+
+auto OpponentJS::getNumberOfStones() -> QJsonArray { return m_StonesLeft; }
 
 auto OpponentJS::getBoardDimensionX() -> int { return m_BoardDimensions.x(); }
 auto OpponentJS::getBoardDimensionY() -> int { return m_BoardDimensions.y(); }

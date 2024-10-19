@@ -437,11 +437,13 @@ void Game::updatePlayers(bool bInitial, bool bChangeDir) {
   }
 
   m_TowersNeededToWin = QJsonArray();  // Clear array
+  m_NumberOfStones = QJsonArray();
   for (int i = 0; i < m_nNumOfPlayers; i++) {
     emit updateStones(i, QString::number(m_pPlayers.at(i)->getStonesLeft()));
     emit updateWon(i, QString::number(m_pPlayers.at(i)->getWonTowers()) +
                           " / " + QString::number(m_nTowersToWin));
     m_TowersNeededToWin << m_nTowersToWin - m_pPlayers.at(i)->getWonTowers();
+    m_NumberOfStones << m_pPlayers.at(i)->getStonesLeft();
   }
 
   bool bWon(false);
@@ -504,7 +506,7 @@ void Game::delayCpu() {
   m_pPlayers.at(activePlayer.ID - 1)
       ->callCpu(m_pBoard->getBoard(),
                 m_pPlayers.at(activePlayer.ID - 1)->getLegalMoves(),
-                activePlayer.Direction, m_TowersNeededToWin);
+                activePlayer.Direction, m_TowersNeededToWin, m_NumberOfStones);
 }
 
 // ---------------------------------------------------------------------------

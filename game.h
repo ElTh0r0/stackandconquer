@@ -81,6 +81,7 @@ class Game : public QObject {
   quint8 m_nNumOfPlayers;
   QList<Player *> m_pPlayers;
   QJsonArray m_TowersNeededToWin;
+  QJsonArray m_NumberOfStones;
 
   const quint8 m_nMaxTowerHeight;
   quint8 m_nTowersToWin;

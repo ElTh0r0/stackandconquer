@@ -45,7 +45,8 @@ class OpponentJS : public QObject {
                       QObject *pParent = nullptr);
   auto loadAndEvalCpuScript(const QString &sFilepath) -> bool;
   void callJsCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
-                 const qint8 nDirection, const QJsonArray &towersNeededToWin);
+                 const qint8 nDirection, const QJsonArray &towersNeededToWin,
+                 const QJsonArray &stonesLeft);
 
  public slots:
   void log(const QString &sMsg);
@@ -53,6 +54,7 @@ class OpponentJS : public QObject {
   quint8 getNumOfPlayers();
   quint8 getHeightToWin();
   QJsonArray getTowersNeededToWin();
+  QJsonArray getNumberOfStones();
   int getBoardDimensionX();
   int getBoardDimensionY();
   QString getOutside();
@@ -72,6 +74,7 @@ class OpponentJS : public QObject {
   QJSEngine *m_jsEngine;
   QJSValue m_obj;
   QJsonArray m_TowersNeededToWin;
+  QJsonArray m_StonesLeft;
 };
 
 #endif  // OPPONENTJS_H_

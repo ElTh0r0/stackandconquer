@@ -28,6 +28,7 @@
  *   game.getNumOfPlayers();
  *   game.getHeightToWin();
  *   game.getTowersNeededToWin();
+ *   game.getNumberOfStones();
  *   game.getBoardDimensionX();
  *   game.getBoardDimensionY();
  *   game.getOutside();
