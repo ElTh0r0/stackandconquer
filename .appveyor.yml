@@ -1,5 +1,11 @@
 version: '0.11.0-{build}'
 
+branches:
+  only:
+  - main
+
+skip_non_tags: true
+
 environment:
   matrix:
     - BUILD: mingw32
