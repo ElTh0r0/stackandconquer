@@ -34,8 +34,6 @@
  *   game.getOutside();
  *   game.getPadding();
  *
- * Remark: Qt <= 5.11 supports only ECMAScript 5, so
- * ES5 should be chosen for compatibility reasons!
  */
 
 // ---------------------------------------------------------------------------
