@@ -49,7 +49,8 @@ OpponentJS::OpponentJS(const quint8 nID, const QPoint BoardDimensions,
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
+auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath,
+                                      const QJsonArray &emptyBoard) -> bool {
   QFile f(sFilepath);
   if (!f.open(QFile::ReadOnly)) {
     qWarning() << "Couldn't open JS file:" << sFilepath;
@@ -81,7 +82,13 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath) -> bool {
   // Call (optional) init() function if available
   if (m_obj.hasProperty(QStringLiteral("initCPU")) &&
       m_obj.property(QStringLiteral("initCPU")).isCallable()) {
-    result = m_obj.property(QStringLiteral("initCPU")).call();
+    QJsonDocument jsdoc(emptyBoard);
+    QString sJsonEmptyBoard(
+        QString::fromLatin1(jsdoc.toJson(QJsonDocument::Compact)));
+    QJSValueList arguments;
+    arguments << sJsonEmptyBoard;
+
+    result = m_obj.property(QStringLiteral("initCPU")).call(arguments);
     if (result.isError()) {
       qCritical().noquote()
           << "CPU P" + QString::number(m_nID) +
@@ -110,15 +117,15 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
                            const QJsonArray &lastMove) {
   QJsonDocument jsdoc(board);
   QString sJsonBoard(QString::fromLatin1(jsdoc.toJson(QJsonDocument::Compact)));
-  QJSValueList args;
-  args << sJsonBoard;
+  QJSValueList arguments;
+  arguments << sJsonBoard;
   m_legalMoves = legalMoves;
   m_TowersNeededToWin = towersNeededToWin;
   m_StonesLeft = stonesLeft;
   m_LastMove = lastMove;
   m_nDirection = nDirection;
 
-  QJSValue result = m_obj.property(QStringLiteral("callCPU")).call(args);
+  QJSValue result = m_obj.property(QStringLiteral("callCPU")).call(arguments);
   // qDebug() << "Result of callCPU(): " + result.toString();
   if (result.isError()) {
     qCritical().noquote()

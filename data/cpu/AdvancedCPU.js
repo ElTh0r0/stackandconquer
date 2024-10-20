@@ -121,8 +121,10 @@ console.log(
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function initCPU() {
+function initCPU(empty_jsonBoard) {
   game.log("Loading CPU script 'AdvancedCPU' with player ID " + game.getID());
+  // var emptyBoard = JSON.parse(empty_jsonBoard);
+  // game.log("EMPTY BOARD: " + empty_jsonBoard);
 
   /* global MY_ID:writable, DIRS:writable */
   MY_ID = game.getID();

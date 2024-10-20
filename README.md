@@ -12,4 +12,4 @@ StackAndConquer is a challenging tower conquest board game inspired by [Mixtour]
 * [Arch AUR](https://aur.archlinux.org/packages/stackandconquer/)
 
 ## Create CPU opponent
-Manual for creating CPU opponents can be found in the wiki: https://github.com/ElTh0r0/stackandconquer/wiki
+Manual for creating CPU opponents can be found in the wiki: https://github.com/ElTh0r0/stackandconquer/wiki/Create-CPU-opponent

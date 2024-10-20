@@ -121,8 +121,10 @@ console.log(
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function initCPU() {
+function initCPU(empty_jsonBoard) {
   game.log("Loading CPU script 'DummyCPU' with player ID " + game.getID());
+  // var emptyBoard = JSON.parse(empty_jsonBoard);
+  // game.log("EMPTY BOARD: " + empty_jsonBoard);
 
   /* global MY_ID:writable, DIRS:writable */
   MY_ID = game.getID();
@@ -147,7 +149,7 @@ function initCPU() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-function callCPU(jsonBoard, s) {
+function callCPU(jsonBoard) {
   var board = JSON.parse(jsonBoard);
   // game.log("BOARD: " + jsonBoard);
   var legalMoves = JSON.parse(game.getLegalMoves());

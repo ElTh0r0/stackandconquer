@@ -204,7 +204,8 @@ Game::~Game() {
 auto Game::initCpu() -> bool {
   for (int i = 0; i < m_nNumOfPlayers; i++) {
     if (!m_pPlayers.at(i)->isHuman()) {
-      if (!m_pPlayers.at(i)->initCPU(m_pBoard->getBoadDimensions(),
+      if (!m_pPlayers.at(i)->initCPU(m_pBoard->getBoard(),
+                                     m_pBoard->getBoadDimensions(),
                                      m_nMaxTowerHeight, m_nNumOfPlayers,
                                      m_pBoard->getOut(), m_pBoard->getPad())) {
         return false;
