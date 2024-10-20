@@ -57,96 +57,96 @@
 <context>
     <name>Game</name>
     <message>
-        <location filename="../game.cpp" line="72"/>
-        <location filename="../game.cpp" line="87"/>
-        <location filename="../game.cpp" line="99"/>
-        <location filename="../game.cpp" line="112"/>
-        <location filename="../game.cpp" line="251"/>
-        <location filename="../game.cpp" line="264"/>
-        <location filename="../game.cpp" line="278"/>
-        <location filename="../game.cpp" line="306"/>
-        <location filename="../game.cpp" line="317"/>
-        <location filename="../game.cpp" line="335"/>
-        <location filename="../game.cpp" line="340"/>
-        <location filename="../game.cpp" line="346"/>
-        <location filename="../game.cpp" line="353"/>
-        <location filename="../game.cpp" line="397"/>
+        <location filename="../game.cpp" line="71"/>
+        <location filename="../game.cpp" line="83"/>
+        <location filename="../game.cpp" line="95"/>
+        <location filename="../game.cpp" line="108"/>
+        <location filename="../game.cpp" line="247"/>
+        <location filename="../game.cpp" line="260"/>
+        <location filename="../game.cpp" line="274"/>
+        <location filename="../game.cpp" line="302"/>
+        <location filename="../game.cpp" line="313"/>
+        <location filename="../game.cpp" line="331"/>
+        <location filename="../game.cpp" line="336"/>
+        <location filename="../game.cpp" line="342"/>
+        <location filename="../game.cpp" line="349"/>
+        <location filename="../game.cpp" line="393"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="73"/>
+        <location filename="../game.cpp" line="72"/>
         <source>Error while opening save game.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="88"/>
-        <location filename="../game.cpp" line="100"/>
-        <location filename="../game.cpp" line="113"/>
-        <location filename="../game.cpp" line="127"/>
-        <location filename="../game.cpp" line="140"/>
+        <location filename="../game.cpp" line="84"/>
+        <location filename="../game.cpp" line="96"/>
+        <location filename="../game.cpp" line="109"/>
+        <location filename="../game.cpp" line="123"/>
+        <location filename="../game.cpp" line="136"/>
         <source>Save game contains invalid data.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="252"/>
-        <location filename="../game.cpp" line="354"/>
+        <location filename="../game.cpp" line="248"/>
+        <location filename="../game.cpp" line="350"/>
         <source>CPU script made an invalid move! Please check the debug log.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="256"/>
-        <location filename="../game.cpp" line="408"/>
-        <location filename="../game.cpp" line="452"/>
-        <location filename="../game.cpp" line="526"/>
-        <location filename="../game.cpp" line="558"/>
+        <location filename="../game.cpp" line="252"/>
+        <location filename="../game.cpp" line="404"/>
+        <location filename="../game.cpp" line="453"/>
+        <location filename="../game.cpp" line="533"/>
+        <location filename="../game.cpp" line="561"/>
         <source>Information</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="257"/>
+        <location filename="../game.cpp" line="253"/>
         <source>No stones left! Please move a tower.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="264"/>
+        <location filename="../game.cpp" line="260"/>
         <source>Invalid move!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="278"/>
-        <location filename="../game.cpp" line="306"/>
-        <location filename="../game.cpp" line="317"/>
-        <location filename="../game.cpp" line="335"/>
-        <location filename="../game.cpp" line="340"/>
-        <location filename="../game.cpp" line="346"/>
-        <location filename="../game.cpp" line="397"/>
+        <location filename="../game.cpp" line="274"/>
+        <location filename="../game.cpp" line="302"/>
+        <location filename="../game.cpp" line="313"/>
+        <location filename="../game.cpp" line="331"/>
+        <location filename="../game.cpp" line="336"/>
+        <location filename="../game.cpp" line="342"/>
+        <location filename="../game.cpp" line="393"/>
         <source>Something went wrong!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="409"/>
+        <location filename="../game.cpp" line="405"/>
         <source>%1 conquered a tower!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="453"/>
+        <location filename="../game.cpp" line="454"/>
         <source>%1 won the game!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="527"/>
+        <location filename="../game.cpp" line="534"/>
         <source>No moves possible anymore.
 Game ends in a tie!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="552"/>
-        <source>Playing direction changes!</source>
+        <location filename="../game.cpp" line="555"/>
+        <source>Right to move is given back to the previous player!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="559"/>
+        <location filename="../game.cpp" line="562"/>
         <source>No move possible! %1 has to pass.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -154,16 +154,16 @@ Game ends in a tie!</source>
 <context>
     <name>OpponentJS</name>
     <message>
-        <location filename="../opponentjs.cpp" line="93"/>
-        <location filename="../opponentjs.cpp" line="124"/>
-        <location filename="../opponentjs.cpp" line="153"/>
+        <location filename="../opponentjs.cpp" line="98"/>
+        <location filename="../opponentjs.cpp" line="134"/>
+        <location filename="../opponentjs.cpp" line="163"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../opponentjs.cpp" line="94"/>
-        <location filename="../opponentjs.cpp" line="125"/>
-        <location filename="../opponentjs.cpp" line="154"/>
+        <location filename="../opponentjs.cpp" line="99"/>
+        <location filename="../opponentjs.cpp" line="135"/>
+        <location filename="../opponentjs.cpp" line="164"/>
         <source>CPU script execution error! Please check the debug log.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -176,12 +176,12 @@ Game ends in a tie!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="74"/>
+        <location filename="../player.cpp" line="75"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../player.cpp" line="74"/>
+        <location filename="../player.cpp" line="75"/>
         <source>Something went wrong!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -190,13 +190,13 @@ Game ends in a tie!</source>
     <name>Settings</name>
     <message>
         <location filename="../settings.cpp" line="100"/>
-        <location filename="../settings.cpp" line="843"/>
+        <location filename="../settings.cpp" line="864"/>
         <source>Color player %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="109"/>
-        <location filename="../settings.cpp" line="845"/>
+        <location filename="../settings.cpp" line="866"/>
         <source>Player %1 Human/CPU</source>
         <translation type="unfinished"></translation>
     </message>
@@ -206,124 +206,124 @@ Game ends in a tie!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="529"/>
+        <location filename="../settings.cpp" line="533"/>
         <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="715"/>
-        <location filename="../settings.cpp" line="755"/>
-        <location filename="../settings.cpp" line="765"/>
+        <location filename="../settings.cpp" line="728"/>
+        <location filename="../settings.cpp" line="768"/>
+        <location filename="../settings.cpp" line="778"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="716"/>
+        <location filename="../settings.cpp" line="729"/>
         <source>Boards folder seems empty!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="736"/>
+        <location filename="../settings.cpp" line="749"/>
         <source>New style</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="737"/>
+        <location filename="../settings.cpp" line="750"/>
         <source>Please insert name of new style file:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="755"/>
+        <location filename="../settings.cpp" line="768"/>
         <source>File already exists.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="766"/>
+        <location filename="../settings.cpp" line="779"/>
         <source>Could not create new style.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="849"/>
+        <location filename="../settings.cpp" line="870"/>
         <source>Color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="852"/>
+        <location filename="../settings.cpp" line="873"/>
         <source>Main background</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="852"/>
+        <location filename="../settings.cpp" line="873"/>
         <source>Board background</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="853"/>
+        <location filename="../settings.cpp" line="874"/>
         <source>Grid color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="853"/>
+        <location filename="../settings.cpp" line="874"/>
         <source>Animate color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="854"/>
+        <location filename="../settings.cpp" line="875"/>
         <source>Animate border color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="854"/>
+        <location filename="../settings.cpp" line="875"/>
         <source>Highlight color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="855"/>
+        <location filename="../settings.cpp" line="876"/>
         <source>Highlight border color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="855"/>
+        <location filename="../settings.cpp" line="876"/>
         <source>Neighbours color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="856"/>
+        <location filename="../settings.cpp" line="877"/>
         <source>Neighbours border color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="856"/>
+        <location filename="../settings.cpp" line="877"/>
         <source>Selected color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="857"/>
+        <location filename="../settings.cpp" line="878"/>
         <source>Selected border color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="857"/>
+        <location filename="../settings.cpp" line="878"/>
         <source>Text color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="858"/>
+        <location filename="../settings.cpp" line="879"/>
         <source>Text highlight color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="915"/>
+        <location filename="../settings.cpp" line="936"/>
         <source>Random</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="917"/>
+        <location filename="../settings.cpp" line="938"/>
         <source>Player</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="977"/>
+        <location filename="../settings.cpp" line="998"/>
         <source>Selected board could not be found!</source>
         <translation type="unfinished"></translation>
     </message>

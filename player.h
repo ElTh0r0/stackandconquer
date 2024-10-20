@@ -62,7 +62,7 @@ class Player : public QObject {
   auto getLegalMoves() const -> QJsonDocument;
   auto canMove() const -> bool;
   void callCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
-               const qint8 nDirection, const QJsonArray &towersNeededToWin,
+               const QJsonArray &towersNeededToWin,
                const QJsonArray &stonesLeft, const QJsonArray &lastMove);
 
  signals:

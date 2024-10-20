@@ -31,7 +31,6 @@
  *   game.getNumberOfStones();
  *   game.getLastMove();
  *   game.getLegalMoves();
- *   game.getDirection();
  *   game.getBoardDimensionX();
  *   game.getBoardDimensionY();
  *   game.getOutside();
@@ -51,7 +50,6 @@ var game = {
   _nBoardDimensionY: 5,
   _sOut: "#",
   _sPad: "-",
-  _nDirection: 1,
 
   log: function (sMessage) {
     console.log(sMessage);
@@ -76,9 +74,6 @@ var game = {
   },
   getPadding: function () {
     return this._sPad;
-  },
-  getDirection: function () {
-    return this._nDirection;
   },
 
   _jsmoves: JSON.stringify([
@@ -168,31 +163,17 @@ function callCPU(jsonBoard) {
     return legalMoves[0];
   }
 
-  // Check if next opponent can win depending on playing direction
+  // Check if next opponent can win
   var prevWin;
-  if (game.getDirection() > 0) {
-    if (MY_ID === game.getNumOfPlayers()) {
-      moveToWin = canWin(board, 1, game.getHeightToWin());
-    } else {
-      moveToWin = canWin(board, MY_ID + 1, game.getHeightToWin());
-    }
-    if (0 !== moveToWin.length) {
-      prevWin = preventWin(board, moveToWin[0], legalMoves);
-      if (3 === prevWin.length) {
-        return prevWin;
-      }
-    }
+  if (MY_ID === game.getNumOfPlayers()) {
+    moveToWin = canWin(board, 1, game.getHeightToWin());
   } else {
-    if (MY_ID === 1) {
-      moveToWin = canWin(board, game.getNumOfPlayers(), game.getHeightToWin());
-    } else {
-      moveToWin = canWin(board, MY_ID - 1, game.getHeightToWin());
-    }
-    if (0 !== moveToWin.length) {
-      prevWin = preventWin(board, moveToWin[0], legalMoves);
-      if (3 === prevWin.length) {
-        return prevWin;
-      }
+    moveToWin = canWin(board, MY_ID + 1, game.getHeightToWin());
+  }
+  if (0 !== moveToWin.length) {
+    prevWin = preventWin(board, moveToWin[0], legalMoves);
+    if (3 === prevWin.length) {
+      return prevWin;
     }
   }
 

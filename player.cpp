@@ -68,7 +68,6 @@ auto Player::initCPU(const QJsonArray &emptyBoard, const QPoint BoadDimensions,
 // ---------------------------------------------------------------------------
 
 void Player::callCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
-                     const qint8 nDirection,
                      const QJsonArray &towersNeededToWin,
                      const QJsonArray &stonesLeft, const QJsonArray &lastMove) {
   if (nullptr == m_pJsCpu) {
@@ -76,8 +75,8 @@ void Player::callCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
     QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
     return;
   }
-  m_pJsCpu->callJsCpu(board, legalMoves, nDirection, towersNeededToWin,
-                      stonesLeft, lastMove);
+  m_pJsCpu->callJsCpu(board, legalMoves, towersNeededToWin, stonesLeft,
+                      lastMove);
 }
 
 // ---------------------------------------------------------------------------

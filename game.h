@@ -48,7 +48,7 @@ class Game : public QObject {
   ~Game();
   auto getScene() const -> QGraphicsScene *;
   auto saveGame(const QString &sFile) -> bool;
-  void updatePlayers(bool bInitial = false, bool bChangeDir = false);
+  void updatePlayers(bool bInitial = false, bool bDirectionChangesOnce = false);
   auto initCpu() -> bool;
 
  signals:
@@ -92,7 +92,6 @@ class Game : public QObject {
   struct currentPlayer {
     quint8 ID;
     bool isHuman;
-    qint8 Direction;  // 1 = clockwise / -1 = anti-clockwise
   } activePlayer;
 };
 

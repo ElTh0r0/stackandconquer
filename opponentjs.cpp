@@ -111,7 +111,6 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath,
 
 void OpponentJS::callJsCpu(const QJsonArray &board,
                            const QJsonDocument &legalMoves,
-                           const qint8 nDirection,
                            const QJsonArray &towersNeededToWin,
                            const QJsonArray &stonesLeft,
                            const QJsonArray &lastMove) {
@@ -123,7 +122,6 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
   m_TowersNeededToWin = towersNeededToWin;
   m_StonesLeft = stonesLeft;
   m_LastMove = lastMove;
-  m_nDirection = nDirection;
 
   QJSValue result = m_obj.property(QStringLiteral("callCPU")).call(arguments);
   // qDebug() << "Result of callCPU(): " + result.toString();
@@ -185,8 +183,6 @@ auto OpponentJS::getTowersNeededToWin() -> QJsonArray {
 auto OpponentJS::getNumberOfStones() -> QJsonArray { return m_StonesLeft; }
 
 auto OpponentJS::getLastMove() -> QJsonArray { return m_LastMove; }
-
-auto OpponentJS::getDirection() -> qint8 { return m_nDirection; }
 
 auto OpponentJS::getLegalMoves() -> QString {
   QString sJsonMoves(

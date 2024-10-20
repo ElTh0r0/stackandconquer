@@ -31,7 +31,6 @@
  *   game.getNumberOfStones();
  *   game.getLastMove();
  *   game.getLegalMoves();
- *   game.getDirection();
  *   game.getBoardDimensionX();
  *   game.getBoardDimensionY();
  *   game.getOutside();
@@ -51,7 +50,6 @@ var game = {
   _nBoardDimensionY: 5,
   _sOut: "#",
   _sPad: "-",
-  _nDirection: 1,
 
   log: function (sMessage) {
     console.log(sMessage);
@@ -76,9 +74,6 @@ var game = {
   },
   getPadding: function () {
     return this._sPad;
-  },
-  getDirection: function () {
-    return this._nDirection;
   },
 
   _jsmoves: JSON.stringify([

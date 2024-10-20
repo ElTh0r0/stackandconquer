@@ -60,7 +60,6 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
   m_sBoardFile = m_pSettings->getBoardFile();
   m_nNumOfPlayers = m_pSettings->getNumOfPlayers();
   quint8 nStartPlayer(m_pSettings->getStartPlayer());
-  qint8 nDirection = 1;
   QJsonArray Won;
   QJsonArray StonesLeft;
   QJsonArray CpuScript;
@@ -76,14 +75,11 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
 
     nStartPlayer =
         static_cast<quint8>(jsonObj[QStringLiteral("Current")].toInt());
-    nDirection =
-        static_cast<qint8>(jsonObj[QStringLiteral("Direction")].toInt());
     m_nTowersToWin =
         static_cast<quint8>(jsonObj[QStringLiteral("WinTowers")].toInt());
-    if (0 == nStartPlayer || 0 == m_nTowersToWin ||
-        (-1 != nDirection && 1 != nDirection)) {
+    if (0 == nStartPlayer || 0 == m_nTowersToWin) {
       qWarning() << "Save game contains invalid data:"
-                 << "nStartPlayer / m_nWinTowers empty or direction != 1/-1";
+                 << "nStartPlayer or m_nWinTowers empty";
       QMessageBox::critical(nullptr, tr("Warning"),
                             tr("Save game contains invalid data."));
       exit(-1);
@@ -183,7 +179,6 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
 
   activePlayer.ID = nStartPlayer;
   activePlayer.isHuman = m_pPlayers.at(activePlayer.ID - 1)->isHuman();
-  activePlayer.Direction = nDirection;
 
   m_previousMove.clear();
 }
@@ -431,7 +426,7 @@ void Game::returnStones(const int nIndex) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::updatePlayers(bool bInitial, bool bChangeDir) {
+void Game::updatePlayers(bool bInitial, bool bDirectionChangesOnce) {
   if (m_bScriptError) {
     emit setInteractive(false);
     return;
@@ -469,11 +464,12 @@ void Game::updatePlayers(bool bInitial, bool bChangeDir) {
       }
       emit updateNames(sListPlayers);
     } else {  // Toggle active player
-      if (bChangeDir) {
-        activePlayer.Direction = activePlayer.Direction * (-1);
+      if (bDirectionChangesOnce) {
+        activePlayer.ID -= 1;
+      } else {
+        activePlayer.ID += 1;
       }
 
-      activePlayer.ID += activePlayer.Direction;
       if (activePlayer.ID > m_nNumOfPlayers) {
         activePlayer.ID = 1;
       }
@@ -512,8 +508,7 @@ void Game::delayCpu() {
   m_pPlayers.at(activePlayer.ID - 1)
       ->callCpu(m_pBoard->getBoard(),
                 m_pPlayers.at(activePlayer.ID - 1)->getLegalMoves(),
-                activePlayer.Direction, m_TowersNeededToWin, m_NumberOfStones,
-                prevMove);
+                m_TowersNeededToWin, m_NumberOfStones, prevMove);
 }
 
 // ---------------------------------------------------------------------------
@@ -545,25 +540,21 @@ auto Game::checkPossibleMoves() -> bool {
     qDebug() << "PLAYER " + m_pPlayers.at(activePlayer.ID - 1)->getID() +
                     " HAS TO PASS!";
     QString sDirectionChange(QLatin1String(""));
-    bool bDirectionChange(false);
+    bool bDirectionChangesOnce(false);
     if (m_nNumOfPlayers > 2) {
-      qint8 tmpDir(activePlayer.Direction);
       quint8 tmpID(activePlayer.ID);
-      tmpDir = tmpDir * (-1);
-      tmpID += tmpDir;
-      if (tmpID > m_nNumOfPlayers) {
-        tmpID = 1;
-      }
+      tmpID -= 1;  // Give back right to move to previous player
       if (tmpID < 1) {
         tmpID = m_nNumOfPlayers;
       }
 
-      // Check if player after direction change would be able to move.
+      // Check if previous player would be able to move.
       // If not, do not change direction, since it would lead to infinity loop.
       if (m_pPlayers.at(tmpID - 1)->canMove()) {
-        sDirectionChange = "\n" + tr("Playing direction changes!");
-        qDebug() << "Playing direction changes!";
-        bDirectionChange = true;
+        sDirectionChange =
+            "\n" + tr("Right to move is given back to the previous player!");
+        qDebug() << "Right to move is given back to the previous player!";
+        bDirectionChangesOnce = true;
       }
     }
     QMessageBox::information(
@@ -571,7 +562,7 @@ auto Game::checkPossibleMoves() -> bool {
         tr("No move possible! %1 has to pass.")
                 .arg(m_pPlayers.at(activePlayer.ID - 1)->getName()) +
             sDirectionChange);
-    this->updatePlayers(false, bDirectionChange);
+    this->updatePlayers(false, bDirectionChangesOnce);
     return false;
   }
 
@@ -617,7 +608,6 @@ auto Game::saveGame(const QString &sFile) -> bool {
   jsonObj[QStringLiteral("BoardFileRelative")] = sRelativeDir;
   jsonObj[QStringLiteral("WinTowers")] = m_nTowersToWin;
   jsonObj[QStringLiteral("Current")] = activePlayer.ID;
-  jsonObj[QStringLiteral("Direction")] = activePlayer.Direction;
   jsonObj[QStringLiteral("NumOfPlayers")] = m_nNumOfPlayers;
   QJsonArray arrWon;
   QJsonArray arrStonesLeft;
