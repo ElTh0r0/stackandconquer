@@ -55,7 +55,7 @@ class Board : public QGraphicsScene {
   void removeStone(const int nIndex, const bool bAll = false);
   void selectIndexField(const int nIndex);
   auto getBoard() const -> QJsonArray;
-  auto getBoadDimensions() const -> QPoint;
+  auto getBoardDimensions() const -> QPoint;
   auto getMaxPlayerStones() const -> quint8;
   auto getField(const int index) const -> QString;
   auto getLegalMoves(const QString &sID, const bool bStonesLeft,

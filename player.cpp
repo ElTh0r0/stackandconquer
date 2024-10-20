@@ -54,10 +54,10 @@ Player::~Player() = default;
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-auto Player::initCPU(const QJsonArray &emptyBoard, const QPoint BoadDimensions,
+auto Player::initCPU(const QJsonArray &emptyBoard, const QPoint BoardDimensions,
                      const quint8 nMaxTowerHeight, const quint8 nNumOfPlayers,
                      const QString &sOut, const QString &sPad) -> bool {
-  m_pJsCpu = new OpponentJS(m_nID, BoadDimensions, nMaxTowerHeight,
+  m_pJsCpu = new OpponentJS(m_nID, BoardDimensions, nMaxTowerHeight,
                             nNumOfPlayers, sOut, sPad);
   connect(m_pJsCpu, &OpponentJS::actionCPU, this, &Player::actionCPU);
   connect(m_pJsCpu, &OpponentJS::scriptError, this, &Player::scriptError);

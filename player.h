@@ -47,7 +47,7 @@ class Player : public QObject {
          QObject *pParent = nullptr);
   ~Player();
 
-  auto initCPU(const QJsonArray &emptyBoard, const QPoint BoadDimensions,
+  auto initCPU(const QJsonArray &emptyBoard, const QPoint BoardDimensions,
                const quint8 nMaxTowerHeight, const quint8 nNumOfPlayers,
                const QString &sOut, const QString &sPad) -> bool;
   auto isHuman() const -> bool;

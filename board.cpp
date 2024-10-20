@@ -713,7 +713,7 @@ auto Board::getField(const int index) const -> QString {
 
 auto Board::getBoard() const -> QJsonArray { return m_jsBoard; }
 
-auto Board::getBoadDimensions() const -> QPoint { return m_BoardDimensions; }
+auto Board::getBoardDimensions() const -> QPoint { return m_BoardDimensions; }
 
 auto Board::getMaxPlayerStones() const -> quint8 { return m_nMaxPlayerStones; }
 
