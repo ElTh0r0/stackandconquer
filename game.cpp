@@ -530,9 +530,26 @@ auto Game::checkPossibleMoves() -> bool {
   if (bTie) {
     emit setInteractive(false);
     qDebug() << "NO MOVES POSSIBLE ANYMORE!";
-    QMessageBox::information(nullptr, tr("Information"),
-                             tr("No moves possible anymore.\n"
-                                "Game ends in a tie!"));
+    bool bSameScore = true;
+    for (int i = 0; i < m_nNumOfPlayers - 1; i++) {
+      if (m_pPlayers.at(i)->getWonTowers() !=
+          m_pPlayers.at(i + 1)->getWonTowers()) {
+        bSameScore = false;
+        break;
+      }
+    }
+    if (bSameScore) {
+      QMessageBox::information(nullptr, tr("Information"),
+                               tr("No moves possible anymore.\n"
+                                  "Game ends in a tie!"));
+    } else {
+      QString sScore(tr("No moves possible anymore! Game ends with score:"));
+      for (int i = 0; i < m_nNumOfPlayers; i++) {
+        sScore += "\n - " + tr("Player") + " " + QString::number(i + 1) + ": " +
+                  QString::number(m_pPlayers.at(i)->getWonTowers());
+      }
+      QMessageBox::information(nullptr, tr("Information"), sScore);
+    }
     return false;
   }
 

@@ -60,8 +60,9 @@
         <location filename="../game.cpp" line="252"/>
         <location filename="../game.cpp" line="404"/>
         <location filename="../game.cpp" line="453"/>
-        <location filename="../game.cpp" line="533"/>
-        <location filename="../game.cpp" line="561"/>
+        <location filename="../game.cpp" line="542"/>
+        <location filename="../game.cpp" line="551"/>
+        <location filename="../game.cpp" line="578"/>
         <source>Information</source>
         <translation>Informatie</translation>
     </message>
@@ -135,19 +136,29 @@
         <translation>%1 heeft het spel gewonnen!</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="534"/>
+        <location filename="../game.cpp" line="543"/>
         <source>No moves possible anymore.
 Game ends in a tie!</source>
         <translation>Er zijn geen zetten meer mogelijk.
 Jullie eindigen in gelijkspel!</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="555"/>
+        <location filename="../game.cpp" line="546"/>
+        <source>No moves possible anymore! Game ends with score:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../game.cpp" line="548"/>
+        <source>Player</source>
+        <translation type="unfinished">Speler</translation>
+    </message>
+    <message>
+        <location filename="../game.cpp" line="572"/>
         <source>Right to move is given back to the previous player!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="562"/>
+        <location filename="../game.cpp" line="579"/>
         <source>No move possible! %1 has to pass.</source>
         <translation>Er zijn geen zetten mogelijk! %1 moet de beurt overslaan.</translation>
     </message>

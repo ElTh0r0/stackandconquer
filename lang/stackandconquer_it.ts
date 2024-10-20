@@ -92,8 +92,9 @@
         <location filename="../game.cpp" line="252"/>
         <location filename="../game.cpp" line="404"/>
         <location filename="../game.cpp" line="453"/>
-        <location filename="../game.cpp" line="533"/>
-        <location filename="../game.cpp" line="561"/>
+        <location filename="../game.cpp" line="542"/>
+        <location filename="../game.cpp" line="551"/>
+        <location filename="../game.cpp" line="578"/>
         <source>Information</source>
         <translation>Informazione</translation>
     </message>
@@ -108,12 +109,22 @@
         <translation>Mossa non valida!</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="555"/>
+        <location filename="../game.cpp" line="546"/>
+        <source>No moves possible anymore! Game ends with score:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../game.cpp" line="548"/>
+        <source>Player</source>
+        <translation type="unfinished">Giocatore</translation>
+    </message>
+    <message>
+        <location filename="../game.cpp" line="572"/>
         <source>Right to move is given back to the previous player!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="562"/>
+        <location filename="../game.cpp" line="579"/>
         <source>No move possible! %1 has to pass.</source>
         <translation>Nessuna mossa possibile! %1 deve passare.</translation>
     </message>
@@ -145,7 +156,7 @@
         <translation>%1 ha vinto la partita!</translation>
     </message>
     <message>
-        <location filename="../game.cpp" line="534"/>
+        <location filename="../game.cpp" line="543"/>
         <source>No moves possible anymore.
 Game ends in a tie!</source>
         <translation>Non sono più possibili mosse.
