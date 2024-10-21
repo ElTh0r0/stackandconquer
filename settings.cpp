@@ -168,8 +168,6 @@ void Settings::showEvent(QShowEvent *pEvent) {
   this->readSettings();
   m_bSettingChanged = false;
   m_pUi->tabWidget->setCurrentIndex(0);
-  // TODO(x): To be removed when more than one board available
-  m_pUi->cbBoard->setEnabled(false);
   QDialog::showEvent(pEvent);
 }
 
@@ -313,6 +311,10 @@ void Settings::searchBoards(const QString &userDataDir) {
         m_pUi->cbBoard->addItem(QIcon(sIcon), file.baseName());
       }
     }
+  }
+
+  if (m_sListBoards.size() < 2) {
+    m_pUi->cbBoard->setEnabled(false);
   }
 }
 
