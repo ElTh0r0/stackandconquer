@@ -296,6 +296,7 @@ auto Settings::getCpuStrength(const QString &sFilename) -> QString {
         if (!sLine.isEmpty()) {
           sStrength = " (" + sLine + ")";
         }
+        break;
       }
     }
     scriptFile.close();
