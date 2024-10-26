@@ -539,7 +539,8 @@ void StackAndConquer::showInfoBox() {
                           "%6<br/>"
                           "<small>%7</small>"
                           "</center><br/>"
-                          "%8")
+                          "%8<br/><br/>"
+                          "%9")
           .arg(qApp->applicationName(), qApp->applicationVersion(),
                QStringLiteral(APP_DESC), QStringLiteral(APP_COPY),
                "URL: <a href=\"https://github.com/ElTh0r0/stackandconquer\">"
@@ -558,7 +559,11 @@ void StackAndConquer::showInfoBox() {
                    "</i><br />"
                    "&nbsp;&nbsp;- Dutch: Vistaus, Elbert Pol<br />"
                    "&nbsp;&nbsp;- German: ElThoro<br />"
-                   "&nbsp;&nbsp;- Italian: davi92"));
+                   "&nbsp;&nbsp;- Italian: davi92",
+               "<i>" + tr("CPU players") +
+                   "</i><br />"
+                   "&nbsp;&nbsp;- Advanced CPU: ElThoro<br />"
+                   "&nbsp;&nbsp;- Minimax & MonteCarlo CPU: maksverver"));
 }
 
 // ---------------------------------------------------------------------------
