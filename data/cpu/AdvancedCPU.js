@@ -22,6 +22,7 @@
  *
  * \section DESCRIPTION
  * Advanced CPU opponent.
+ * CPU strength: Medium
  *
  * Following function can be used to access data from game:
  *   game.getID();

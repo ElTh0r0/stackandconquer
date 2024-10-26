@@ -106,7 +106,8 @@ class Settings : public QDialog {
   auto readColor(QSettings *pSet, const QString &sKey,
                  const QString &sFallback) const -> QColor;
   auto searchTranslations() const -> QStringList;
-  void searchCpuScripts(const QString &userDataDir);
+  void searchCpuScripts(const QString &sUserDataDir);
+  auto getCpuStrength(const QString &sFilename) -> QString;
   void searchBoardStyles(const QString &sStyleDir);
   void loadBoardStyle(const QString &sStyleFile);
   void readStyle_SetTable(QColor &color, QSettings *pSet, const int nRow,
@@ -114,7 +115,7 @@ class Settings : public QDialog {
   void saveBoardStyle(const QString &sStyleFile);
   void saveColor(QColor &color, QSettings *pSet, const int nRow,
                  const QString &sKey);
-  void searchBoards(const QString &userDataDir);
+  void searchBoards(const QString &sUserDataDir);
   void updateStartCombo();
 
   Ui::SettingsDialog *m_pUi;

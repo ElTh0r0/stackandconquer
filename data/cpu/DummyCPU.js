@@ -22,6 +22,8 @@
  *
  * \section DESCRIPTION
  * Dummy CPU opponent.
+ * Very simple opponent to be used as starting point for own CPU implementation.
+ * CPU strength: Very easy
  *
  * Following function can be used to access data from game:
  *   game.getID();

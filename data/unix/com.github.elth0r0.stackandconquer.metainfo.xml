@@ -42,6 +42,8 @@
         <p>Main changes:</p>
         <ul>
           <li>Extend CPU interface</li>
+          <li>Add Minimax and MonteCarlo CPU - thanks to maksverver!</li>
+          <li>Drop support for ReactOS (>= Qt 5.12 required now)</li>
         </ul>
       </description>
     </release>

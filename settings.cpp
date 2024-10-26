@@ -218,7 +218,7 @@ auto Settings::searchTranslations() const -> QStringList {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void Settings::searchCpuScripts(const QString &userDataDir) {
+void Settings::searchCpuScripts(const QString &sUserDataDir) {
   QDir cpuDir = m_sSharePath;
 
   m_sListCPUs.clear();
@@ -231,6 +231,7 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
     m_listPlayerCombo[i]->addItem(QIcon(sIcon), m_sListCPUs.first());
   }
 
+  QString sStrength;
   // Cpu scripts in share folder
   if (cpuDir.cd(QStringLiteral("cpu"))) {
     const QFileInfoList listFiles(cpuDir.entryInfoList(QDir::Files));
@@ -240,16 +241,18 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
     }
     for (const auto &file : listFiles) {
       if (m_sCpuExtension == "." + file.suffix().toLower()) {
+        sStrength = this->getCpuStrength(file.absoluteFilePath());
         m_sListCPUs << file.absoluteFilePath();
         for (int i = 0; i < m_listPlayerCombo.size(); i++) {
-          m_listPlayerCombo[i]->addItem(QIcon(sIcon), file.baseName());
+          m_listPlayerCombo[i]->addItem(QIcon(sIcon),
+                                        file.baseName() + sStrength);
         }
       }
     }
   }
 
   // Cpu scripts in user folder
-  cpuDir.setPath(userDataDir);
+  cpuDir.setPath(sUserDataDir);
   if (cpuDir.cd(QStringLiteral("cpu"))) {
     const QFileInfoList listFiles(cpuDir.entryInfoList(QDir::Files));
     sIcon = QStringLiteral(":/img/code.png");
@@ -264,9 +267,11 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
           continue;
         }
 
+        sStrength = this->getCpuStrength(file.absoluteFilePath());
         m_sListCPUs << file.absoluteFilePath();
         for (int i = 0; i < m_listPlayerCombo.size(); i++) {
-          m_listPlayerCombo[i]->addItem(QIcon(sIcon), file.baseName());
+          m_listPlayerCombo[i]->addItem(QIcon(sIcon),
+                                        file.baseName() + sStrength);
         }
       }
     }
@@ -276,7 +281,33 @@ void Settings::searchCpuScripts(const QString &userDataDir) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-void Settings::searchBoards(const QString &userDataDir) {
+auto Settings::getCpuStrength(const QString &sFilename) -> QString {
+  QString sStrength("");
+  QFile scriptFile(sFilename);
+  if (scriptFile.open(QIODevice::ReadOnly)) {
+    QTextStream in(&scriptFile);
+    QString sLine;
+    while (in.readLineInto(&sLine)) {
+      if (sLine.trimmed().startsWith(("// CPU strength:")) ||
+          sLine.trimmed().startsWith(("* CPU strength:"))) {
+        sLine = sLine.remove("// CPU strength:")
+                    .remove("* CPU strength:")
+                    .trimmed();
+        if (!sLine.isEmpty()) {
+          sStrength = " (" + sLine + ")";
+        }
+      }
+    }
+    scriptFile.close();
+  }
+
+  return sStrength;
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+void Settings::searchBoards(const QString &sUserDataDir) {
   QDir boardsDir = m_sSharePath;
 
   m_sListBoards.clear();
@@ -292,7 +323,7 @@ void Settings::searchBoards(const QString &userDataDir) {
   }
 
   // Boards in user folder
-  boardsDir.setPath(userDataDir);
+  boardsDir.setPath(sUserDataDir);
   if (boardsDir.cd(QStringLiteral("boards"))) {
     const QFileInfoList listFiles(boardsDir.entryInfoList(QDir::Files));
     QString sIcon = QStringLiteral(":/img/code.png");

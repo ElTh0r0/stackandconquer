@@ -26,6 +26,8 @@
  *
  * This file was auto-generated from multiple source files. The original source
  * code is available here: https://github.com/maksverver/stackandconquer-ai/
+ *
+ * CPU strength: Very hard
  */
 
 'use strict';
