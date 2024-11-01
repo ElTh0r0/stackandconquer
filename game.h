@@ -42,9 +42,10 @@ class Game : public QObject {
   Q_OBJECT
 
  public:
-  explicit Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
+  explicit Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
+                const QString &sOUT,
                 const QString &sSavegame = QLatin1String(""),
-                QObject *pParent = nullptr);
+                QObject *pParentObj = nullptr);
   ~Game();
   auto getScene() const -> QGraphicsScene *;
   auto saveGame(const QString &sFile) -> bool;
@@ -75,6 +76,7 @@ class Game : public QObject {
   void checkTowerWin(const int nIndex);
   void returnStones(const int nIndex);
 
+  QWidget *m_pParent;
   Settings *m_pSettings;
   Board *m_pBoard;
   QString m_sBoardFile;

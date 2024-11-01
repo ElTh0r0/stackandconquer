@@ -64,8 +64,8 @@ StackAndConquer::StackAndConquer(const QDir &sharePath,
       m_DefaultSize(600, 480) {
   m_pUi->setupUi(this);
 
-  m_pSettings = new Settings(m_sSharePath, m_userDataDir.absolutePath(),
-                             sBoardExtension, m_nMaxPlayers, this);
+  m_pSettings = new Settings(this, m_sSharePath, m_userDataDir.absolutePath(),
+                             sBoardExtension, m_nMaxPlayers);
   connect(m_pSettings, &Settings::newGame, this,
           &StackAndConquer::startNewGame);
   connect(m_pSettings, &Settings::changeLang, this,
@@ -292,7 +292,7 @@ void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
 void StackAndConquer::startNewGame(const QString &sSavegame) {
   this->recolor();
   delete m_pGame;
-  m_pGame = new Game(m_pSettings, m_sIN, m_sOUT, sSavegame);
+  m_pGame = new Game(this, m_pSettings, m_sIN, m_sOUT, sSavegame);
 
   connect(m_pGame, &Game::updateNames, this, &StackAndConquer::updateNames);
   connect(m_pGame, &Game::drawIcon, this, &StackAndConquer::drawPlayerIcon);

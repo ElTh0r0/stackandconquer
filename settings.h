@@ -47,12 +47,12 @@ class Settings : public QDialog {
   Q_OBJECT
 
  public:
-  explicit Settings(const QString &sSharePath, const QString &userDataDir,
-                    const QString &sBoardExtension, const quint8 nMaxPlayers,
-                    QWidget *pParent = nullptr);
+  explicit Settings(QWidget *pParent, const QString &sSharePath,
+                    const QString &userDataDir, const QString &sBoardExtension,
+                    const quint8 nMaxPlayers);
   virtual ~Settings();
 
-  auto getBoardFile() const -> QString;
+  auto getBoardFile() -> QString;
   auto getPlayerCpuScript(const quint8 nPlayer) const -> QString;
   auto getPlayerColor(const quint8 nPlayer) const -> QString;
   auto getNumOfPlayers() const -> quint8;

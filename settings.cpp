@@ -38,10 +38,11 @@
 
 #include "ui_settings.h"
 
-Settings::Settings(const QString &sSharePath, const QString &userDataDir,
-                   const QString &sBoardExtension, const quint8 nMaxPlayers,
-                   QWidget *pParent)
-    : m_pUi(new Ui::SettingsDialog()),
+Settings::Settings(QWidget *pParent, const QString &sSharePath,
+                   const QString &userDataDir, const QString &sBoardExtension,
+                   const quint8 nMaxPlayers)
+    : QDialog(pParent),
+      m_pUi(new Ui::SettingsDialog()),
       m_sSharePath(sSharePath),
       m_sBoardExtension(sBoardExtension),
       m_sCpuExtension(QStringLiteral(".js")),
@@ -49,7 +50,6 @@ Settings::Settings(const QString &sSharePath, const QString &userDataDir,
       m_nMaxGrid(200),
       m_nMaxPlayers(nMaxPlayers),
       m_DefaultPlayerColors{"#EF2929", "#FCAF3E", "#729FCF", "#8F5902"} {
-  Q_UNUSED(pParent)
   m_pUi->setupUi(this);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
   this->setModal(true);
@@ -563,7 +563,7 @@ void Settings::accept() {
 
   int nRet = QMessageBox::No;
   if (m_bSettingChanged) {
-    nRet = QMessageBox::question(nullptr, this->windowTitle(),
+    nRet = QMessageBox::question(this, this->windowTitle(),
                                  tr("Main game settings had been changed.<br>"
                                     "Do you want to start a new game?"));
     if (nRet != QMessageBox::Yes) {
@@ -759,7 +759,7 @@ void Settings::readSettings() {
         m_sBoard = m_sListBoards.at(0);
         m_pUi->cbBoard->setCurrentIndex(0);
       } else {
-        QMessageBox::warning(nullptr, tr("Error"),
+        QMessageBox::warning(this, tr("Error"),
                              tr("Boards folder seems empty!"));
         qWarning() << "Boards folder(s) empty (share folder and user folder)!";
         return;
@@ -780,7 +780,7 @@ void Settings::changedStyle(int nIndex) {
     QFileInfo fiStyle(fi.absolutePath() + "/" + m_sBoardStyleFile + m_sExt);
 
     sFileName =
-        QInputDialog::getText(nullptr, tr("New style"),
+        QInputDialog::getText(this, tr("New style"),
                               tr("Please insert name of "
                                  "new style file:"),
                               QLineEdit::Normal, QLatin1String(""), &bOk);
@@ -799,7 +799,7 @@ void Settings::changedStyle(int nIndex) {
       m_pUi->cbBoardStyle->setCurrentIndex(
           m_pUi->cbBoardStyle->findText(m_sBoardStyleFile));
 
-      QMessageBox::warning(nullptr, tr("Error"), tr("File already exists."));
+      QMessageBox::warning(this, tr("Error"), tr("File already exists."));
       qWarning() << "Style file already exists:" << fileStyle.fileName();
       return;
     }
@@ -809,7 +809,7 @@ void Settings::changedStyle(int nIndex) {
       m_pUi->cbBoardStyle->setCurrentIndex(
           m_pUi->cbBoardStyle->findText(m_sBoardStyleFile));
 
-      QMessageBox::warning(nullptr, tr("Error"),
+      QMessageBox::warning(this, tr("Error"),
                            tr("Could not create new style."));
       qWarning() << "Could not create new style file:";
       qWarning() << "Org:" << fiStyle.absoluteFilePath();
@@ -1026,9 +1026,9 @@ auto Settings::getMaxNumOfPlayers() const -> quint8 { return m_nMaxPlayers; }
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-auto Settings::getBoardFile() const -> QString {
+auto Settings::getBoardFile() -> QString {
   if (!QFile::exists(m_sBoard)) {
-    QMessageBox::warning(nullptr, this->windowTitle(),
+    QMessageBox::warning(this, this->windowTitle(),
                          tr("Selected board could not be found!"));
     qWarning() << "Board not found:" << m_sBoard;
     return QString();

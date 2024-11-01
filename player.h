@@ -42,9 +42,9 @@ class Player : public QObject {
   Q_OBJECT
 
  public:
-  Player(const quint8 nID, const quint8 nMaxStones,
+  Player(QWidget *pParent, const quint8 nID, const quint8 nMaxStones,
          const QString &sCpuScript = QLatin1String(""),
-         QObject *pParent = nullptr);
+         QObject *pParentObj = nullptr);
   ~Player();
 
   auto initCPU(const QJsonArray &emptyBoard, const QPoint BoardDimensions,
@@ -70,6 +70,7 @@ class Player : public QObject {
   void scriptError();
 
  private:
+  QWidget *m_pParent;
   const quint8 m_nID;
   OpponentJS *m_pJsCpu;
   QString m_sName;

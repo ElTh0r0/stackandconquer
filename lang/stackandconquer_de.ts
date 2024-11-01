@@ -27,7 +27,7 @@
         <location filename="../board.cpp" line="151"/>
         <location filename="../board.cpp" line="164"/>
         <source>Error while opening board file!</source>
-        <translation>Fehler beim Lader der Spielfelddatei!</translation>
+        <translation>Fehler beim Laden der Spielfelddatei!</translation>
     </message>
     <message>
         <location filename="../board.cpp" line="312"/>

@@ -31,17 +31,19 @@
 #include <QJSEngine>
 #include <QMessageBox>
 
-OpponentJS::OpponentJS(const quint8 nID, const QPoint BoardDimensions,
+OpponentJS::OpponentJS(QWidget *pParent, const quint8 nID,
+                       const QPoint BoardDimensions,
                        const quint8 nHeightTowerWin, const quint8 nNumOfPlayers,
                        const QString &sOut, const QString &sPad,
-                       QObject *pParent)
-    : m_nID(nID),
+                       QObject *pParentObj)
+    : m_pParent(pParent),
+      m_nID(nID),
       m_BoardDimensions(BoardDimensions),
       m_nHeightTowerWin(nHeightTowerWin),
       m_nNumOfPlayers(nNumOfPlayers),
       m_sOut(sOut),
       m_sPad(sPad),
-      m_jsEngine(new QJSEngine(pParent)) {
+      m_jsEngine(new QJSEngine(pParentObj)) {
   m_obj = m_jsEngine->globalObject();
   m_obj.setProperty(QStringLiteral("game"), m_jsEngine->newQObject(this));
 }
@@ -95,7 +97,7 @@ auto OpponentJS::loadAndEvalCpuScript(const QString &sFilepath,
                  "- Error calling \"initCPU\" function at line: " +
                  result.property(QStringLiteral("lineNumber")).toString() +
                  "\n         " + result.toString();
-      QMessageBox::warning(nullptr, tr("Warning"),
+      QMessageBox::warning(m_pParent, tr("Warning"),
                            tr("CPU script execution error! "
                               "Please check the debug log."));
       emit scriptError();
@@ -131,7 +133,7 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
                "- Error calling \"callCPU\" function at line: " +
                result.property(QStringLiteral("lineNumber")).toString() +
                "\n         " + result.toString();
-    QMessageBox::warning(nullptr, tr("Warning"),
+    QMessageBox::warning(m_pParent, tr("Warning"),
                          tr("CPU script execution error! "
                             "Please check the debug log."));
     emit scriptError();
@@ -160,7 +162,7 @@ void OpponentJS::callJsCpu(const QJsonArray &board,
   qCritical() << "CPU P" + QString::number(m_nID) +
                      "script invalid return from callCPU(): " +
                      result.toString();
-  QMessageBox::warning(nullptr, tr("Warning"),
+  QMessageBox::warning(m_pParent, tr("Warning"),
                        tr("CPU script execution error! "
                           "Please check the debug log."));
   emit scriptError();

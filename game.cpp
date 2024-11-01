@@ -46,14 +46,15 @@
 #include "./player.h"
 #include "./settings.h"
 
-Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
-           const QString &sSavegame, QObject *pParent)
-    : m_pSettings(pSettings),
+Game::Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
+           const QString &sOUT, const QString &sSavegame, QObject *pParentObj)
+    : m_pParent(pParent),
+      m_pSettings(pSettings),
       m_pBoard(nullptr),
       m_nMaxTowerHeight(5),
       m_nTowersToWin(pSettings->getTowersToWin()),
       m_bScriptError(false) {
-  Q_UNUSED(pParent)
+  Q_UNUSED(pParentObj)
   qDebug() << "Starting new game" << sSavegame;
 
   // Start with default
@@ -68,7 +69,7 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
     QJsonObject jsonObj(Game::loadGame(sSavegame));
     if (jsonObj.isEmpty()) {
       qWarning() << "Save file is empty!";
-      QMessageBox::critical(nullptr, tr("Warning"),
+      QMessageBox::critical(m_pParent, tr("Warning"),
                             tr("Error while opening save game."));
       exit(-1);
     }
@@ -80,7 +81,7 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
     if (0 == nStartPlayer || 0 == m_nTowersToWin) {
       qWarning() << "Save game contains invalid data:"
                  << "nStartPlayer or m_nWinTowers empty";
-      QMessageBox::critical(nullptr, tr("Warning"),
+      QMessageBox::critical(m_pParent, tr("Warning"),
                             tr("Save game contains invalid data."));
       exit(-1);
     }
@@ -92,7 +93,7 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
       qWarning() << "Save game contains invalid data:"
                  << "NumOfPlayers > max number of players or "
                     "nStartPlayer > m_nNumOfPlayers";
-      QMessageBox::critical(nullptr, tr("Warning"),
+      QMessageBox::critical(m_pParent, tr("Warning"),
                             tr("Save game contains invalid data."));
       exit(-1);
     }
@@ -105,7 +106,7 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
       qWarning() << "Save game contains invalid data:"
                  << "m_nNumOfPlayers = 0 or CpuScript / Won / StonesLeft "
                     "size != m_nNumOfPlayers.";
-      QMessageBox::critical(nullptr, tr("Warning"),
+      QMessageBox::critical(m_pParent, tr("Warning"),
                             tr("Save game contains invalid data."));
       exit(-1);
     }
@@ -119,7 +120,7 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
         m_sBoardFile = qApp->applicationDirPath() + "/" + sRelBoard;
       } else {
         qWarning() << "Save game contains invalid data - board not found!";
-        QMessageBox::warning(nullptr, qApp->applicationName(),
+        QMessageBox::warning(m_pParent, qApp->applicationName(),
                              tr("Save game contains invalid data."));
         exit(-1);
       }
@@ -128,11 +129,11 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
     qDebug() << "Loading save game board:" << m_sBoardFile;
 
     QJsonArray jsBoard = jsonObj[QStringLiteral("Board")].toArray();
-    m_pBoard = new Board(m_sBoardFile, m_nMaxTowerHeight, m_nNumOfPlayers, sIN,
-                         sOUT, m_pSettings);
+    m_pBoard = new Board(m_pParent, m_sBoardFile, m_nMaxTowerHeight,
+                         m_nNumOfPlayers, sIN, sOUT, m_pSettings);
     if (!m_pBoard->setupSavegame(jsBoard)) {
       qWarning() << "Save game contains invalid data!";
-      QMessageBox::warning(nullptr, qApp->applicationName(),
+      QMessageBox::warning(m_pParent, qApp->applicationName(),
                            tr("Save game contains invalid data."));
       exit(-1);
     }
@@ -140,8 +141,8 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
 
   // No save game: Start empty board with default values
   if (nullptr == m_pBoard) {
-    m_pBoard = new Board(m_sBoardFile, m_nMaxTowerHeight, m_nNumOfPlayers, sIN,
-                         sOUT, m_pSettings);
+    m_pBoard = new Board(m_pParent, m_sBoardFile, m_nMaxTowerHeight,
+                         m_nNumOfPlayers, sIN, sOUT, m_pSettings);
     for (int i = 1; i <= m_nNumOfPlayers; i++) {
       Won << 0;
       StonesLeft << m_pBoard->getMaxPlayerStones();
@@ -165,7 +166,7 @@ Game::Game(Settings *pSettings, const QString &sIN, const QString &sOUT,
 
   m_pPlayers.reserve(m_nNumOfPlayers);
   for (int i = 0; i < m_nNumOfPlayers; i++) {
-    m_pPlayers << new Player(i + 1, m_pBoard->getMaxPlayerStones(),
+    m_pPlayers << new Player(m_pParent, i + 1, m_pBoard->getMaxPlayerStones(),
                              CpuScript.at(i).toString(QStringLiteral("ERROR")));
     m_pPlayers.last()->setStonesLeft(StonesLeft.at(i).toInt(999));
     m_pPlayers.last()->setWonTowers(Won.at(i).toInt(666));
@@ -244,12 +245,12 @@ void Game::makeMove(QJsonArray move) {
                           QString::number(move.at(0).toInt()) + ", " +
                           QString::number(move.at(1).toInt()) + ", " +
                           QString::number(move.at(2).toInt()) + "]";
-        QMessageBox::warning(nullptr, tr("Warning"),
+        QMessageBox::warning(m_pParent, tr("Warning"),
                              tr("CPU script made an invalid move! "
                                 "Please check the debug log."));
       } else {
         if (bSetStone) {
-          QMessageBox::information(nullptr, tr("Information"),
+          QMessageBox::information(m_pParent, tr("Information"),
                                    tr("No stones left! Please move a tower."));
         } else {
           QString sMove(m_pBoard->getStringCoordFromIndex(move.at(0).toInt()) +
@@ -257,7 +258,8 @@ void Game::makeMove(QJsonArray move) {
                         m_pBoard->getStringCoordFromIndex(move.at(2).toInt()));
           qWarning() << "Invalid move!"
                      << "P" + QString::number(activePlayer.ID) + " >> " + sMove;
-          QMessageBox::information(nullptr, tr("Warning"), tr("Invalid move!"));
+          QMessageBox::information(m_pParent, tr("Warning"),
+                                   tr("Invalid move!"));
         }
       }
       return;
@@ -271,7 +273,7 @@ void Game::makeMove(QJsonArray move) {
     }
   } else {
     qWarning() << "Invalid move!" << move;
-    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+    QMessageBox::warning(m_pParent, tr("Warning"), tr("Something went wrong!"));
   }
 }
 
@@ -299,7 +301,8 @@ void Game::setStone(const int nIndex, const bool bDebug) {
       m_pBoard->addStone(nIndex, activePlayer.ID);
     } else {
       qWarning() << "Invalid move! Set stone:" << nIndex;
-      QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+      QMessageBox::warning(m_pParent, tr("Warning"),
+                           tr("Something went wrong!"));
       return;
     }
 
@@ -310,7 +313,7 @@ void Game::setStone(const int nIndex, const bool bDebug) {
     this->updatePlayers();
   } else {
     qWarning() << "Invalid move! Set stone:" << nIndex;
-    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+    QMessageBox::warning(m_pParent, tr("Warning"), tr("Something went wrong!"));
   }
 }
 
@@ -328,25 +331,25 @@ void Game::moveTower(const int nFrom, const quint8 nStones, const int nTo) {
   // Below checks never should fail, due to comparison with legal moves list...
   if (listStones.contains(-1)) {
     qWarning() << "Tower contains invalid stone!" << listStones;
-    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+    QMessageBox::warning(m_pParent, tr("Warning"), tr("Something went wrong!"));
     return;
   }
   if (listStones.isEmpty()) {
     qWarning() << "Move tower size == 0! Tower:" << nFrom;
-    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+    QMessageBox::warning(m_pParent, tr("Warning"), tr("Something went wrong!"));
     return;
   }
   if (nStones > listStones.size()) {
     qWarning() << "Trying to move more stones than available! From:" << nFrom
                << "Stones:" << nStones << "To:" << nTo;
-    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+    QMessageBox::warning(m_pParent, tr("Warning"), tr("Something went wrong!"));
     return;
   }
   if (!m_pBoard->checkNeighbourhood(nTo).contains(nFrom)) {
     qWarning() << "CPU tried to move a tower, which is not in the "
                   "neighbourhood of the selected tower.";
     m_bScriptError = true;
-    QMessageBox::warning(nullptr, tr("Warning"),
+    QMessageBox::warning(m_pParent, tr("Warning"),
                          tr("CPU script made an invalid move! "
                             "Please check the debug log."));
     return;
@@ -390,7 +393,8 @@ void Game::checkTowerWin(const int nIndex) {
       qWarning() << "Last stone <= 0 or > num of players!";
       qWarning() << "Field:" << nIndex << " -  Tower"
                  << m_pBoard->getField(nIndex);
-      QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+      QMessageBox::warning(m_pParent, tr("Warning"),
+                           tr("Something went wrong!"));
       return;
     }
 
@@ -401,7 +405,7 @@ void Game::checkTowerWin(const int nIndex) {
                     m_pBoard->getStringCoordFromIndex(nIndex);
     if (m_nTowersToWin != m_pPlayers.at(nWinner)->getWonTowers()) {
       QMessageBox::information(
-          nullptr, tr("Information"),
+          m_pParent, tr("Information"),
           tr("%1 conquered a tower!").arg(m_pPlayers.at(nWinner)->getName()));
     }
 
@@ -450,7 +454,7 @@ void Game::updatePlayers(bool bInitial, bool bDirectionChangesOnce) {
       emit setInteractive(false);
       emit highlightActivePlayer(i + 1, i + 1);
       QMessageBox::information(
-          nullptr, tr("Information"),
+          m_pParent, tr("Information"),
           tr("%1 won the game!").arg(m_pPlayers.at(i)->getName()));
     }
   }
@@ -539,7 +543,7 @@ auto Game::checkPossibleMoves() -> bool {
       }
     }
     if (bSameScore) {
-      QMessageBox::information(nullptr, tr("Information"),
+      QMessageBox::information(m_pParent, tr("Information"),
                                tr("No moves possible anymore.\n"
                                   "Game ends in a tie!"));
     } else {
@@ -548,7 +552,7 @@ auto Game::checkPossibleMoves() -> bool {
         sScore += "\n - " + tr("Player") + " " + QString::number(i + 1) + ": " +
                   QString::number(m_pPlayers.at(i)->getWonTowers());
       }
-      QMessageBox::information(nullptr, tr("Information"), sScore);
+      QMessageBox::information(m_pParent, tr("Information"), sScore);
     }
     return false;
   }
@@ -575,7 +579,7 @@ auto Game::checkPossibleMoves() -> bool {
       }
     }
     QMessageBox::information(
-        nullptr, tr("Information"),
+        m_pParent, tr("Information"),
         tr("No move possible! %1 has to pass.")
                 .arg(m_pPlayers.at(activePlayer.ID - 1)->getName()) +
             sDirectionChange);

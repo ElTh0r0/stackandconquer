@@ -40,10 +40,11 @@ class OpponentJS : public QObject {
   Q_OBJECT
 
  public:
-  explicit OpponentJS(const quint8 nID, const QPoint BoardDimensions,
+  explicit OpponentJS(QWidget *pParent, const quint8 nID,
+                      const QPoint BoardDimensions,
                       const quint8 nHeightTowerWin, const quint8 nNumOfPlayers,
                       const QString &sOut, const QString &sPad,
-                      QObject *pParent = nullptr);
+                      QObject *pParentObj = nullptr);
   auto loadAndEvalCpuScript(const QString &sFilepath,
                             const QJsonArray &emptyBoard) -> bool;
   void callJsCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
@@ -70,6 +71,7 @@ class OpponentJS : public QObject {
   void scriptError();
 
  private:
+  QWidget *m_pParent;
   const quint8 m_nID;
   const QPoint m_BoardDimensions;
   const quint8 m_nHeightTowerWin;

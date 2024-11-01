@@ -41,10 +41,11 @@
 
 #include "./settings.h"
 
-Board::Board(const QString &sBoard, const quint8 nMaxTower, quint8 NumOfPlayers,
-             const QString &sIN, const QString &sOUT, Settings *pSettings,
-             QObject *pParent)
-    : m_sIN(sIN),
+Board::Board(QWidget *pParent, const QString &sBoard, const quint8 nMaxTower,
+             quint8 NumOfPlayers, const QString &sIN, const QString &sOUT,
+             Settings *pSettings, QObject *pParentObj)
+    : m_pParent(pParent),
+      m_sIN(sIN),
       m_sOUT(sOUT),
       m_sPAD(QStringLiteral("-")),
       m_pSettings(pSettings),
@@ -53,7 +54,7 @@ Board::Board(const QString &sBoard, const quint8 nMaxTower, quint8 NumOfPlayers,
       m_nMaxPlayerStones(0),
       m_nMaxTower(nMaxTower),
       m_NumOfPlayers(NumOfPlayers) {
-  Q_UNUSED(pParent)
+  Q_UNUSED(pParentObj)
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
 
   QList<QString> tmpBoard;
@@ -94,14 +95,14 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
   QFile fBoard(sBoard);
   if (!fBoard.exists()) {
     qWarning() << "Board cannot be loaded:" << sBoard;
-    QMessageBox::critical(nullptr, tr("Warning"),
+    QMessageBox::critical(m_pParent, tr("Warning"),
                           tr("Error while opening board file!"));
     return;
   }
 
   if (!fBoard.open(QIODevice::ReadOnly)) {
     qWarning() << "Couldn't open open board file:" << sBoard;
-    QMessageBox::critical(nullptr, tr("Warning"),
+    QMessageBox::critical(m_pParent, tr("Warning"),
                           tr("Error while opening board file!"));
     return;
   }
@@ -119,7 +120,7 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
       !jso.value(QStringLiteral("PlayersStones")).isArray()) {
     qWarning() << "Board file doesn't contain all required keys:" << sBoard;
     qWarning() << "Found json keys:" << jso.keys();
-    QMessageBox::critical(nullptr, tr("Warning"),
+    QMessageBox::critical(m_pParent, tr("Warning"),
                           tr("Error while opening board file!"));
     return;
   }
@@ -130,7 +131,7 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
     qWarning() << "Board file contains invalid dimensions:"
                << m_BoardDimensions;
     qWarning() << "Board:" << sBoard;
-    QMessageBox::critical(nullptr, tr("Warning"),
+    QMessageBox::critical(m_pParent, tr("Warning"),
                           tr("Error while opening board file!"));
     return;
   }
@@ -147,7 +148,7 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
   }
   if (0 == m_nMaxPlayerStones) {
     qWarning() << "Number of player stone is 0!";
-    QMessageBox::critical(nullptr, tr("Warning"),
+    QMessageBox::critical(m_pParent, tr("Warning"),
                           tr("Error while opening board file!"));
     return;
   }
@@ -160,7 +161,7 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
         (m_sOUT != s && m_sIN != s && m_sPAD != s)) {
       qWarning() << "Board array contains invalid data:" << s;
       qWarning() << "Board:" << sBoard;
-      QMessageBox::critical(nullptr, tr("Warning"),
+      QMessageBox::critical(m_pParent, tr("Warning"),
                             tr("Error while opening board file!"));
       return;
     }
@@ -308,7 +309,7 @@ void Board::createStones() {
   if (!fStone.open(QFile::ReadOnly | QFile::Text)) {
     qDebug() << "Could not open stone.svg";
     QMessageBox::critical(
-        nullptr, tr("Warning"),
+        m_pParent, tr("Warning"),
         tr("Could not open %1!").arg(QStringLiteral("stone.svg")));
     return;
   }
@@ -440,7 +441,7 @@ void Board::changeZoom() {
 auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
   if (jsBoard.size() != m_jsBoard.size()) {
     qWarning() << "jsBoard.size() != m_jsBoard.size()";
-    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+    QMessageBox::warning(m_pParent, tr("Warning"), tr("Something went wrong!"));
     return false;
   }
 
@@ -454,7 +455,7 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
         } else {
           qWarning() << "Save game data invalid stone at index" << i;
           qWarning() << "Character:" << ch;
-          QMessageBox::warning(nullptr, tr("Warning"),
+          QMessageBox::warning(m_pParent, tr("Warning"),
                                tr("Something went wrong!"));
           return false;
         }
@@ -466,7 +467,7 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
         qWarning() << "Save game data != board array at index" << i;
         qWarning() << "Save game:" << jsBoard.at(i)
                    << "- board:" << m_jsBoard.at(i);
-        QMessageBox::warning(nullptr, tr("Warning"),
+        QMessageBox::warning(m_pParent, tr("Warning"),
                              tr("Something went wrong!"));
         return false;
       }
@@ -605,7 +606,7 @@ void Board::addStone(const int nIndex, const quint8 nStone, const bool bAnim) {
 
   if (nStone < 1 || nStone > m_NumOfPlayers) {
     qWarning() << "Trying to set invalid stone type" << nStone;
-    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+    QMessageBox::warning(m_pParent, tr("Warning"), tr("Something went wrong!"));
     return;
   }
 
@@ -670,7 +671,7 @@ void Board::resetAnimation2() { m_pAnimateField2->setVisible(false); }
 void Board::removeStone(const int nIndex, const bool bAll) {
   if (m_jsBoard.at(nIndex).toString().isEmpty()) {
     qWarning() << "Trying to remove stone from empty field" << nIndex;
-    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+    QMessageBox::warning(m_pParent, tr("Warning"), tr("Something went wrong!"));
     return;
   }
 
@@ -756,7 +757,7 @@ void Board::selectIndexField(const int nIndex) {
     if (m_jsBoard.at(nIndex).toString().length() > 1) {
       bool ok;
       nStonesToMove = QInputDialog::getInt(
-          nullptr, tr("Move tower"), tr("How many stones shall be moved:"), 1,
+          m_pParent, tr("Move tower"), tr("How many stones shall be moved:"), 1,
           1, m_jsBoard.at(nIndex).toString().length(), 1, &ok);
       if (!ok) {
         return;

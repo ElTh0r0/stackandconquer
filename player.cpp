@@ -32,16 +32,17 @@
 
 #include "./opponentjs.h"
 
-Player::Player(const quint8 nID, const quint8 nMaxStones,
-               const QString &sCpuScript, QObject *pParent)
-    : m_nID(nID),
+Player::Player(QWidget *pParent, const quint8 nID, const quint8 nMaxStones,
+               const QString &sCpuScript, QObject *pParentObj)
+    : m_pParent(pParent),
+      m_nID(nID),
       m_pJsCpu(nullptr),
       m_sName(tr("Player") + " " + QString::number(m_nID)),
       m_sCpuScript(sCpuScript),
       m_nMaxStones(nMaxStones),
       m_nStonesLeft(nMaxStones),
       m_nWonTowers(0) {
-  Q_UNUSED(pParent)
+  Q_UNUSED(pParentObj)
   if (!m_sCpuScript.isEmpty()) {
     QFileInfo fi(m_sCpuScript);
     m_sName += " (" + fi.baseName() + ")";
@@ -57,7 +58,7 @@ Player::~Player() = default;
 auto Player::initCPU(const QJsonArray &emptyBoard, const QPoint BoardDimensions,
                      const quint8 nMaxTowerHeight, const quint8 nNumOfPlayers,
                      const QString &sOut, const QString &sPad) -> bool {
-  m_pJsCpu = new OpponentJS(m_nID, BoardDimensions, nMaxTowerHeight,
+  m_pJsCpu = new OpponentJS(m_pParent, m_nID, BoardDimensions, nMaxTowerHeight,
                             nNumOfPlayers, sOut, sPad);
   connect(m_pJsCpu, &OpponentJS::actionCPU, this, &Player::actionCPU);
   connect(m_pJsCpu, &OpponentJS::scriptError, this, &Player::scriptError);
@@ -72,7 +73,7 @@ void Player::callCpu(const QJsonArray &board, const QJsonDocument &legalMoves,
                      const QJsonArray &stonesLeft, const QJsonArray &lastMove) {
   if (nullptr == m_pJsCpu) {
     qWarning() << "callCPU called for Human player P" + this->getID();
-    QMessageBox::warning(nullptr, tr("Warning"), tr("Something went wrong!"));
+    QMessageBox::warning(m_pParent, tr("Warning"), tr("Something went wrong!"));
     return;
   }
   m_pJsCpu->callJsCpu(board, legalMoves, towersNeededToWin, stonesLeft,
@@ -110,7 +111,7 @@ void Player::setStonesLeft(const quint8 nStones) {
   } else {
     m_nStonesLeft = m_nMaxStones;
     qWarning() << "Stones > MaxStones!" << nStones << ">" << m_nMaxStones;
-    QMessageBox::warning(nullptr, QStringLiteral("Warning"),
+    QMessageBox::warning(m_pParent, QStringLiteral("Warning"),
                          QStringLiteral("Something went wrong!"));
   }
 }
