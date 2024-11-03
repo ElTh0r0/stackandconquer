@@ -297,7 +297,7 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
     QGraphicsScene *tmpScene = new QGraphicsScene(this);
     tmpScene->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
     m_pGraphView->setScene(tmpScene);
-    m_pGraphView->setInteractive(false);
+    this->setViewInteractive(false);
     return;
   }
 
@@ -320,17 +320,18 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
 
   m_pGraphView->setScene(m_pGame->getScene());
   m_pGraphView->updateSceneRect(m_pGame->getScene()->sceneRect());
-  m_pGraphView->setInteractive(true);
 
   QFileInfo fiBoard(m_pSettings->getBoardFile());
   this->setWindowTitle(fiBoard.baseName());
 
   if (!m_pGame->initCpu()) {
-    m_pGraphView->setInteractive(false);
+    this->setViewInteractive(false);
     QMessageBox::warning(this, tr("Warning"),
                          tr("An error occured during CPU initialization."));
     return;
   }
+
+  this->setViewInteractive(true);
   m_pGame->updatePlayers(true);
 }
 
