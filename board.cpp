@@ -41,9 +41,9 @@
 
 #include "./settings.h"
 
-Board::Board(QWidget *pParent, const QString &sBoard, const quint8 nMaxTower,
-             quint8 NumOfPlayers, const QString &sIN, const QString &sOUT,
-             Settings *pSettings, QObject *pParentObj)
+Board::Board(QWidget *pParent, const quint8 nMaxTower, quint8 NumOfPlayers,
+             const QString &sIN, const QString &sOUT, Settings *pSettings,
+             QObject *pParentObj)
     : m_pParent(pParent),
       m_sIN(sIN),
       m_sOUT(sOUT),
@@ -56,14 +56,24 @@ Board::Board(QWidget *pParent, const QString &sBoard, const quint8 nMaxTower,
       m_NumOfPlayers(NumOfPlayers) {
   Q_UNUSED(pParentObj)
   this->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
+}
 
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+auto Board::createBoard(const QString &sBoard) -> bool {
   QList<QString> tmpBoard;
-  this->loadBoard(sBoard, tmpBoard);
+  if (!this->loadBoard(sBoard, tmpBoard)) {
+    return false;
+  }
 
   this->addBoardPadding(tmpBoard, m_nMaxTower);
   this->drawBoard(tmpBoard);
   this->createHighlighters();
-  this->createStones();
+
+  if (!this->createStones()) {
+    return false;
+  }
 
   /*
    * Moving directions factor
@@ -72,13 +82,13 @@ Board::Board(QWidget *pParent, const QString &sBoard, const quint8 nMaxTower,
    * -1   X    1
    * 14  15   16
    */
-  m_DIRS << -(2 * nMaxTower + m_BoardDimensions.x() + 1);  // -16
-  m_DIRS << -(2 * nMaxTower + m_BoardDimensions.x());      // -15
-  m_DIRS << -(2 * nMaxTower + m_BoardDimensions.x() - 1);  // -14
-  m_DIRS << -1 << 1;                                       // -1, 1
-  m_DIRS << -(m_DIRS.at(2));                               // 14
-  m_DIRS << -(m_DIRS.at(1));                               // 15
-  m_DIRS << -(m_DIRS.at(0));                               // 16
+  m_DIRS << -(2 * m_nMaxTower + m_BoardDimensions.x() + 1);  // -16
+  m_DIRS << -(2 * m_nMaxTower + m_BoardDimensions.x());      // -15
+  m_DIRS << -(2 * m_nMaxTower + m_BoardDimensions.x() - 1);  // -14
+  m_DIRS << -1 << 1;                                         // -1, 1
+  m_DIRS << -(m_DIRS.at(2));                                 // 14
+  m_DIRS << -(m_DIRS.at(1));                                 // 15
+  m_DIRS << -(m_DIRS.at(0));                                 // 16
 
   m_FieldStones.clear();
   m_FieldStones.reserve(m_jsBoard.size());
@@ -86,25 +96,27 @@ Board::Board(QWidget *pParent, const QString &sBoard, const quint8 nMaxTower,
   for (int i = 0; i < m_jsBoard.size(); i++) {
     m_FieldStones.append(tmpTower);
   }
+
+  return true;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
+auto Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) -> bool {
   QFile fBoard(sBoard);
   if (!fBoard.exists()) {
     qWarning() << "Board cannot be loaded:" << sBoard;
     QMessageBox::critical(m_pParent, tr("Warning"),
                           tr("Error while opening board file!"));
-    return;
+    return false;
   }
 
   if (!fBoard.open(QIODevice::ReadOnly)) {
     qWarning() << "Couldn't open open board file:" << sBoard;
     QMessageBox::critical(m_pParent, tr("Warning"),
                           tr("Error while opening board file!"));
-    return;
+    return false;
   }
 
   QByteArray boardData = fBoard.readAll();
@@ -122,7 +134,7 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
     qWarning() << "Found json keys:" << jso.keys();
     QMessageBox::critical(m_pParent, tr("Warning"),
                           tr("Error while opening board file!"));
-    return;
+    return false;
   }
 
   m_BoardDimensions.setX(jso.value(QStringLiteral("Columns")).toInt());
@@ -133,7 +145,7 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
     qWarning() << "Board:" << sBoard;
     QMessageBox::critical(m_pParent, tr("Warning"),
                           tr("Error while opening board file!"));
-    return;
+    return false;
   }
 
   const QJsonArray stones(jso.value(QStringLiteral("PlayersStones")).toArray());
@@ -150,7 +162,7 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
     qWarning() << "Number of player stone is 0!";
     QMessageBox::critical(m_pParent, tr("Warning"),
                           tr("Error while opening board file!"));
-    return;
+    return false;
   }
 
   tmpBoard.clear();
@@ -163,7 +175,7 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
       qWarning() << "Board:" << sBoard;
       QMessageBox::critical(m_pParent, tr("Warning"),
                             tr("Error while opening board file!"));
-      return;
+      return false;
     }
     tmpBoard << s;
   }
@@ -171,6 +183,8 @@ void Board::loadBoard(const QString &sBoard, QList<QString> &tmpBoard) {
   qDebug() << "Board file:" << sBoard;
   qDebug() << "Board dimensions:" << m_BoardDimensions.x() << "columns x"
            << m_BoardDimensions.y() << "rows";
+
+  return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -303,7 +317,7 @@ void Board::createHighlighters() {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Board::createStones() {
+auto Board::createStones() -> bool {
   // Load svg as txt for below color exchange.
   QFile fStone(QStringLiteral(":/img/stone.svg"));
   if (!fStone.open(QFile::ReadOnly | QFile::Text)) {
@@ -311,7 +325,7 @@ void Board::createStones() {
     QMessageBox::critical(
         m_pParent, tr("Warning"),
         tr("Could not open %1!").arg(QStringLiteral("stone.svg")));
-    return;
+    return false;
   }
   QTextStream in(&fStone);
   QString sSvg = in.readAll();
@@ -341,6 +355,8 @@ void Board::createStones() {
     }
     m_listPlayerStones << tmpSvgList;
   }
+
+  return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -441,7 +457,6 @@ void Board::changeZoom() {
 auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
   if (jsBoard.size() != m_jsBoard.size()) {
     qWarning() << "jsBoard.size() != m_jsBoard.size()";
-    QMessageBox::warning(m_pParent, tr("Warning"), tr("Something went wrong!"));
     return false;
   }
 
@@ -455,8 +470,6 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
         } else {
           qWarning() << "Save game data invalid stone at index" << i;
           qWarning() << "Character:" << ch;
-          QMessageBox::warning(m_pParent, tr("Warning"),
-                               tr("Something went wrong!"));
           return false;
         }
       }
@@ -467,8 +480,6 @@ auto Board::setupSavegame(const QJsonArray &jsBoard) -> bool {
         qWarning() << "Save game data != board array at index" << i;
         qWarning() << "Save game:" << jsBoard.at(i)
                    << "- board:" << m_jsBoard.at(i);
-        QMessageBox::warning(m_pParent, tr("Warning"),
-                             tr("Something went wrong!"));
         return false;
       }
     }

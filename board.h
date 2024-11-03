@@ -46,10 +46,11 @@ class Board : public QGraphicsScene {
   Q_OBJECT
 
  public:
-  Board(QWidget *pParent, const QString &sBoard, const quint8 nMaxTower,
-        quint8 NumOfPlayers, const QString &sIN, const QString &sOUT,
-        Settings *pSettings, QObject *pParentObj = nullptr);
+  Board(QWidget *pParent, const quint8 nMaxTower, quint8 NumOfPlayers,
+        const QString &sIN, const QString &sOUT, Settings *pSettings,
+        QObject *pParentObj = nullptr);
 
+  auto createBoard(const QString &sBoard) -> bool;
   auto setupSavegame(const QJsonArray &jsBoard) -> bool;
   void addStone(const int nIndex, const quint8 nStone, const bool bAnim = true);
   void removeStone(const int nIndex, const bool bAll = false);
@@ -84,11 +85,11 @@ class Board : public QGraphicsScene {
   void resetAnimation2();
 
  private:
-  void loadBoard(const QString &sBoard, QList<QString> &tmpBoard);
+  auto loadBoard(const QString &sBoard, QList<QString> &tmpBoard) -> bool;
   void addBoardPadding(const QList<QString> &tmpBoard, const quint8 nMaxTower);
   void drawBoard(const QList<QString> &tmpBoard);
   void createHighlighters();
-  void createStones();
+  auto createStones() -> bool;
   void startAnimation(const QPoint field);
   void startAnimation2(const QPoint field);
   auto snapToGrid(const QPointF point) const -> QPointF;

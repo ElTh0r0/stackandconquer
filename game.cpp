@@ -47,19 +47,43 @@
 #include "./settings.h"
 
 Game::Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
-           const QString &sOUT, const QString &sSavegame, QObject *pParentObj)
+           const QString &sOUT, QObject *pParentObj)
     : m_pParent(pParent),
       m_pSettings(pSettings),
+      m_sIN(sIN),
+      m_sOUT(sOUT),
       m_pBoard(nullptr),
+      m_sBoardFile(pSettings->getBoardFile()),
+      m_nNumOfPlayers(pSettings->getNumOfPlayers()),
       m_nMaxTowerHeight(5),
       m_nTowersToWin(pSettings->getTowersToWin()),
       m_bScriptError(false) {
   Q_UNUSED(pParentObj)
+
+  // Dummy init; will be set in createGame()
+  activePlayer.ID = 1;
+  activePlayer.isHuman = true;
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+Game::~Game() {
+  delete m_pBoard;
+  m_pBoard = nullptr;
+  for (int i = 0; i < m_pPlayers.size(); i++) {
+    delete m_pPlayers[i];
+    m_pPlayers[i] = nullptr;
+  }
+  m_pPlayers.clear();
+}
+
+// ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+
+auto Game::createGame(const QString &sSavegame) -> bool {
   qDebug() << "Starting new game" << sSavegame;
 
-  // Start with default
-  m_sBoardFile = m_pSettings->getBoardFile();
-  m_nNumOfPlayers = m_pSettings->getNumOfPlayers();
   quint8 nStartPlayer(m_pSettings->getStartPlayer());
   QJsonArray Won;
   QJsonArray StonesLeft;
@@ -71,7 +95,7 @@ Game::Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
       qWarning() << "Save file is empty!";
       QMessageBox::critical(m_pParent, tr("Warning"),
                             tr("Error while opening save game."));
-      exit(-1);
+      return false;
     }
 
     nStartPlayer =
@@ -83,7 +107,7 @@ Game::Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
                  << "nStartPlayer or m_nWinTowers empty";
       QMessageBox::critical(m_pParent, tr("Warning"),
                             tr("Save game contains invalid data."));
-      exit(-1);
+      return false;
     }
 
     m_nNumOfPlayers =
@@ -95,7 +119,7 @@ Game::Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
                     "nStartPlayer > m_nNumOfPlayers";
       QMessageBox::critical(m_pParent, tr("Warning"),
                             tr("Save game contains invalid data."));
-      exit(-1);
+      return false;
     }
     CpuScript = jsonObj[QStringLiteral("CpuScript")].toArray();
     Won = jsonObj[QStringLiteral("Won")].toArray();
@@ -108,7 +132,7 @@ Game::Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
                     "size != m_nNumOfPlayers.";
       QMessageBox::critical(m_pParent, tr("Warning"),
                             tr("Save game contains invalid data."));
-      exit(-1);
+      return false;
     }
 
     m_sBoardFile = jsonObj[QStringLiteral("BoardFile")].toString().trimmed();
@@ -122,27 +146,33 @@ Game::Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
         qWarning() << "Save game contains invalid data - board not found!";
         QMessageBox::warning(m_pParent, qApp->applicationName(),
                              tr("Save game contains invalid data."));
-        exit(-1);
+        return false;
       }
     }
 
     qDebug() << "Loading save game board:" << m_sBoardFile;
 
     QJsonArray jsBoard = jsonObj[QStringLiteral("Board")].toArray();
-    m_pBoard = new Board(m_pParent, m_sBoardFile, m_nMaxTowerHeight,
-                         m_nNumOfPlayers, sIN, sOUT, m_pSettings);
+    m_pBoard = new Board(m_pParent, m_nMaxTowerHeight, m_nNumOfPlayers, m_sIN,
+                         m_sOUT, m_pSettings);
+    if (!m_pBoard->createBoard(m_sBoardFile)) {
+      return false;
+    }
     if (!m_pBoard->setupSavegame(jsBoard)) {
       qWarning() << "Save game contains invalid data!";
       QMessageBox::warning(m_pParent, qApp->applicationName(),
                            tr("Save game contains invalid data."));
-      exit(-1);
+      return false;
     }
   }
 
   // No save game: Start empty board with default values
   if (nullptr == m_pBoard) {
-    m_pBoard = new Board(m_pParent, m_sBoardFile, m_nMaxTowerHeight,
-                         m_nNumOfPlayers, sIN, sOUT, m_pSettings);
+    m_pBoard = new Board(m_pParent, m_nMaxTowerHeight, m_nNumOfPlayers, m_sIN,
+                         m_sOUT, m_pSettings);
+    if (!m_pBoard->createBoard(m_sBoardFile)) {
+      return false;
+    }
     for (int i = 1; i <= m_nNumOfPlayers; i++) {
       Won << 0;
       StonesLeft << m_pBoard->getMaxPlayerStones();
@@ -182,16 +212,7 @@ Game::Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
   activePlayer.isHuman = m_pPlayers.at(activePlayer.ID - 1)->isHuman();
 
   m_previousMove.clear();
-}
-
-Game::~Game() {
-  delete m_pBoard;
-  m_pBoard = nullptr;
-  for (int i = 0; i < m_nNumOfPlayers; i++) {
-    delete m_pPlayers[i];
-    m_pPlayers[i] = nullptr;
-  }
-  m_pPlayers.clear();
+  return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -491,7 +512,8 @@ void Game::updatePlayers(bool bInitial, bool bDirectionChangesOnce) {
 
     if (!activePlayer.isHuman) {
       emit setInteractive(false);
-      QTimer::singleShot(800, this, &Game::delayCpu);
+      QTimer::singleShot(800, this,
+                         [this]() { this->delayCpu(m_previousMove); });
     } else {
       emit setInteractive(true);
     }
@@ -503,9 +525,9 @@ void Game::updatePlayers(bool bInitial, bool bDirectionChangesOnce) {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 
-void Game::delayCpu() {
+void Game::delayCpu(const QList<int> &previousMove) {
   QJsonArray prevMove;
-  for (const auto &i : m_previousMove) {
+  for (const auto &i : previousMove) {
     prevMove << i;
   }
 

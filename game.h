@@ -43,10 +43,9 @@ class Game : public QObject {
 
  public:
   explicit Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
-                const QString &sOUT,
-                const QString &sSavegame = QLatin1String(""),
-                QObject *pParentObj = nullptr);
+                const QString &sOUT, QObject *pParentObj = nullptr);
   ~Game();
+  auto createGame(const QString &sSavegame = QLatin1String("")) -> bool;
   auto getScene() const -> QGraphicsScene *;
   auto saveGame(const QString &sFile) -> bool;
   void updatePlayers(bool bInitial = false, bool bDirectionChangesOnce = false);
@@ -63,7 +62,6 @@ class Game : public QObject {
 
  private slots:
   void makeMove(QJsonArray move);
-  void delayCpu();
   void caughtScriptError();
 
  private:
@@ -75,9 +73,12 @@ class Game : public QObject {
                         const QJsonArray &move) -> bool;
   void checkTowerWin(const int nIndex);
   void returnStones(const int nIndex);
+  void delayCpu(const QList<int> &previousMove);
 
   QWidget *m_pParent;
   Settings *m_pSettings;
+  QString m_sIN;
+  QString m_sOUT;
   Board *m_pBoard;
   QString m_sBoardFile;
   quint8 m_nNumOfPlayers;

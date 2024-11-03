@@ -292,7 +292,14 @@ void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
 void StackAndConquer::startNewGame(const QString &sSavegame) {
   this->recolor();
   delete m_pGame;
-  m_pGame = new Game(this, m_pSettings, m_sIN, m_sOUT, sSavegame);
+  m_pGame = new Game(this, m_pSettings, m_sIN, m_sOUT);
+  if (!m_pGame->createGame(sSavegame)) {
+    QGraphicsScene *tmpScene = new QGraphicsScene(this);
+    tmpScene->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
+    m_pGraphView->setScene(tmpScene);
+    m_pGraphView->setInteractive(false);
+    return;
+  }
 
   connect(m_pGame, &Game::updateNames, this, &StackAndConquer::updateNames);
   connect(m_pGame, &Game::drawIcon, this, &StackAndConquer::drawPlayerIcon);
