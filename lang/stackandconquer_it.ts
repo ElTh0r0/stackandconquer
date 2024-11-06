@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="it_IT">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="it">
 <context>
     <name>Board</name>
     <message>
@@ -83,6 +81,12 @@
         <translation>Il salvataggio contiene dati non validi.</translation>
     </message>
     <message>
+        <location filename="../game.cpp" line="260"/>
+        <location filename="../game.cpp" line="364"/>
+        <source>CPU script made an invalid move! Please check the debug log.</source>
+        <translation>Lo script della CPU ha effettuato una mossa non valida! Controlla il registro di debug.</translation>
+    </message>
+    <message>
         <location filename="../game.cpp" line="264"/>
         <location filename="../game.cpp" line="416"/>
         <location filename="../game.cpp" line="465"/>
@@ -101,32 +105,6 @@
         <location filename="../game.cpp" line="273"/>
         <source>Invalid move!</source>
         <translation>Mossa non valida!</translation>
-    </message>
-    <message>
-        <location filename="../game.cpp" line="559"/>
-        <source>No moves possible anymore! Game ends with score:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../game.cpp" line="561"/>
-        <source>Player</source>
-        <translation>Giocatore</translation>
-    </message>
-    <message>
-        <location filename="../game.cpp" line="585"/>
-        <source>Right to move is given back to the previous player!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../game.cpp" line="592"/>
-        <source>No move possible! %1 has to pass.</source>
-        <translation>Nessuna mossa possibile! %1 deve passare.</translation>
-    </message>
-    <message>
-        <location filename="../game.cpp" line="260"/>
-        <location filename="../game.cpp" line="364"/>
-        <source>CPU script made an invalid move! Please check the debug log.</source>
-        <translation>Lo script della CPU ha effettuato una mossa non valida! Controlla il registro di debug.</translation>
     </message>
     <message>
         <location filename="../game.cpp" line="287"/>
@@ -155,6 +133,26 @@
 Game ends in a tie!</source>
         <translation>Non sono più possibili mosse.
 Il gioco finisce in pareggio!</translation>
+    </message>
+    <message>
+        <location filename="../game.cpp" line="559"/>
+        <source>No moves possible anymore! Game ends with score:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../game.cpp" line="561"/>
+        <source>Player</source>
+        <translation>Giocatore</translation>
+    </message>
+    <message>
+        <location filename="../game.cpp" line="585"/>
+        <source>Right to move is given back to the previous player!</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../game.cpp" line="592"/>
+        <source>No move possible! %1 has to pass.</source>
+        <translation>Nessuna mossa possibile! %1 deve passare.</translation>
     </message>
 </context>
 <context>
@@ -195,101 +193,91 @@ Il gioco finisce in pareggio!</translation>
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../settings.cpp" line="109"/>
-        <location filename="../settings.cpp" line="900"/>
-        <source>Player %1 Human/CPU</source>
-        <translation>Giocatore %1 Umano/CPU</translation>
-    </message>
-    <message>
-        <location filename="../settings.cpp" line="972"/>
-        <source>Player</source>
-        <translation>Giocatore</translation>
-    </message>
-    <message>
-        <location filename="../settings.cpp" line="970"/>
-        <source>Random</source>
-        <translation>Casuale</translation>
-    </message>
-    <message>
         <location filename="../settings.cpp" line="100"/>
         <location filename="../settings.cpp" line="898"/>
         <source>Color player %1</source>
         <translation>Colore giocatore %1</translation>
     </message>
     <message>
+        <location filename="../settings.cpp" line="109"/>
+        <location filename="../settings.cpp" line="900"/>
+        <source>Player %1 Human/CPU</source>
+        <translation>Giocatore %1 Umano/CPU</translation>
+    </message>
+    <message>
         <location filename="../settings.cpp" line="366"/>
         <source>Create new style...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="904"/>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="907"/>
         <source>Main background</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="907"/>
         <source>Board background</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="908"/>
         <source>Grid color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="908"/>
         <source>Animate color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="909"/>
         <source>Animate border color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="909"/>
         <source>Highlight color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="910"/>
         <source>Highlight border color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="910"/>
         <source>Neighbours color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="911"/>
         <source>Neighbours border color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="911"/>
         <source>Selected color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="912"/>
         <source>Selected border color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="912"/>
         <source>Text color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="913"/>
         <source>Text highlight color</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="567"/>
@@ -299,39 +287,49 @@ Il gioco finisce in pareggio!</translation>
     <message>
         <location filename="../settings.cpp" line="763"/>
         <source>Boards folder seems empty!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="783"/>
         <source>New style</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="784"/>
         <source>Please insert name of new style file:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="762"/>
         <location filename="../settings.cpp" line="802"/>
         <location filename="../settings.cpp" line="812"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="802"/>
         <source>File already exists.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.cpp" line="813"/>
         <source>Could not create new style.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="970"/>
+        <source>Random</source>
+        <translation>Casuale</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="972"/>
+        <source>Player</source>
+        <translation>Giocatore</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="1032"/>
         <source>Selected board could not be found!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -340,6 +338,11 @@ Il gioco finisce in pareggio!</translation>
         <location filename="../settings.ui" line="20"/>
         <source>Preferences</source>
         <translation>Preferenze</translation>
+    </message>
+    <message>
+        <location filename="../settings.ui" line="37"/>
+        <source>General</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.ui" line="51"/>
@@ -352,19 +355,14 @@ Il gioco finisce in pareggio!</translation>
         <translation>Numero di giocatori</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="97"/>
-        <source>Start player</source>
-        <translation>Giocatore di partenza</translation>
-    </message>
-    <message>
         <location filename="../settings.ui" line="90"/>
         <source>Game</source>
         <translation>Gioco</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="37"/>
-        <source>General</source>
-        <translation type="unfinished"></translation>
+        <location filename="../settings.ui" line="97"/>
+        <source>Start player</source>
+        <translation>Giocatore di partenza</translation>
     </message>
     <message>
         <location filename="../settings.ui" line="117"/>
@@ -389,17 +387,17 @@ Il gioco finisce in pareggio!</translation>
     <message>
         <location filename="../settings.ui" line="166"/>
         <source>Board style</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.ui" line="175"/>
         <source>Style</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../settings.ui" line="110"/>
         <source>Board</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
