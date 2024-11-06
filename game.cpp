@@ -34,13 +34,8 @@
 #include <QJsonObject>
 #include <QList>
 #include <QMessageBox>
-#include <QTimer>
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
 #include <QRandomGenerator>
-#else
-#include <QTime>  // Seed qsrand
-#endif
+#include <QTimer>
 
 #include "./board.h"
 #include "./player.h"
@@ -185,13 +180,8 @@ auto Game::createGame(const QString &sSavegame) -> bool {
 
   // Select start player
   if (0 == nStartPlayer) {  // Random
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     nStartPlayer = QRandomGenerator::global()->bounded(
         1, m_pSettings->getNumOfPlayers() + 1);
-#else
-    qsrand(static_cast<uint>(QTime::currentTime().msec()));  // Seed
-    nStartPlayer = qrand() % m_pSettings->getNumOfPlayers() + 1;
-#endif
   }
 
   m_pPlayers.reserve(m_nNumOfPlayers);
@@ -403,12 +393,9 @@ void Game::moveTower(const int nFrom, const quint8 nStones, const int nTo) {
 
 void Game::checkTowerWin(const int nIndex) {
   if (m_pBoard->getField(nIndex).size() >= m_nMaxTowerHeight) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     int nWinner(
         QString(QStringView{m_pBoard->getField(nIndex)}.last()).toInt() - 1);
-#else
-    int nWinner(m_pBoard->getField(nIndex).rightRef(1).toInt() - 1);
-#endif
+
     if (nWinner < 0 || nWinner > m_nNumOfPlayers - 1) {
       qDebug() << Q_FUNC_INFO;
       qWarning() << "Last stone <= 0 or > num of players!";
