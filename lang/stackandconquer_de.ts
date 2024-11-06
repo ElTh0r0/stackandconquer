@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="de">
 <context>
     <name>Board</name>
     <message>
@@ -51,21 +49,6 @@
 <context>
     <name>Game</name>
     <message>
-        <location filename="../game.cpp" line="264"/>
-        <location filename="../game.cpp" line="416"/>
-        <location filename="../game.cpp" line="465"/>
-        <location filename="../game.cpp" line="555"/>
-        <location filename="../game.cpp" line="564"/>
-        <location filename="../game.cpp" line="591"/>
-        <source>Information</source>
-        <translation>Information</translation>
-    </message>
-    <message>
-        <location filename="../game.cpp" line="265"/>
-        <source>No stones left! Please move a tower.</source>
-        <translation>Keine Steine verfügbar! Bitte einen Turm bewegen.</translation>
-    </message>
-    <message>
         <location filename="../game.cpp" line="91"/>
         <location filename="../game.cpp" line="103"/>
         <location filename="../game.cpp" line="115"/>
@@ -102,6 +85,21 @@
         <location filename="../game.cpp" line="364"/>
         <source>CPU script made an invalid move! Please check the debug log.</source>
         <translation>CPU hat einen ungültigen Zug ausgeführt! Bitte überprüfe die Debugdatei.</translation>
+    </message>
+    <message>
+        <location filename="../game.cpp" line="264"/>
+        <location filename="../game.cpp" line="416"/>
+        <location filename="../game.cpp" line="465"/>
+        <location filename="../game.cpp" line="555"/>
+        <location filename="../game.cpp" line="564"/>
+        <location filename="../game.cpp" line="591"/>
+        <source>Information</source>
+        <translation>Information</translation>
+    </message>
+    <message>
+        <location filename="../game.cpp" line="265"/>
+        <source>No stones left! Please move a tower.</source>
+        <translation>Keine Steine verfügbar! Bitte einen Turm bewegen.</translation>
     </message>
     <message>
         <location filename="../game.cpp" line="273"/>
@@ -195,16 +193,16 @@ Das Spiel endet unentschieden!</translation>
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../settings.cpp" line="109"/>
-        <location filename="../settings.cpp" line="900"/>
-        <source>Player %1 Human/CPU</source>
-        <translation>Spieler %1 Mensch/CPU</translation>
-    </message>
-    <message>
         <location filename="../settings.cpp" line="100"/>
         <location filename="../settings.cpp" line="898"/>
         <source>Color player %1</source>
         <translation>Farbe Spieler %1</translation>
+    </message>
+    <message>
+        <location filename="../settings.cpp" line="109"/>
+        <location filename="../settings.cpp" line="900"/>
+        <source>Player %1 Human/CPU</source>
+        <translation>Spieler %1 Mensch/CPU</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="366"/>
@@ -319,6 +317,11 @@ Das Spiel endet unentschieden!</translation>
         <translation>Neuer Stil konnte nicht erstellt werden.</translation>
     </message>
     <message>
+        <location filename="../settings.cpp" line="970"/>
+        <source>Random</source>
+        <translation>Zufällig</translation>
+    </message>
+    <message>
         <location filename="../settings.cpp" line="972"/>
         <source>Player</source>
         <translation>Spieler</translation>
@@ -328,11 +331,6 @@ Das Spiel endet unentschieden!</translation>
         <source>Selected board could not be found!</source>
         <translation>Ausgewähltes Spielfeld konnte nicht gefunden werden!</translation>
     </message>
-    <message>
-        <location filename="../settings.cpp" line="970"/>
-        <source>Random</source>
-        <translation>Zufällig</translation>
-    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
@@ -340,6 +338,11 @@ Das Spiel endet unentschieden!</translation>
         <location filename="../settings.ui" line="20"/>
         <source>Preferences</source>
         <translation>Einstellungen</translation>
+    </message>
+    <message>
+        <location filename="../settings.ui" line="37"/>
+        <source>General</source>
+        <translation>Allgemein</translation>
     </message>
     <message>
         <location filename="../settings.ui" line="51"/>
@@ -352,19 +355,14 @@ Das Spiel endet unentschieden!</translation>
         <translation>Anzahl der Spieler</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="97"/>
-        <source>Start player</source>
-        <translation>Startspieler</translation>
-    </message>
-    <message>
         <location filename="../settings.ui" line="90"/>
         <source>Game</source>
         <translation>Spiel</translation>
     </message>
     <message>
-        <location filename="../settings.ui" line="37"/>
-        <source>General</source>
-        <translation>Allgemein</translation>
+        <location filename="../settings.ui" line="97"/>
+        <source>Start player</source>
+        <translation>Startspieler</translation>
     </message>
     <message>
         <location filename="../settings.ui" line="117"/>
@@ -472,11 +470,6 @@ Das Spiel endet unentschieden!</translation>
         <translation>&amp;Regeln</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="456"/>
-        <source>Rules</source>
-        <translation>Regeln</translation>
-    </message>
-    <message>
         <location filename="../stackandconquer.cpp" line="98"/>
         <location filename="../stackandconquer.cpp" line="329"/>
         <location filename="../stackandconquer.cpp" line="347"/>
@@ -521,6 +514,11 @@ Das Spiel endet unentschieden!</translation>
         <location filename="../stackandconquer.cpp" line="397"/>
         <source>%1&apos;s turn</source>
         <translation>%1 ist am Zug</translation>
+    </message>
+    <message>
+        <location filename="../stackandconquer.cpp" line="456"/>
+        <source>Rules</source>
+        <translation>Regeln</translation>
     </message>
     <message>
         <location filename="../stackandconquer.cpp" line="464"/>
