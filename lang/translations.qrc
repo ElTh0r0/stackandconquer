@@ -3,19 +3,19 @@
         <file>stackandconquer_en.qm</file>
         <file>stackandconquer_de.qm</file>
         <file>stackandconquer_it.qm</file>
-        <file>stackandconquer_jp.qm</file>
+        <file>stackandconquer_ja_JP.qm</file>
         <file>stackandconquer_nl.qm</file>
         <file>stackandconquer_pl.qm</file>
         <file>rules_en.html</file>
         <file>rules_de.html</file>
         <file>rules_it.html</file>
-        <file>rules_jp.html</file>
+        <file>rules_ja_JP.html</file>
         <file>rules_nl.html</file>
         <file>rules_pl.html</file>
         <file>rules_a_trois_en.html</file>
         <file>rules_a_trois_de.html</file>
         <file>rules_a_trois_it.html</file>
-        <file>rules_a_trois_jp.html</file>
+        <file>rules_a_trois_ja_JP.html</file>
         <file>rules_a_trois_nl.html</file>
         <file>rules_a_trois_pl.html</file>
     </qresource>

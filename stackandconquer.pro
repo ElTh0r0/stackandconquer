@@ -83,7 +83,7 @@ RESOURCES    += data/data.qrc \
 TRANSLATIONS += lang/stackandconquer_de.ts \
                 lang/stackandconquer_en.ts \
                 lang/stackandconquer_it.ts \
-                lang/stackandconquer_jp.ts \
+                lang/stackandconquer_ja_JP.ts \
                 lang/stackandconquer_nl.ts \
                 lang/stackandconquer_pl.ts
 

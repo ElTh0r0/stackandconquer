@@ -24,6 +24,7 @@
 
   <url type="homepage">https://github.com/ElTh0r0/stackandconquer</url>
   <url type="bugtracker">https://github.com/ElTh0r0/stackandconquer/issues</url>
+  <url type="translate">https://explore.transifex.com/elth0r0/stackandconquer/</url>
 
   <developer id="com.github.elth0r0">
     <name>Thorsten Roth</name>
@@ -36,14 +37,24 @@
 
   <content_rating type="oars-1.0" />
 
+  <languages>
+    <lang percentage="100">de</lang>
+    <lang percentage="100">en</lang>
+    <lang percentage="80">it</lang>
+    <lang percentage="30">ja_JP</lang>
+    <lang percentage="80">nl</lang>
+    <lang percentage="30">pl</lang>
+  </languages>
+  
   <releases>
-    <release version="0.11.0" date="2024-10-13">
+    <release version="0.11.0" date="2024-11-06">
       <description>
         <p>Main changes:</p>
         <ul>
           <li>Extend CPU interface</li>
           <li>Add Minimax and MonteCarlo CPU - thanks to maksverver!</li>
           <li>Drop support for ReactOS (>= Qt 5.12 required now)</li>
+          <li>Integrate into Transifex for translations</li>
         </ul>
       </description>
     </release>

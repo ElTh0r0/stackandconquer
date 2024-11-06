@@ -476,11 +476,14 @@ void StackAndConquer::showRules() {
   pLayout->addWidget(pCredits);
 
   QString sLang(m_pSettings->getLanguage());
-  sLang = sLang.left(2);
   QFile rules(":/rules_" + sLang + ".html");
   if (!rules.exists()) {
-    qWarning() << rules.fileName() << "does not exist. Loading EN fallback.";
-    rules.setFileName(QStringLiteral(":/rules_en.html"));
+    sLang = sLang.left(2);
+    rules.setFileName(":/rules_" + sLang + ".html");
+    if (!rules.exists()) {
+      qWarning() << rules.fileName() << "does not exist. Loading EN fallback.";
+      rules.setFileName(QStringLiteral(":/rules_en.html"));
+    }
   }
   if (!rules.open(QFile::ReadOnly | QFile::Text)) {
     qWarning() << "Could not open rules:" << rules.fileName();
@@ -495,10 +498,15 @@ void StackAndConquer::showRules() {
   pTextEditRules->setHtml(stream.readAll());
   rules.close();
 
+  sLang = m_pSettings->getLanguage();
   rules.setFileName(":/rules_a_trois_" + sLang + ".html");
   if (!rules.exists()) {
-    qWarning() << rules.fileName() << "does not exist. Loading EN fallback.";
-    rules.setFileName(QStringLiteral(":/rules_a_trois_en.html"));
+    sLang = sLang.left(2);
+    rules.setFileName(":/rules_a_trois_" + sLang + ".html");
+    if (!rules.exists()) {
+      qWarning() << rules.fileName() << "does not exist. Loading EN fallback.";
+      rules.setFileName(QStringLiteral(":/rules_a_trois_en.html"));
+    }
   }
   if (!rules.open(QFile::ReadOnly | QFile::Text)) {
     qWarning() << "Could not open rules a trois:" << rules.fileName();
