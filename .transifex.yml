@@ -1,0 +1,18 @@
+git:
+  filters:
+  - filter_type: file
+    file_format: QT
+    source_language: en
+    source_file: lang/stackandconquer_en.ts
+    # path expression to translation files, must contain <lang> placeholder
+    translation_files_expression: 'lang/stackandconquer_<lang>.ts'
+  - filter_type: file
+    file_format: HTML
+    source_language: en
+    source_file: lang/rules_en.html
+    translation_files_expression: 'lang/rules_<lang>.html'
+  - filter_type: file
+    file_format: HTML
+    source_language: en
+    source_file: lang/rules_a_trois_en.html
+    translation_files_expression: 'lang/rules_a_trois_<lang>.html'
