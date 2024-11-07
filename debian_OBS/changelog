@@ -1,3 +1,13 @@
+stackandconquer (0.11.0-0) unstable; urgency=low
+
+  [ Thorsten Roth ]
+  * Extend CPU interface
+  * Add Minimax and MonteCarlo CPU - thanks to maksverver!
+  * Drop support for ReactOS (>= Qt 5.12 required now)
+  * Integrate into Transifex for translations
+
+ -- Thorsten Roth <elthoro@gmx.de>  Thu, 07 Nov 2024 15:55:00 +0200
+
 stackandconquer (0.10.1-0) unstable; urgency=low
 
   [ Thorsten Roth ]

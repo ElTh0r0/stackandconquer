@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Thu Nov 07 15:55:00 UTC 2024 - elthoro@gmx.de 0.11.0
+
+- Extend CPU interface
+- Add Minimax and MonteCarlo CPU - thanks to maksverver!
+- Drop support for ReactOS (>= Qt 5.12 required now)
+- Integrate into Transifex for translations
+
+-------------------------------------------------------------------
 Mon May 20 14:57:00 UTC 2024 - elthoro@gmx.de 0.10.1
 
 - Add support for dark scheme on Windows with Qt 6.5

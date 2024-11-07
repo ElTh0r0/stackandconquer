@@ -12,7 +12,7 @@ Objective is to build a stack of stones with at least five stones and
 a stone with the players color on top.
 
 Create your own CPU opponent:
-https://github.com/ElTh0r0/stackandconquer/wiki#create-cpu-opponent
+https://github.com/ElTh0r0/stackandconquer/wiki/Create-CPU-opponent
 
 
 Translations
@@ -22,6 +22,11 @@ Translations
  - German: ElThoro
  - Italian: davi92
 
+CPU players
+-----------
+
+ - Advanced CPU: ElThoro
+ - Minimax CPU / MonteCarlo CPU: maksverver
 
 Icons
 -----
