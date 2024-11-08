@@ -139,7 +139,7 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../game.cpp" line="559"/>
         <source>No moves possible anymore! Game ends with score:</source>
-        <translation type="unfinished"></translation>
+        <translation>Er zijn geen zetten meer mogelijk! Eindstand:</translation>
     </message>
     <message>
         <location filename="../game.cpp" line="561"/>
@@ -149,12 +149,12 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../game.cpp" line="585"/>
         <source>Right to move is given back to the previous player!</source>
-        <translation type="unfinished"></translation>
+        <translation>De vorige speler is weer aan de beurt!</translation>
     </message>
     <message>
         <location filename="../game.cpp" line="592"/>
         <source>No move possible! %1 has to pass.</source>
-        <translation>Er zijn geen zetten mogelijk! %1 moet de beurt overslaan.</translation>
+        <translation>Er is geen zet mogelijk! %1 moet de beurt overslaan.</translation>
     </message>
 </context>
 <context>
@@ -209,114 +209,114 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../settings.cpp" line="366"/>
         <source>Create new style...</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieuwe stijl aanmaken...</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="904"/>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Kleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="907"/>
         <source>Main background</source>
-        <translation type="unfinished"></translation>
+        <translation>Hoofdachtergrond</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="907"/>
         <source>Board background</source>
-        <translation type="unfinished"></translation>
+        <translation>Bordachtergrond</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="908"/>
         <source>Grid color</source>
-        <translation type="unfinished"></translation>
+        <translation>Rasterkleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="908"/>
         <source>Animate color</source>
-        <translation type="unfinished"></translation>
+        <translation>Animatiekleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="909"/>
         <source>Animate border color</source>
-        <translation type="unfinished"></translation>
+        <translation>Animatierandkleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="909"/>
         <source>Highlight color</source>
-        <translation type="unfinished"></translation>
+        <translation>Accentkleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="910"/>
         <source>Highlight border color</source>
-        <translation type="unfinished"></translation>
+        <translation>Accentrandkleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="910"/>
         <source>Neighbours color</source>
-        <translation type="unfinished"></translation>
+        <translation>Buurveldkleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="911"/>
         <source>Neighbours border color</source>
-        <translation type="unfinished"></translation>
+        <translation>Buurveldrandkleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="911"/>
         <source>Selected color</source>
-        <translation type="unfinished"></translation>
+        <translation>Selectiekleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="912"/>
         <source>Selected border color</source>
-        <translation type="unfinished"></translation>
+        <translation>Selectierandkleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="912"/>
         <source>Text color</source>
-        <translation type="unfinished"></translation>
+        <translation>Tekstkleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="913"/>
         <source>Text highlight color</source>
-        <translation type="unfinished"></translation>
+        <translation>Tekstaccentkleur</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="567"/>
         <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
-        <translation>De algemene instellingen zijn gewijzigd.&lt;br&gt;Wilt u een nieuw spel starten?</translation>
+        <translation>Spelinstellingen zijn gewijzigd.&lt;br&gt;Wilt u een nieuw spel starten?</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="763"/>
         <source>Boards folder seems empty!</source>
-        <translation type="unfinished"></translation>
+        <translation>Bordenmap schijnt leeg te zijn!</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="783"/>
         <source>New style</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieuwe stijl</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="784"/>
         <source>Please insert name of new style file:</source>
-        <translation type="unfinished"></translation>
+        <translation>Naam van de nieuwe stijl invoeren alstublieft:</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="762"/>
         <location filename="../settings.cpp" line="802"/>
         <location filename="../settings.cpp" line="812"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Fout</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="802"/>
         <source>File already exists.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bestand bestaat al.</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="813"/>
         <source>Could not create new style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kon nieuwe stijl niet aanmaken.</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="970"/>
@@ -331,7 +331,7 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../settings.cpp" line="1032"/>
         <source>Selected board could not be found!</source>
-        <translation type="unfinished"></translation>
+        <translation>Gekozen bord kon niet gevonden worden!</translation>
     </message>
 </context>
 <context>
@@ -344,7 +344,7 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../settings.ui" line="37"/>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>Algemeen</translation>
     </message>
     <message>
         <location filename="../settings.ui" line="51"/>
@@ -369,7 +369,7 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../settings.ui" line="117"/>
         <source>Towers needed to win</source>
-        <translation>Aantal torens dat nodig is om te winnen</translation>
+        <translation>Aantal torens nodig voor winst</translation>
     </message>
     <message>
         <location filename="../settings.ui" line="134"/>
@@ -379,7 +379,7 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../settings.ui" line="141"/>
         <source>Show movable towers after selection</source>
-        <translation>Verplaatsbare torens weergeven na selectie</translation>
+        <translation>Toon verplaatsbare torens na selectie</translation>
     </message>
     <message>
         <location filename="../settings.ui" line="155"/>
@@ -389,17 +389,17 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../settings.ui" line="166"/>
         <source>Board style</source>
-        <translation type="unfinished"></translation>
+        <translation>Bordstijl</translation>
     </message>
     <message>
         <location filename="../settings.ui" line="175"/>
         <source>Style</source>
-        <translation type="unfinished"></translation>
+        <translation>Stijl</translation>
     </message>
     <message>
         <location filename="../settings.ui" line="110"/>
         <source>Board</source>
-        <translation type="unfinished"></translation>
+        <translation>Bord</translation>
     </message>
 </context>
 <context>
