@@ -900,6 +900,8 @@ void Settings::updateUiLang() {
         tr("Player %1 Human/CPU").arg(QString::number(i + 1)));
   }
 
+  m_pUi->cbBoardStyle->setItemText(0, tr("Create new style..."));
+
   QStringList sListHeader;
   sListHeader << tr("Color");
   m_pUi->tableBoardStyle->setHorizontalHeaderLabels(sListHeader);
