@@ -18,7 +18,7 @@ https://github.com/ElTh0r0/stackandconquer/wiki/Create-CPU-opponent
 Translations
 ------------
 
- - Dutch: Vistaus, Elbert Pol
+ - Dutch: Vistaus, Elbert Pol, maksverver
  - German: ElThoro
  - Italian: davi92
 
