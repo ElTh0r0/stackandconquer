@@ -207,6 +207,7 @@ Game ends in a tie!</source>
     </message>
     <message>
         <location filename="../settings.cpp" line="366"/>
+        <location filename="../settings.cpp" line="903"/>
         <source>Create new style...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -248,87 +249,87 @@ Game ends in a tie!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="904"/>
+        <location filename="../settings.cpp" line="906"/>
         <source>Color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="907"/>
+        <location filename="../settings.cpp" line="909"/>
         <source>Main background</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="907"/>
+        <location filename="../settings.cpp" line="909"/>
         <source>Board background</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="908"/>
+        <location filename="../settings.cpp" line="910"/>
         <source>Grid color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="908"/>
+        <location filename="../settings.cpp" line="910"/>
         <source>Animate color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="909"/>
+        <location filename="../settings.cpp" line="911"/>
         <source>Animate border color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="909"/>
+        <location filename="../settings.cpp" line="911"/>
         <source>Highlight color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="910"/>
+        <location filename="../settings.cpp" line="912"/>
         <source>Highlight border color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="910"/>
+        <location filename="../settings.cpp" line="912"/>
         <source>Neighbours color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="911"/>
+        <location filename="../settings.cpp" line="913"/>
         <source>Neighbours border color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="911"/>
+        <location filename="../settings.cpp" line="913"/>
         <source>Selected color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="912"/>
+        <location filename="../settings.cpp" line="914"/>
         <source>Selected border color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="912"/>
+        <location filename="../settings.cpp" line="914"/>
         <source>Text color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="913"/>
+        <location filename="../settings.cpp" line="915"/>
         <source>Text highlight color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="970"/>
+        <location filename="../settings.cpp" line="972"/>
         <source>Random</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="972"/>
+        <location filename="../settings.cpp" line="974"/>
         <source>Player</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="1032"/>
+        <location filename="../settings.cpp" line="1034"/>
         <source>Selected board could not be found!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -475,8 +476,8 @@ Game ends in a tie!</source>
         <location filename="../stackandconquer.cpp" line="329"/>
         <location filename="../stackandconquer.cpp" line="347"/>
         <location filename="../stackandconquer.cpp" line="366"/>
-        <location filename="../stackandconquer.cpp" line="487"/>
-        <location filename="../stackandconquer.cpp" line="505"/>
+        <location filename="../stackandconquer.cpp" line="490"/>
+        <location filename="../stackandconquer.cpp" line="513"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
@@ -532,43 +533,43 @@ Game ends in a tie!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="487"/>
-        <location filename="../stackandconquer.cpp" line="505"/>
+        <location filename="../stackandconquer.cpp" line="490"/>
+        <location filename="../stackandconquer.cpp" line="513"/>
         <source>Could not open rules!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="518"/>
+        <location filename="../stackandconquer.cpp" line="526"/>
         <source>These rules are licensed under Creative Commons &lt;a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;&gt;Attribution-Noncommercial 4.0 International&lt;/a&gt; license.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="541"/>
+        <location filename="../stackandconquer.cpp" line="549"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="556"/>
+        <location filename="../stackandconquer.cpp" line="564"/>
         <source>License</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="559"/>
+        <location filename="../stackandconquer.cpp" line="567"/>
         <source>This application uses icons from &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;Tango project&lt;/a&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="563"/>
+        <location filename="../stackandconquer.cpp" line="571"/>
         <source>The game is based on &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;Mixtour&lt;/a&gt; by Dieter Stein.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="566"/>
+        <location filename="../stackandconquer.cpp" line="574"/>
         <source>Translations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="571"/>
+        <location filename="../stackandconquer.cpp" line="579"/>
         <source>CPU players</source>
         <translation type="unfinished"></translation>
     </message>

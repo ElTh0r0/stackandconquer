@@ -208,76 +208,77 @@ Das Spiel endet unentschieden!</translation>
     </message>
     <message>
         <location filename="../settings.cpp" line="366"/>
+        <location filename="../settings.cpp" line="903"/>
         <source>Create new style...</source>
         <translation>Neuen Stil erstellen...</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="904"/>
+        <location filename="../settings.cpp" line="906"/>
         <source>Color</source>
         <translation>Farbe</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="907"/>
+        <location filename="../settings.cpp" line="909"/>
         <source>Main background</source>
         <translation>Fensterhintergrund</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="907"/>
+        <location filename="../settings.cpp" line="909"/>
         <source>Board background</source>
         <translation>Spielfeldhintergrund</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="908"/>
+        <location filename="../settings.cpp" line="910"/>
         <source>Grid color</source>
         <translation>Gitternetzfarbe</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="908"/>
+        <location filename="../settings.cpp" line="910"/>
         <source>Animate color</source>
         <translation>Animationsfarbe</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="909"/>
+        <location filename="../settings.cpp" line="911"/>
         <source>Animate border color</source>
         <translation>Animationsrahmenfarbe</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="909"/>
+        <location filename="../settings.cpp" line="911"/>
         <source>Highlight color</source>
         <translation>Hervorhebungsfarbe</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="910"/>
+        <location filename="../settings.cpp" line="912"/>
         <source>Highlight border color</source>
         <translation>Hervorhebungsrahmenfarbe</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="910"/>
+        <location filename="../settings.cpp" line="912"/>
         <source>Neighbours color</source>
         <translation>Nachbarfarbe</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="911"/>
+        <location filename="../settings.cpp" line="913"/>
         <source>Neighbours border color</source>
         <translation>Nachbarrahmenfarbe</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="911"/>
+        <location filename="../settings.cpp" line="913"/>
         <source>Selected color</source>
         <translation>Auswahlfarbe</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="912"/>
+        <location filename="../settings.cpp" line="914"/>
         <source>Selected border color</source>
         <translation>Auswahlrahmenfarbe</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="912"/>
+        <location filename="../settings.cpp" line="914"/>
         <source>Text color</source>
         <translation>Textfarbe</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="913"/>
+        <location filename="../settings.cpp" line="915"/>
         <source>Text highlight color</source>
         <translation>Texthervorhebungsfarbe</translation>
     </message>
@@ -319,17 +320,17 @@ Das Spiel endet unentschieden!</translation>
         <translation>Neuer Stil konnte nicht erstellt werden.</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="970"/>
+        <location filename="../settings.cpp" line="972"/>
         <source>Random</source>
         <translation>Zufällig</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="972"/>
+        <location filename="../settings.cpp" line="974"/>
         <source>Player</source>
         <translation>Spieler</translation>
     </message>
     <message>
-        <location filename="../settings.cpp" line="1032"/>
+        <location filename="../settings.cpp" line="1034"/>
         <source>Selected board could not be found!</source>
         <translation>Ausgewähltes Spielfeld konnte nicht gefunden werden!</translation>
     </message>
@@ -476,8 +477,8 @@ Das Spiel endet unentschieden!</translation>
         <location filename="../stackandconquer.cpp" line="329"/>
         <location filename="../stackandconquer.cpp" line="347"/>
         <location filename="../stackandconquer.cpp" line="366"/>
-        <location filename="../stackandconquer.cpp" line="487"/>
-        <location filename="../stackandconquer.cpp" line="505"/>
+        <location filename="../stackandconquer.cpp" line="490"/>
+        <location filename="../stackandconquer.cpp" line="513"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
@@ -533,43 +534,43 @@ Das Spiel endet unentschieden!</translation>
         <translation>Ergänzung für &gt; 2 Spieler</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="487"/>
-        <location filename="../stackandconquer.cpp" line="505"/>
+        <location filename="../stackandconquer.cpp" line="490"/>
+        <location filename="../stackandconquer.cpp" line="513"/>
         <source>Could not open rules!</source>
         <translation>Regeln konnten nicht geöffnet werden!</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="518"/>
+        <location filename="../stackandconquer.cpp" line="526"/>
         <source>These rules are licensed under Creative Commons &lt;a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;&gt;Attribution-Noncommercial 4.0 International&lt;/a&gt; license.</source>
         <translation>Diese Regeln sind unter der Creative Commons &lt;a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;&gt;Attribution-Noncommercial 4.0 International&lt;/a&gt; Lizenz lizensiert.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="541"/>
+        <location filename="../stackandconquer.cpp" line="549"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="556"/>
+        <location filename="../stackandconquer.cpp" line="564"/>
         <source>License</source>
         <translation>Lizenz</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="559"/>
+        <location filename="../stackandconquer.cpp" line="567"/>
         <source>This application uses icons from &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;Tango project&lt;/a&gt;.</source>
         <translation>Diese Anwendung verwendet Symbole aus dem &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;Tango Projekt&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="563"/>
+        <location filename="../stackandconquer.cpp" line="571"/>
         <source>The game is based on &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;Mixtour&lt;/a&gt; by Dieter Stein.</source>
         <translation>Das Spiel basiert auf &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;Mixtour&lt;/a&gt; von Dieter Stein.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="566"/>
+        <location filename="../stackandconquer.cpp" line="574"/>
         <source>Translations</source>
         <translation>Übersetzungen</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="571"/>
+        <location filename="../stackandconquer.cpp" line="579"/>
         <source>CPU players</source>
         <translation>CPU Spieler</translation>
     </message>

@@ -42,18 +42,19 @@
     <lang percentage="100">en</lang>
     <lang percentage="80">it</lang>
     <lang percentage="30">ja_JP</lang>
-    <lang percentage="80">nl</lang>
+    <lang percentage="100">nl</lang>
     <lang percentage="30">pl</lang>
   </languages>
   
   <releases>
-    <release version="0.11.0" date="2024-11-07">
+    <release version="0.11.0" date="2024-11-10">
       <description>
         <p>Main changes:</p>
         <ul>
           <li>Extend CPU interface</li>
-          <li>Add Minimax and MonteCarlo CPU - thanks to maksverver!</li>
+          <li>Add Minimax and MonteCarlo CPU - thanks to maksverver</li>
           <li>Drop support for ReactOS (>= Qt 5.12 required now)</li>
+          <li>Update Dutch translation - thanks to maksverver</li>
           <li>Integrate into Transifex for translations</li>
         </ul>
       </description>
