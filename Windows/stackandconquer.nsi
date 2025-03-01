@@ -118,6 +118,8 @@ Function .onInit
     SetErrorLevel 740 ;ERROR_ELEVATION_REQUIRED
     Quit
   ${EndIf}
+
+  !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
 ;--------------------------------
