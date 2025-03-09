@@ -87,7 +87,7 @@ TRANSLATIONS += lang/stackandconquer_de.ts \
                 lang/stackandconquer_nl.ts \
                 lang/stackandconquer_pl.ts
 
-win32:RC_ICONS = icons/stackandconquer.ico
+win32:RC_FILE = data/win.rc
 
 macx {
   ICON               = icons/icon.icns
