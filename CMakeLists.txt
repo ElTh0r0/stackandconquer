@@ -71,7 +71,7 @@ target_compile_definitions(stackandconquer
         APP_COPY="${PROJECT_COPYRIGHT}"
         APP_DESC="${PROJECT_DESCRIPTION}"
         QT_NO_FOREACH
-        $<$<CONFIG:DEBUG>:QT_DISABLE_DEPRECATED_BEFORE=0x060800>
+        $<$<CONFIG:DEBUG>:QT_DISABLE_DEPRECATED_BEFORE=0x060900>
 )
    
 target_link_libraries(stackandconquer PRIVATE
