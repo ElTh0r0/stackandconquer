@@ -69,8 +69,8 @@ class Game : public QObject {
   void moveTower(const int nFrom, const quint8 nStones, const int nTo);
   static auto loadGame(const QString &sFile) -> QJsonObject;
   auto checkPossibleMoves() -> bool;
-  auto checkMoveIsValid(const QJsonDocument &legalMoves,
-                        const QJsonArray &move) -> bool;
+  auto checkMoveIsValid(const QJsonDocument &legalMoves, const QJsonArray &move)
+      -> bool;
   void checkTowerWin(const int nIndex);
   void returnStones(const int nIndex);
   void delayCpu(const QList<int> &previousMove);

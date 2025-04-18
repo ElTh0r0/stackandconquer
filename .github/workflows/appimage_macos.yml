@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  AppImage_Ubuntu20-04:
-    name: AppImage Ubuntu 20.04
-    runs-on: ubuntu-20.04
+  AppImage_Ubuntu22-04:
+    name: AppImage Ubuntu 22.04
+    runs-on: ubuntu-22.04
     env:
       QT_SELECT: qt5
     steps:
@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install Dependencies
-      run: sudo apt update && sudo apt install qtbase5-dev qt5-qmake qttools5-dev-tools qtdeclarative5-dev libqt5svg5-dev
+      run: sudo apt update && sudo apt install qtbase5-dev qt5-qmake qttools5-dev-tools qtdeclarative5-dev libqt5svg5-dev libfuse2
 
     - name: Download linuxdeployqt
       run: |
@@ -59,9 +59,9 @@ jobs:
        brew install p7zip
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
-        version: '6.5.*'
+        version: '6.8.*'
         host: 'mac'
         target: 'desktop'
 

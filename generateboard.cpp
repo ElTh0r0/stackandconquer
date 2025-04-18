@@ -134,8 +134,8 @@ void GenerateBoard::loopFiles(const QPair<QFileInfo, QFileInfo> &fiInOut,
 // ---------------------------------------------------------------------------
 
 auto GenerateBoard::generateBoard(QFile *pInput, QFile *pOutput,
-                                  const QString &sIN,
-                                  const QString &sOUT) -> bool {
+                                  const QString &sIN, const QString &sOUT)
+    -> bool {
   if (!pInput->open(QIODevice::ReadOnly | QIODevice::Text)) {
     qWarning() << "Couldn't open input file for board generation:"
                << pInput->fileName() << "\n";
