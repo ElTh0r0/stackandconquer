@@ -44,9 +44,19 @@
     <lang percentage="30">ja_JP</lang>
     <lang percentage="100">nl</lang>
     <lang percentage="30">pl</lang>
+    <lang percentage="100">ru</lang>
   </languages>
   
   <releases>
+    <release version="0.11.1" date="2025-05-29">
+      <description>
+        <p>Main changes:</p>
+        <ul>
+          <li>Add Russian translation - thanks to aaly11</li>
+          <li>CI fixes</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.11.0" date="2024-11-10">
       <description>
         <p>Main changes:</p>
