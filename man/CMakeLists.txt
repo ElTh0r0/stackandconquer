@@ -18,6 +18,7 @@ set(MAN_FILES
     man6/stackandconquer.6
     de/man6/stackandconquer.6
     it/man6/stackandconquer.6
+    ru/man6/stackandconquer.6
 )
 
 find_program(GZIP gzip REQUIRED)

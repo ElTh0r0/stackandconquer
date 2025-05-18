@@ -1,0 +1,40 @@
+'\" t
+.\" ** The above line should force tbl to be a preprocessor **
+.\" Man page for StackAndConquer
+.\"
+.\" Copyright (C), 2018, Thorsten Roth
+.\"
+.\" You may distribute under the terms of the GNU General Public
+.\" License as specified in the file COPYING that comes with the man
+.\" distribution.
+.\"
+.\" Mon Jan  01 20:15:00 CEST 2018  ElThoro <elthoro@gmx.de>
+.\"
+.TH STACKANDCONQUER 6 "2019-08-31" "Thorsten Roth" "StackAndConquer Manual"
+.SH ИМЯ
+StackAndConquer \- Настольная игра по захвату башни
+.SH КОМАНДНАЯ СТРОКА
+\fBstackandconquer\fP [\fIключи\fP] и/или [\fIфайл/папка\fP]
+.SH ОПИСАНИЕ
+StackAndConquer \- это сложная настольная игра по захвату башни.
+.SH КЛЮЧИ
+.TP
+\fB\-\-debug\fP
+Старт режима отладки.
+.TP
+\fB\-\-genboard\fP
+Конвертирование файла *.in в файл настольной игры *.stackboard.
+.TP
+\fBфайл/папка\fP
+Загрузка сохранённой игры (.stacksav) или, если используется ключ \-\-genboard вместе с входным файлом/папкой и необязательной папкой назначения, создание файла игровой доски.
+.SH ФАЙЛЫ
+.TP
+.I /usr/share/stackandconquer/cpu
+Сценарии процессора
+.TP
+.I /usr/share/stackandconquer/boards
+Игровые доски
+.SH ГЛЮКИ
+Трекер ошибок GitHub:
+
+https://github.com/ElTh0r0/stackandconquer/issues

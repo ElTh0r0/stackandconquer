@@ -575,7 +575,8 @@ void StackAndConquer::showInfoBox() {
                    "</i><br />"
                    "&nbsp;&nbsp;- Dutch: Vistaus, Elbert Pol, maksverver<br />"
                    "&nbsp;&nbsp;- German: ElThoro<br />"
-                   "&nbsp;&nbsp;- Italian: davi92",
+                   "&nbsp;&nbsp;- Italian: davi92<br />"
+                   "&nbsp;&nbsp;- Russian: aaly11",
                "<i>" + tr("CPU players") +
                    "</i><br />"
                    "&nbsp;&nbsp;- Advanced CPU: ElThoro<br />"

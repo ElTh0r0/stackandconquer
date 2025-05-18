@@ -120,6 +120,7 @@ set(TRANSLATIONS
     lang/stackandconquer_ja_JP.ts
     lang/stackandconquer_nl.ts
     lang/stackandconquer_pl.ts
+    lang/stackandconquer_ru.ts
 )
 
 qt_add_translation(QM_FILES ${TRANSLATIONS})

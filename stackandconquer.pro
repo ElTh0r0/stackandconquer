@@ -85,7 +85,8 @@ TRANSLATIONS += lang/stackandconquer_de.ts \
                 lang/stackandconquer_it.ts \
                 lang/stackandconquer_ja_JP.ts \
                 lang/stackandconquer_nl.ts \
-                lang/stackandconquer_pl.ts
+                lang/stackandconquer_pl.ts \
+                lang/stackandconquer_ru.ts
 
 win32:RC_FILE = data/win.rc
 
@@ -124,6 +125,7 @@ unix: !macx {
   man.files     += man/man6
   man.files     += man/de
   man.files     += man/it
+  man.files     += man/ru
 
   meta.path      = $$PREFIX/share/metainfo
   meta.files    += data/unix/com.github.elth0r0.stackandconquer.metainfo.xml
