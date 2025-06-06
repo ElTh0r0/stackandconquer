@@ -16,111 +16,58 @@
 # You should have received a copy of the GNU General Public License
 # along with StackAndConquer  If not, see <http://www.gnu.org/licenses/>.
 
+%define  _name  com.github.elth0r0.stackandconquer
 Name:           stackandconquer
 Summary:        Challenging tower conquest board game
-Version:        0.11.0
+Version:        0.11.1
 Release:        1
-License:        GPL-3.0+
+License:        GPL-3.0-or-later
+Group:          Amusements/Games/Board/Other
 URL:            https://github.com/ElTh0r0/stackandconquer
 Source:         %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-build
 
-# Fedora, RHEL, or CentOS
 #--------------------------------------------------------------------
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
-Group:          Amusements/Games
 
-BuildRequires:  desktop-file-utils
+BuildRequires:  cmake
+BuildRequires:  cmake(Qt6Core)
+BuildRequires:  cmake(Qt6Gui)
+BuildRequires:  cmake(Qt6LinguistTools)
+BuildRequires:  cmake(Qt6Qml)
+BuildRequires:  cmake(Qt6SvgWidgets)
+BuildRequires:  cmake(Qt6Widgets)
 BuildRequires:  gcc-c++
 BuildRequires:  hicolor-icon-theme
-BuildRequires:  qt5-qtbase-devel
-BuildRequires:  qt5-qtsvg-devel
-BuildRequires:  qt5-qtdeclarative-devel
-%endif
-#--------------------------------------------------------------------
-
-# openSUSE or SLE
-#--------------------------------------------------------------------
-%if 0%{?suse_version}
-Group:          Amusements/Games/Board/Other
-
-BuildRequires:  gcc-c++
-BuildRequires:  hicolor-icon-theme
-BuildRequires:  libqt5-qtbase-devel
-BuildRequires:  libQt5Svg-devel
-BuildRequires:  libqt5-qtdeclarative-devel
 BuildRequires:  update-desktop-files
-%endif
+
 #--------------------------------------------------------------------
 
 %description
-StackAndConquer is a challenging tower conquest board game inspired
-by "Mixtour". Objective is to build a stack of stones with at least
-five stones and a stone with the players color on top.
+StackAndConquer is a challenging tower conquest board game inspired by
+Mixtour created by Dieter Stein. Objective is to build a stack of stones
+with at least five stones and a stone with the players color on top.
 
 %prep
-%setup -q -n %{name}-%{version}
+%autosetup -N -n %{name}-%{version}
 
-# Fedora, RHEL, or CentOS
-#--------------------------------------------------------------------
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 %build
-# Create qmake cache file to add rpm optflags.
-cat > .qmake.cache <<EOF
-QMAKE_CXXFLAGS += %{optflags}
-EOF
-%{qmake_qt5} PREFIX=%{_prefix}
-make %{?_smp_mflags}
+%cmake_qt6
+%qt6_build
 
 %install
-make install INSTALL_ROOT=%{buildroot}
-desktop-file-validate %{buildroot}/%{_datadir}/applications/com.github.elth0r0.stackandconquer.desktop || :
-
-%post
-update-desktop-database &> /dev/null || :
-
-%postun
-update-desktop-database &> /dev/null || :
-%endif
-#--------------------------------------------------------------------
-
-# openSUSE or SLE
-#--------------------------------------------------------------------
-%if 0%{?suse_version}
-%build
-# Create qmake cache file to add rpm optflags.
-cat > .qmake.cache <<EOF
-QMAKE_CXXFLAGS += %{optflags}
-EOF
-qmake-qt5 PREFIX=%{_prefix}
-make %{?_smp_mflags}
-
-%install
-make INSTALL_ROOT=%{buildroot} install
-%suse_update_desktop_file com.github.elth0r0.stackandconquer
-
-%if 0%{?suse_version} >= 1140
-%post
-%desktop_database_post
-
-%postun
-%desktop_database_postun
-%endif
-%endif
-#--------------------------------------------------------------------
+%qt6_install
 
 %files
-%defattr(-,root,root,-)
-%if 0%{?suse_version}
-%dir %{_datadir}/metainfo
-%{_datadir}/icons/hicolor/
-%endif
+%doc README.md
 %{_bindir}/%{name}
-%{_datadir}/%{name}
-%{_datadir}/applications/com.github.elth0r0.stackandconquer.desktop
-%{_datadir}/icons/hicolor/*/apps/com.github.elth0r0.stackandconquer.*g
-%{_datadir}/metainfo/com.github.elth0r0.stackandconquer.metainfo.xml
-%doc COPYING
-%{_mandir}/*/*
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/cpu/
+%{_datadir}/%{name}/boards/
+%{_datadir}/applications/%{_name}.desktop
+%{_datadir}/icons/hicolor/*/apps/%{_name}.??g
+%{_mandir}/man?/%{name}.?%{?ext_man}
+%{_mandir}/??/man?/%{name}.?%{?ext_man}
+%{_datadir}/metainfo/%{_name}.metainfo.xml
+%license COPYING
 
 %changelog

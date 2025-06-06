@@ -21,6 +21,7 @@ Translations
  - Dutch: Vistaus, Elbert Pol, maksverver
  - German: ElThoro
  - Italian: davi92
+ - Russian: aaly11
 
 CPU players
 -----------

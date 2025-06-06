@@ -1,3 +1,11 @@
+stackandconquer (0.11.1-0) noble; urgency=low
+
+  [ Thorsten Roth ]
+  * Add Russian translation - thanks to aaly11
+  * CI fixes
+
+ -- Thorsten Roth <elthoro@gmx.de>  Sat, 07 Jul 2025 14:58:00 +0200
+
 stackandconquer (0.11.0-0) jammy; urgency=low
 
   [ Thorsten Roth ]

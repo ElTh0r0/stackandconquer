@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sat Jul 07 14:58:00 UTC 2024 - elthoro@gmx.de 0.11.1
+
+- Add Russian translation - thanks to aaly11
+- CI fixes
+
+-------------------------------------------------------------------
 Sun Nov 10 12:49:00 UTC 2024 - elthoro@gmx.de 0.11.0
 
 - Extend CPU interface
