@@ -22,24 +22,36 @@ Summary:        Challenging tower conquest board game
 Version:        0.11.1
 Release:        1
 License:        GPL-3.0-or-later
-Group:          Amusements/Games/Board/Other
 URL:            https://github.com/ElTh0r0/stackandconquer
 Source:         %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-build
 
+# Fedora, RHEL, or CentOS
 #--------------------------------------------------------------------
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+Group:          Amusements/Games
 
-BuildRequires:  cmake
-BuildRequires:  cmake(Qt6Core)
-BuildRequires:  cmake(Qt6Gui)
-BuildRequires:  cmake(Qt6LinguistTools)
-BuildRequires:  cmake(Qt6Qml)
-BuildRequires:  cmake(Qt6SvgWidgets)
-BuildRequires:  cmake(Qt6Widgets)
+BuildRequires:  desktop-file-utils
 BuildRequires:  gcc-c++
 BuildRequires:  hicolor-icon-theme
-BuildRequires:  update-desktop-files
+BuildRequires:  qt5-qtbase-devel
+BuildRequires:  qt5-qtsvg-devel
+BuildRequires:  qt5-qtdeclarative-devel
+%endif
+#--------------------------------------------------------------------
 
+# openSUSE or SLE
+#--------------------------------------------------------------------
+%if 0%{?suse_version}
+Group:          Amusements/Games/Board/Other
+
+BuildRequires:  gcc-c++
+BuildRequires:  hicolor-icon-theme
+BuildRequires:  libqt5-qtbase-devel
+BuildRequires:  libQt5Svg-devel
+BuildRequires:  libqt5-qtdeclarative-devel
+BuildRequires:  update-desktop-files
+%endif
 #--------------------------------------------------------------------
 
 %description
@@ -50,24 +62,66 @@ with at least five stones and a stone with the players color on top.
 %prep
 %autosetup -N -n %{name}-%{version}
 
+# Fedora, RHEL, or CentOS
+#--------------------------------------------------------------------
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 %build
-%cmake_qt6
-%qt6_build
+# Create qmake cache file to add rpm optflags.
+cat > .qmake.cache <<EOF
+QMAKE_CXXFLAGS += %{optflags}
+EOF
+%{qmake_qt5} PREFIX=%{_prefix}
+make %{?_smp_mflags}
 
 %install
-%qt6_install
+make install INSTALL_ROOT=%{buildroot}
+desktop-file-validate %{buildroot}/%{_datadir}/applications/%{_name}.desktop || :
+
+%post
+update-desktop-database &> /dev/null || :
+
+%postun
+update-desktop-database &> /dev/null || :
+%endif
+#--------------------------------------------------------------------
+
+# openSUSE or SLE
+#--------------------------------------------------------------------
+%if 0%{?suse_version}
+%build
+# Create qmake cache file to add rpm optflags.
+cat > .qmake.cache <<EOF
+QMAKE_CXXFLAGS += %{optflags}
+EOF
+qmake-qt5 PREFIX=%{_prefix}
+make %{?_smp_mflags}
+
+%install
+make INSTALL_ROOT=%{buildroot} install
+%suse_update_desktop_file %{_name}
+
+%if 0%{?suse_version} >= 1140
+%post
+%desktop_database_post
+
+%postun
+%desktop_database_postun
+%endif
+%endif
+#--------------------------------------------------------------------
 
 %files
-%doc README.md
+%defattr(-,root,root,-)
+%if 0%{?suse_version}
+%dir %{_datadir}/metainfo
+%{_datadir}/icons/hicolor/
+%endif
 %{_bindir}/%{name}
-%dir %{_datadir}/%{name}
-%{_datadir}/%{name}/cpu/
-%{_datadir}/%{name}/boards/
+%{_datadir}/%{name}
 %{_datadir}/applications/%{_name}.desktop
-%{_datadir}/icons/hicolor/*/apps/%{_name}.??g
-%{_mandir}/man?/%{name}.?%{?ext_man}
-%{_mandir}/??/man?/%{name}.?%{?ext_man}
+%{_datadir}/icons/hicolor/*/apps/%{_name}.*g
 %{_datadir}/metainfo/%{_name}.metainfo.xml
-%license COPYING
+%doc COPYING
+%{_mandir}/*/*
 
 %changelog
