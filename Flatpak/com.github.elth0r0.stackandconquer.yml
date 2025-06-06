@@ -18,5 +18,5 @@ modules:
     sources:
       - type: git
         url: https://github.com/ElTh0r0/stackandconquer.git
-        tag: v0.11.0
-        commit: 157cb393b04c01098f4025fd82ae4a87ec4033fc
+        tag: v0.11.1
+        commit: 00f4f227e091f0730c2749951f4deb8cf47ec6bb
