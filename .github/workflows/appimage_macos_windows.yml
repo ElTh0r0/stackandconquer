@@ -1,0 +1,207 @@
+name: "AppImage macOS Windows"
+
+# manual trigger
+on:
+  workflow_dispatch:
+
+jobs:
+  AppImage_Ubuntu22-04:
+    name: AppImage Ubuntu 22.04
+    runs-on: ubuntu-22.04
+    env:
+      QT_SELECT: qt5
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Dependencies
+      run: sudo apt update && sudo apt install qtbase5-dev qt5-qmake qttools5-dev-tools qtdeclarative5-dev libqt5svg5-dev libfuse2
+
+    - name: Download linuxdeployqt
+      run: |
+       wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+       chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+       unset QTDIR ; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
+       export VERSION=$(git rev-parse --short HEAD)  # linuxdeployqt uses this for naming the file
+
+    - name: Download ffsend
+      run: |
+       FFSEND_VERSION=$(curl --silent https://api.github.com/repos/timvisee/ffsend/releases/latest | sed -Ene '/^ *"tag_name": *"(v.+)",$/s//\1/p')
+       wget -c -nv "https://github.com/timvisee/ffsend/releases/download/$FFSEND_VERSION/ffsend-$FFSEND_VERSION-linux-x64-static"
+       mv ./ffsend-* ./ffsend
+       chmod a+x ./ffsend
+
+    - name: Compile
+      run: |
+       qmake CONFIG+=release PREFIX=/usr
+       make -j$(nproc)
+       make INSTALL_ROOT=appdir -j$(nproc) install
+       find appdir
+
+    - name: Create AppImage
+      run: |
+       ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -appimage -bundle-non-qt-libs -extra-plugins=iconengines,platformthemes/libqgtk3.so
+       find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
+
+    - name: Upload AppImage
+      run: |
+       ./ffsend upload StackAndConquer-*-x86_64.AppImage
+
+  macOS_laetst:
+    name: macOS
+    runs-on: macos-latest
+    env:
+      QT_VERSION: '6.9.1'
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: ${{ env.QT_VERSION }}
+        cache: 'true'
+        cache-key-prefix: install-qt-action
+        host: 'mac'
+        target: 'desktop'
+
+    - name: Compile
+      run: |
+       mkdir build
+       cd build
+       qmake ../stackandconquer.pro CONFIG+=release
+       make
+       rm -rf .moc
+       rm -rf .obj
+       rm -rf .qrc
+
+    - name: Create dmg archive and zip
+      run: |
+       cd build
+       VERSION=$(git rev-parse --short HEAD) 
+       macdeployqt "StackAndConquer.app" -dmg
+       mv "StackAndConquer.dmg" "StackAndConquer_${VERSION}.dmg"
+       cp "../README.md" "./README.md"
+       cp "../COPYING" "./COPYING"
+       7z a StackAndConquer_${VERSION}_macOS.zip "StackAndConquer_${VERSION}.dmg" "README.md" "COPYING"
+
+    - name: Upload macOS zip
+      run: |
+       cd build
+       curl --upload-file ./StackAndConquer_*_macOS.zip https://transfer.adminforge.de/StackAndConquer_macOS.zip
+
+  Windows_msvc:
+    name: Win latest Qt 6 msvc
+    runs-on: windows-latest
+    env:
+      QT_VERSION: '6.9.1'
+      BUILD: 'msvc2022_64'
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: ${{ env.QT_VERSION }}
+        cache: 'true'
+        cache-key-prefix: install-qt-action
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2022_64'
+    
+    - name: Compile
+      run: |
+       mkdir build-cmake
+       cmake -G "Visual Studio 17 2022" -S ${{github.workspace}} -B ${{github.workspace}}/build-cmake
+       cmake --build ${{github.workspace}}/build-cmake --config Release
+    
+#    - name: Create Package
+#      env:
+#        VCINSTALLDIR: 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC'
+#      shell: cmd
+#      run: |
+#       git rev-parse --short main > buildnr.txt
+#       set /p buildnr= < buildnr.txt
+#       del buildnr.txt
+#       mkdir StackAndConquer\cpu
+#       mkdir StackAndConquer\boards
+#       copy build-cmake\Release\StackAndConquer.exe StackAndConquer\StackAndConquer.exe
+#       windeployqt --release --no-translations --no-opengl-sw StackAndConquer\StackAndConquer.exe
+#       copy COPYING StackAndConquer\
+#       curl -fsSL -o ReadMe.txt https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/ReadMe.txt
+#       copy ReadMe.txt StackAndConquer\
+#       xcopy /i /e /s data\cpu\*.js StackAndConquer\cpu\
+#       xcopy /i /e /s data\boards\* StackAndConquer\boards\
+#       7z a StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.zip .\StackAndConquer\
+#       curl -fsSL -o stackandconquer.nsi https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.nsi
+#       curl -fsSL -o removeprevious.nsh https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/removeprevious.nsh
+#       curl -fsSL -o stackandconquer.ico https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.ico
+#       makensis stackandconquer.nsi
+#       ren StackAndConquer_Installer.exe StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.exe
+#       
+#    - uses: actions/upload-artifact@v4
+#      with:
+#        name: StackAndConquer-Windows_Artefacts
+#        path: StackAndConquer-*.*
+#        retention-days: 1
+#        overwrite: true
+
+  Windows_mingw:
+    name: Win 2022 Qt 6 mingw
+    runs-on: windows-2022
+    env:
+      QT_VERSION: '6.9.1'
+      BUILD: 'mingw1310_64'
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: ${{ env.QT_VERSION }}
+        cache: 'true'
+        cache-key-prefix: install-qt-action
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_mingw'
+        tools: 'tools_mingw1310'
+
+    - name: Add Qt MinGW to PATH
+      run: echo "${{ env.QT_ROOT_DIR }}/../Tools/${{ env.BUILD }}/bin" >> $GITHUB_PATH
+
+    - name: Compile
+      run: |
+       mkdir build-cmake
+       cmake -G "MinGW Makefiles" -S ${{github.workspace}} -B ${{github.workspace}}/build-cmake
+       cmake --build ${{github.workspace}}/build-cmake --config Release
+    
+    - name: Create Package
+      shell: cmd
+      run: |
+       git rev-parse --short main > buildnr.txt
+       set /p buildnr= < buildnr.txt
+       del buildnr.txt
+       mkdir StackAndConquer\cpu
+       mkdir StackAndConquer\boards
+       copy build-cmake\Release\StackAndConquer.exe StackAndConquer\StackAndConquer.exe
+       windeployqt --release --no-translations --no-opengl-sw StackAndConquer\StackAndConquer.exe
+       copy COPYING StackAndConquer\
+       curl -fsSL -o ReadMe.txt https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/ReadMe.txt
+       copy ReadMe.txt StackAndConquer\
+       xcopy /i /e /s data\cpu\*.js StackAndConquer\cpu\
+       xcopy /i /e /s data\boards\* StackAndConquer\boards\
+       7z a StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.zip .\StackAndConquer\
+       curl -fsSL -o stackandconquer.nsi https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.nsi
+       curl -fsSL -o removeprevious.nsh https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/removeprevious.nsh
+       curl -fsSL -o stackandconquer.ico https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.ico
+       makensis stackandconquer.nsi
+       ren StackAndConquer_Installer.exe StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.exe
+       
+    - uses: actions/upload-artifact@v4
+      with:
+        name: StackAndConquer-Windows_Artefacts
+        path: StackAndConquer-*.*
+        retention-days: 2
+        overwrite: true
