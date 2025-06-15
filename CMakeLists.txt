@@ -110,7 +110,6 @@ set(FORMS
 
 set(RESOURCES
     data/data.qrc
-    lang/translations.qrc
 )
 
 set(TRANSLATIONS
@@ -124,7 +123,18 @@ set(TRANSLATIONS
 )
 
 qt_add_translation(QM_FILES ${TRANSLATIONS})
-add_custom_target(translations ALL DEPENDS ${QM_FILES})
+add_custom_target(translations_${PROJECT_NAME} ALL DEPENDS ${QM_FILES})
+foreach(qm_file ${QM_FILES})
+    get_filename_component(qm_filename "${qm_file}" NAME)
+    set_source_files_properties(
+        "${qm_file}"
+        PROPERTIES QT_RESOURCE_ALIAS "${qm_filename}"
+    )
+endforeach()
+qt_add_resources(stackandconquer translations_stack
+    PREFIX "/"
+    FILES ${QM_FILES}
+)
 
 target_sources(stackandconquer PRIVATE ${HEADERS} ${SOURCES} ${FORMS} ${RESOURCES})
 

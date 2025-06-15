@@ -185,7 +185,7 @@ jobs:
        del buildnr.txt
        mkdir StackAndConquer\cpu
        mkdir StackAndConquer\boards
-       copy build-cmake\Release\StackAndConquer.exe StackAndConquer\StackAndConquer.exe
+       copy build-cmake\StackAndConquer.exe StackAndConquer\StackAndConquer.exe
        windeployqt --release --no-translations --no-opengl-sw StackAndConquer\StackAndConquer.exe
        copy COPYING StackAndConquer\
        curl -fsSL -o ReadMe.txt https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/ReadMe.txt
