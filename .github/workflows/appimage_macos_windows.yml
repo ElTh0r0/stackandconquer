@@ -133,7 +133,7 @@ jobs:
 #       copy ReadMe.txt StackAndConquer\
 #       xcopy /i /e /s data\cpu\*.js StackAndConquer\cpu\
 #       xcopy /i /e /s data\boards\* StackAndConquer\boards\
-#       7z a StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.zip .\StackAndConquer\
+#       7z a -tzip -mx=7 StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.zip .\StackAndConquer\
 #       curl -fsSL -o stackandconquer.nsi https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.nsi
 #       curl -fsSL -o removeprevious.nsh https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/removeprevious.nsh
 #       curl -fsSL -o stackandconquer.ico https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.ico
@@ -192,7 +192,7 @@ jobs:
        copy ReadMe.txt StackAndConquer\
        xcopy /i /e /s data\cpu\*.js StackAndConquer\cpu\
        xcopy /i /e /s data\boards\* StackAndConquer\boards\
-       7z a StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.zip .\StackAndConquer\
+       7z a -tzip -mx=7 StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.zip .\StackAndConquer\
        curl -fsSL -o stackandconquer.nsi https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.nsi
        curl -fsSL -o removeprevious.nsh https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/removeprevious.nsh
        curl -fsSL -o stackandconquer.ico https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.ico
