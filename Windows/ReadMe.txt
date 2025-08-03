@@ -23,6 +23,10 @@ Translations
  - Italian: davi92
  - Russian: aaly11
 
+New translations and corrections are highly welcome! You can either fork the
+source code from GitHub, make your changes and create a pull request or you
+can participate on Transifex: https://explore.transifex.com/elth0r0/stackandconquer/
+
 CPU players
 -----------
 
