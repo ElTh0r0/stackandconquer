@@ -15,6 +15,6 @@ StackAndConquer is a challenging tower conquest board game inspired by [Mixtour]
 Manual for creating CPU opponents can be found in the wiki: https://github.com/ElTh0r0/stackandconquer/wiki/Create-CPU-opponent
 
 ## Help translating
-New translations and corrections are highly welcome! You can either fork the source code from GitHub, make your changes and create a pull request or you can participate on Transifex: https://www.transifex.com/elth0r0/stackandconquer/
+New translations and corrections are highly welcome! You can either fork the source code from GitHub, make your changes and create a pull request or you can participate on Transifex: https://explore.transifex.com/elth0r0/stackandconquer/
 
 Additionally see [this page](https://github.com/ElTh0r0/stackandconquer/issues/30) at GitHub.
