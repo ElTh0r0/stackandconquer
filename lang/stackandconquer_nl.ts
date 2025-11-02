@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="nl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl">
 <context>
     <name>Board</name>
     <message>
@@ -264,131 +262,131 @@ Jullie eindigen in gelijkspel!</translation>
         <location filename="../settingsdialog.cpp" line="55"/>
         <location filename="../settingsdialog.cpp" line="659"/>
         <source>Color player %1</source>
-        <translation type="unfinished">Kleur speler %1</translation>
+        <translation>Kleur speler %1</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="64"/>
         <location filename="../settingsdialog.cpp" line="661"/>
         <source>Player %1 Human/CPU</source>
-        <translation type="unfinished">Speler %1 mens/computer</translation>
+        <translation>Speler %1 mens/computer</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="289"/>
         <location filename="../settingsdialog.cpp" line="664"/>
         <source>Create new style...</source>
-        <translation type="unfinished">Nieuwe stijl aanmaken...</translation>
+        <translation>Nieuwe stijl aanmaken...</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="399"/>
         <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
-        <translation type="unfinished">Spelinstellingen zijn gewijzigd.&lt;br&gt;Wilt u een nieuw spel starten?</translation>
+        <translation>Spelinstellingen zijn gewijzigd.&lt;br&gt;Wilt u een nieuw spel starten?</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="487"/>
         <location filename="../settingsdialog.cpp" line="529"/>
         <location filename="../settingsdialog.cpp" line="540"/>
         <source>Error</source>
-        <translation type="unfinished">Fout</translation>
+        <translation>Fout</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="487"/>
         <source>Boards folder seems empty!</source>
-        <translation type="unfinished">Bordenmap schijnt leeg te zijn!</translation>
+        <translation>Bordenmap schijnt leeg te zijn!</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="508"/>
         <source>New style</source>
-        <translation type="unfinished">Nieuwe stijl</translation>
+        <translation>Nieuwe stijl</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="509"/>
         <source>Please insert name of new style file:</source>
-        <translation type="unfinished">Naam van de nieuwe stijl invoeren alstublieft:</translation>
+        <translation>Naam van de nieuwe stijl invoeren alstublieft:</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="529"/>
         <source>File already exists.</source>
-        <translation type="unfinished">Bestand bestaat al.</translation>
+        <translation>Bestand bestaat al.</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="541"/>
         <source>Could not create new style.</source>
-        <translation type="unfinished">Kon nieuwe stijl niet aanmaken.</translation>
+        <translation>Kon nieuwe stijl niet aanmaken.</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="667"/>
         <source>Color</source>
-        <translation type="unfinished">Kleur</translation>
+        <translation>Kleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="670"/>
         <source>Main background</source>
-        <translation type="unfinished">Hoofdachtergrond</translation>
+        <translation>Hoofdachtergrond</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="670"/>
         <source>Board background</source>
-        <translation type="unfinished">Bordachtergrond</translation>
+        <translation>Bordachtergrond</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="671"/>
         <source>Grid color</source>
-        <translation type="unfinished">Rasterkleur</translation>
+        <translation>Rasterkleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="671"/>
         <source>Animate color</source>
-        <translation type="unfinished">Animatiekleur</translation>
+        <translation>Animatiekleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="672"/>
         <source>Animate border color</source>
-        <translation type="unfinished">Animatierandkleur</translation>
+        <translation>Animatierandkleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="672"/>
         <source>Highlight color</source>
-        <translation type="unfinished">Accentkleur</translation>
+        <translation>Accentkleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="673"/>
         <source>Highlight border color</source>
-        <translation type="unfinished">Accentrandkleur</translation>
+        <translation>Accentrandkleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="673"/>
         <source>Neighbours color</source>
-        <translation type="unfinished">Buurveldkleur</translation>
+        <translation>Buurveldkleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="674"/>
         <source>Neighbours border color</source>
-        <translation type="unfinished">Buurveldrandkleur</translation>
+        <translation>Buurveldrandkleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="674"/>
         <source>Selected color</source>
-        <translation type="unfinished">Selectiekleur</translation>
+        <translation>Selectiekleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="675"/>
         <source>Selected border color</source>
-        <translation type="unfinished">Selectierandkleur</translation>
+        <translation>Selectierandkleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="675"/>
         <source>Text color</source>
-        <translation type="unfinished">Tekstkleur</translation>
+        <translation>Tekstkleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="676"/>
         <source>Text highlight color</source>
-        <translation type="unfinished">Tekstaccentkleur</translation>
+        <translation>Tekstaccentkleur</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="706"/>
         <source>Random</source>
-        <translation type="unfinished">Willekeurig</translation>
+        <translation>Willekeurig</translation>
     </message>
 </context>
 <context>
