@@ -12,7 +12,7 @@
 #include <QMessageBox>
 #include <QSpinBox>
 
-#include "ui_settings.h"
+#include "ui_settingsdialog.h"
 
 SettingsDialog::SettingsDialog(QWidget *pParent, const QString &userDataDir)
     : QDialog(pParent),

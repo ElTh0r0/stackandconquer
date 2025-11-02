@@ -3,6 +3,7 @@
 
 #include "./settings.h"
 
+#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
