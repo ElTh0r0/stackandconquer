@@ -36,14 +36,14 @@ class QJsonObject;
 
 class Board;
 class Player;
-class Settings;
+
+#include "./settings.h"
 
 class Game : public QObject {
   Q_OBJECT
 
  public:
-  explicit Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
-                const QString &sOUT, QObject *pParentObj = nullptr);
+  explicit Game(QWidget *pParent, QObject *pParentObj = nullptr);
   ~Game();
   auto createGame(const QString &sSavegame = QLatin1String("")) -> bool;
   auto getScene() const -> QGraphicsScene *;
@@ -77,8 +77,6 @@ class Game : public QObject {
 
   QWidget *m_pParent;
   Settings *m_pSettings;
-  QString m_sIN;
-  QString m_sOUT;
   Board *m_pBoard;
   QString m_sBoardFile;
   quint8 m_nNumOfPlayers;

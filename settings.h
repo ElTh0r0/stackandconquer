@@ -27,140 +27,110 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-#include <QDialog>
-#include <QMap>
-
-class QComboBox;
-class QLabel;
-class QLineEdit;
-class QSettings;
-
-namespace Ui {
-class SettingsDialog;
-}
+#include <QColor>
+#include <QHash>
+#include <QSettings>
 
 /**
  * \class Settings
- * \brief Settings dialog.
+ * \brief Settings class.
  */
-class Settings : public QDialog {
+class Settings : public QObject {
   Q_OBJECT
 
  public:
-  explicit Settings(QWidget *pParent, const QString &sSharePath,
-                    const QString &userDataDir, const QString &sBoardExtension,
-                    const quint8 nMaxPlayers);
-  virtual ~Settings();
+  static Settings *instance();
+  void setSharePath(const QString &sPath);
+  auto getSharePath() const -> QString;
+  auto getConfigPath() const -> QString;
 
-  auto getBoardFile() -> QString;
-  auto getPlayerCpuScript(const quint8 nPlayer) const -> QString;
-  auto getPlayerColor(const quint8 nPlayer) const -> QString;
-  auto getNumOfPlayers() const -> quint8;
+  // Players
+  auto getNumOfPlayers() -> quint8;
+  void setNumOfPlayers(const quint8 nNumOfPlayers);
   auto getMaxNumOfPlayers() const -> quint8;
-  auto getStartPlayer() const -> quint8;
-  auto getTowersToWin() const -> quint8;
-  auto getShowPossibleMoveTowers() const -> bool;
-  auto getLanguage() -> QString;
+  auto getPlayerCpuScript(const quint8 nPlayer) -> QString;
+  void setPlayerCpuScript(const quint8 nPlayer, const QString &sHumanCpu);
+  void setAvailableCpuScripts(const QHash<QString, QString> &CpuScripts);
+  auto getPlayerCpuScriptFile(const quint8 nPlayer) -> QString;
+  auto getPlayerColor(const quint8 nPlayer) -> QString;
+  void setPlayerColor(const quint8 nPlayer, const QString &sColor);
 
+  // Game settings
+  auto getStartPlayer() const -> quint8;
+  void setStartPlayer(const quint8 nStartPlayer);
+  auto getBoardFile() -> QString;
+  void setBoardFile(const QString &sBoardFile);
+  auto getTowersToWin() const -> quint8;
+  void setTowersToWin(const quint8 nTowersToWin);
+  auto getShowPossibleMoveTowers() const -> bool;
+  void setShowPossibleMoveTowers(const bool bShowMoves);
+
+  // Grid
   auto getGridSize() const -> quint16;
   void setGridSize(const quint16 nNewGrid);
-  auto getDefaultGrid() const -> qreal;
-  auto getMaxGrid() const -> quint16;
+  auto getDefaultGridSize() const -> qreal;
+  auto getMaxGridSize() const -> quint16;
 
+  // Language
+  auto getGuiLanguage() -> QString;
+  void setGuiLanguage(const QString &sLanguage);
+
+  // Board style
+  auto getBoardStyleFile() const -> QString;
+  void setBoardStyleFile(const QString &sBoardStyleFile);
+  void loadBoardStyle(const QString &sStyleFile);
+  void saveBoardStyle() const;
+  auto createNewBoardStyleFile(const QString &sNewFile) const -> bool;
   auto getBgColor() const -> QColor;
+  void setBgColor(const QColor Color);
   auto getTextColor() const -> QColor;
+  void setTextColor(const QColor Color);
   auto getTextHighlightColor() const -> QColor;
+  void setTextHighlightColor(const QColor Color);
   auto getHighlightColor() const -> QColor;
+  void setHighlightColor(const QColor Color);
   auto getHighlightBorderColor() const -> QColor;
+  void setHighlightBorderColor(const QColor Color);
   auto getSelectedColor() const -> QColor;
+  void setSelectedColor(const QColor Color);
   auto getSelectedBorderColor() const -> QColor;
+  void setSelectedBorderColor(const QColor Color);
   auto getAnimateColor() const -> QColor;
+  void setAnimateColor(const QColor Color);
   auto getAnimateBorderColor() const -> QColor;
+  void setAnimateBorderColor(const QColor Color);
   auto getBgBoardColor() const -> QColor;
+  void setBgBoardColor(const QColor Color);
   auto getGridBoardColor() const -> QColor;
+  void setGridBoardColor(const QColor Color);
   auto getNeighboursColor() const -> QColor;
+  void setNeighboursColor(const QColor Color);
   auto getNeighboursBorderColor() const -> QColor;
+  void setNeighboursBorderColor(const QColor Color);
 
- public slots:
-  void accept() override;
-  void reject() override;
-  void updateUiLang();
-
- signals:
-  void newGame(const QString &s);
-  void changeLang(const QString &sLang);
-
- protected:
-  void showEvent(QShowEvent *pEvent) override;
-  bool eventFilter(QObject *pObj, QEvent *pEvent) override;
-
- private slots:
-  void changeNumOfPlayers();
-  void changedSettings();
-  void changedStyle(int nIndex);
-  void clickedStyleCell(int nRow, int nCol);
+  static const QString CONF_FILE_EXT;
+  static const QString SAVE_FILE_EXT;
+  static const QString CPU_FILE_EXT;
+  static const QString BOARD_FILE_EXT;
+  static const QString BORD_IN_FILE_EXT;
+  static const QString FIELD_IN;
+  static const QString FIELD_OUT;
+  static const QString FIELD_PAD;
 
  private:
-  void copyDefaultStyles();
-  void readSettings();
-  auto readColor(QSettings *pSet, const QString &sKey,
+  auto readColor(const QSettings &StyleSet, const QString &sKey,
                  const QString &sFallback) const -> QColor;
-  auto searchTranslations() const -> QStringList;
-  void searchCpuScripts(const QString &sUserDataDir);
-  auto getCpuStrength(const QString &sFilename) -> QString;
-  void searchBoardStyles(const QString &sStyleDir);
-  void loadBoardStyle(const QString &sStyleFile);
-  void readStyle_SetTable(QColor &color, QSettings *pSet, const int nRow,
-                          const QString &sKey, const QString &sFallback);
-  void saveBoardStyle(const QString &sStyleFile);
-  void saveColor(QColor &color, QSettings *pSet, const int nRow,
-                 const QString &sKey);
-  void searchBoards(const QString &sUserDataDir);
-  void updateStartCombo();
+  void copyDefaultStyles();
 
-  Ui::SettingsDialog *m_pUi;
-  QSettings *m_pSettings;
-  QList<QMap<QString, QString>> m_Players;
-  const QString m_sSharePath;
-  const QString m_sBoardExtension;
-  const QString m_sCpuExtension;
-  QString m_sGuiLanguage;
-
-  QList<QLabel *> m_listColorLbls;
-  QList<QLabel *> m_listHumCpuLbls;
-  QList<QLineEdit *> m_listColorEdit;
-  QList<QComboBox *> m_listPlayerCombo;
-
-  QStringList m_sListCPUs;
-  QStringList m_sListBoards;
-  QString m_sBoard;
-  int m_nNumOfPlayers{};
-  int m_nStartPlayer{};
-  int m_nTowersToWin{};
-  bool m_bShowPossibleMoveTowers{};
-  bool m_bSettingChanged{};
-
-  QString m_sBoardStyleFile;
-  QString m_sExt;
-  QColor m_bgColor;
-  QColor m_txtColor;
-  QColor m_txtHighColor;
-  QColor m_highlightColor;
-  QColor m_highlightBorderColor;
-  QColor m_selectedColor;
-  QColor m_selectedBorderColor;
-  QColor m_animateColor;
-  QColor m_animateBorderColor;
-  QColor m_bgBoardColor;
-  QColor m_gridBoardColor;
-  QColor m_neighboursColor;
-  QColor m_neighboursBorderColor;
-
-  quint16 m_nGridSize;
-  const qreal m_nDefaultGrid;
-  const quint16 m_nMaxGrid;
+  explicit Settings(QObject *pParent = nullptr);
+  QSettings m_settings;
   const quint8 m_nMaxPlayers;
   const QStringList m_DefaultPlayerColors;
+  const qreal m_nDefaultGridSize;
+  const quint16 m_nMaxGridSize;
+  QString m_sSharePath;
+  QHash<QString, QColor> m_BoardStyle;
+  QHash<QString, QString> m_CpuScripts;
 };
 
 #endif  // SETTINGS_H_

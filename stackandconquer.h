@@ -31,6 +31,9 @@
 #include <QMainWindow>
 #include <QTranslator>
 
+#include "./settings.h"
+#include "./settingsdialog.h"
+
 class QFrame;
 class QGraphicsView;
 class QGridLayout;
@@ -38,7 +41,6 @@ class QLabel;
 class QSlider;
 
 class Game;
-class Settings;
 
 namespace Ui {
 class StackAndConquer;
@@ -52,10 +54,7 @@ class StackAndConquer : public QMainWindow {
   Q_OBJECT
 
  public:
-  explicit StackAndConquer(const QDir &sharePath, const QDir &userDataPath,
-                           const QString &sSaveExtension,
-                           const QString &sBoardExtension, const QString &sIN,
-                           const QString &sOUT,
+  explicit StackAndConquer(const QDir &userDataPath,
                            const QStringList &sListArgs = QStringList(),
                            QWidget *pParent = nullptr);
   ~StackAndConquer();
@@ -93,15 +92,12 @@ class StackAndConquer : public QMainWindow {
 
   Ui::StackAndConquer *m_pUi;
   const QDir m_userDataDir;
-  const QString m_sSharePath;
-  const QString m_sSaveExtension;
-  const QString m_sIN;
-  const QString m_sOUT;
-  const quint8 m_nMaxPlayers;
+
   QTranslator m_translator;    // App translations
   QTranslator m_translatorQt;  // Qt translations
   QString m_sCurrLang;
   Settings *m_pSettings;
+  SettingsDialog *m_pSettingsDialog;
   QGraphicsView *m_pGraphView{};
   Game *m_pGame;
 

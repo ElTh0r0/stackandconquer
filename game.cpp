@@ -39,19 +39,15 @@
 
 #include "./board.h"
 #include "./player.h"
-#include "./settings.h"
 
-Game::Game(QWidget *pParent, Settings *pSettings, const QString &sIN,
-           const QString &sOUT, QObject *pParentObj)
+Game::Game(QWidget *pParent, QObject *pParentObj)
     : m_pParent(pParent),
-      m_pSettings(pSettings),
-      m_sIN(sIN),
-      m_sOUT(sOUT),
+      m_pSettings(Settings::instance()),
       m_pBoard(nullptr),
-      m_sBoardFile(pSettings->getBoardFile()),
-      m_nNumOfPlayers(pSettings->getNumOfPlayers()),
+      m_sBoardFile(m_pSettings->getBoardFile()),
+      m_nNumOfPlayers(m_pSettings->getNumOfPlayers()),
       m_nMaxTowerHeight(5),
-      m_nTowersToWin(pSettings->getTowersToWin()),
+      m_nTowersToWin(m_pSettings->getTowersToWin()),
       m_bScriptError(false) {
   Q_UNUSED(pParentObj)
 
@@ -148,8 +144,7 @@ auto Game::createGame(const QString &sSavegame) -> bool {
     qDebug() << "Loading save game board:" << m_sBoardFile;
 
     QJsonArray jsBoard = jsonObj[QStringLiteral("Board")].toArray();
-    m_pBoard = new Board(m_pParent, m_nMaxTowerHeight, m_nNumOfPlayers, m_sIN,
-                         m_sOUT, m_pSettings);
+    m_pBoard = new Board(m_pParent, m_nMaxTowerHeight, m_nNumOfPlayers);
     if (!m_pBoard->createBoard(m_sBoardFile)) {
       return false;
     }
@@ -163,15 +158,14 @@ auto Game::createGame(const QString &sSavegame) -> bool {
 
   // No save game: Start empty board with default values
   if (nullptr == m_pBoard) {
-    m_pBoard = new Board(m_pParent, m_nMaxTowerHeight, m_nNumOfPlayers, m_sIN,
-                         m_sOUT, m_pSettings);
+    m_pBoard = new Board(m_pParent, m_nMaxTowerHeight, m_nNumOfPlayers);
     if (!m_pBoard->createBoard(m_sBoardFile)) {
       return false;
     }
-    for (int i = 1; i <= m_nNumOfPlayers; i++) {
+    for (int i = 0; i < m_nNumOfPlayers; i++) {
       Won << 0;
       StonesLeft << m_pBoard->getMaxPlayerStones();
-      CpuScript << m_pSettings->getPlayerCpuScript(i);
+      CpuScript << m_pSettings->getPlayerCpuScriptFile(i);
     }
   }
 
@@ -211,10 +205,10 @@ auto Game::createGame(const QString &sSavegame) -> bool {
 auto Game::initCpu() -> bool {
   for (int i = 0; i < m_nNumOfPlayers; i++) {
     if (!m_pPlayers.at(i)->isHuman()) {
-      if (!m_pPlayers.at(i)->initCPU(m_pBoard->getBoard(),
-                                     m_pBoard->getBoardDimensions(),
-                                     m_nMaxTowerHeight, m_nNumOfPlayers,
-                                     m_pBoard->getOut(), m_pBoard->getPad())) {
+      if (!m_pPlayers.at(i)->initCPU(
+              m_pBoard->getBoard(), m_pBoard->getBoardDimensions(),
+              m_nMaxTowerHeight, m_nNumOfPlayers, Settings::FIELD_OUT,
+              Settings::FIELD_PAD)) {
         return false;
       }
     }

@@ -71,9 +71,14 @@ target_compile_definitions(stackandconquer
         APP_COPY="${PROJECT_COPYRIGHT}"
         APP_DESC="${PROJECT_DESCRIPTION}"
         QT_NO_FOREACH
-        $<$<CONFIG:DEBUG>:QT_DISABLE_DEPRECATED_BEFORE=0x060900>
+        $<$<CONFIG:DEBUG>:QT_DISABLE_DEPRECATED_BEFORE=0x061000>
 )
-   
+
+target_compile_options(stackandconquer
+    PRIVATE
+        $<$<CONFIG:DEBUG>:-Wall -Wextra -pedantic>
+)
+
 target_link_libraries(stackandconquer PRIVATE
     ${QT_MAIN_VERSION}::Core
     ${QT_MAIN_VERSION}::Gui
@@ -88,6 +93,7 @@ set(HEADERS
     board.h
     player.h
     settings.h
+    settingsdialog.h
     opponentjs.h
     generateboard.h
 )
@@ -99,13 +105,14 @@ set(SOURCES
     board.cpp
     player.cpp
     settings.cpp
+    settingsdialog.cpp
     opponentjs.cpp
     generateboard.cpp
 )
 
 set(FORMS
     stackandconquer.ui
-    settings.ui
+    settingsdialog.ui
 )
 
 set(RESOURCES

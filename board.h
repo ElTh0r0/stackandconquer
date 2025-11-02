@@ -36,7 +36,7 @@
 class QGraphicsSceneMouseEvent;
 class QGraphicsSvgItem;
 
-class Settings;
+#include "./settings.h"
 
 /**
  * \class Board
@@ -46,8 +46,7 @@ class Board : public QGraphicsScene {
   Q_OBJECT
 
  public:
-  Board(QWidget *pParent, const quint8 nMaxTower, quint8 NumOfPlayers,
-        const QString &sIN, const QString &sOUT, Settings *pSettings,
+  Board(QWidget *pParent, const quint8 nMaxTower, quint8 nNumOfPlayers,
         QObject *pParentObj = nullptr);
 
   auto createBoard(const QString &sBoard) -> bool;
@@ -67,8 +66,6 @@ class Board : public QGraphicsScene {
   auto getStringCoordFromField(const int nField) const -> QString;
   auto getCoordinateFromIndex(const int nIndex) const -> QPoint;
   auto getStringCoordFromIndex(const int nIndex) const -> QString;
-  auto getOut() const -> QString;
-  auto getPad() const -> QString;
 
  signals:
   void actionPlayer(QJsonArray move);
@@ -98,21 +95,18 @@ class Board : public QGraphicsScene {
   auto getFieldFromIndex(const int nIndex) const -> int;
 
   QWidget *m_pParent;
-  const QString m_sIN;
-  const QString m_sOUT;
-  const QString m_sPAD;
+  Settings *m_pSettings;
   QPoint m_BoardDimensions;
   QJsonArray m_jsBoard;
 
   QList<QGraphicsRectItem *> m_listFields;
   QPainterPath m_boardPath;
 
-  Settings *m_pSettings;
   quint16 m_nGridSize;
   qreal m_nScale;
   quint8 m_nMaxPlayerStones;
   const quint8 m_nMaxTower;
-  const quint8 m_NumOfPlayers;
+  const quint8 m_nNumOfPlayers;
   QList<int> m_DIRS;
   QGraphicsRectItem *m_pHighlightRect{};
   QGraphicsRectItem *m_pSelectedField{};

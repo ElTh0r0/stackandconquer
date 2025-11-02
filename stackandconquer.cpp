@@ -41,39 +41,29 @@
 #include <QTextEdit>
 
 #include "./game.h"
-#include "./settings.h"
 #include "ui_stackandconquer.h"
 
-StackAndConquer::StackAndConquer(const QDir &sharePath,
-                                 const QDir &userDataPath,
-                                 const QString &sSaveExtension,
-                                 const QString &sBoardExtension,
-                                 const QString &sIN, const QString &sOUT,
+StackAndConquer::StackAndConquer(const QDir &userDataPath,
                                  const QStringList &sListArgs, QWidget *pParent)
     : QMainWindow(pParent),
       m_pUi(new Ui::StackAndConquer),
       m_userDataDir(userDataPath),
-      m_sSharePath(sharePath.absolutePath()),
-      m_sSaveExtension(sSaveExtension),
-      m_sIN(sIN),
-      m_sOUT(sOUT),
-      m_nMaxPlayers(2),
       m_sCurrLang(QString()),
+      m_pSettings(Settings::instance()),
       m_pGame(nullptr),
       // Size is based on default grid size of 70!
       m_DefaultSize(600, 480) {
   m_pUi->setupUi(this);
 
-  m_pSettings = new Settings(this, m_sSharePath, m_userDataDir.absolutePath(),
-                             sBoardExtension, m_nMaxPlayers);
-  connect(m_pSettings, &Settings::newGame, this,
+  m_pSettingsDialog = new SettingsDialog(this, m_userDataDir.absolutePath());
+  connect(m_pSettingsDialog, &SettingsDialog::newGame, this,
           &StackAndConquer::startNewGame);
-  connect(m_pSettings, &Settings::changeLang, this,
+  connect(m_pSettingsDialog, &SettingsDialog::changeLang, this,
           &StackAndConquer::loadLanguage);
-  connect(this, &StackAndConquer::updateUiLang, m_pSettings,
-          &Settings::updateUiLang);
-  this->loadLanguage(m_pSettings->getLanguage());
+  connect(this, &StackAndConquer::updateUiLang, m_pSettingsDialog,
+          &SettingsDialog::updateUiLang);
 
+  this->loadLanguage(m_pSettings->getGuiLanguage());
   this->setupMenu();
   this->setupGraphView();
   this->checkCmdArgs(sListArgs);
@@ -89,7 +79,8 @@ void StackAndConquer::checkCmdArgs(const QStringList &sListArgs) {
   QString sSavegame(QLatin1String(""));
   if (!sListArgs.isEmpty()) {
     // Load save game
-    if (sListArgs.at(0).endsWith(m_sSaveExtension, Qt::CaseInsensitive)) {
+    if (sListArgs.at(0).endsWith(Settings::SAVE_FILE_EXT,
+                                 Qt::CaseInsensitive)) {
       if (QFile::exists(sListArgs.at(0))) {
         sSavegame = sListArgs.at(0);
       } else {
@@ -117,8 +108,8 @@ void StackAndConquer::setupMenu() {
   m_pUi->action_SaveGame->setShortcut(QKeySequence::Save);
   connect(m_pUi->action_SaveGame, &QAction::triggered, this,
           &StackAndConquer::saveGame);
-  connect(m_pUi->action_Preferences, &QAction::triggered, m_pSettings,
-          &Settings::show);
+  connect(m_pUi->action_Preferences, &QAction::triggered, m_pSettingsDialog,
+          &SettingsDialog::show);
   m_pUi->action_Quit->setShortcut(QKeySequence::Quit);
   connect(m_pUi->action_Quit, &QAction::triggered, this,
           &StackAndConquer::close);
@@ -132,8 +123,8 @@ void StackAndConquer::setupMenu() {
           &StackAndConquer::showInfoBox);
 
   m_pZoomSlider = new QSlider(Qt::Orientation::Horizontal, this);
-  m_pZoomSlider->setMinimum(m_pSettings->getDefaultGrid());
-  m_pZoomSlider->setMaximum(m_pSettings->getMaxGrid());
+  m_pZoomSlider->setMinimum(m_pSettings->getDefaultGridSize());
+  m_pZoomSlider->setMaximum(m_pSettings->getMaxGridSize());
   m_pZoomSlider->setSingleStep(5);
   m_pZoomSlider->setTickInterval(10);
   m_pZoomSlider->setTracking(false);
@@ -168,7 +159,7 @@ void StackAndConquer::setupGraphView() {
     iconWin = QStringLiteral(":/img/trophy2.png");
   }
 
-  for (int i = 0; i < m_nMaxPlayers; i++) {
+  for (int i = 0; i < m_pSettings->getMaxNumOfPlayers(); i++) {
     m_pLblsPlayerName << new QLabel(QStringLiteral("Player"));
     m_pLblsPlayerName.last()->setStyleSheet(QStringLiteral("color: ") +
                                             m_pSettings->getTextColor().name());
@@ -245,7 +236,7 @@ void StackAndConquer::drawPlayerIcon(const quint8 nID) {
 // ---------------------------------------------------------------------------
 
 void StackAndConquer::updateNames(const QStringList &sListName) {
-  for (int i = 0; i < m_nMaxPlayers; i++) {
+  for (int i = 0; i < m_pSettings->getMaxNumOfPlayers(); i++) {
     if (i < sListName.size()) {
       m_pLblsPlayerName[i]->setText(sListName.at(i));
       m_pLblsPlayerName[i]->setVisible(true);
@@ -272,7 +263,7 @@ void StackAndConquer::zoomChanged(const int nNewGrid) {
   if (m_pSettings->getGridSize() != nNewGrid || bInitial) {
     m_pSettings->setGridSize(nNewGrid);
     this->resize(m_DefaultSize * m_pSettings->getGridSize() /
-                 m_pSettings->getDefaultGrid());
+                 m_pSettings->getDefaultGridSize());
     m_pFrame->setFixedWidth(this->width());
     emit changeZoom();
     bInitial = false;
@@ -292,7 +283,7 @@ void StackAndConquer::resizeEvent(QResizeEvent *pEvent) {
 void StackAndConquer::startNewGame(const QString &sSavegame) {
   this->recolor();
   delete m_pGame;
-  m_pGame = new Game(this, m_pSettings, m_sIN, m_sOUT);
+  m_pGame = new Game(this);
   if (!m_pGame->createGame(sSavegame)) {
     QGraphicsScene *tmpScene = new QGraphicsScene(this);
     tmpScene->setBackgroundBrush(QBrush(m_pSettings->getBgColor()));
@@ -341,9 +332,9 @@ void StackAndConquer::startNewGame(const QString &sSavegame) {
 void StackAndConquer::loadGame() {
   QString sFile = QFileDialog::getOpenFileName(
       this, tr("Load game"), m_userDataDir.absolutePath(),
-      tr("Save games") + "(*" + m_sSaveExtension + ")");
+      tr("Save games") + "(*" + Settings::SAVE_FILE_EXT + ")");
   if (!sFile.isEmpty()) {
-    if (!sFile.endsWith(m_sSaveExtension, Qt::CaseInsensitive)) {
+    if (!sFile.endsWith(Settings::SAVE_FILE_EXT, Qt::CaseInsensitive)) {
       QMessageBox::warning(this, tr("Warning"), tr("Invalid save game file."));
     } else {
       this->startNewGame(sFile);
@@ -357,10 +348,10 @@ void StackAndConquer::loadGame() {
 void StackAndConquer::saveGame() {
   QString sFile = QFileDialog::getSaveFileName(
       this, tr("Save game"), m_userDataDir.absolutePath(),
-      tr("Save games") + "(*" + m_sSaveExtension + ")");
+      tr("Save games") + "(*" + Settings::SAVE_FILE_EXT + ")");
   if (!sFile.isEmpty()) {
-    if (!sFile.endsWith(m_sSaveExtension, Qt::CaseInsensitive)) {
-      sFile += m_sSaveExtension;
+    if (!sFile.endsWith(Settings::SAVE_FILE_EXT, Qt::CaseInsensitive)) {
+      sFile += Settings::SAVE_FILE_EXT;
     }
     if (!m_pGame->saveGame(sFile)) {
       QMessageBox::warning(this, tr("Warning"), tr("Game could not be saved."));
@@ -417,14 +408,14 @@ void StackAndConquer::loadLanguage(const QString &sLang) {
 #endif
                 QLibraryInfo::TranslationsPath))) {
       StackAndConquer::switchTranslator(&m_translatorQt, "qt_" + sLang,
-                                        m_sSharePath + "/lang");
+                                        m_pSettings->getSharePath() + "/lang");
     }
     if (!StackAndConquer::switchTranslator(
             &m_translator,
             ":/" + qApp->applicationName().toLower() + "_" + sLang + ".qm")) {
       StackAndConquer::switchTranslator(
           &m_translator, qApp->applicationName().toLower() + "_" + sLang,
-          m_sSharePath + "/lang");
+          m_pSettings->getSharePath() + "/lang");
     }
   }
   m_pUi->retranslateUi(this);
@@ -464,7 +455,7 @@ void StackAndConquer::showRules() {
   pTabs->addTab(pTextEditRules, tr("Standard rules"));
   // TODO(x): Implement rules for > 2 players
   // TODO(x): Remove after implementation of > 2 players
-  if (m_nMaxPlayers > 2) {
+  if (m_pSettings->getMaxNumOfPlayers() > 2) {
     pTabs->addTab(pTextEditRulesATrois, tr("Addition for > 2 players"));
   }
   auto *pCredits = new QLabel;
@@ -475,7 +466,7 @@ void StackAndConquer::showRules() {
   pLayout->addWidget(pTabs);
   pLayout->addWidget(pCredits);
 
-  QString sLang(m_pSettings->getLanguage());
+  QString sLang(m_pSettings->getGuiLanguage());
   QFile rules(":/rules_" + sLang + ".html");
   if (!rules.exists()) {
     sLang = sLang.left(2);
@@ -498,7 +489,7 @@ void StackAndConquer::showRules() {
   pTextEditRules->setHtml(stream.readAll());
   rules.close();
 
-  sLang = m_pSettings->getLanguage();
+  sLang = m_pSettings->getGuiLanguage();
   rules.setFileName(":/rules_a_trois_" + sLang + ".html");
   if (!rules.exists()) {
     sLang = sLang.left(2);
@@ -605,7 +596,7 @@ void StackAndConquer::recolor() {
     iconWin = QStringLiteral(":/img/trophy2.png");
   }
 
-  for (int i = 0; i < m_nMaxPlayers; i++) {
+  for (int i = 0; i < m_pSettings->getMaxNumOfPlayers(); i++) {
     m_pLblsPlayerName[i]->setStyleSheet(QStringLiteral("color: ") +
                                         m_pSettings->getTextColor().name());
     m_pLblsStonesLeft[i]->setStyleSheet(QStringLiteral("color: ") +

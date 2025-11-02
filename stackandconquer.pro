@@ -54,7 +54,8 @@ DEFINES      += QT_NO_FOREACH
 
 CONFIG(debug, debug|release) {
   CONFIG     += warn_on
-  DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x060900
+  QMAKE_CXXFLAGS += -Wall -Wextra -pedantic
+  DEFINES    += QT_DISABLE_DEPRECATED_BEFORE=0x061000
 }
 
 SOURCES      += main.cpp\
@@ -63,6 +64,7 @@ SOURCES      += main.cpp\
                 board.cpp \
                 player.cpp \
                 settings.cpp \
+                settingsdialog.cpp \
                 opponentjs.cpp \
                 generateboard.cpp
 
@@ -71,11 +73,12 @@ HEADERS      += stackandconquer.h \
                 board.h \
                 player.h \
                 settings.h \
+                settingsdialog.h \
                 opponentjs.h \
                 generateboard.h
 
 FORMS        += stackandconquer.ui \
-                settings.ui
+                settingsdialog.ui
 
 RESOURCES    += data/data.qrc \
                 lang/translations.qrc

@@ -38,6 +38,7 @@
 #include <QTime>
 
 #include "./generateboard.h"
+#include "./settings.h"
 #include "./stackandconquer.h"
 
 static QFile logfile;
@@ -65,12 +66,6 @@ auto main(int argc, char *argv[]) -> int {
   app.setDesktopFileName(QStringLiteral("com.github.elth0r0.stackandconquer"));
 #endif
 
-  static const QString FILEEXTSAVE(QStringLiteral(".stacksav"));
-  static const QString FILEEXTBOARD(QStringLiteral(".stackboard"));
-  static const QString FILEEXTBORDIN(QStringLiteral(".in"));
-  static const QString FIELD_IN(QStringLiteral("0"));
-  static const QString FIELD_OUT(QStringLiteral("#"));
-
   QCommandLineParser cmdparser;
   cmdparser.setApplicationDescription(QStringLiteral(APP_DESC));
   cmdparser.addHelpOption();
@@ -80,17 +75,19 @@ auto main(int argc, char *argv[]) -> int {
   cmdparser.addOption(enableDebug);
   QCommandLineOption generateBoard(
       QStringLiteral("genboard"),
-      QStringLiteral("Generate %1 from input file(s)").arg(FILEEXTBOARD));
+      QStringLiteral("Generate %1 from input file(s)")
+          .arg(Settings::BOARD_FILE_EXT));
   cmdparser.addOption(generateBoard);
 
   cmdparser.addPositionalArgument(
       QStringLiteral("savegame"),
-      QStringLiteral("Savegame file to be opened (*%1)").arg(FILEEXTSAVE));
+      QStringLiteral("Savegame file to be opened (*%1)")
+          .arg(Settings::SAVE_FILE_EXT));
   cmdparser.addPositionalArgument(
       QStringLiteral("board_in"),
       QStringLiteral("Input file (*%1) or folder to be converted to "
                      "stackboard; only to be used with option --%2")
-          .arg(FILEEXTBORDIN, generateBoard.names().at(0)));
+          .arg(Settings::BORD_IN_FILE_EXT, generateBoard.names().at(0)));
   cmdparser.addPositionalArgument(
       QStringLiteral("board_out"),
       QStringLiteral("Optional folder in which generated board files shall "
@@ -100,8 +97,9 @@ auto main(int argc, char *argv[]) -> int {
 
   if (cmdparser.isSet(generateBoard)) {
     GenerateBoard::startGeneration(cmdparser.positionalArguments(),
-                                   FILEEXTBORDIN.toLower(),
-                                   FILEEXTBOARD.toLower(), FIELD_IN, FIELD_OUT);
+                                   Settings::BORD_IN_FILE_EXT.toLower(),
+                                   Settings::BOARD_FILE_EXT.toLower(),
+                                   Settings::FIELD_IN, Settings::FIELD_OUT);
     exit(0);
   }
 
@@ -117,6 +115,7 @@ auto main(int argc, char *argv[]) -> int {
 #if defined(Q_OS_OSX)
   sSharePath = app.applicationDirPath() + "/../Resources/";
 #endif
+  Settings::instance()->setSharePath(sSharePath);
 
   QStringList sListPaths =
       QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation);
@@ -139,9 +138,8 @@ auto main(int argc, char *argv[]) -> int {
     qWarning() << "DEBUG mode enabled!";
   }
 
-  StackAndConquer myStackAndConquer(
-      sSharePath, userDataDir, FILEEXTSAVE.toLower(), FILEEXTBOARD.toLower(),
-      FIELD_IN, FIELD_OUT, cmdparser.positionalArguments());
+  StackAndConquer myStackAndConquer(userDataDir,
+                                    cmdparser.positionalArguments());
   myStackAndConquer.show();
   int nRet = app.exec();
 
