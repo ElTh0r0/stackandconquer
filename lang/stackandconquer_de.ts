@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="de">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="de">
 <context>
     <name>Board</name>
     <message>
@@ -264,131 +262,131 @@ Das Spiel endet unentschieden!</translation>
         <location filename="../settingsdialog.cpp" line="55"/>
         <location filename="../settingsdialog.cpp" line="659"/>
         <source>Color player %1</source>
-        <translation type="unfinished">Farbe Spieler %1</translation>
+        <translation>Farbe Spieler %1</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="64"/>
         <location filename="../settingsdialog.cpp" line="661"/>
         <source>Player %1 Human/CPU</source>
-        <translation type="unfinished">Spieler %1 Mensch/CPU</translation>
+        <translation>Spieler %1 Mensch/CPU</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="289"/>
         <location filename="../settingsdialog.cpp" line="664"/>
         <source>Create new style...</source>
-        <translation type="unfinished">Neuen Stil erstellen...</translation>
+        <translation>Neuen Stil erstellen...</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="399"/>
         <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
-        <translation type="unfinished">Grundlegende Spieleinstellungen wurden geändert.&lt;br&gt;Soll ein neues Spiel gestartet werden?</translation>
+        <translation>Grundlegende Spieleinstellungen wurden geändert.&lt;br&gt;Soll ein neues Spiel gestartet werden?</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="487"/>
         <location filename="../settingsdialog.cpp" line="529"/>
         <location filename="../settingsdialog.cpp" line="540"/>
         <source>Error</source>
-        <translation type="unfinished">Fehler</translation>
+        <translation>Fehler</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="487"/>
         <source>Boards folder seems empty!</source>
-        <translation type="unfinished">Spielfeld-Verzeichnis scheint leer zu sein!</translation>
+        <translation>Spielfeld-Verzeichnis scheint leer zu sein!</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="508"/>
         <source>New style</source>
-        <translation type="unfinished">Neuer Stil</translation>
+        <translation>Neuer Stil</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="509"/>
         <source>Please insert name of new style file:</source>
-        <translation type="unfinished">Bitte Namen für die neue Stildatei eingeben:</translation>
+        <translation>Bitte Namen für die neue Stildatei eingeben:</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="529"/>
         <source>File already exists.</source>
-        <translation type="unfinished">Datei existiert bereits.</translation>
+        <translation>Datei existiert bereits.</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="541"/>
         <source>Could not create new style.</source>
-        <translation type="unfinished">Neuer Stil konnte nicht erstellt werden.</translation>
+        <translation>Neuer Stil konnte nicht erstellt werden.</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="667"/>
         <source>Color</source>
-        <translation type="unfinished">Farbe</translation>
+        <translation>Farbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="670"/>
         <source>Main background</source>
-        <translation type="unfinished">Fensterhintergrund</translation>
+        <translation>Fensterhintergrund</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="670"/>
         <source>Board background</source>
-        <translation type="unfinished">Spielfeldhintergrund</translation>
+        <translation>Spielfeldhintergrund</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="671"/>
         <source>Grid color</source>
-        <translation type="unfinished">Gitternetzfarbe</translation>
+        <translation>Gitternetzfarbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="671"/>
         <source>Animate color</source>
-        <translation type="unfinished">Animationsfarbe</translation>
+        <translation>Animationsfarbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="672"/>
         <source>Animate border color</source>
-        <translation type="unfinished">Animationsrahmenfarbe</translation>
+        <translation>Animationsrahmenfarbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="672"/>
         <source>Highlight color</source>
-        <translation type="unfinished">Hervorhebungsfarbe</translation>
+        <translation>Hervorhebungsfarbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="673"/>
         <source>Highlight border color</source>
-        <translation type="unfinished">Hervorhebungsrahmenfarbe</translation>
+        <translation>Hervorhebungsrahmenfarbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="673"/>
         <source>Neighbours color</source>
-        <translation type="unfinished">Nachbarfarbe</translation>
+        <translation>Nachbarfarbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="674"/>
         <source>Neighbours border color</source>
-        <translation type="unfinished">Nachbarrahmenfarbe</translation>
+        <translation>Nachbarrahmenfarbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="674"/>
         <source>Selected color</source>
-        <translation type="unfinished">Auswahlfarbe</translation>
+        <translation>Auswahlfarbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="675"/>
         <source>Selected border color</source>
-        <translation type="unfinished">Auswahlrahmenfarbe</translation>
+        <translation>Auswahlrahmenfarbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="675"/>
         <source>Text color</source>
-        <translation type="unfinished">Textfarbe</translation>
+        <translation>Textfarbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="676"/>
         <source>Text highlight color</source>
-        <translation type="unfinished">Texthervorhebungsfarbe</translation>
+        <translation>Texthervorhebungsfarbe</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="706"/>
         <source>Random</source>
-        <translation type="unfinished">Zufällig</translation>
+        <translation>Zufällig</translation>
     </message>
 </context>
 <context>
