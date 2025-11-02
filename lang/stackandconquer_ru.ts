@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ru">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ru">
 <context>
     <name>Board</name>
     <message>
@@ -264,131 +262,131 @@ Game ends in a tie!</source>
         <location filename="../settingsdialog.cpp" line="55"/>
         <location filename="../settingsdialog.cpp" line="659"/>
         <source>Color player %1</source>
-        <translation type="unfinished">Цвет игрока %1</translation>
+        <translation>Цвет игрока %1</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="64"/>
         <location filename="../settingsdialog.cpp" line="661"/>
         <source>Player %1 Human/CPU</source>
-        <translation type="unfinished">Игрок %1 Человек/ПК</translation>
+        <translation>Игрок %1 Человек/ПК</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="289"/>
         <location filename="../settingsdialog.cpp" line="664"/>
         <source>Create new style...</source>
-        <translation type="unfinished">Создать новый стиль ...</translation>
+        <translation>Создать новый стиль ...</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="399"/>
         <source>Main game settings had been changed.&lt;br&gt;Do you want to start a new game?</source>
-        <translation type="unfinished">Основные настройки игры были изменены.&lt;br&gt;Вы хотите начать новую игру?</translation>
+        <translation>Основные настройки игры были изменены.&lt;br&gt;Вы хотите начать новую игру?</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="487"/>
         <location filename="../settingsdialog.cpp" line="529"/>
         <location filename="../settingsdialog.cpp" line="540"/>
         <source>Error</source>
-        <translation type="unfinished">Ошибка</translation>
+        <translation>Ошибка</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="487"/>
         <source>Boards folder seems empty!</source>
-        <translation type="unfinished">Папка доски кажется пустой!</translation>
+        <translation>Папка доски кажется пустой!</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="508"/>
         <source>New style</source>
-        <translation type="unfinished">Новый стиль</translation>
+        <translation>Новый стиль</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="509"/>
         <source>Please insert name of new style file:</source>
-        <translation type="unfinished">Пожалуйста, вставьте имя файла нового стиля:</translation>
+        <translation>Пожалуйста, вставьте имя файла нового стиля:</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="529"/>
         <source>File already exists.</source>
-        <translation type="unfinished">Файл уже существует.</translation>
+        <translation>Файл уже существует.</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="541"/>
         <source>Could not create new style.</source>
-        <translation type="unfinished">Не мог создать новый стиль.</translation>
+        <translation>Не мог создать новый стиль.</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="667"/>
         <source>Color</source>
-        <translation type="unfinished">Цвет</translation>
+        <translation>Цвет</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="670"/>
         <source>Main background</source>
-        <translation type="unfinished">Основной фон</translation>
+        <translation>Основной фон</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="670"/>
         <source>Board background</source>
-        <translation type="unfinished">Фон доски</translation>
+        <translation>Фон доски</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="671"/>
         <source>Grid color</source>
-        <translation type="unfinished">Цвет сетки</translation>
+        <translation>Цвет сетки</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="671"/>
         <source>Animate color</source>
-        <translation type="unfinished">Цвет анимации</translation>
+        <translation>Цвет анимации</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="672"/>
         <source>Animate border color</source>
-        <translation type="unfinished">Цвет анимации границы</translation>
+        <translation>Цвет анимации границы</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="672"/>
         <source>Highlight color</source>
-        <translation type="unfinished">Выделенный цвет</translation>
+        <translation>Выделенный цвет</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="673"/>
         <source>Highlight border color</source>
-        <translation type="unfinished">Выберите цвет границы</translation>
+        <translation>Выберите цвет границы</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="673"/>
         <source>Neighbours color</source>
-        <translation type="unfinished">Соседний цвет</translation>
+        <translation>Соседний цвет</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="674"/>
         <source>Neighbours border color</source>
-        <translation type="unfinished">Цвет соседних границ</translation>
+        <translation>Цвет соседних границ</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="674"/>
         <source>Selected color</source>
-        <translation type="unfinished">Выбранный цвет</translation>
+        <translation>Выбранный цвет</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="675"/>
         <source>Selected border color</source>
-        <translation type="unfinished">Выбранный цвет границы</translation>
+        <translation>Выбранный цвет границы</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="675"/>
         <source>Text color</source>
-        <translation type="unfinished">Цвет текста</translation>
+        <translation>Цвет текста</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="676"/>
         <source>Text highlight color</source>
-        <translation type="unfinished">Цвет выделенного текста</translation>
+        <translation>Цвет выделенного текста</translation>
     </message>
     <message>
         <location filename="../settingsdialog.cpp" line="706"/>
         <source>Random</source>
-        <translation type="unfinished">Случайный</translation>
+        <translation>Случайный</translation>
     </message>
 </context>
 <context>
