@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 project(StackAndConquer
-    VERSION 0.11.1
+    VERSION 0.12.0
     DESCRIPTION "Challenging tower conquest board game"
     LANGUAGES C CXX
 )
