@@ -638,7 +638,7 @@ auto SettingsDialog::getStyleColorFromTable(QColor color, const int nRow)
     -> QColor {
   QColor cTmp = color;
 #if QT_VERSION < QT_VERSION_CHECK(6, 4, 0)
-  oldColor.setNamedColor(m_pUi->tableBoardStyle->item(nRow, 0)->text());
+  color.setNamedColor(m_pUi->tableBoardStyle->item(nRow, 0)->text());
 #else
   color = QColor::fromString(m_pUi->tableBoardStyle->item(nRow, 0)->text());
 #endif
