@@ -1,7 +1,14 @@
 // SPDX-FileCopyrightText: 2024 Maks Verver
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-// CPU strength: Hard
+/*
+ * CPU opponent using Monte Carlo simulations.
+ *
+ * This file was auto-generated from multiple source files. The original source
+ * code is available here: https://github.com/maksverver/stackandconquer-ai/
+ *
+ * CPU strength: Hard
+ */
 
 'use strict';
 

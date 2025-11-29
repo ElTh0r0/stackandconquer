@@ -1,7 +1,14 @@
 // SPDX-FileCopyrightText: 2024 Maks Verver
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-// CPU strength: Very hard
+/*
+ * CPU opponent using the Minimax algorithm.
+ *
+ * This file was auto-generated from multiple source files. The original source
+ * code is available here: https://github.com/maksverver/stackandconquer-ai/
+ *
+ * CPU strength: Very hard
+ */
 
 'use strict';
 
