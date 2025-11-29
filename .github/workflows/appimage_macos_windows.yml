@@ -12,7 +12,7 @@ jobs:
       QT_SELECT: qt5
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install Dependencies
       run: sudo apt update && sudo apt install qtbase5-dev qt5-qmake qttools5-dev-tools qtdeclarative5-dev libqt5svg5-dev libfuse2
@@ -51,10 +51,10 @@ jobs:
     name: macOS
     runs-on: macos-latest
     env:
-      QT_VERSION: '6.9.1'
+      QT_VERSION: '6.10.1'
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -94,11 +94,11 @@ jobs:
     name: Win latest Qt 6 msvc
     runs-on: windows-latest
     env:
-      QT_VERSION: '6.9.1'
+      QT_VERSION: '6.10.1'
       BUILD: 'msvc2022_64'
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
     
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
@@ -151,11 +151,11 @@ jobs:
     name: Win 2022 Qt 6 mingw
     runs-on: windows-2022
     env:
-      QT_VERSION: '6.9.1'
+      QT_VERSION: '6.10.1'
       BUILD: 'mingw1310_64'
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
