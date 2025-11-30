@@ -61,10 +61,17 @@ target_compile_definitions(stackandconquer
         $<$<CONFIG:DEBUG>:QT_DISABLE_DEPRECATED_BEFORE=0x061000>
 )
 
-target_compile_options(stackandconquer
-    PRIVATE
-        $<$<CONFIG:DEBUG>:-Wall -Wextra -pedantic>
-)
+if(MSVC)
+    target_compile_options(stackandconquer
+        PRIVATE
+            $<$<CONFIG:DEBUG>:/W4 /permissive->
+    )
+else()
+    target_compile_options(stackandconquer
+        PRIVATE
+            $<$<CONFIG:DEBUG>:-Wall -Wextra -pedantic>
+    )
+endif()
 
 target_link_libraries(stackandconquer PRIVATE
     ${QT_MAIN_VERSION}::Core
