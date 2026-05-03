@@ -51,7 +51,7 @@ jobs:
     name: macOS
     runs-on: macos-latest
     env:
-      QT_VERSION: '6.10.1'
+      QT_VERSION: '6.10.3'
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6
@@ -94,7 +94,7 @@ jobs:
     name: Win latest Qt 6 msvc
     runs-on: windows-latest
     env:
-      QT_VERSION: '6.10.1'
+      QT_VERSION: '6.10.3'
       BUILD: 'msvc2022_64'
     steps:
     - name: Checkout repository
@@ -151,7 +151,7 @@ jobs:
     name: Win 2022 Qt 6 mingw
     runs-on: windows-2022
     env:
-      QT_VERSION: '6.10.1'
+      QT_VERSION: '6.10.3'
       BUILD: 'mingw1310_64'
     steps:
     - name: Checkout repository
@@ -199,7 +199,7 @@ jobs:
        makensis stackandconquer.nsi
        ren StackAndConquer_Installer.exe StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.exe
        
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v7
       with:
         name: StackAndConquer-Windows_Artefacts
         path: StackAndConquer-*.*
