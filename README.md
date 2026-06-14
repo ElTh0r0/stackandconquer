@@ -1,7 +1,7 @@
 # StackAndConquer
 StackAndConquer is a challenging tower conquest board game inspired by [Mixtour](https://spielstein.com/games/mixtour) created by Dieter Stein who allows free copying and using the rule texts and graphics under [CC license (BY-NC)](https://creativecommons.org/licenses/by-nc/4.0/). Objective is to build a stack of stones with at least five stones and a stone with the players color on top.
 
-![Screenshot](https://codeberg.org/ElTh0r0/stackandconquer/wiki/raw/img/screenshot.png)
+![Screenshot](./data/screenshot.png)
 
 ## Installation
 * [Build for Windows](https://codeberg.org/ElTh0r0/stackandconquer/releases/latest)
