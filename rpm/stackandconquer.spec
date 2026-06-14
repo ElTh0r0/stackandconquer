@@ -23,35 +23,36 @@ Version:        0.11.1
 Release:        1
 License:        GPL-3.0-or-later
 URL:            https://github.com/ElTh0r0/stackandconquer
-Source:         %{name}-%{version}.tar.gz
+Source:         %{name}-v%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-build
 
-# Fedora, RHEL, or CentOS
 #--------------------------------------------------------------------
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+# Fedora
+#--------------------------------------------------------------------
+%if 0%{?fedora}
 Group:          Amusements/Games
-
 BuildRequires:  desktop-file-utils
-BuildRequires:  gcc-c++
-BuildRequires:  hicolor-icon-theme
-BuildRequires:  qt5-qtbase-devel
-BuildRequires:  qt5-qtsvg-devel
-BuildRequires:  qt5-qtdeclarative-devel
+BuildRequires:  libappstream-glib
+BuildRequires:  ninja-build
 %endif
 #--------------------------------------------------------------------
-
-# openSUSE or SLE
+# openSUSE
 #--------------------------------------------------------------------
 %if 0%{?suse_version}
 Group:          Amusements/Games/Board/Other
-
+%endif
+#--------------------------------------------------------------------
+# All
+#--------------------------------------------------------------------
 BuildRequires:  gcc-c++
 BuildRequires:  hicolor-icon-theme
-BuildRequires:  libqt5-qtbase-devel
-BuildRequires:  libQt5Svg-devel
-BuildRequires:  libqt5-qtdeclarative-devel
-BuildRequires:  update-desktop-files
-%endif
+BuildRequires:  cmake
+BuildRequires:  cmake(Qt6Core)
+BuildRequires:  cmake(Qt6Gui)
+BuildRequires:  cmake(Qt6Widgets)
+BuildRequires:  cmake(Qt6Qml)
+BuildRequires:  cmake(Qt6SvgWidgets)
+BuildRequires:  cmake(Qt6LinguistTools)
 #--------------------------------------------------------------------
 
 %description
@@ -60,53 +61,33 @@ Mixtour created by Dieter Stein. Objective is to build a stack of stones
 with at least five stones and a stone with the players color on top.
 
 %prep
-%autosetup -N -n %{name}-%{version}
+%autosetup -n %{name} -p1
 
-# Fedora, RHEL, or CentOS
 #--------------------------------------------------------------------
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+# Fedora
+#--------------------------------------------------------------------
+%if 0%{?fedora}
 %build
-# Create qmake cache file to add rpm optflags.
-cat > .qmake.cache <<EOF
-QMAKE_CXXFLAGS += %{optflags}
-EOF
-%{qmake_qt5} PREFIX=%{_prefix}
-make %{?_smp_mflags}
+%cmake_qt6
+%cmake_build
 
 %install
-make install INSTALL_ROOT=%{buildroot}
+%cmake_install
+
+%check
 desktop-file-validate %{buildroot}/%{_datadir}/applications/%{_name}.desktop || :
-
-%post
-update-desktop-database &> /dev/null || :
-
-%postun
-update-desktop-database &> /dev/null || :
+appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/%{_name}.metainfo.xml || :
 %endif
 #--------------------------------------------------------------------
-
-# openSUSE or SLE
+# openSUSE
 #--------------------------------------------------------------------
 %if 0%{?suse_version}
 %build
-# Create qmake cache file to add rpm optflags.
-cat > .qmake.cache <<EOF
-QMAKE_CXXFLAGS += %{optflags}
-EOF
-qmake-qt5 PREFIX=%{_prefix}
-make %{?_smp_mflags}
+%cmake_qt6
+%{qt6_build}
 
 %install
-make INSTALL_ROOT=%{buildroot} install
-%suse_update_desktop_file %{_name}
-
-%if 0%{?suse_version} >= 1140
-%post
-%desktop_database_post
-
-%postun
-%desktop_database_postun
-%endif
+%{qt6_install}
 %endif
 #--------------------------------------------------------------------
 
