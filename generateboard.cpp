@@ -121,10 +121,6 @@ auto GenerateBoard::generateBoard(QFile *pInput, QFile *pOutput,
   qDebug() << "Input:\t" << pInput->fileName();
 
   QTextStream in(pInput);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-  // Since Qt 6 UTF-8 is used by default
-  in.setCodec("UTF-8");
-#endif
   QList<QString> listBoard;
   QString sLine;
   bool bOk(true);
@@ -140,11 +136,7 @@ auto GenerateBoard::generateBoard(QFile *pInput, QFile *pOutput,
     if (sLine.isEmpty()) {
       break;
     }
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
-    const QStringList sList(sLine.split(',', QString::SkipEmptyParts));
-#else
     const QStringList sList(sLine.split(',', Qt::SkipEmptyParts));
-#endif
     if (sList.isEmpty()) {
       qWarning() << "Invalid line:" << nRows + 1;
       return false;

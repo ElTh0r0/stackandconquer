@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: 2015-2025 Thorsten Roth
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-equals(QT_MAJOR_VERSION, 5):lessThan(QT_MINOR_VERSION, 12) {
-  error("StackAndConquer requires Qt 5.12 or greater")
+equals(QT_MAJOR_VERSION, 6):lessThan(QT_MINOR_VERSION, 2) {
+  error("StackAndConquer requires Qt 6.2 or greater")
 }
 
 TEMPLATE      = app
@@ -30,12 +30,7 @@ OBJECTS_DIR   = ./.objs
 UI_DIR        = ./.ui
 RCC_DIR       = ./.rcc
 
-QT           += core gui qml widgets
-lessThan(QT_MAJOR_VERSION, 6) {
-  QT         += svg
-} else {
-  QT         += svgwidgets
-}
+QT           += core gui qml widgets svgwidgets
 CONFIG       += c++11
 DEFINES      += QT_NO_FOREACH
 
