@@ -403,8 +403,10 @@ auto StackAndConquer::switchTranslator(QTranslator *translator,
   if (translator->load(sFile, sPath)) {
     qApp->installTranslator(translator);
   } else {
-    qWarning() << "Could not find translation" << sFile << "in" << sPath;
-    return false;
+    if (!sFile.contains(QStringLiteral("_en"))) {
+      qWarning() << "Could not find translation" << sFile << "in" << sPath;
+      return false;
+    }
   }
   return true;
 }

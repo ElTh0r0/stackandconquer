@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ru">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ru">
 <context>
     <name>Board</name>
     <message>
@@ -9,8 +11,8 @@
         <location filename="../board.cpp" line="134"/>
         <location filename="../board.cpp" line="148"/>
         <location filename="../board.cpp" line="298"/>
-        <location filename="../board.cpp" line="593"/>
-        <location filename="../board.cpp" line="658"/>
+        <location filename="../board.cpp" line="588"/>
+        <location filename="../board.cpp" line="653"/>
         <source>Warning</source>
         <translation>Внимание</translation>
     </message>
@@ -30,18 +32,18 @@
         <translation>Не мог открыть %1!</translation>
     </message>
     <message>
-        <location filename="../board.cpp" line="593"/>
-        <location filename="../board.cpp" line="658"/>
+        <location filename="../board.cpp" line="588"/>
+        <location filename="../board.cpp" line="653"/>
         <source>Something went wrong!</source>
         <translation>Что -то пошло не так!</translation>
     </message>
     <message>
-        <location filename="../board.cpp" line="737"/>
+        <location filename="../board.cpp" line="732"/>
         <source>Move tower</source>
         <translation>Переместить башню</translation>
     </message>
     <message>
-        <location filename="../board.cpp" line="737"/>
+        <location filename="../board.cpp" line="732"/>
         <source>How many stones shall be moved:</source>
         <translation>Сколько камней должно быть перемещено:</translation>
     </message>
@@ -194,67 +196,80 @@ Game ends in a tie!</source>
     <name>SettingsDialog</name>
     <message>
         <location filename="../settingsdialog.ui" line="20"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="261"/>
         <source>Preferences</source>
         <translation>Настройки</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="37"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="271"/>
         <source>General</source>
         <translation>Общие</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="51"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="262"/>
         <location filename="../settingsdialog.cpp" line="708"/>
         <source>Player</source>
         <translation>Игрока</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="58"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="263"/>
         <source>Number of players</source>
         <translation>Количество игроков</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="90"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="264"/>
         <source>Game</source>
         <translation>Игры</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="97"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="265"/>
         <source>Start player</source>
         <translation>Первый игрок</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="117"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="267"/>
         <source>Towers needed to win</source>
         <translation>Количество башен, необходимых для победы</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="134"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="268"/>
         <source>Possible tower moves</source>
         <translation>Возможные ходы башней</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="141"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="269"/>
         <source>Show movable towers after selection</source>
         <translation>Показать движение башни после выбора</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="155"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="270"/>
         <source>GUI language</source>
         <translation>Язык приложения</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="166"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="278"/>
         <source>Board style</source>
         <translation>Стиль доски</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="175"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="272"/>
         <source>Style</source>
         <translation>Стиль</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="110"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="266"/>
         <source>Board</source>
         <translation>Доска</translation>
     </message>
@@ -393,68 +408,81 @@ Game ends in a tie!</source>
     <name>StackAndConquer</name>
     <message>
         <location filename="../stackandconquer.ui" line="35"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="170"/>
         <source>&amp;Game</source>
         <translation>&amp;Игра</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="47"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="171"/>
         <source>&amp;Help</source>
         <translation>&amp;Помощь</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="65"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="153"/>
         <source>&amp;New game</source>
         <translation>&amp;Новая игра</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="68"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="155"/>
         <source>New game</source>
         <translation>Новая игра</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="78"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="157"/>
         <source>&amp;Quit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="88"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="158"/>
         <source>&amp;About</source>
         <translation>О&amp;б игре</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="101"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="159"/>
         <source>&amp;Save game</source>
         <translation>&amp;Сохранить игру</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="104"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="161"/>
         <location filename="../stackandconquer.cpp" line="327"/>
         <source>Save game</source>
         <translation>Сохранение игры</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="114"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="163"/>
         <source>&amp;Load game</source>
         <translation>&amp;Загрузить игру</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="117"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="165"/>
         <location filename="../stackandconquer.cpp" line="311"/>
         <source>Load game</source>
         <translation>Загрузка игры</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="122"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="167"/>
         <source>Report &amp;bug</source>
         <translation>О&amp;тчёт об ошибках</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="132"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="168"/>
         <source>S&amp;ettings</source>
         <translation>Н&amp;астройки</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="137"/>
+        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="169"/>
         <source>&amp;Rules</source>
         <translation>П&amp;равила</translation>
     </message>
@@ -463,8 +491,8 @@ Game ends in a tie!</source>
         <location filename="../stackandconquer.cpp" line="297"/>
         <location filename="../stackandconquer.cpp" line="315"/>
         <location filename="../stackandconquer.cpp" line="334"/>
-        <location filename="../stackandconquer.cpp" line="458"/>
-        <location filename="../stackandconquer.cpp" line="481"/>
+        <location filename="../stackandconquer.cpp" line="455"/>
+        <location filename="../stackandconquer.cpp" line="474"/>
         <source>Warning</source>
         <translation>Внимание</translation>
     </message>
@@ -505,58 +533,58 @@ Game ends in a tie!</source>
         <translation>%1 ваш ход</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="424"/>
+        <location filename="../stackandconquer.cpp" line="421"/>
         <source>Rules</source>
         <translation>Правила</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="432"/>
+        <location filename="../stackandconquer.cpp" line="429"/>
         <source>Standard rules</source>
         <translation>Стандартные правила</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="436"/>
+        <location filename="../stackandconquer.cpp" line="433"/>
         <source>Addition for &gt; 2 players</source>
         <translation>Дополнение для &gt; 2 игроков</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="458"/>
-        <location filename="../stackandconquer.cpp" line="481"/>
+        <location filename="../stackandconquer.cpp" line="455"/>
+        <location filename="../stackandconquer.cpp" line="474"/>
         <source>Could not open rules!</source>
         <translation>Не мог открыть правила!</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="494"/>
+        <location filename="../stackandconquer.cpp" line="483"/>
         <source>These rules are licensed under Creative Commons &lt;a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;&gt;Attribution-Noncommercial 4.0 International&lt;/a&gt; license.</source>
         <translation>Эти правила лицензированы в соответствии с Creative Commons &lt;a href=&quot;https://creativecommons.org/licenses/by-nc/4.0/&quot;&gt;Attribution-Noncommercial 4.0 International&lt;/a&gt; лицензией.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="517"/>
+        <location filename="../stackandconquer.cpp" line="506"/>
         <source>About</source>
         <translation>Об игре</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="532"/>
+        <location filename="../stackandconquer.cpp" line="521"/>
         <source>License</source>
         <translation>Лицензия</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="535"/>
+        <location filename="../stackandconquer.cpp" line="524"/>
         <source>This application uses icons from &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;Tango project&lt;/a&gt;.</source>
         <translation>Это приложение использует значки от &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;проекта Танго&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="539"/>
+        <location filename="../stackandconquer.cpp" line="528"/>
         <source>The game is based on &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;Mixtour&lt;/a&gt; by Dieter Stein.</source>
         <translation>Игра основана на &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;Mixtour&lt;/a&gt; от Dieter Stein.</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="542"/>
+        <location filename="../stackandconquer.cpp" line="531"/>
         <source>Translations</source>
         <translation>Переводы</translation>
     </message>
     <message>
-        <location filename="../stackandconquer.cpp" line="548"/>
+        <location filename="../stackandconquer.cpp" line="537"/>
         <source>CPU players</source>
         <translation>Движки ПК</translation>
     </message>

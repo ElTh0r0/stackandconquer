@@ -19,6 +19,8 @@ find_package(${QT_MAIN_VERSION} ${QT_MINIMUM_VERSION}
     REQUIRED Core Gui Widgets Qml SvgWidgets LinguistTools
 )
 
+option(GENERATE_TS "Regenerate translation source files" OFF)
+
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     set(LINUX ON)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
@@ -101,11 +103,11 @@ set(FORMS
 
 set(RESOURCES
     data/data.qrc
+    lang/rules.qrc
 )
 
 set(TRANSLATIONS
     lang/stackandconquer_de.ts
-    lang/stackandconquer_en.ts
     lang/stackandconquer_it.ts
     lang/stackandconquer_ja_JP.ts
     lang/stackandconquer_nl.ts
@@ -113,7 +115,11 @@ set(TRANSLATIONS
     lang/stackandconquer_ru.ts
 )
 
-qt_add_translation(QM_FILES ${TRANSLATIONS})
+if (GENERATE_TS)
+    qt6_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TRANSLATIONS} OPTIONS -no-obsolete)
+else ()
+    qt6_add_translation(QM_FILES ${TRANSLATIONS})
+endif ()
 add_custom_target(translations_${PROJECT_NAME} ALL DEPENDS ${QM_FILES})
 foreach(qm_file ${QM_FILES})
     get_filename_component(qm_filename "${qm_file}" NAME)
