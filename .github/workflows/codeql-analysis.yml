@@ -38,7 +38,7 @@ jobs:
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
     - name: Install Dependencies
-      run: sudo apt update && sudo apt install qtbase5-dev qt5-qmake libqt5svg5-dev qtdeclarative5-dev
+      run: sudo apt update && sudo apt install qt6-base-dev qt6-base-dev-tools qt6-l10n-tools qt6-declarative-dev libqt6svg6-dev
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
@@ -53,8 +53,8 @@ jobs:
     #    uses a compiled language
 
     - run: |
-       qmake CONFIG+=release PREFIX=/usr
-       make
+       cmake -B . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_PREFIX_PATH=/usr/include/x86_64-linux-gnu/qt6/
+       cmake --build . -- -j$(nproc)
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
