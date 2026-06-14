@@ -6,7 +6,7 @@
   !define VERSIONMINOR 11
   !define VERSIONPATCH 1
   !define APPVERSION "${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONPATCH}.0"
-  !define ABOUTURL "https://github.com/ElTh0r0/stackandconquer"
+  !define ABOUTURL "https://codeberg.org/ElTh0r0/stackandconquer"
 
   !include "LogicLib.nsh"
   !include "MUI2.nsh"

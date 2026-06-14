@@ -1,2 +1,2 @@
 # StackAndConquer packaging
-Packaging files for [StackAndConquer](https://github.com/ElTh0r0/stackandconquer).
+Packaging files for [StackAndConquer](https://codeberg.org/ElTh0r0/stackandconquer).

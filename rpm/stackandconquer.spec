@@ -16,13 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with StackAndConquer  If not, see <http://www.gnu.org/licenses/>.
 
-%define  _name  com.github.elth0r0.stackandconquer
+%define  _name  org.codeberg.elth0r0.stackandconquer
 Name:           stackandconquer
 Summary:        Challenging tower conquest board game
 Version:        0.11.1
 Release:        1
 License:        GPL-3.0-or-later
-URL:            https://github.com/ElTh0r0/stackandconquer
+URL:            https://codeberg.org/ElTh0r0/stackandconquer
 Source:         %{name}-v%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-build
 

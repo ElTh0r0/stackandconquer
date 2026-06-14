@@ -1,4 +1,4 @@
-app-id: com.github.elth0r0.stackandconquer
+app-id: org.codeberg.elth0r0.stackandconquer
 runtime: org.kde.Platform
 runtime-version: '6.10'
 sdk: org.kde.Sdk
@@ -15,6 +15,6 @@ modules:
       - -DCMAKE_BUILD_TYPE=Release
     sources:
       - type: git
-        url: https://github.com/ElTh0r0/stackandconquer.git
+        url: https://codeberg.org/ElTh0r0/stackandconquer.git
         tag: v0.11.1
         commit: 00f4f227e091f0730c2749951f4deb8cf47ec6bb

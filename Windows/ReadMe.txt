@@ -1,4 +1,4 @@
-StackAndConquer - https://github.com/ElTh0r0/stackandconquer
+StackAndConquer - https://codeberg.org/ElTh0r0/stackandconquer
 
 
 About
@@ -11,9 +11,6 @@ CC license BY-NC (https://creativecommons.org/licenses/by-nc/4.0/).
 Objective is to build a stack of stones with at least five stones and
 a stone with the players color on top.
 
-Create your own CPU opponent:
-https://github.com/ElTh0r0/stackandconquer/wiki/Create-CPU-opponent
-
 
 Translations
 ------------
@@ -24,14 +21,19 @@ Translations
  - Russian: aaly11
 
 New translations and corrections are highly welcome! You can either fork the
-source code from GitHub, make your changes and create a pull request or you
-can participate on Transifex: https://explore.transifex.com/elth0r0/stackandconquer/
+source code, make your changes and then create a pull request or you can
+participate here:  https://translate.codeberg.org/engage/stackandconquer/
+
 
 CPU players
 -----------
 
  - Advanced CPU: ElThoro
  - Minimax CPU / MonteCarlo CPU: maksverver
+
+Create your own CPU opponent:
+https://codeberg.org/ElTh0r0/stackandconquer/wiki/Create-CPU-opponent
+
 
 Icons
 -----
