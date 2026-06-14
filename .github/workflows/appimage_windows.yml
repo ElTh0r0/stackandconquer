@@ -103,14 +103,14 @@ jobs:
 #       copy build-cmake\Release\StackAndConquer.exe StackAndConquer\StackAndConquer.exe
 #       windeployqt --release --no-translations --no-opengl-sw StackAndConquer\StackAndConquer.exe
 #       copy COPYING StackAndConquer\
-#       curl -fsSL -o ReadMe.txt https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/ReadMe.txt
+#       curl -fsSL -o ReadMe.txt https://codeberg.org/ElTh0r0/stackandconquer/raw/branch/packaging/Windows/ReadMe.txt
 #       copy ReadMe.txt StackAndConquer\
 #       xcopy /i /e /s data\cpu\*.js StackAndConquer\cpu\
 #       xcopy /i /e /s data\boards\* StackAndConquer\boards\
 #       7z a -tzip -mx=7 StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.zip .\StackAndConquer\
-#       curl -fsSL -o stackandconquer.nsi https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.nsi
-#       curl -fsSL -o removeprevious.nsh https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/removeprevious.nsh
-#       curl -fsSL -o stackandconquer.ico https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.ico
+#       curl -fsSL -o stackandconquer.nsi https://codeberg.org/ElTh0r0/stackandconquer/raw/branch/packaging/Windows/stackandconquer.nsi
+#       curl -fsSL -o removeprevious.nsh https://codeberg.org/ElTh0r0/stackandconquer/raw/branch/packaging/Windows/removeprevious.nsh
+#       curl -fsSL -o stackandconquer.ico https://codeberg.org/ElTh0r0/stackandconquer/raw/branch/packaging/Windows/stackandconquer.ico
 #       makensis stackandconquer.nsi
 #       ren StackAndConquer_Installer.exe StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.exe
 #       
@@ -161,14 +161,14 @@ jobs:
        copy build-cmake\StackAndConquer.exe StackAndConquer\StackAndConquer.exe
        windeployqt --release --no-translations --no-opengl-sw StackAndConquer\StackAndConquer.exe
        copy COPYING StackAndConquer\
-       curl -fsSL -o ReadMe.txt https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/ReadMe.txt
+       curl -fsSL -o ReadMe.txt https://codeberg.org/ElTh0r0/stackandconquer/raw/branch/packaging/Windows/ReadMe.txt
        copy ReadMe.txt StackAndConquer\
        xcopy /i /e /s data\cpu\*.js StackAndConquer\cpu\
        xcopy /i /e /s data\boards\* StackAndConquer\boards\
        7z a -tzip -mx=7 StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.zip .\StackAndConquer\
-       curl -fsSL -o stackandconquer.nsi https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.nsi
-       curl -fsSL -o removeprevious.nsh https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/removeprevious.nsh
-       curl -fsSL -o stackandconquer.ico https://raw.githubusercontent.com/ElTh0r0/stackandconquer/packaging/Windows/stackandconquer.ico
+       curl -fsSL -o stackandconquer.nsi https://codeberg.org/ElTh0r0/stackandconquer/raw/branch/packaging/Windows/stackandconquer.nsi
+       curl -fsSL -o removeprevious.nsh https://codeberg.org/ElTh0r0/stackandconquer/raw/branch/packaging/Windows/removeprevious.nsh
+       curl -fsSL -o stackandconquer.ico https://codeberg.org/ElTh0r0/stackandconquer/raw/branch/packaging/Windows/stackandconquer.ico
        makensis stackandconquer.nsi
        ren StackAndConquer_Installer.exe StackAndConquer-%buildnr%-Windows_${{ env.BUILD }}.exe
        

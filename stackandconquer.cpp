@@ -495,7 +495,7 @@ void StackAndConquer::showRules() {
 
 void StackAndConquer::reportBug() {
   QDesktopServices::openUrl(QUrl(
-      QStringLiteral("https://github.com/ElTh0r0/stackandconquer/issues")));
+      QStringLiteral("https://codeberg.org/ElTh0r0/stackandconquer/issues")));
 }
 
 // ----------------------------------------------------------------------------
@@ -516,8 +516,8 @@ void StackAndConquer::showInfoBox() {
                           "%9")
           .arg(qApp->applicationName(), qApp->applicationVersion(),
                QStringLiteral(APP_DESC), QStringLiteral(APP_COPY),
-               "URL: <a href=\"https://github.com/ElTh0r0/stackandconquer\">"
-               "https://github.com/ElTh0r0/stackandconquer</a>",
+               "URL: <a href=\"https://codeberg.org/ElTh0r0/stackandconquer\">"
+               "https://codeberg.org/ElTh0r0/stackandconquer</a>",
                tr("License") +
                    ": <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">"
                    "GNU General Public License Version 3</a>",
