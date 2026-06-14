@@ -332,8 +332,7 @@ auto Settings::getMaxGridSize() const -> quint16 { return m_nMaxGridSize; }
 auto Settings::getGuiLanguage() -> QString {
   QString sGuiLanguage =
       m_settings.value(QStringLiteral("GuiLanguage"), QStringLiteral("auto"))
-          .toString()
-          .toLower();
+          .toString();
 
   // Automatically detected language
   if ("auto" == sGuiLanguage) {
