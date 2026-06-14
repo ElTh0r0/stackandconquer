@@ -23,8 +23,6 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     set(LINUX ON)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     set(WINDOWS ON)
-#elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-#    set(MACOS ON)
 endif()
     
 set(CMAKE_AUTOUIC ON)
@@ -38,14 +36,6 @@ if(WINDOWS)
         OUTPUT_NAME StackAndConquer
         WIN32_EXECUTABLE TRUE
     )
-#elseif(MACOS)
-#    set(MACOSX_BUNDLE_ICON_FILE icon.icns)
-#    set(app_icon_macos "${CMAKE_CURRENT_SOURCE_DIR}/icons/icon.icns")
-#    set_source_files_properties(${app_icon_macos} PROPERTIES
-#           MACOSX_PACKAGE_LOCATION "Resources")
-#
-#    # TODO: To be checked how to bundle ressources (boards)
-#    qt_add_executable(stackandconquer MACOSX_BUNDLE ${app_icon_macos})
 else()
     qt_add_executable(stackandconquer)
 endif()

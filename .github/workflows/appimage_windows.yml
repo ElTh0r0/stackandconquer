@@ -12,6 +12,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v6
 
+    - name: Set global env
+      run: |
+       echo "BASE_DIR=$(pwd)" >> $GITHUB_ENV
+       echo "LINUXDEPLOY_OUTPUT_VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
     - name: Install Dependencies
       run: sudo apt update && sudo apt install qmake6 qt6-base-dev qt6-l10n-tools qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev libqt6svg6-dev qt6-wayland libgl-dev libfuse2
 
@@ -47,45 +52,6 @@ jobs:
     - name: Upload AppImage
       run: |
        ./ffsend upload ${BASE_DIR}/out/StackAndConquer-*-x86_64.AppImage
-
-  macOS_laetst:
-    name: macOS
-    runs-on: macos-latest
-    env:
-      QT_VERSION: '6.10.3'
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v6
-
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v4
-      with:
-        version: ${{ env.QT_VERSION }}
-        cache: 'true'
-        host: 'mac'
-        target: 'desktop'
-
-    - name: Compile
-      run: |
-       mkdir build
-       cd build
-       cmake -G Ninja -S .. -B .
-       cmake --build .
-
-    - name: Create dmg archive and zip
-      run: |
-       cd build
-       VERSION=$(git rev-parse --short HEAD) 
-       macdeployqt "StackAndConquer.app" -dmg
-       mv "StackAndConquer.dmg" "StackAndConquer_${VERSION}.dmg"
-       cp "../README.md" "./README.md"
-       cp "../COPYING" "./COPYING"
-       7z a StackAndConquer_${VERSION}_macOS.zip "StackAndConquer_${VERSION}.dmg" "README.md" "COPYING"
-
-    - name: Upload macOS zip
-      run: |
-       cd build
-       curl --upload-file ./StackAndConquer_*_macOS.zip https://transfer.adminforge.de/StackAndConquer_macOS.zip
 
   Windows_msvc:
     name: Win latest Qt 6 msvc
