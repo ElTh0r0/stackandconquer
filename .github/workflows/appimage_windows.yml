@@ -4,9 +4,12 @@ name: "AppImage Windows"
 on:
   workflow_dispatch:
 
+env:
+  ARCH: "x86_64"
+
 jobs:
   AppImage_Ubuntu22-04:
-    name: AppImage Ubuntu 22.04
+    name: AppImage Ubuntu 22.04 Qt 6.2
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
@@ -18,7 +21,7 @@ jobs:
        echo "LINUXDEPLOY_OUTPUT_VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
     - name: Install Dependencies
-      run: sudo apt update && sudo apt install qmake6 qt6-base-dev qt6-l10n-tools qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev libqt6svg6-dev qt6-wayland libgl-dev libfuse2
+      run: sudo apt update && sudo apt install qmake6 qt6-base-dev qt6-l10n-tools qt6-tools-dev qt6-tools-dev-tools qt6-declarative-dev libqt6svg6-dev qt6-wayland libgl-dev libfuse2 appstream
 
     - name: Download linuxdeploy
       run: |
@@ -26,12 +29,12 @@ jobs:
        chmod a+x linuxdeploy-"$ARCH".AppImage
        LINUXDEPLOY_BIN=${PWD}/linuxdeploy-"$ARCH".AppImage
 
-    - name: Download linuxdeployqt-plugin-appimage
+    - name: Download linuxdeploy-plugin-appimage
       run: |
        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-"$ARCH".AppImage"
        chmod a+x linuxdeploy-plugin-appimage-"$ARCH".AppImage
 
-    - name: Download linuxdeployqt-plugin-qt
+    - name: Download linuxdeploy-plugin-qt
       run: |
        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-"$ARCH".AppImage"
        chmod a+x linuxdeploy-plugin-qt-"$ARCH".AppImage
@@ -60,7 +63,7 @@ jobs:
 
     - name: Upload AppImage
       run: |
-       ./ffsend upload ${BASE_DIR}/out/StackAndConquer-*-x86_64.AppImage
+       ./ffsend upload ${BASE_DIR}/out/StackAndConquer-*.AppImage
 
   Windows_msvc:
     name: Win latest Qt 6 msvc
