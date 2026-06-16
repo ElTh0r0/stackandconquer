@@ -571,7 +571,7 @@ Il gioco finisce in pareggio!</translation>
     <message>
         <location filename="../stackandconquer.cpp" line="524"/>
         <source>This application uses icons from &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;Tango project&lt;/a&gt;.</source>
-        <translation>Questa applicazione utilizza le icone del &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt; progetto Tango&lt;/a&gt;.</translation>
+        <translation>Questa applicazione utilizza le icone del &lt;a href=&quot;http://tango.freedesktop.org&quot;&gt;progetto Tango&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="../stackandconquer.cpp" line="528"/>

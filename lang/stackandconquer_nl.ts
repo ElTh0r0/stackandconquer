@@ -576,7 +576,7 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../stackandconquer.cpp" line="528"/>
         <source>The game is based on &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;Mixtour&lt;/a&gt; by Dieter Stein.</source>
-        <translation>Het spel is gebadeerd op &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;mixtour&lt;a/&gt; door Dieter Stein.</translation>
+        <translation>Het spel is gebadeerd op &lt;a href=&quot;https://spielstein.com/games/mixtour&quot;&gt;mixtour&lt;/a&gt; door Dieter Stein.</translation>
     </message>
     <message>
         <location filename="../stackandconquer.cpp" line="531"/>
