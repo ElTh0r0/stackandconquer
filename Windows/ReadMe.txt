@@ -38,4 +38,5 @@ https://codeberg.org/ElTh0r0/stackandconquer/wiki/Create-CPU-opponent
 Icons
 -----
 
-StackAndConquer uses icons from Tango Desktop Project: http://tango.freedesktop.org
+StackAndConquer uses Breeze icons from KDE:
+https://invent.kde.org/frameworks/breeze-icons
