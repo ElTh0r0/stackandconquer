@@ -571,7 +571,7 @@ Jullie eindigen in gelijkspel!</translation>
     <message>
         <location filename="../stackandconquer.cpp" line="550"/>
         <source>This application uses &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze icons from KDE&lt;/a&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dit programma gebruikt &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze-pictogrammen van KDE&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="../stackandconquer.cpp" line="554"/>

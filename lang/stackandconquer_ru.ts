@@ -571,7 +571,7 @@ Game ends in a tie!</source>
     <message>
         <location filename="../stackandconquer.cpp" line="550"/>
         <source>This application uses &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;Breeze icons from KDE&lt;/a&gt;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Приложение использует &lt;a href=&quot;https://invent.kde.org/frameworks/breeze-icons&quot;&gt;иконки Breeze из KDE&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="../stackandconquer.cpp" line="554"/>
