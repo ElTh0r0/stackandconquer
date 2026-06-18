@@ -27,7 +27,7 @@
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>30</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuGame">
@@ -57,9 +57,7 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_NewGame">
    <property name="icon">
-    <iconset theme="document-new">
-     <normalon>:/menu/document-new.png</normalon>
-    </iconset>
+    <iconset theme="document-new"/>
    </property>
    <property name="text">
     <string>&amp;New game</string>
@@ -70,9 +68,7 @@
   </action>
   <action name="action_Quit">
    <property name="icon">
-    <iconset theme="application-exit">
-     <normalon>:/menu/system-log-out.png</normalon>
-    </iconset>
+    <iconset theme="application-exit"/>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -80,9 +76,7 @@
   </action>
   <action name="action_Info">
    <property name="icon">
-    <iconset theme="help-about">
-     <normalon>:/menu/help-browser.png</normalon>
-    </iconset>
+    <iconset theme="help-about"/>
    </property>
    <property name="text">
     <string>&amp;About</string>
@@ -93,9 +87,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset theme="document-save">
-     <normalon>:/menu/document-save.png</normalon>
-    </iconset>
+    <iconset theme="document-save"/>
    </property>
    <property name="text">
     <string>&amp;Save game</string>
@@ -106,9 +98,7 @@
   </action>
   <action name="action_LoadGame">
    <property name="icon">
-    <iconset theme="document-open">
-     <normalon>:/menu/document-open.png</normalon>
-    </iconset>
+    <iconset theme="document-open"/>
    </property>
    <property name="text">
     <string>&amp;Load game</string>
@@ -118,15 +108,16 @@
    </property>
   </action>
   <action name="action_ReportBug">
+   <property name="icon">
+    <iconset theme="tools-report-bug"/>
+   </property>
    <property name="text">
     <string>Report &amp;bug</string>
    </property>
   </action>
   <action name="action_Preferences">
    <property name="icon">
-    <iconset theme="preferences-system">
-     <normalon>:/menu/preferences-system.png</normalon>
-    </iconset>
+    <iconset theme="configure"/>
    </property>
    <property name="text">
     <string>S&amp;ettings</string>

@@ -16,6 +16,9 @@
 #include <QSlider>
 #include <QTabWidget>
 #include <QTextEdit>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+#include <QStyleHints>
+#endif
 
 #include "./game.h"
 #include "ui_stackandconquer.h"
@@ -31,6 +34,29 @@ StackAndConquer::StackAndConquer(const QDir &userDataPath,
       // Size is based on default grid size of 70!
       m_DefaultSize(600, 480) {
   m_pUi->setupUi(this);
+
+  QString sIconTheme;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+  qDebug() << "Detected color scheme:"
+           << QGuiApplication::styleHints()->colorScheme();
+  if (Qt::ColorScheme::Dark == QGuiApplication::styleHints()->colorScheme()) {
+    sIconTheme = QStringLiteral("dark");
+  } else if (Qt::ColorScheme::Light ==
+             QGuiApplication::styleHints()->colorScheme()) {
+    sIconTheme = QStringLiteral("light");
+  }
+#endif
+  // If < Qt 6.5 or if Qt::ColorScheme::Unknown was returned
+  if (sIconTheme.isEmpty()) {
+    // If window is darker than text
+    if (this->window()->palette().window().color().lightnessF() <
+        this->window()->palette().windowText().color().lightnessF()) {
+      sIconTheme = QStringLiteral("dark");
+    } else {
+      sIconTheme = QStringLiteral("light");
+    }
+  }
+  QIcon::setThemeName(sIconTheme);
 
   m_pSettingsDialog = new SettingsDialog(this, m_userDataDir.absolutePath());
   connect(m_pSettingsDialog, &SettingsDialog::newGame, this,
@@ -521,9 +547,9 @@ void StackAndConquer::showInfoBox() {
                tr("License") +
                    ": <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">"
                    "GNU General Public License Version 3</a>",
-               tr("This application uses icons from "
-                  "<a href=\"http://tango.freedesktop.org\">"
-                  "Tango project</a>.") +
+               tr("This application uses "
+                  "<a href=\"https://invent.kde.org/frameworks/breeze-icons\">"
+                  "Breeze icons from KDE</a>.") +
                    "<br/>" +
                    tr("The game is based on "
                       "<a href=\"https://spielstein.com/games/mixtour\">"
