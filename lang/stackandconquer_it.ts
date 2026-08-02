@@ -196,80 +196,67 @@ Il gioco finisce in pareggio!</translation>
     <name>SettingsDialog</name>
     <message>
         <location filename="../settingsdialog.ui" line="20"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="261"/>
         <source>Preferences</source>
         <translation>Preferenze</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="37"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="271"/>
         <source>General</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="51"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="262"/>
         <location filename="../settingsdialog.cpp" line="708"/>
         <source>Player</source>
         <translation>Giocatore</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="58"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="263"/>
         <source>Number of players</source>
         <translation>Numero di giocatori</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="90"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="264"/>
         <source>Game</source>
         <translation>Gioco</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="97"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="265"/>
         <source>Start player</source>
         <translation>Giocatore di partenza</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="117"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="267"/>
         <source>Towers needed to win</source>
         <translation>Torri necessarie per vincere</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="134"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="268"/>
         <source>Possible tower moves</source>
         <translation>Spostamenti della torre possibili</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="141"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="269"/>
         <source>Show movable towers after selection</source>
         <translation>Mostra le torri disponibili dopo la selezione</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="155"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="270"/>
         <source>GUI language</source>
         <translation>Linguaggio GUI</translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="166"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="278"/>
         <source>Board style</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="175"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="272"/>
         <source>Style</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../settingsdialog.ui" line="110"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_settingsdialog.h" line="266"/>
         <source>Board</source>
         <translation type="unfinished"></translation>
     </message>
@@ -408,81 +395,68 @@ Il gioco finisce in pareggio!</translation>
     <name>StackAndConquer</name>
     <message>
         <location filename="../stackandconquer.ui" line="35"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="136"/>
         <source>&amp;Game</source>
         <translation>&amp;Gioco</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="47"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="137"/>
         <source>&amp;Help</source>
         <translation>&amp;Aiuto</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="63"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="119"/>
         <source>&amp;New game</source>
         <translation>&amp;Nuova partita</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="66"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="121"/>
         <source>New game</source>
         <translation>Nuova partita</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="74"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="123"/>
         <source>&amp;Quit</source>
         <translation>&amp;Esci</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="82"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="124"/>
         <source>&amp;About</source>
         <translation>&amp;Riguardo a</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="93"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="125"/>
         <source>&amp;Save game</source>
         <translation>&amp;Salva partita</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="96"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="127"/>
         <location filename="../stackandconquer.cpp" line="353"/>
         <source>Save game</source>
         <translation>Salva partita</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="104"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="129"/>
         <source>&amp;Load game</source>
         <translation>&amp;Carica partita</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="107"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="131"/>
         <location filename="../stackandconquer.cpp" line="337"/>
         <source>Load game</source>
         <translation>Carica partita</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="115"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="133"/>
         <source>Report &amp;bug</source>
         <translation>Segnala &amp;bug</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="123"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="134"/>
         <source>S&amp;ettings</source>
         <translation>I&amp;mpostazioni</translation>
     </message>
     <message>
         <location filename="../stackandconquer.ui" line="128"/>
-        <location filename="../build/Desktop_Clang_Qt_6-Debug/stackandconquer_autogen/include/ui_stackandconquer.h" line="135"/>
         <source>&amp;Rules</source>
         <translation>&amp;Regole</translation>
     </message>
