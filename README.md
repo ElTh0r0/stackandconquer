@@ -6,11 +6,16 @@ StackAndConquer is a challenging tower conquest board game inspired by [Mixtour]
 ![Screenshot](./data/screenshot.png)
 
 ## Installation
-* [Build for Windows](https://codeberg.org/ElTh0r0/stackandconquer/releases/latest)
+* [Build for Windows or macOS (untested)](https://codeberg.org/ElTh0r0/stackandconquer/releases/latest)
 * [AppImage](https://codeberg.org/ElTh0r0/stackandconquer/releases/latest)
 * [Ubuntu PPA](https://launchpad.net/~elthoro/+archive/stackandconquer)
 * [Builds for Debian, Fedora, openSUSE](http://software.opensuse.org/download.html?project=home%3AElThoro&package=stackandconquer)
 * [Arch AUR](https://aur.archlinux.org/packages/stackandconquer/)
+
+## Rules
+The rules are included in the game and can be opened through the menu "_Help -> Rules_". Additionally the rules can be found on the official Mixtour website:
+* [2 Players](https://spielstein.com/games/mixtour/rules)
+* [3 (or more) players](https://spielstein.com/games/mixtour/rules/a-trois)
 
 ## Create CPU opponent
 Manual for creating CPU opponents can be found in the [wiki](https://codeberg.org/ElTh0r0/stackandconquer/wiki/Create-CPU-opponent).

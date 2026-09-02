@@ -35,7 +35,7 @@ auto main(int argc, char *argv[]) -> int {
       QIcon::fromTheme(QStringLiteral("stackandconquer"),
                        QIcon(QStringLiteral(":/stackandconquer.png"))));
   app.setDesktopFileName(
-      QStringLiteral("org.codeberg.elth0r0.stackandconquer"));
+      QStringLiteral("page.codeberg.elth0r0.stackandconquer"));
 #endif
 
   QCommandLineParser cmdparser;
