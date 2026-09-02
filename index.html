@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>StackAndConquer | Challenging tower conquest board game</title>
+        <link rel="icon" href="img/favicon.ico" type="image/vnd.microsoft.icon">
+        <link rel="stylesheet" href="./oat.min.css">
+        <script src="./oat.min.js" defer></script>
+        <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+        <nav data-topnav>
+            <div class="row">
+                <div class="col-4 branding">
+                    <a href="./"><img src="img/stackandconquer_24.png" alt="icon">&nbsp;&nbsp;&nbsp;StackAndConquer</a>
+                </div>
+
+                <div class="col-8 justify-end hstack">
+                    <a href="./">Home</a>
+                    <a href="create-cpu-opponent.html">CPU creation</a>
+                    <a href="https://codeberg.org/ElTh0r0/stackandconquer">Codeberg</a>
+                    <button class="outline small" onclick="toggleTheme()">
+                        <svg
+                            class="icon-light"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            role="img"
+                            aria-label="Light mode"
+                        >
+                            <circle cx="12" cy="12" r="5" />
+                            <line x1="12" y1="1" x2="12" y2="3" />
+                            <line x1="12" y1="21" x2="12" y2="23" />
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                            <line x1="1" y1="12" x2="3" y2="12" />
+                            <line x1="21" y1="12" x2="23" y2="12" />
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                        </svg>
+
+                        <svg
+                            class="icon-dark"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            role="img"
+                            aria-label="Dark mode"
+                        >
+                            <path
+                                d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <main>
+            <div class="container">
+                <section>
+                    <h1>StackAndConquer</h1>
+                    <p>
+                        StackAndConquer is a challenging tower conquest board
+                        game inspired by <a href="https://spielstein.com/games/mixtour">Mixtour</a>
+                        created by Dieter Stein who allows free copying and
+                        using the rule texts and graphics under
+                        <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC license (BY-NC)</a>.
+                        Objective is to build a stack of stones with at least
+                        five stones and a stone with the players color on top.
+                    </p>
+                    <p><img src="img/stackandconquer.png" alt="Screenshot"></p>
+
+                    <h2 id="downloads"><a href="#downloads"></a>Downloads</h2>
+                    <h6>Latest release v0.11.1 (06. Jun 2025)</h6>
+                    <ul>
+                        <li>
+                            <a
+                                href="https://codeberg.org/ElTh0r0/stackandconquer/releases/download/v0.11.1/StackAndConquer-0.11.1-Windows_Installer.exe"
+                                >Build for Windows - Installer</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="https://codeberg.org/ElTh0r0/stackandconquer/releases/download/v0.11.1/StackAndConquer-0.11.1-Windows.zip"
+                                >Build for Windows - ZIP</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="https://codeberg.org/ElTh0r0/stackandconquer/releases/download/v0.11.1/StackAndConquer-0.11.1-macOS.zip"
+                                >Build for macOS</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="https://codeberg.org/ElTh0r0/stackandconquer/releases/download/v0.11.1/StackAndConquer-0.11.1-x86_64.AppImage"
+                                >Linux AppImage</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="https://launchpad.net/~elthoro/+archive/stackandconquer"
+                                >Ubuntu PPA</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="http://software.opensuse.org/download.html?project=home%3AElThoro&package=stackandconquer"
+                                >Builds for Debian, Fedora, openSUSE</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="https://aur.archlinux.org/packages/stackandconquer/"
+                                >Arch AUR</a
+                            >
+                        </li>
+                    </ul>
+
+                    <p>
+                        Please note that the <strong>macOS</strong> release was
+                        created automatically on a build server and has not
+                        been tested due to missing hardware. If you encounter
+                        any problems,
+                        <a href="https://codeberg.org/ElTh0r0/stackandconquer/issues"
+                            >please create an issue</a
+                        >.
+                    </p>
+
+                    <h2 id="rules">
+                        <a href="#rules"></a>Rules
+                    </h2>
+                    <p>
+                        The rules are included in the game and can be opened
+                        through the menu <em>'Help &rarr; Rules'</em>.
+                        Additionally the rules can be found on the official
+                        Mixtour website:
+                    </p>
+                    <ul>
+                        <li>
+                            <a
+                                href="https://spielstein.com/games/mixtour/rules"
+                                >2 Players</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="https://spielstein.com/games/mixtour/rules/a-trois"
+                                >3 (or more) players</a
+                            >
+                        </li>
+                    </ul>
+
+                    <h2 id="createcpuopponent">
+                        <a href="#createcpuopponent"></a>Create your own CPU opponent
+                    </h2>
+                    <p>
+                        You can find a manual for creating your own CPU opponent
+                        <a href="create-cpu-opponent.html">here</a>. Feel free to submit a
+                        pull request
+                        <a href="https://codeberg.org/ElTh0r0/stackandconquer/"
+                            >on Codeberg</a
+                        >
+                        and your CPU opponent could be included in the next release!
+                    </p>
+                    
+                    <h2 id="translations">
+                        <a href="#translations"></a>Translations
+                    </h2>
+                    <p>
+                        New translations and corrections are highly welcome! You
+                        can either fork the source code, make your changes and
+                        then create a pull request or you can participate on
+                        <a
+                            href="https://translate.codeberg.org/engage/stackandconquer/"
+                            >translate.codeberg.org</a
+                        >.
+                    </p>
+                </section>
+
+                <h2 id="releases"><a href="#releases"></a>Release notes</h2>
+                <section id="release-notes">
+                    <article class="card">
+                        <header>
+                            <h3>v0.11.1 (06. Jun 2025)</h3>
+                        </header>
+                        <ul>
+                            <li>
+                                Add Russian translation - thanks to aaly11!
+                            </li>
+                            <li>
+                                CI fixes
+                            </li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3>v0.11.0 (12. Nov 2024)</h3>
+                        </header>
+                        <ul>
+                            <li>
+                                Two new great and really challenging CPU opponents:
+                                "Minimax" and "MonteCarlo" CPU - many thanks to maksverver!
+                            </li>
+                            <li>
+                                Extend CPU interface
+                            </li>
+                            <li>
+                                Update Dutch translation - thanks to maksverver!
+                            </li>
+                            <li>
+                                Drop support for ReactOS (>= Qt 5.12 required now)
+                            </li>
+                            <li>
+                                Integrate into Transifex for translations
+                            </li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3>v0.10.1 (20. May 2024)</h3>
+                        </header>
+                        <ul>
+                            <li>Add support for dark scheme on Windows with Qt 6.5</li>
+                            <li>Add Japanese and Polish rules</li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3>v0.10.0 (01. May 2022)</h3>
+                        </header>
+                        <ul>
+                            <li>
+                                Add board settings dialog
+                            </li>
+                            <li>
+                                Updated Italian translation - thanks to davi92
+                            </li>
+                            <li>
+                                Add txt to json board file converter
+                            </li>
+                            <li>
+                                Fix for loading user CPU scripts
+                            </li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3>v0.9.0 (27. Jun 2021)</h3>
+                        </header>
+                        <ul>
+                            <li>
+                                Improved CPU opponent
+                            </li>
+                            <li>
+                                Dynamic scale change
+                            </li>
+                            <li>
+                                Icon for dark background
+                            </li>
+                            <li>
+                                Check for legal moves
+                            </li>
+                            <li>
+                                Implement direction change
+                            </li>
+                            <li>
+                                Save game fixes
+                            </li>
+                            <li>
+                                Configurable stone color
+                            </li>
+                            <li>
+                                Rewrite of board handling
+                            </li>
+                            <li>
+                                Update Dutch translation - thanks to Elbert
+                            </li>
+                            <li>
+                                Packaging changes
+                            </li>
+                            <li>
+                                Support for Qt 6
+                            </li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3>v0.8.2 (27. Mar 2020)</h3>
+                        </header>
+                        <ul>
+                            <li>Added Italian translation - thanks to davi92!</li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3><span class="badge" data-variant="warning">
+                            alpha</span>
+                            v0.8.1 (11. Mar 2018)</h3>
+                        </header>
+                        <ul>
+                            <li>Added Dutch translation - thanks to Vistaus!</li>
+                            <li>Improved CPU opponent</li>
+                            <li>Added AppImage</li>
+                            <li>Added macOS build (untested)</li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3><span class="badge" data-variant="warning">
+                            alpha</span>
+                            v0.8.0 (08. Nov 2017)</h3>
+                        </header>
+                        <ul>
+                            <li>Added rules</li>
+                            <li>Load/save game</li>
+                            <li>Fixed cmd argument handling</li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3><span class="badge" data-variant="warning">
+                            alpha</span>
+                            v0.7.0 (19. Sep 2017)</h3>
+                        </header>
+                        <ul>
+                            <li>Improved CPU</li>
+                            <li>Added Appyeyor build file</li>
+                            <li>Bug fixes</li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3><span class="badge" data-variant="warning">
+                            alpha</span>
+                            v0.6.0 (17. Apr 2017)</h3>
+                        </header>
+                        <ul>
+                            <li>Added JS engine for CPU scripts and removed plugin interface</li>
+                            <li>Minor GUI changes and graphic fixes</li>
+                            <li>Added fall-back menu icons</li>
+                            <li>Change GUI language without restarting the game</li>
+                            <li>Moved project from Launchpad to GitHub</li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3><span class="badge" data-variant="warning">
+                            alpha</span>
+                            v0.5.0 (13. Nov 2016)</h3>
+                        </header>
+                        <ul>
+                            <li>Added CPU plugin interface</li>
+                            <li>Highlight moves</li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3><span class="badge" data-variant="warning">
+                            alpha</span>
+                            v0.4.0 (29. May 2016)</h3>
+                        </header>
+                        <ul>
+                            <li>Check for possible moves</li>
+                            <li>Check if previous move is reverted</li>
+                            <li>Pretty debug output</li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3><span class="badge" data-variant="warning">
+                            alpha</span>
+                            v0.3.0 (16. Apr 2016)</h3>
+                        </header>
+                        <ul>
+                            <li>Settings dialog</li>
+                            <li>Added German translation</li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3><span class="badge" data-variant="warning">
+                            alpha</span>
+                            v0.2.0 (08. Apr 2016)</h3>
+                        </header>
+                        <ul>
+                            <li>Improved graphics</li>
+                        </ul>
+                    </article>
+                    <p></p>
+
+                    <article class="card">
+                        <header>
+                            <h3><span class="badge" data-variant="warning">
+                            alpha</span>
+                            v0.1.0 (07. Apr 2016)</h3>
+                        </header>
+                        <ul>
+                            <li>Initial commit. Main game logic implemented</li>
+                        </ul>
+                    </article>
+                </section>
+                <div class="center-pagination">
+                <nav class="nav-center" aria-label="Pagination">
+                    <menu class="buttons" id="pagination"></menu>
+                </nav>
+                </div>
+
+            </div>
+        </main>
+        <script>
+            function toggleTheme() {
+                var cs = document.documentElement.style.colorScheme;
+                var isDark =
+                    cs === "dark" ||
+                    (!cs && matchMedia("(prefers-color-scheme: dark)").matches);
+                var theme = isDark ? "light" : "dark";
+                document.documentElement.style.colorScheme = theme;
+                document.documentElement.setAttribute("data-theme", theme);
+                localStorage.setItem("theme", theme);
+            }
+
+            const container = document.getElementById("release-notes");
+            const articles = Array.from(
+                container.querySelectorAll("article.card"),
+            );
+            const pagination = document.getElementById("pagination");
+
+            const perPage = 5;
+            let currentPage = 1;
+
+            const totalPages = Math.ceil(articles.length / perPage);
+
+            function renderArticles() {
+                const start = (currentPage - 1) * perPage;
+                const end = start + perPage;
+
+                articles.forEach((article, index) => {
+                    article.hidden = index < start || index >= end;
+                });
+            }
+
+            function renderPagination() {
+                pagination.innerHTML = "";
+
+                const addItem = (
+                    label,
+                    page,
+                    disabled = false,
+                    current = false,
+                ) => {
+                    const li = document.createElement("li");
+                    const a = document.createElement("a");
+
+                    a.className = current
+                        ? "button small"
+                        : "button outline small";
+                    a.textContent = label;
+
+                    if (current) {
+                        a.setAttribute("aria-current", "page");
+                    } else if (!disabled) {
+                        a.href = "#release-notes";
+                        a.addEventListener("click", (e) => {
+                            e.preventDefault();
+                            currentPage = page;
+                            renderArticles();
+                            renderPagination();
+
+                            const headline =
+                                document.getElementById("releases");
+                            if (headline) {
+                                headline.scrollIntoView({ behavior: "smooth" });
+                            }
+                        });
+                    } else {
+                        a.setAttribute("aria-disabled", "true");
+                    }
+
+                    li.appendChild(a);
+                    pagination.appendChild(li);
+                };
+
+                addItem(
+                    "← Previous",
+                    Math.max(1, currentPage - 1),
+                    currentPage === 1,
+                );
+
+                for (let page = 1; page <= totalPages; page++) {
+                    addItem(String(page), page, false, page === currentPage);
+                }
+
+                addItem(
+                    "Next →",
+                    Math.min(totalPages, currentPage + 1),
+                    currentPage === totalPages,
+                );
+            }
+
+            renderArticles();
+            renderPagination();
+        </script>
+    </body>
+</html>
