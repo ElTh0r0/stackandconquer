@@ -1,4 +1,4 @@
-StackAndConquer - https://codeberg.org/ElTh0r0/stackandconquer
+StackAndConquer - https://elth0r0.codeberg.page/stackandconquer/
 
 
 About
@@ -32,7 +32,7 @@ CPU players
  - Minimax CPU / MonteCarlo CPU: maksverver
 
 Create your own CPU opponent:
-https://codeberg.org/ElTh0r0/stackandconquer/wiki/Create-CPU-opponent
+https://elth0r0.codeberg.page/stackandconquer/create-cpu-opponent.html
 
 
 Icons

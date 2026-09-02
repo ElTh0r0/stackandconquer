@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Wed Sep 02 15:55:00 UTC 2026 - elthoro@gmx.de 0.12.0
+
+- Bundle light and dark icons
+- Fix language selection
+- Drop support for Qt 5
+- Move project to Codeberg
+- CI fixes
+
+-------------------------------------------------------------------
 Sat Jul 07 14:58:00 UTC 2025 - elthoro@gmx.de 0.11.1
 
 - Add Russian translation - thanks to aaly11

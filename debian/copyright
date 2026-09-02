@@ -7,6 +7,10 @@ Files: *
 Copyright: 2015-present Thorsten Roth <elthoro@gmx.de>
 License: GPL-3+
 
+Files: data/icons/*
+Copyright: 2014 Uri Herrera <uri_herrera@nitrux.in> and others
+License: LGPL-3+
+
 License: GPL-3+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by

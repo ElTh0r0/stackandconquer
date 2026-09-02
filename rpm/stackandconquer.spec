@@ -16,10 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with StackAndConquer  If not, see <http://www.gnu.org/licenses/>.
 
-%define  _name  org.codeberg.elth0r0.stackandconquer
+%define  _name  page.codeberg.elth0r0.stackandconquer
 Name:           stackandconquer
 Summary:        Challenging tower conquest board game
-Version:        0.11.1
+Version:        0.12.0
 Release:        1
 License:        GPL-3.0-or-later
 URL:            https://codeberg.org/ElTh0r0/stackandconquer
