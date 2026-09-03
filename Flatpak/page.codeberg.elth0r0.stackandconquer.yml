@@ -1,6 +1,6 @@
-app-id: org.codeberg.elth0r0.stackandconquer
+app-id: page.codeberg.elth0r0.stackandconquer
 runtime: org.kde.Platform
-runtime-version: '6.10'
+runtime-version: '6.11'
 sdk: org.kde.Sdk
 command: stackandconquer
 finish-args:
@@ -16,5 +16,5 @@ modules:
     sources:
       - type: git
         url: https://codeberg.org/ElTh0r0/stackandconquer.git
-        tag: v0.11.1
-        commit: 00f4f227e091f0730c2749951f4deb8cf47ec6bb
+        tag: v0.12.0
+        commit: 569f118bf22422e0f280ac6d4c77dcfef8d3df33
