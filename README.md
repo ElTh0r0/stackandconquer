@@ -6,7 +6,7 @@ StackAndConquer is a challenging tower conquest board game inspired by [Mixtour]
 ![Screenshot](./data/screenshot.png)
 
 ## Installation
-* [Build for Windows or macOS (untested)](https://codeberg.org/ElTh0r0/stackandconquer/releases/latest)
+* [Build for Windows](https://codeberg.org/ElTh0r0/stackandconquer/releases/latest)
 * [AppImage](https://codeberg.org/ElTh0r0/stackandconquer/releases/latest)
 * [Ubuntu PPA](https://launchpad.net/~elthoro/+archive/stackandconquer)
 * [Builds for Debian, Fedora, openSUSE](http://software.opensuse.org/download.html?project=home%3AElThoro&package=stackandconquer)
